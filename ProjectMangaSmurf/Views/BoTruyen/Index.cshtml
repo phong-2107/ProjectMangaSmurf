@@ -1,0 +1,223 @@
+﻿@model IEnumerable<ProjectMangaSmurf.Models.BoTruyen>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.2.0/remixicon.css" integrity="sha512-OQDNdI5rpnZ0BRhhJc+btbbtnxaj+LdQFeh0V9/igiEPDiWE2fG+ZsXl0JEH+bjXKPJ3zcXqNyP4/F/NegVdZg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<link href="~/css/style.css" rel="stylesheet" />
+
+
+<div class="main__top section">
+    <div class="top__container containers">
+        <div class="top__content">
+            <span class="section__subtitle">Truyện Mới</span>
+            <p class="section__des">Cập nhật những bộ truyện mới nhất trong năm 2024</p>
+        </div>
+        <div class=" slick-list autoplay row col-6 w-100 d-flex justify-content-center">
+
+            @foreach (var botruyen in Model)
+            {
+
+                <div class="col update-item" asp-action="CTBoTruyen" asp-route-id="botruyen.IdBo">
+                    <figure>
+                        @if (!string.IsNullOrEmpty(botruyen.AnhBanner))
+                        {
+                            <img src="@botruyen.AnhBanner" alt="truyen Image" />
+                        }
+                        <figcaption>
+                            <h6 class="item-title"><a href="#">@botruyen.TenBo</a></h6>
+                        </figcaption>
+                    </figure>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<div class="main__bottom containers grid">
+    <section class="home w-100" id="home">
+        <div class="home__container ">
+            <div id="carouselExampleAutoplaying" class="carousel slide home__carousel bg__carousel w-100 " data-bs-ride="carousel">
+                <div class="carousel-inner rounded-3 w-100">
+                    @{
+                        int i = 0;
+                        @foreach (var botruyen in Model)
+                        {
+                            if (i == 0)
+                            {
+                                <div class="carousel-item active">
+                                    @if (!string.IsNullOrEmpty(botruyen.AnhBia))
+                                    {
+                                        <img src="@botruyen.AnhBia" class="d-block w-100 rounded-3" alt="...">
+                                    }
+                                    <div class="item-infor">
+                                        <div class="item-content">
+                                            <div class="content">
+                                                <a href="#">@botruyen.TenBo</a>
+                                            </div>
+                                            <div class="item-des">
+                                                <p>@botruyen.Mota</p>
+                                            </div>
+                                        </div>
+                                        <div class=" btn__regis">
+                                            <a asp-action="CTBoTruyen" asp-route-id="@botruyen.IdBo">Xem thông tin</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="carousel-item">
+                                    @if (!string.IsNullOrEmpty(botruyen.AnhBia))
+                                    {
+                                        <img src="@botruyen.AnhBia" class="d-block w-100 rounded-3" alt="...">
+                                    }
+                                    <div class="item-infor">
+                                        <div class="item-content">
+                                            <div class="content">
+                                                <a href="#">@botruyen.TenBo</a>
+                                            </div>
+                                            <div class="item-des">
+                                                <p>@botruyen.Mota</p>
+                                            </div>
+                                        </div>
+                                        <div class=" btn__regis">
+                                            <a asp-action="CTBoTruyen" asp-route-id="@botruyen.IdBo">Xem thông tin</a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            }
+                            i++;
+                        }
+                    }
+                </div>
+                <div class="background-item rounded-3"></div>
+                <button class="carousel-control-prev " type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev" style="width: 5%; z-index: 1000;">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="next" style="width: 5%; z-index: 1000;">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                </button>
+            </div>
+        </div>
+    </section>
+    <div class="main__right">
+        <div class="main__random bg">
+            <div class="item-content">
+                <div class="content">
+                    <a href="#">Hôm nay đọc gì?</a>
+                </div>
+                <div class="horizontal"></div>
+                <div class="item-des">
+                    <p>Nếu bạn không biết đọc gì hôm nay. Hãy để chúng tôi chọn cho bạn</p>
+                </div>
+                <div class="btn__regis">
+                    <a href="#">Đọc ngẫu nhiên</a>
+                </div>
+                <div class="background-img"></div>
+            </div>
+
+        </div>
+        <div class="main__random bg-random">
+            <a href="#" class="btn-pre"><i class="ri-vip-crown-line"></i> Tham gia</a>
+        </div>
+    </div>
+</div>
+<section class="new-update containers mt-3" id="update">
+    <div class="update__container grids">
+        <div class="top__content">
+            <span class="section__subtitle">Mới Cập Nhật</span>
+            <p class="section__des">Cập nhật Cập nhật nhanh và chất lượng nhất các chương truyện</p>
+        </div>
+        <div class="container">
+            <div class="row row-cols-6 justify-content-center">
+
+
+                @foreach (var botruyen in Model)
+                {
+                    <div class="col-2 update-item">
+                        <figure>
+                            @if (!string.IsNullOrEmpty(botruyen.AnhBanner))
+                            {
+                                <img src="@botruyen.AnhBanner" alt="truyen Image" />
+                            }
+                            <figcaption>
+                                <h6 class="item-title"><a href="#">@botruyen.TenBo</a></h6>
+
+                                <a href="#" class="item-chapter" style="font-size: 13px;">
+                                    <span class="chap" style="margin-right: 10px; ">chap ...</span>
+                                    <span class="time">... giờ trước</span>
+                                </a>
+                            </figcaption>
+                        </figure>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="btn-infor">
+            <a href="#">Xem thêm</a>
+        </div>
+    </div>
+</section>
+<section class="new-update containers mt-3" id="update">
+    <div class="update__container grids">
+        <div class="top__content">
+            <span class="section__subtitle">Danh Sách truyện</span>
+            <p class="section__des">Danh sách các truyện mới nhất cập nhật liên tục </p>
+        </div>
+        <div class="container">
+            <div class="row row-cols-6  justify-content-center">
+                @foreach (var botruyen in Model)
+                {
+                    <div class="col-2 update-item">
+                        <figure>
+                            @if (!string.IsNullOrEmpty(botruyen.AnhBanner))
+                            {
+                                <img src="@botruyen.AnhBanner" alt="truyen Image" />
+                            }
+                            <figcaption>
+                                <h6 class="item-title"><a href="#">@botruyen.TenBo</a></h6>
+
+                                <a href="#" class="item-chapter" style="font-size: 13px;">
+                                    <span class="chap" style="margin-right: 10px; ">chap ...</span>
+                                    <span class="time">... giờ trước</span>
+                                </a>
+                            </figcaption>
+                        </figure>
+                    </div>
+                }
+            </div>
+            <div class="btn-infor">
+                <a href="#">Xem thêm</a>
+            </div>
+        </div>
+</section>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.js" integrity="sha512-HGOnQO9+SP1V92SrtZfjqxxtLmVzqZpjFFekvzZVWoiASSQgSr4cw9Kqd2+l8Llp4Gm0G8GIFJ4ddwZilcdb8A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
+<script type="text/javascript">
+    const CloseContent = document.querySelector(".content-main .content-close");
+    const Content = document.querySelector(".content-main");
+    CloseContent.onclick = () => {
+        if (CloseContent.textContent == "Xem thêm") {
+            Content.classList.toggle('active-content');
+            CloseContent.textContent = "Thu gọn";
+        }
+        else if (CloseContent.textContent == "Thu gọn") {
+            Content.classList.remove('active-content');
+            CloseContent.textContent = "Xem thêm";
+        }
+    }
+</script>
+<script type="text/javascript">
+    $('.autoplay').slick({
+        slidesToShow: 7,
+        slidesToScroll: 2,
+        autoplay: true,
+        autoplaySpeed: 1000,
+    });
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.js"></script>

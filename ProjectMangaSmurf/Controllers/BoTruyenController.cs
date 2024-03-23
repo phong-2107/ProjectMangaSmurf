@@ -1,0 +1,57 @@
+﻿using ProjectMangaSmurf.Models;
+using ProjectMangaSmurf.Repository;
+using Microsoft.AspNetCore.Mvc;
+namespace ProjectMangaSmurf.Controllers
+{
+    public class BoTruyenController : Controller
+    {
+        private readonly IboTruyenRepository _botruyenrepository;
+        private readonly IChapterRepository _chapterrepository;
+        public BoTruyenController(IboTruyenRepository botruyenrepository, IChapterRepository chapterrepository)
+        {
+            _botruyenrepository = botruyenrepository;
+            _chapterrepository = chapterrepository;
+        }
+
+        public async Task<IActionResult> Index()
+        {
+            var listBotruyen = await _botruyenrepository.GetAllAsync();
+            return View(listBotruyen);
+        }
+
+        public async Task<IActionResult> ListTruyen()
+        {
+            var listBotruyen = await _botruyenrepository.GetAllAsync();
+            return View(listBotruyen);
+        }
+
+        public async Task<IActionResult> ListTopic(string id)
+        {
+            var listBotruyen = await _botruyenrepository.GetAllByTopic(id);
+            return View(listBotruyen);
+        }
+
+        public async Task<IActionResult> CTBoTruyen(string id)
+        {
+            var Botruyen = await _botruyenrepository.GetByIdAsync(id);
+            var Chapter = await _chapterrepository.GetAllAsync();
+            if (Botruyen == null)
+            {
+                return NotFound();
+            }
+
+            return View(Botruyen);
+        }
+
+        public async Task<IActionResult> Chapter(string id, int stt)
+        {
+            var Chapter = await _chapterrepository.GetByIdAsync(id, stt);
+            if (Chapter == null)
+            {
+                return NotFound();
+            }
+
+            return View(Chapter);
+        }
+    }
+}

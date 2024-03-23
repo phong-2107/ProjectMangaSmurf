@@ -1,0 +1,33 @@
+﻿using System;
+using System.Collections.Generic;
+
+namespace ProjectMangaSmurf.Models;
+
+public partial class KhachHang
+{
+    public string IdKh { get; set; } = null!;
+
+    public string TenKh { get; set; } = null!;
+
+    public string? Sdt { get; set; }
+
+    public string Email { get; set; } = null!;
+
+    public string LienketFb { get; set; } = null!;
+
+    public string LienketGg { get; set; } = null!;
+
+    public string Taikhoan { get; set; } = null!;
+
+    public string Matkhau { get; set; } = null!;
+
+    public bool TtPremium { get; set; }
+
+    public bool Active { get; set; }
+
+    public virtual ICollection<CtBoTruyen> CtBoTruyens { get; set; } = new List<CtBoTruyen>();
+
+    public virtual ICollection<CtHoatDong> CtHoatDongs { get; set; } = new List<CtHoatDong>();
+
+    public virtual ICollection<HopDong> HopDongs { get; set; } = new List<HopDong>();
+}

@@ -1,0 +1,180 @@
+﻿@model ProjectMangaSmurf.Models.BoTruyen
+
+
+<!-- LINK BOOTSTRAP -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+<!-- LINK REMIXICON -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.2.0/remixicon.css">
+
+<!-- LINK JQUERY -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+
+<!-- LINK SLICK -->
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.css" />
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick-theme.css" />
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.2.0/remixicon.css" integrity="sha512-OQDNdI5rpnZ0BRhhJc+btbbtnxaj+LdQFeh0V9/igiEPDiWE2fG+ZsXl0JEH+bjXKPJ3zcXqNyP4/F/NegVdZg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<link href="~/css/style.css" rel="stylesheet" />
+<link href="~/css/styleList.css" rel="stylesheet" />
+<link href="~/css/styleCT.css" rel="stylesheet" />
+
+<div class=" main__top detail section">
+    <div class=" detail__container containers">
+        <div class="detail__infor containers">
+            <div class="bg__detail">
+                <div class="bg">
+                    @if (!string.IsNullOrEmpty(Model.AnhBia))
+                    {
+                        <img src="@Model.AnhBia" alt="bg-item" class="bg-main">
+                    }
+                    <div class="item-infor bg__detail-infor">
+                        <div class="infor">
+
+                            <p class="item-author">@Model.IdTg</p>
+                            <h3 class="item-title">@Model.TenBo</h3>
+
+                            <div class="rating">
+                                <i class="ri-star-fill"></i>
+                                <i class="ri-star-fill"></i>
+                                <i class="ri-star-fill"></i>
+                                <i class="ri-star-fill"></i>
+                                <i class="ri-star-fill"></i>
+                            </div>
+                        </div>
+                        <div class="pre">
+                            <img src="/images/PreLight.png" alt="goi premium">
+                        </div>
+                        <div class=" btn__follow">
+                            <a href="3">Theo dõi</a>
+                            <i class="ri-bookmark-fill"></i>
+                        </div>
+                    </div>
+                    <div class="background-item"></div>
+                </div>
+                <div class="poster-detail">
+                    <div class="background-detail">
+                        <div class="bg-item"></div>
+                        <a href="">
+                            <i class="fa-solid fa-book-open" title="click here"></i>
+                        </a>
+
+                    </div>
+                    @if (!string.IsNullOrEmpty(Model.AnhBanner))
+                    {
+                        <img src="@Model.AnhBanner" alt="poster">
+                    }
+
+                </div>
+                <div class="content-detail">
+                    <div class="time-detail">
+                        <i class="ri-time-line"></i>
+                        <span class="time">8 gio truoc</span>
+                    </div>
+                    <div class="type-detail">
+                        <a href="#" class="item-type">Tình cảm</a>
+                        <a href="#" class="item-type">Lãng mạng</a>
+                        <a href="#" class="item-type">Manga</a>
+                        <a href="#" class="item-type">khám phá</a>
+                    </div>
+                </div>
+                <div class="btn-detail">
+                    <a class="btn__action" href="#">Đọc tiếp chap <span class="chapter">01</span></a>
+                </div>
+            </div>
+            <div class="content-main">
+                <div class="content-title">
+                    <i class="ri-file-text-line"></i> Nội dung
+                </div>
+                <div class="content">
+                    <p>@Model.Mota</p>
+                </div>
+
+                <div class="content-More">
+                    <div class="content-title">
+                        <i class="ri-file-text-line"></i> Thông tin thêm
+                    </div>
+                    <div class="content">
+                        <div class="chapter">
+                            <i class="ri-send-plane-fill"></i>
+                            <span class="count">@Model.Chapters.ToList().Count</span> Chương đã đăng
+                        </div>
+                        <div class="view">
+                            <i class="ri-eye-line"></i>
+                            <span class="count">05</span> Lượt xem
+                        </div>
+                        <!--
+                            <div class="review">
+                            <i class="ri-message-2-fill"></i>
+                            <span class="count">00</span> Lượt đánh giá
+                        </div>
+                        -->
+                    </div>
+                </div>
+
+                <div class="content-close">Xem thêm</div>
+            </div>
+        </div>
+
+        <div class="detail__list containers">
+            <div class="content-title">
+                <i class="ri-file-text-line"></i> Danh sách Chương
+            </div>
+            <div class="d-flex flex-column mb-3 w-100 mt-3">
+                @{
+                    var list = Model.Chapters.ToList();
+                    if (list.Count > 0)
+                    {
+                        foreach (var chapter in Model.Chapters)
+                        {
+                            <a class="p-2 chapter-item" asp-action="Chapter" asp-route-id="@chapter.IdBo" asp-route-stt="@chapter.SttChap">
+                                <div class="row">
+                                    <div class="col chapter">
+                                        Chương @chapter.SttChap
+                                    </div>
+                                    <div class="col-6 content">
+                                        @chapter.TenChap
+                                    </div>
+                                    <div class="col time">
+                                        @chapter.ThoiGian.ToString("dd-MM-yyyy")
+                                    </div>
+                                    <div class="col view">
+                                        @chapter.TkLuotxem lượt xem
+                                    </div>
+                                </div>
+                            </a>
+                        }
+                    }
+                    else
+                    {
+                        <script>
+                            alert("hien tai chua co chap nao !!!");
+                        </script>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    const CloseContent = document.querySelector(".content-main .content-close");
+    const Content = document.querySelector(".content-main");
+    CloseContent.onclick = () => {
+        if (CloseContent.textContent == "Xem thêm") {
+            Content.classList.toggle('active-content');
+            CloseContent.textContent = "Thu gọn";
+        }
+        else if (CloseContent.textContent == "Thu gọn") {
+            Content.classList.remove('active-content');
+            CloseContent.textContent = "Xem thêm";
+        }
+    }
+</script>
+

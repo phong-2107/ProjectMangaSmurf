@@ -1,0 +1,277 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] MangaSmurf</title>
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />-->
+    <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/MangaSmurf.styles.css" asp-append-version="true" />
+    
+    <link rel="icon" type="image/png" href="~/images/icon logo.png">
+
+    <!-- LINK REMIXICON -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.2.0/remixicon.css">
+
+    <!-- LINK JQUERY -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+
+    <!-- LINK SLICK -->
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick-theme.css" />
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.2.0/remixicon.css" integrity="sha512-OQDNdI5rpnZ0BRhhJc+btbbtnxaj+LdQFeh0V9/igiEPDiWE2fG+ZsXl0JEH+bjXKPJ3zcXqNyP4/F/NegVdZg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+
+    <style>
+        .nav__item .dropdown:hover .dropdown-menu {
+            display: block;
+            margin-top: 0; /* remove the gap so it doesn't close */
+        }
+    </style>
+
+<body>
+    <header class="header" id="header">
+        <div class="nav__side">
+            <nav class="containers nav">
+                <a class="nav__logo" asp-area="" asp-controller="BoTruyen" asp-action="Index">
+                    <img class="nav__logo-img" src="/images/logo1.png" alt="logo website">
+                </a>
+                <div class="nav__menu nav__menu-list" id="nav-menu">
+                    <div class="search">
+                        <div class="icon"><i class="ri-search-2-line"></i></div>
+                        <div class="input">
+                            <input type="text" placeholder="Tìm Kiếm ..." id="search-truyen">
+                        </div>
+                        <span class="clear"><i class="ri-close-large-line"></i></span>
+                    </div>
+
+                    <div class="nav__buttons">
+                        <i class="ri-moon-fill change-theme" id="theme-button"></i>
+                    </div>
+                    <div class="nav__login">
+                        <div class="btn__regis mr-2">
+                            <a href="#">Đăng ký</a>
+                        </div>
+                        <div class=" btn__login">
+                            <a href="#">Đăng nhập</a>
+                        </div>
+                    </div>
+                </div>
+
+            </nav>
+        </div>
+        <div class="nav__content">
+            <nav class="containers nav__content">
+                <input type="checkbox" id="sidebar-active">
+                <label for="sidebar-active" class="open-sidebar-button">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="32" viewBox="0 -960 960 960" width="32"><path d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z" /></svg>
+                </label>
+                <label id="overlay" for="sidebar-active"></label>
+                <div class="links-container grids">
+                    <label for="sidebar-active" class="close-sidebar-button">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="32" viewBox="0 -960 960 960" width="32"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" /></svg>
+                    </label>
+                    <a class="nav__item nav__link active-link" >
+                        <div class="dropdown">
+                            <a class="nav__link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="cursor:pointer;">Thể loại truyện</a>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <div class="row">
+                                    <div class="col-4">
+                                        <a class="dropdown-item item-main" asp-area="" asp-controller="BoTruyen" asp-action="ListTruyen">Tất cả</a>
+                                        <a class="dropdown-item" asp-area="" asp-controller="BoTruyen" asp-action="ListTopic" asp-route-id="Xuyên không">Xuyên không</a>
+                                        <a class="dropdown-item" asp-area="" asp-controller="BoTruyen" asp-action="ListTruyen" asp-route-id="Xuyên không">Adventure</a>
+                                        <a class="dropdown-item" asp-area="" asp-controller="BoTruyen" asp-action="ListTruyen" asp-route-id="Xuyên không">One short</a>
+                                        <a class="dropdown-item" asp-area="" asp-controller="BoTruyen" asp-action="ListTruyen" asp-route-id="Xuyên không">Chuyển sinh</a>
+                                        <a class="dropdown-item" asp-area="" asp-controller="BoTruyen" asp-action="ListTruyen" asp-route-id="Xuyên không">Truyện màu</a>
+                                    </div>
+                                    <div class="col-4">
+                                        <a class="dropdown-item item-main" href="#">Theo Cảm xúc</a>
+                                        <a class="dropdown-item" asp-area="" asp-controller="BoTruyen" asp-action="ListTruyen" asp-route-id="Xuyên không">Nhẹ nhàng</a>
+                                        <a class="dropdown-item" asp-area="" asp-controller="BoTruyen" asp-action="ListTruyen" asp-route-id="Xuyên không">Kinh dị</a>
+                                        <a class="dropdown-item" asp-area="" asp-controller="BoTruyen" asp-action="ListTruyen" asp-route-id="Xuyên không">Lãng mạng</a>
+                                        <a class="dropdown-item" asp-area="" asp-controller="BoTruyen" asp-action="ListTruyen" asp-route-id="Xuyên không">Action</a>
+                                        <a class="dropdown-item" asp-area="" asp-controller="BoTruyen" asp-action="ListTruyen" asp-route-id="Xuyên không">Comedy</a>
+                                    </div>
+                                    <div class="col-4">
+                                        <a class="dropdown-item item-main" href="#">Theo Khu Vực</a>
+                                        <a class="dropdown-item" asp-area="" asp-controller="BoTruyen" asp-action="ListTruyen" asp-route-id="Xuyên không">Manwa</a>
+                                        <a class="dropdown-item" asp-area="" asp-controller="BoTruyen" asp-action="ListTruyen" asp-route-id="Xuyên không">Manhua</a>
+                                        <a class="dropdown-item" asp-area="" asp-controller="BoTruyen" asp-action="ListTopic" asp-route-id="Manga">Manga</a>
+                                        <a class="dropdown-item" asp-area="" asp-controller="BoTruyen" asp-action="ListTruyen" asp-route-id="Xuyên không">Comic</a>
+                                        <a class="dropdown-item" asp-area="" asp-controller="BoTruyen" asp-action="ListTruyen" asp-route-id="Xuyên không">Webtoon</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="#" class="nav__link active-link">Trending</a>
+                    <a href="#home" class="nav__item nav__link active-link">Theo dõi</a>
+                    <a href="#home" class="nav__item nav__link active-link">Lịch sử</a>
+                    <a href="./Ranking.html" class="nav__item nav__link active-link">Xếp hạng</a>
+                    <a href="#home" class="nav__item nav__link active-link">Tìm truyện</a>
+                    <a class="nav__item nav__link active-link" asp-area="" asp-controller="BoTruyen" asp-action="ListTruyen">Mới cập nhật</a>
+                    <div class="nav__login">
+                        <div class="btn__regis mr-2">
+                            <a href="#">Đăng ký</a>
+                        </div>
+                        <div class=" btn__login">
+                            <a href="#">Đăng nhập</a>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <div class="background"></div>
+    <main role="main" class="pb-3">
+        @RenderBody()
+        <a onclick="scrollToTop()" id="scrollToTopBtn" title="Go to top"><i class="ri-arrow-up-s-line"></i></a>
+    </main>
+    <footer class="footer" style="position:relative; padding-block: 1rem; line-height: 20px; padding: 2rem 0;">
+        <div class="footer__container containers grid">
+            <div>
+                <p class="footer__description">
+                    Website luôn cập nhật nhanh và sớm nhất các đầu truyện hot<br>
+                    Đảm bảo tính bảo mật và trai nghiệm của khách hàng<br>
+                </p>
+            </div>
+
+            <div class="footer__content">
+                <div>
+                    <h3 class="footer__title">Main Menu</h3>
+
+                    <ul class="footer__links">
+                        <li>
+                            <a href="" class="footer__link">About</a>
+                        </li>
+                        <li>
+                            <a href="" class="footer__link">Confirm</a>
+                        </li>
+                        <li>
+                            <a href="" class="footer__link">manga</a>
+                        </li>
+                        <li>
+                            <a href="" class="footer__link">Events</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="footer__title">Information</h3>
+
+                    <ul class="footer__links">
+                        <li>
+                            <a href="" class="footer__link">Contact</a>
+                        </li>
+                        <li>
+                            <a href="" class="footer__link">Order & Returns</a>
+                        </li>
+                        <li>
+                            <a href="" class="footer__link">Videos</a>
+                        </li>
+                        <li>
+                            <a href="" class="footer__link">Reservation</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="footer__title">Address</h3>
+                    <ul class="footer__links">
+                        <li class="footer__information">
+                            District 9
+                            HoChiMinh City, VietNam
+                        </li>
+                        <li class="footer__information">
+                            9AM - 11PM
+                        </li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="footer__title">Social Media</h3>
+
+                    <ul class="footer__social">
+                        <a href="https://www.facebook.com/" target="_blank" class="footer__social-link">
+                            <i class="ri-facebook-circle-line"></i>
+                        </a>
+                        <a href="https://www.instagram.com/" target="_blank" class="footer__social-link">
+                            <i class="ri-instagram-line"></i>
+                        </a>
+                        <a href="https://twitter.com/" target="_blank" class="footer__social-link">
+                            <i class="ri-twitter-line"></i>
+                        </a>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer__info containers" style="margin-top: 1.5rem;">
+
+            <span class="footer__copy">
+                &#169; Copyright TEAM 10. All rights reserved
+            </span>
+        </div>
+    </footer>
+    
+    <script src="~/js/script.js"></script>
+    <script>
+        /*=============== DARK LIGHT THEME ===============*/
+        const themeButton = document.getElementById('theme-button');
+        const darkTheme = 'dark-theme';
+        const iconTheme = 'ri-sun-cloudy-fill';
+
+        const selectedTheme = localStorage.getItem('selected-theme');
+        const selectedIcon = localStorage.getItem('selected-icon');
+
+        const getCurrentTheme = () => document.body.classList.contains(darkTheme) ? 'light' : 'dark';
+        const getCurrentIcon = () => themeButton.classList.contains(iconTheme) ? 'ri-sun-cloudy-fill' : 'ri-moon-fill';
+
+        if (selectedTheme) {
+            document.body.classList[selectedTheme === 'light' ? 'add' : 'remove'](darkTheme)
+            themeButton.classList[selectedIcon === 'ri-moon-fill' ? 'add' : 'remove'](iconTheme)
+        }
+        themeButton.addEventListener('click', () => {
+            document.body.classList.toggle(darkTheme);
+            themeButton.classList.toggle(iconTheme);
+
+            localStorage.setItem('selected-theme', getCurrentTheme());
+            localStorage.setItem('selected-icon', getCurrentIcon());
+        })
+        /* ======================== cuộn lên đầu trang ================================ */
+        
+        var scrollToTopButton = document.getElementById("scrollToTopBtn");
+
+        window.onscroll = function () { scrollFunction() };
+
+        function scrollFunction() {
+            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                scrollToTopButton.style.display = "block";
+            } else {
+                scrollToTopButton.style.display = "none";
+            }
+        }
+
+        function scrollToTop() {
+            var currentPosition = document.documentElement.scrollTop || document.body.scrollTop;
+
+            if (currentPosition > 0) {
+                window.requestAnimationFrame(scrollToTop);
+                window.scrollTo(0, currentPosition - currentPosition / 8); // Thay đổi giá trị 8 để điều chỉnh tốc độ cuộn
+            }
+        }
+
+    </script>
+
+</body>
+
+</html>
+
