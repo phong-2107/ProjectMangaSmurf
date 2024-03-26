@@ -25,6 +25,13 @@ namespace ProjectMangaSmurf.Controllers
             return View(listBotruyen);
         }
 
+        public async Task<IActionResult> Rankings()
+        {
+
+            var listBotruyen = await _botruyenrepository.GetRankingAsync();
+            return View(listBotruyen);
+        }
+
         public async Task<IActionResult> ListTopic(string id)
         {
             var listBotruyen = await _botruyenrepository.GetAllByTopic(id);

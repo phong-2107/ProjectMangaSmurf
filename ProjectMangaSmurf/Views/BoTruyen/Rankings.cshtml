@@ -1,0 +1,253 @@
+﻿@model IEnumerable<ProjectMangaSmurf.Models.BoTruyen>
+@using ProjectMangaSmurf.Repository
+@inject IboTruyenRepository boTruyenRepository
+
+<!-- LINK BOOTSTRAP -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+<!-- LINK REMIXICON -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.2.0/remixicon.css">
+
+<!-- LINK JQUERY -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+
+<!-- LINK SLICK -->
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.css" />
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick-theme.css" />
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.2.0/remixicon.css" integrity="sha512-OQDNdI5rpnZ0BRhhJc+btbbtnxaj+LdQFeh0V9/igiEPDiWE2fG+ZsXl0JEH+bjXKPJ3zcXqNyP4/F/NegVdZg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<link href="~/css/style.css" rel="stylesheet" />
+<link href="~/css/styleRank.css" rel="stylesheet" />
+
+
+<div class=" main__top rank section">
+    <div class="top__container rank__container containers">
+        <div class="top__content">
+            <h2 class="section__subtitle">Bảng Xếp Hạng</h2>
+            <p class="section__des">Xếp hạng các bộ truyện theo xu hướng lượt xem, độ ưa thích từ đọc giả và các mốc thời gian</p>
+        </div>
+        <div class="rank-top ">
+            <ul class="rank__type " id="rank__type">
+                <li class="nav__item  active-rank">
+                    <a href="#" class="nav__link active-link">THEO DÕI</a>
+                </li>
+                <li class="nav__item">
+                    <a href="#" class="nav__link active-link">NGÀY</a>
+                </li>
+                <li class="nav__item">
+                    <a href="#" class="nav__link active-link">THÁNG</a>
+                </li>
+                <li class="nav__item">
+                    <a href="#" class="nav__link active-link">NĂM</a>
+                </li>
+                <li class="nav__item">
+                    <a href="#" class="nav__link active-link">LƯỢT ĐỌC</a>
+                </li>
+            </ul>
+        </div>
+        <div class="top__content rank-content">
+            <span class="section__title">BẢNG XẾP HẠNG<span class="rank-content-type"> THEO LƯỢT THEO DÕI</span></span>
+        </div>
+        <div class="rank__infor ">
+            <ul class="rank__list">
+                @{
+                    var item = Model.ElementAt(0);
+                    var list = boTruyenRepository.GetListLoaiAsync(item.IdBo);
+                    string img = item.AnhBia;
+                    int count = 1;
+                    string loaitruyen = string.Join(", ", list);
+                    <li id="firstRank" class="rank-item">
+                            <div class="bg-img" style="background-image: url('@img');"></div>
+                            <span class="item-number">01</span>
+                            <div class="item-content">
+                                @if (!string.IsNullOrEmpty(item.AnhBanner))
+                                {
+                                <a asp-action="CTBoTruyen" asp-route-id="@item.IdBo"><img src="@item.AnhBanner" alt="truyen Image" class="rank-img" /></a>
+                                }
+
+                                <div class="item-infor">
+                                <a asp-action="CTBoTruyen" asp-route-id="@item.IdBo">
+                                        <p class="item-type">@loaitruyen</p>
+                                        <h3 class="item-title">@item.TenBo</h3>
+                                    </a>
+                                    <div class="rating">
+                                        <i class="ri-star-fill"></i>
+                                        <i class="ri-star-fill"></i>
+                                        <i class="ri-star-fill"></i>
+                                        <i class="ri-star-fill"></i>
+                                        <i class="ri-star-fill"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        <div class="background-item rounded-3"></div>
+                    </li>
+
+                    
+                    @foreach(var i in Model.Skip(1))
+                    {
+                        count = count + 1;
+                        var listtop = boTruyenRepository.GetListLoaiAsync(i.IdBo);
+                        string loaiTop = string.Join(", ", listtop);
+                        <li class="rank-item">
+                            <span class="item-number" style="color: #FE3200;">@count</span>
+                            <div class="item-content">
+                                <img src="@i.AnhBanner" alt="" class="rank-img">
+                                <div class="item-infor">
+                                    <h3 class="item-title">@i.TenBo</h3>
+                                    <p class="item-type">@loaiTop</p>
+                                </div>
+                            </div>
+                            <div class="rank__item-infor ">
+                                <div class="rating">
+                                    <i class="ri-star-fill"></i>
+                                    <i class="ri-star-fill"></i>
+                                    <i class="ri-star-fill"></i>
+                                    <i class="ri-star-fill"></i>
+                                    <i class="ri-star-fill"></i>
+                                </div>
+                                <span class="chapter">Chap ...</span>
+                                <i class="ri-heart-3-fill"></i>
+                            </div>
+                        </li>
+                    }
+
+                }
+
+
+                @* <li class="rank-item">
+                    <span class="item-number" style="color: #FE3200;">02</span>
+                    <div class="item-content">
+                        <img src="./assets/img/poster7.jpg" alt="" class="rank-img">
+                        <div class="item-infor">
+                            <h3 class="item-title">Kanojo,  Okarishimasu</h3>
+                            <p class="item-type">Manga, lãng mạng, vui vẻ</p>
+                        </div>
+                    </div>
+                    <div class="rank__item-infor ">
+                        <div class="rating">
+                            <i class="ri-star-fill"></i>
+                            <i class="ri-star-fill"></i>
+                            <i class="ri-star-fill"></i>
+                            <i class="ri-star-fill"></i>
+                            <i class="ri-star-fill"></i>
+                        </div>
+                        <span class="chapter">Chap 110</span>
+                        <i class="ri-heart-3-fill"></i>
+                    </div>
+                </li>
+                <li class="rank-item">
+                    <span class="item-number" style="color: #FE6400;">03</span>
+                    <div class="item-content">
+                        <img src="./assets/img/poster2.jpg" alt="" class="rank-img">
+                        <div class="item-infor">
+                            <h3 class="item-title">Kanojo,  Okarishimasu</h3>
+                            <p class="item-type">Manga, lãng mạng, vui vẻ</p>
+                        </div>
+                    </div>
+                    <div class="rank__item-infor ">
+                        <div class="rating">
+                            <i class="ri-star-fill"></i>
+                            <i class="ri-star-fill"></i>
+                            <i class="ri-star-fill"></i>
+                            <i class="ri-star-fill"></i>
+                            <i class="ri-star-fill"></i>
+                        </div>
+                        <span class="chapter">Chap 110</span>
+                        <i class="ri-heart-3-fill"></i>
+                    </div>
+                </li>
+                <li class="rank-item">
+                    <span class="item-number" style="color: #FD9800;">04</span>
+                    <div class="item-content">
+                        <img src="./assets/img/poster4.jpg" alt="" class="rank-img">
+                        <div class="item-infor">
+                            <h3 class="item-title">Kanojo,  Okarishimasu</h3>
+                            <p class="item-type">Manga, lãng mạng, vui vẻ</p>
+                        </div>
+                    </div>
+                    <div class="rank__item-infor ">
+                        <div class="rating">
+                            <i class="ri-star-fill"></i>
+                            <i class="ri-star-fill"></i>
+                            <i class="ri-star-fill"></i>
+                            <i class="ri-star-fill"></i>
+                            <i class="ri-star-fill"></i>
+                        </div>
+                        <span class="chapter">Chap 110</span>
+                        <i class="ri-heart-3-fill"></i>
+                    </div>
+                </li>
+                <li class="rank-item">
+                    <span class="item-number" style="color: #FECB00;">05</span>
+                    <div class="item-content">
+                        <img src="./assets/img/poster5.jpg" alt="" class="rank-img">
+                        <div class="item-infor">
+                            <h3 class="item-title">Kanojo,  Okarishimasu</h3>
+                            <p class="item-type">Manga, lãng mạng, vui vẻ</p>
+                        </div>
+                    </div>
+                    <div class="rank__item-infor ">
+                        <div class="rating">
+                            <i class="ri-star-fill"></i>
+                            <i class="ri-star-fill"></i>
+                            <i class="ri-star-fill"></i>
+                            <i class="ri-star-fill"></i>
+                            <i class="ri-star-fill"></i>
+                        </div>
+                        <span class="chapter">Chap 110</span>
+                        <i class="ri-heart-3-fill"></i>
+                    </div>
+                </li>
+                <li class="rank-item">
+                    <span class="item-number">06</span>
+                    <div class="item-content">
+                        <img src="./assets/img/poster8.jpg" alt="" class="rank-img">
+                        <div class="item-infor">
+                            <h3 class="item-title">Kanojo,  Okarishimasu</h3>
+                            <p class="item-type">Manga, lãng mạng, vui vẻ</p>
+                        </div>
+                    </div>
+                    <div class="rank__item-infor ">
+                        <div class="rating">
+                            <i class="ri-star-fill"></i>
+                            <i class="ri-star-fill"></i>
+                            <i class="ri-star-fill"></i>
+                            <i class="ri-star-fill"></i>
+                            <i class="ri-star-fill"></i>
+                        </div>
+                        <span class="chapter">Chap 110</span>
+                        <i class="ri-heart-3-fill"></i>
+                    </div>
+                </li>
+                <li class="rank-item">
+                    <span class="item-number">07</span>
+                    <div class="item-content">
+                        <img src="./assets/img/poster6.jpg" alt="" class="rank-img">
+                        <div class="item-infor">
+                            <h3 class="item-title">Kanojo,  Okarishimasu</h3>
+                            <p class="item-type">Manga, lãng mạng, vui vẻ</p>
+                        </div>
+                    </div>
+                    <div class="rank__item-infor ">
+                        <div class="rating">
+                            <i class="ri-star-fill"></i>
+                            <i class="ri-star-fill"></i>
+                            <i class="ri-star-fill"></i>
+                            <i class="ri-star-fill"></i>
+                            <i class="ri-star-fill"></i>
+                        </div>
+                        <span class="chapter">Chap 110</span>
+                        <i class="ri-heart-3-fill"></i>
+                    </div>
+                </li> *@
+            </ul>
+
+        </div>
+    </div>
+</div>

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] MangaSmurf</title>
 
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />-->
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/MangaSmurf.styles.css" asp-append-version="true" />
     
@@ -57,10 +57,10 @@
                     </div>
                     <div class="nav__login">
                         <div class="btn__regis mr-2">
-                            <a href="#">Đăng ký</a>
+                            <a >Đăng ký</a>
                         </div>
                         <div class=" btn__login">
-                            <a href="#">Đăng nhập</a>
+                            <a asp-area="" asp-controller="KhachHang" asp-action="Login">Đăng nhập</a>
                         </div>
                     </div>
                 </div>
@@ -86,26 +86,26 @@
                                     <div class="col-4">
                                         <a class="dropdown-item item-main" asp-area="" asp-controller="BoTruyen" asp-action="ListTruyen">Tất cả</a>
                                         <a class="dropdown-item" asp-area="" asp-controller="BoTruyen" asp-action="ListTopic" asp-route-id="Xuyên không">Xuyên không</a>
-                                        <a class="dropdown-item" asp-area="" asp-controller="BoTruyen" asp-action="ListTruyen" asp-route-id="Xuyên không">Adventure</a>
-                                        <a class="dropdown-item" asp-area="" asp-controller="BoTruyen" asp-action="ListTruyen" asp-route-id="Xuyên không">One short</a>
-                                        <a class="dropdown-item" asp-area="" asp-controller="BoTruyen" asp-action="ListTruyen" asp-route-id="Xuyên không">Chuyển sinh</a>
-                                        <a class="dropdown-item" asp-area="" asp-controller="BoTruyen" asp-action="ListTruyen" asp-route-id="Xuyên không">Truyện màu</a>
+                                        <a class="dropdown-item" asp-area="" asp-controller="BoTruyen" asp-action="ListTopic" asp-route-id="Adventure">Adventure</a>
+                                        <a class="dropdown-item" asp-area="" asp-controller="BoTruyen" asp-action="ListTopic" asp-route-id="One short">One short</a>
+                                        <a class="dropdown-item" asp-area="" asp-controller="BoTruyen" asp-action="ListTopic" asp-route-id="Chuyển sinh">Chuyển sinh</a>
+                                        <a class="dropdown-item" asp-area="" asp-controller="BoTruyen" asp-action="ListTopic" asp-route-id="Truyện màu">Truyện màu</a>
                                     </div>
                                     <div class="col-4">
                                         <a class="dropdown-item item-main" href="#">Theo Cảm xúc</a>
-                                        <a class="dropdown-item" asp-area="" asp-controller="BoTruyen" asp-action="ListTruyen" asp-route-id="Xuyên không">Nhẹ nhàng</a>
-                                        <a class="dropdown-item" asp-area="" asp-controller="BoTruyen" asp-action="ListTruyen" asp-route-id="Xuyên không">Kinh dị</a>
-                                        <a class="dropdown-item" asp-area="" asp-controller="BoTruyen" asp-action="ListTruyen" asp-route-id="Xuyên không">Lãng mạng</a>
-                                        <a class="dropdown-item" asp-area="" asp-controller="BoTruyen" asp-action="ListTruyen" asp-route-id="Xuyên không">Action</a>
-                                        <a class="dropdown-item" asp-area="" asp-controller="BoTruyen" asp-action="ListTruyen" asp-route-id="Xuyên không">Comedy</a>
+                                        <a class="dropdown-item" asp-area="" asp-controller="BoTruyen" asp-action="ListTopic" asp-route-id="Nhẹ nhàng">Nhẹ nhàng</a>
+                                        <a class="dropdown-item" asp-area="" asp-controller="BoTruyen" asp-action="ListTopic" asp-route-id="Kinh dị">Kinh dị</a>
+                                        <a class="dropdown-item" asp-area="" asp-controller="BoTruyen" asp-action="ListTopic" asp-route-id="Lãng mạng">Lãng mạng</a>
+                                        <a class="dropdown-item" asp-area="" asp-controller="BoTruyen" asp-action="ListTopic" asp-route-id="Action">Action</a>
+                                        <a class="dropdown-item" asp-area="" asp-controller="BoTruyen" asp-action="ListTopic" asp-route-id="Comedy">Comedy</a>
                                     </div>
                                     <div class="col-4">
                                         <a class="dropdown-item item-main" href="#">Theo Khu Vực</a>
-                                        <a class="dropdown-item" asp-area="" asp-controller="BoTruyen" asp-action="ListTruyen" asp-route-id="Xuyên không">Manwa</a>
-                                        <a class="dropdown-item" asp-area="" asp-controller="BoTruyen" asp-action="ListTruyen" asp-route-id="Xuyên không">Manhua</a>
+                                        <a class="dropdown-item" asp-area="" asp-controller="BoTruyen" asp-action="ListTopic" asp-route-id="Manwa">Manwa</a>
+                                        <a class="dropdown-item" asp-area="" asp-controller="BoTruyen" asp-action="ListTopic" asp-route-id="Manhua">Manhua</a>
                                         <a class="dropdown-item" asp-area="" asp-controller="BoTruyen" asp-action="ListTopic" asp-route-id="Manga">Manga</a>
-                                        <a class="dropdown-item" asp-area="" asp-controller="BoTruyen" asp-action="ListTruyen" asp-route-id="Xuyên không">Comic</a>
-                                        <a class="dropdown-item" asp-area="" asp-controller="BoTruyen" asp-action="ListTruyen" asp-route-id="Xuyên không">Webtoon</a>
+                                        <a class="dropdown-item" asp-area="" asp-controller="BoTruyen" asp-action="ListTopic" asp-route-id="Comic">Comic</a>
+                                        <a class="dropdown-item" asp-area="" asp-controller="BoTruyen" asp-action="ListTopic" asp-route-id="Webtoon">Webtoon</a>
                                     </div>
                                 </div>
                             </div>
@@ -114,7 +114,7 @@
                     <a href="#" class="nav__link active-link">Trending</a>
                     <a href="#home" class="nav__item nav__link active-link">Theo dõi</a>
                     <a href="#home" class="nav__item nav__link active-link">Lịch sử</a>
-                    <a href="./Ranking.html" class="nav__item nav__link active-link">Xếp hạng</a>
+                    <a class="nav__item nav__link active-link" asp-area="" asp-controller="BoTruyen" asp-action="Rankings">Xếp hạng</a>
                     <a href="#home" class="nav__item nav__link active-link">Tìm truyện</a>
                     <a class="nav__item nav__link active-link" asp-area="" asp-controller="BoTruyen" asp-action="ListTruyen">Mới cập nhật</a>
                     <div class="nav__login">
@@ -130,8 +130,9 @@
         </div>
     </header>
 
-    <div class="background"></div>
+    
     <main role="main" class="pb-3">
+        <div class="background"></div>
         @RenderBody()
         <a onclick="scrollToTop()" id="scrollToTopBtn" title="Go to top"><i class="ri-arrow-up-s-line"></i></a>
     </main>
@@ -140,7 +141,7 @@
             <div>
                 <p class="footer__description">
                     Website luôn cập nhật nhanh và sớm nhất các đầu truyện hot<br>
-                    Đảm bảo tính bảo mật và trai nghiệm của khách hàng<br>
+                    Đảm bảo tính bảo mật và trải nghiệm của khách hàng<br>
                 </p>
             </div>
 

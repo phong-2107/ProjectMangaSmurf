@@ -43,8 +43,18 @@ namespace ProjectMangaSmurf.Repository
         public async Task<IEnumerable<BoTruyen>> GetAllByTopic(string name)
         {
             var getid = _context.LoaiTruyens.FirstOrDefault(p => p.TenLoai.Trim().Equals(name.Trim()));
-            var getListTruyen = _context.BoTruyens
-            return await _context.BoTruyens.Where(p => p.IdLoai.Equals(getid.IdLoai)).ToListAsync();
+            var getListTruyen = _context.CtLoaiTruyens.Where(p => p.IdLoai.Trim().Equals(getid.IdLoai)).ToList();
+            List<BoTruyen> list = new List<BoTruyen>();
+            foreach (var item in getListTruyen)
+            {
+                var find = _context.BoTruyens.FirstOrDefault(p => p.IdBo == item.IdBo);
+                if(find != null)
+                {
+                    list.Add(find);
+                }
+            }
+            IEnumerable<BoTruyen> listbo = list;
+            return await Task.FromResult(listbo);
         }
 
 
@@ -52,6 +62,37 @@ namespace ProjectMangaSmurf.Repository
         public async Task<LoaiTruyen> GetLoaiByIdAsync(string id)
         {
             return await _context.LoaiTruyens.FirstOrDefaultAsync(p => p.IdLoai == id);
+        }
+
+        public async Task<BoTruyen> RandomAsync()
+        {
+            var list =  _context.BoTruyens.ToList();
+            Random random = new Random();
+            int randomIndex = random.Next(0, list.Count);
+            var randomElement = list[randomIndex];
+            return await Task.FromResult(randomElement);
+        }
+
+        public async Task<IEnumerable<BoTruyen>> GetRankingAsync()
+        {
+            return await _context.BoTruyens.OrderByDescending(p => p.TongLuotXem).Take(10).ToListAsync();
+        }
+
+
+
+        public List<string> GetListLoaiAsync(string id)
+        {
+            var list = _context.CtLoaiTruyens.Where(p => p.IdBo == id.Trim()).ToList();
+            List<string> listLoai = new List<string>();
+            if(list.Count > 0)
+            {
+                foreach(var item in list)
+                {
+                    var loai = _context.LoaiTruyens.FirstOrDefault(p => p.IdLoai == item.IdLoai);
+                    listLoai.Add(loai.TenLoai);
+                }
+            }
+            return listLoai;
         }
     }
 }

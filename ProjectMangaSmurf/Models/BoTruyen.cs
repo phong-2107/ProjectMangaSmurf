@@ -13,13 +13,12 @@ public partial class BoTruyen
 
     public string IdTg { get; set; } = null!;
 
-    public string IdLoai { get; set; } = null!;
-
     public string Mota { get; set; } = null!;
 
     public double TkDanhgia { get; set; }
 
     public int TkTheodoi { get; set; }
+    public int TongLuotXem { get; set; }
 
     public string AnhBia { get; set; } = null!;
 

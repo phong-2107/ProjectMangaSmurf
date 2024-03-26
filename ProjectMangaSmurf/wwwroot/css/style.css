@@ -2,9 +2,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
 /*=============== VARIABLES CSS ===============*/
 :root {
-    --header-height: 3rem;
     /*========== Colors ==========*/
-    /*Color mode HSL(hue, saturation, lightness)
+    /*Color mode HSL(hue, saturation, lightness)*/
     --first-color: #6a4040;
     --first-color-alt: hsl(19, 64%, 52%);
     --title-color: hsl(19, 16%, 10%);
@@ -18,27 +17,13 @@
     --btn-yellow: #E38645;
     --containers-color-alt: #BD9A43;
     --containers-color-yellow: #B58E3E;
-    --containers-color: hsl(20, 45%, 14%);*/
-
-
-
-    --first-color: hsl(19, 100%, 97%);
-    --first-color-alt: hsl(19, 100%, 97%);
-    --title-color: hsl(19, 16%, 85%);
-    --text-color: hsl(19, 16%, 65%);
-    --text-color-light: hsl(19, 8%, 55%);
-    --box-color: #181D1F;
-    --body-color: #263238;
-    --body-color-dark: #1a2226;
-    --body-main: #1a1e24;
-    --btn-yellow: #CE29F9;
-    --body-item-color: #314149;
-    --containers-color: hsl(19, 10%, 10%);
-    --containers-color-alt: #9858F1;
-    --containers-color-yellow: #B142F5;
-    --btn-orange: #F47521;
-
-
+    --containers-color: hsl(20, 45%, 14%);
+    --header-height: 3rem;
+    /*========== Colors ==========*/
+    Color mode HSL(hue, saturation, lightness) --first-color: #6a4040;
+    --first-color-alt: hsl(19, 64%, 52%);
+    --title-color: hsl(19, 16%, 10%);
+    --text-color: hsl(19, 16%, 35%);
     /*========== Font and typography ==========*/
     /*.5rem = 8px | 1rem = 16px ...*/
     --body-font: montserrat, Verdana, Segoe, sans-serif;
@@ -73,7 +58,22 @@
 }
 /*========== Variables Dark theme ==========*/
 body.dark-theme {
-    
+    --body-white: #ffffff;
+    --first-color: hsl(19, 100%, 97%);
+    --first-color-alt: hsl(19, 100%, 97%);
+    --title-color: hsl(19, 16%, 85%);
+    --text-color: hsl(19, 16%, 65%);
+    --text-color-light: hsl(19, 8%, 55%);
+    --box-color: #181D1F;
+    --body-color: #263238;
+    --body-color-dark: #1a2226;
+    --body-main: #1a1e24;
+    --btn-yellow: #CE29F9;
+    --body-item-color: #314149;
+    --containers-color: hsl(19, 10%, 10%);
+    --containers-color-alt: #9858F1;
+    --containers-color-yellow: #B142F5;
+    --btn-orange: #F47521;
 }
 
 .ri-sun-line {
@@ -138,6 +138,7 @@ ul {
 
 a {
     text-decoration: none !important;
+    cursor:pointer !important;
 }
 
 img {
@@ -521,6 +522,7 @@ img {
     margin: 0 auto;
     padding: .7rem 1.25rem;
     cursor: pointer;
+    width:100%;
 }
 
 .nav__login .btn__regis {
@@ -660,7 +662,7 @@ img {
     }
 
     .item-infor .item-des {
-        color: hsl(19, 8%, 55%);
+        color: var(--title-color)!important;
         font-size: var(--title-font);
         font-weight: var(--font-medium);
     }

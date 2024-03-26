@@ -9,7 +9,7 @@ public partial class CtLoaiTruyen
 
     public string IdBo { get; set; } = null!;
 
-    public string LoaiChinh { get; set; } = null!;
+    public bool Active { get; set; }
 
     public virtual BoTruyen IdBoNavigation { get; set; } = null!;
 

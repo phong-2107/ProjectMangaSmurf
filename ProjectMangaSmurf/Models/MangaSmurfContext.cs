@@ -68,18 +68,13 @@ public partial class MangaSmurfContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("anh_bia");
             entity.Property(e => e.Dotuoi).HasColumnName("dotuoi");
-            entity.Property(e => e.IdLoai)
-                .HasMaxLength(5)
-                .IsUnicode(false)
-                .IsFixedLength()
-                .HasColumnName("id_loai");
             entity.Property(e => e.IdTg)
                 .HasMaxLength(6)
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("id_tg");
             entity.Property(e => e.Mota)
-                .HasColumnType("text")
+                .HasColumnType("ntext")
                 .HasColumnName("mota");
             entity.Property(e => e.TenBo)
                 .HasMaxLength(30)
@@ -88,7 +83,7 @@ public partial class MangaSmurfContext : DbContext
             entity.Property(e => e.TkTheodoi).HasColumnName("tk_theodoi");
             entity.Property(e => e.TrangThai).HasColumnName("trang_thai");
             entity.Property(e => e.TtPemium).HasColumnName("tt_pemium");
-
+            entity.Property(e => e.TongLuotXem).HasColumnName("TongLuotXem");
             entity.HasOne(d => d.IdTgNavigation).WithMany(p => p.BoTruyens)
                 .HasForeignKey(d => d.IdTg)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -228,11 +223,7 @@ public partial class MangaSmurfContext : DbContext
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("id_bo");
-            entity.Property(e => e.LoaiChinh)
-                .HasMaxLength(5)
-                .IsUnicode(false)
-                .IsFixedLength();
-
+            entity.Property(e => e.Active).HasColumnName("active");
             entity.HasOne(d => d.IdBoNavigation).WithMany(p => p.CtLoaiTruyens)
                 .HasForeignKey(d => d.IdBo)
                 .OnDelete(DeleteBehavior.ClientSetNull)

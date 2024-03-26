@@ -75,25 +75,43 @@
         </div>
         <div class="container w-100">
             <div class="row justify-content-center">
-                @foreach (var botruyen in Model)
-                {
-                    <div class="item col-2 update-item">
-                        <figure>
-                            @if (!string.IsNullOrEmpty(botruyen.AnhBanner))
-                            {
-                                <img src="@botruyen.AnhBanner" alt="truyen Image" />
-                            }
-                            <figcaption>
-                                <h6 class="item-title"><a href="#">@botruyen.TenBo</a></h6>
 
-                                <a href="#" class="item-chapter" style="font-size: 13px;">
-                                    <span class="chap" style="margin-right: 10px; ">chap ...</span>
-                                    <span class="time">... giờ trước</span>
-                                </a>
-                            </figcaption>
-                        </figure>
-                    </div>
+                @{
+                    var list = Model.ToList();
+                    if(list.Count > 0)
+                    {
+                            @foreach (var botruyen in Model)
+                        {
+                                <div class="item col-2 update-item">
+                                    <figure>
+                                        @if (!string.IsNullOrEmpty(botruyen.AnhBanner))
+                                    {
+                                            <img src="@botruyen.AnhBanner" alt="truyen Image" />
+                                    }
+                                        <figcaption>
+                                            <h6 class="item-title"><a href="#">@botruyen.TenBo</a></h6>
+
+                                            <a href="#" class="item-chapter" style="font-size: 13px;">
+                                                <span class="chap" style="margin-right: 10px; ">chap ...</span>
+                                                <span class="time">... giờ trước</span>
+                                            </a>
+                                        </figcaption>
+                                    </figure>
+                                </div>
+                        }
+                    }
+                    else
+                    {
+                            <script>
+                                alert("Loại truyện này hiện tại chưa có truyện phù hợp !!");
+                                function goBack() {
+                                    window.history.back();
+                                }
+                                setTimeout(goBack, 1000);
+                            </script>
+                    }
                 }
+                
             </div>
         </div>
         <ul class="listPage">
