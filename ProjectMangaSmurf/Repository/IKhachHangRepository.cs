@@ -9,5 +9,10 @@ namespace ProjectMangaSmurf.Repository
 
         Task<KhachHang> GetAccountByIdAsync(string name, string pass);
 
+        Task AddAsync(KhachHang KhachHang);
+        Task UpdateAsync(KhachHang KhachHang);
+        Task DeleteAsync(KhachHang id);
+
+        string GenerateCustomerId();
     }
 }

@@ -12,6 +12,7 @@ builder.Services.AddDbContext<MangaSmurfContext>(options =>
 
 builder.Services.AddScoped<IboTruyenRepository, EFboTruyenRepository>();
 builder.Services.AddScoped<IChapterRepository, EFChapterRepository>();
+builder.Services.AddScoped<IKhachHangRepository, EFKhachHangRepository>();
 
 builder.Services.AddControllersWithViews();
 var app = builder.Build();

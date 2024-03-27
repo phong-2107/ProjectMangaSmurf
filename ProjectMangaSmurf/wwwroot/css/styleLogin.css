@@ -112,8 +112,14 @@
 .img-login {
     position: absolute;
     height: 550px;
-    left: -230px;
+    left: -200px;
     top: -100px;
+}
+.img-regis {
+    position: absolute;
+    height: 550px;
+    left: -170px;
+    top: 0;
 }
 
 .img-login-cat {
@@ -266,6 +272,49 @@ input[type="submit"] {
             font-weight: 600;
         }
 
+/* =================================== REGISTER ======================================== */
+.passSecurity {
+    height: 4px;
+    margin-top: 1rem;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+    .passSecurity span {
+        font-size: var(--small-font-size);
+    }
+
+.strengthList {
+    display: flex;
+    flex-direction: row;
+    gap: .5rem;
+    transition: width 0.3s ease;
+}
+
+.password-strength {
+    height: 4px;
+    width: 16px;
+    background-color: #8f8f8f;
+    transition: width 0.3s ease;
+}
+
+.weak {
+    background-color: red;
+}
+
+.moderate {
+    background-color: orange;
+}
+
+.strong {
+    background-color: green;
+}
+
+#securityText{
+    color:#8f8f8f;
+}
 
 
 @media (min-width: 35.5em) {
@@ -299,3 +348,4 @@ input[type="submit"] {
         inset-inline-end: 0;
     }
 }
+

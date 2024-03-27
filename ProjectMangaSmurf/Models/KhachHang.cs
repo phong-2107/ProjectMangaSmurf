@@ -7,17 +7,17 @@ public partial class KhachHang
 {
     public string IdKh { get; set; } = null!;
 
-    public string TenKh { get; set; } = null!;
+    public string? TenKh { get; set; }
 
     public string? Sdt { get; set; }
 
-    public string Email { get; set; } = null!;
+    public string? Email { get; set; }
 
-    public string LienketFb { get; set; } = null!;
+    public string? LienketFb { get; set; }
 
-    public string LienketGg { get; set; } = null!;
+    public string? LienketGg { get; set; }
 
-    public string Taikhoan { get; set; } = null!;
+    public string Taikhoan { get; set; }
 
     public string Matkhau { get; set; } = null!;
 

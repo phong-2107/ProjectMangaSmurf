@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProjectMangaSmurf.Models;
 
@@ -11,9 +12,11 @@ using ProjectMangaSmurf.Models;
 namespace ProjectMangaSmurf.Migrations
 {
     [DbContext(typeof(MangaSmurfContext))]
-    partial class MangaSmurfContextModelSnapshot : ModelSnapshot
+    [Migration("20240327053637_UpdateNameKH")]
+    partial class UpdateNameKH
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
