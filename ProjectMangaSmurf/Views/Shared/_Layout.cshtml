@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -55,6 +56,8 @@
                     <div class="nav__buttons">
                         <i class="ri-moon-fill change-theme" id="theme-button"></i>
                     </div>
+
+
                     <div class="nav__login">
                         <div class="btn__regis mr-2">
                             <a asp-area="" asp-controller="KhachHang" asp-action="Register">Đăng ký</a>
@@ -117,14 +120,29 @@
                     <a class="nav__item nav__link active-link" asp-area="" asp-controller="BoTruyen" asp-action="Rankings">Xếp hạng</a>
                     <a href="#home" class="nav__item nav__link active-link">Tìm truyện</a>
                     <a class="nav__item nav__link active-link" asp-area="" asp-controller="BoTruyen" asp-action="ListTruyen">Mới cập nhật</a>
-                    <div class="nav__login">
-                        <div class="btn__regis mr-2">
-                            <a href="#">Đăng ký</a>
-                        </div>
-                        <div class=" btn__login">
-                            <a href="#">Đăng nhập</a>
-                        </div>
-                    </div>
+
+                    @{
+                        if (ViewBag.Title != null)
+                        {
+                            <div class="nav__login">
+                                <div class="btn__regis mr-2">
+                                    <a href="#">Hello @ViewBag.Title</a>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="nav__login">
+                                <div class="btn__regis mr-2">
+                                    <a href="#">Đăng ký</a>
+                                </div>
+                                <div class=" btn__login">
+                                    <a href="#">Đăng nhập</a>
+                                </div>
+                            </div>
+                        }
+                    }
+                    
                 </div>
             </nav>
         </div>
@@ -137,7 +155,7 @@
         <a onclick="scrollToTop()" id="scrollToTopBtn" title="Go to top"><i class="ri-arrow-up-s-line"></i></a>
     </main>
     <footer class="footer" style="position:relative; padding-block: 1rem; line-height: 20px; padding: 2rem 0;">
-        <div class="footer__container containers grid">
+        <div class="footer__container containers grid">z`
             <div>
                 <p class="footer__description">
                     Website luôn cập nhật nhanh và sớm nhất các đầu truyện hot<br>

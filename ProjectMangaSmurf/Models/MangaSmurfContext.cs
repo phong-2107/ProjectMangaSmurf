@@ -325,7 +325,7 @@ public partial class MangaSmurfContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("lienket_gg");
             entity.Property(e => e.Matkhau)
-                .HasMaxLength(20)
+                .HasColumnType("nvarchar(max)")
                 .IsUnicode(false)
                 .HasColumnName("matkhau");
             entity.Property(e => e.Sdt)

@@ -7,10 +7,12 @@ namespace ProjectMangaSmurf.Controllers
     {
         private readonly IboTruyenRepository _botruyenrepository;
         private readonly IChapterRepository _chapterrepository;
-        public BoTruyenController(IboTruyenRepository botruyenrepository, IChapterRepository chapterrepository)
+        private readonly IKhachHangRepository _khachhangrepository;
+        public BoTruyenController(IboTruyenRepository botruyenrepository, IChapterRepository chapterrepository, IKhachHangRepository khachHangRepository)
         {
             _botruyenrepository = botruyenrepository;
             _chapterrepository = chapterrepository;
+            _khachhangrepository = khachHangRepository;
         }
 
         public async Task<IActionResult> Index()
@@ -18,6 +20,12 @@ namespace ProjectMangaSmurf.Controllers
             var listBotruyen = await _botruyenrepository.GetAllAsync();
             return View(listBotruyen);
         }
+
+        //public async Task<IActionResult> Index(string id)
+        //{
+        //    var listBotruyen = await _khachhangrepository.GetByIdAsync(id);
+        //    return View(listBotruyen);
+        //}
 
         public async Task<IActionResult> ListTruyen()
         {

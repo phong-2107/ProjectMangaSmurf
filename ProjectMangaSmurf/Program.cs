@@ -1,7 +1,9 @@
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using ProjectMangaSmurf.Models;
 using ProjectMangaSmurf.Repository;
-
+using System.Data;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -13,6 +15,8 @@ builder.Services.AddDbContext<MangaSmurfContext>(options =>
 builder.Services.AddScoped<IboTruyenRepository, EFboTruyenRepository>();
 builder.Services.AddScoped<IChapterRepository, EFChapterRepository>();
 builder.Services.AddScoped<IKhachHangRepository, EFKhachHangRepository>();
+
+//builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<MangaSmurfContext>().AddDefaultTokenProviders();
 
 builder.Services.AddControllersWithViews();
 var app = builder.Build();

@@ -1,5 +1,8 @@
-﻿@{
+﻿@model ProjectMangaSmurf.Models.KhachHang
+@using Microsoft.AspNetCore.Mvc.Rendering
+@{
     Layout = null;
+    ViewData["Title"] = "Đăng Nhập";
 }
 
 <!DOCTYPE html>
@@ -45,23 +48,24 @@
         <div class="main__top  containers">
             <div class="main__content w-100">
                 <h3 class="main__title">LOGIN</h3>
-                <form action="" class="form-login">
-                    <div class="background-login"></div>
-                    <div class="content-login" style="z-index: 100000;">
+                <form class="form-login" asp-action="Login" method="post">
+                    <div class="content-login form-group" style="z-index: 100000;">
                         <div class="inputBox">
-                            <input type="text" required>
-                            <span>Username</span>
+                            <input asp-for="Taikhoan" type="text" required>
+                            <span asp-validation-for="Taikhoan">Username</span>
                             <i></i>
                         </div>
                         <div class="inputBox">
-                            <input type="password" required>
-                            <span>Password</span>
+                            <input asp-for="Matkhau" type="password" required>
+                            <span asp-validation-for="Matkhau">Password</span>
                             <i></i>
 
                         </div>
                         <a class="forgot">QUÊN MẬT KHẨU?</a>
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                         <div class="login">
-                            <input type="submit" value="Đăng nhập">
+                            
+                            <input type="submit" value="Đăng nhập" >
                         </div>
                         <h6>or</h6>
                         <div class="other">
@@ -81,12 +85,6 @@
                 </form>
 
             </div>
-        </div>
-
-        <div class="option">
-            <a >Bảo mật</a> |
-            <a >Điều khoản</a>|
-            <a >Về chúng tôi</a>
         </div>
     </main>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.js" integrity="sha512-HGOnQO9+SP1V92SrtZfjqxxtLmVzqZpjFFekvzZVWoiASSQgSr4cw9Kqd2+l8Llp4Gm0G8GIFJ4ddwZilcdb8A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>

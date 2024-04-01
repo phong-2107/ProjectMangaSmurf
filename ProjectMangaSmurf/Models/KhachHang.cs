@@ -1,9 +1,10 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using System;
 using System.Collections.Generic;
 
 namespace ProjectMangaSmurf.Models;
 
-public partial class KhachHang
+public partial class KhachHang 
 {
     public string IdKh { get; set; } = null!;
 

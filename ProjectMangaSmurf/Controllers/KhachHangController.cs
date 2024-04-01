@@ -14,7 +14,6 @@ namespace ProjectMangaSmurf.Controllers
         {
             _botruyenrepository = botruyenrepository;
             _khachhangrepository = khachHangRepository;
-
         }
 
 
@@ -30,26 +29,94 @@ namespace ProjectMangaSmurf.Controllers
         }
 
 
+        public bool checkpass(string pass, string passKh)
+        {
+            if (pass != null && passKh != null)
+            {
+                if (pass.Trim().Equals(passKh))
+                    return true;
+                else
+                    return false;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Login(string Taikhoan, string matKhau)
+        {
+            if (ModelState.IsValid)
+            {
+                var kh = await _khachhangrepository.GetByIdAsync(Taikhoan);
+                if (kh != null)
+                {
+                    var check = PasswordHasher.VerifyPassword(matKhau.Trim(), kh.Matkhau.Trim());
+                    if (check)
+                    {
+                        ViewBag.Title = kh.Taikhoan;
+                        return RedirectToAction("Index", "BoTruyen");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, "mật khẩu không đúng");
+                        return View();
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "Tai Khoan của bạn không đúng");
+                    return View();
+                }
+
+            }
+            return View();
+            //var check = checkpass(matKhau, khachHang.Matkhau);
+            //if(check)
+            //{
+            //    
+            //}
+            //else
+            //{
+            //    
+
+            //}
+            //if (kh != null)
+            //{
+            //    var result = await
+
+            //    if (result.Succeeded)
+            //    {
+            //        return RedirectToAction("Index", "BoTruyen", new { id = Taikhoan.Trim() });
+            //    }
+            //}
+            //ModelState.AddModelError(string.Empty, "Thông tin đăng nhập không chính xác.");
+            //return View();
+        }
+
+
         public IActionResult Register()
         {
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Register(KhachHang khachHang)
+        public async Task<IActionResult> Register(string Taikhoan,string Email, string matKhau)
         {
             if (ModelState.IsValid)
             {
-                khachHang.Matkhau = PasswordHasher.HashPassword(khachHang.Matkhau);
-                khachHang.IdKh = _khachhangrepository.GenerateCustomerId();
-                khachHang.TtPremium = true;
-                khachHang.Active = true;
-
-                await _khachhangrepository.AddAsync(khachHang);
-                TempData["RegisteredKhachHang"] = khachHang;
-                return RedirectToAction("Success", "Register"); 
+                KhachHang kh = new KhachHang();
+                kh.IdKh = _khachhangrepository.GenerateCustomerId();
+                kh.Email = Email.Trim();
+                kh.Taikhoan = Taikhoan.Trim();
+                kh.TtPremium = false;
+                kh.Active = true;
+                kh.Matkhau = PasswordHasher.HashPassword(matKhau);
+                await _khachhangrepository.AddAsync(kh);
+                return RedirectToAction("Index", "BoTruyen");
             }
-            return View(khachHang);
+            return View();
         }
 
 

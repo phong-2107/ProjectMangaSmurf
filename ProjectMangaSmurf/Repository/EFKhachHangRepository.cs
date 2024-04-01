@@ -51,9 +51,9 @@ namespace ProjectMangaSmurf.Repository
             throw new NotImplementedException();
         }
 
-        public Task<KhachHang> GetByIdAsync(string id)
+        public async Task<KhachHang> GetByIdAsync(string id)
         {
-            throw new NotImplementedException();
+            return await _context.KhachHangs.FirstOrDefaultAsync(p => p.Taikhoan == id.Trim());
         }
 
         public Task UpdateAsync(KhachHang KhachHang)
