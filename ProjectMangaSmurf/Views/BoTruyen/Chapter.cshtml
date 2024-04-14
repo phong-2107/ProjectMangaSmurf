@@ -62,7 +62,14 @@
     </div>
     <div class="control" id="control">
         <a asp-area="" asp-controller="BoTruyen" asp-action="Index" class="btn-home"><i class="ri-home-4-fill"></i></a>
-        <a href="#" class="btn-pre"><i class="ri-arrow-left-s-line"></i></a>
+        @{
+            var sttchapMin = @Model.SttChap - 1;
+            if (sttchapMin >= 1)
+            {
+                <a class="btn-pre" asp-action="Chapter" asp-route-id="@Model.IdBo" asp-route-stt="@sttchapMin"><i class="ri-arrow-left-s-line"></i></a>
+            }
+        }
+        
 
         <div class="dropdown">
             <a class="btn dropdown-btn" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -82,13 +89,18 @@
                             <li><a class="dropdown-item" asp-action="Chapter" asp-route-id="@chap.IdBo" asp-route-stt="@chap.SttChap">chap @chap.SttChap - @chap.TenChap</a></li>
                         }
                     }
-
                 }
             </ul>
         </div>
-
-        <a href="#" class="btn-next"><i class="ri-arrow-right-s-line"></i></a>
-        <a href="#" class="btn-follow"> theo doi<i class="ri-heart-fill"></i></i></a>
+        @{
+            var sttchapMax = @Model.SttChap + 1;
+            var sttMax = ChapterRepository.GetEarliestByIdAsync(Model.IdBo);
+            if (sttchapMax <= sttMax)
+            {
+                <a class="btn-next" asp-action="Chapter" asp-route-id="@Model.IdBo" asp-route-stt="@sttchapMax"><i class="ri-arrow-right-s-line"></i></a>
+            }
+        }
+        <a class="btn-follow""><i class="ri-heart-fill"></i></i></a>
     </div>
 
     <div class="reading-detail containers">
@@ -112,7 +124,6 @@
                     alert("error");
                 </script>
             }
-
         }
     </div>
 </div>

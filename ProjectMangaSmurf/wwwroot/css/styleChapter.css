@@ -115,13 +115,14 @@
             border-radius: 5px;
             background-color: hsl(19, 100%, 97%);
             font-size: var(--normal-font-size);
-            color: var(--body-item-color);
+            color: var(--body-item-color)!important;
             display: flex;
             justify-content: space-between;
         }
 
             .control .dropdown .dropdown-btn i {
                 font-size: var(--nomal-font-size);
+                color: var(--body-item-color) !important;
             }
 
     .control .dropdown-menu {
@@ -133,7 +134,7 @@
 
 
         .control .dropdown-menu .dropdown-item {
-            color: #181D1F;
+            color: #181D1F !important;
             font-size: var(--nomal-font-size);
             font-weight: var(--font-medium);
         }

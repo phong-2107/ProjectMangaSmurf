@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ProjectMangaSmurf.Models;
 
-public partial class Premium
+public class Premium
 {
     public decimal? GiaThanh { get; set; }
 

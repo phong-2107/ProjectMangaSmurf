@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ProjectMangaSmurf.Models;
 
-public partial class HopDong
+public class HopDong
 {
     public string IdHd { get; set; } = null!;
 

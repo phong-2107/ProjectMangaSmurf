@@ -45,7 +45,7 @@
         <div class="main__top  containers">
             <div class="main__content w-100">
                 <h3 class="main__title">REGISTER NOW!</h3>
-                <form class="form-login" asp-action="Register" method="post">
+                <form class="form-login" asp-controller="KhachHang" asp-action="Register" method="post">
                     <div class="content-login" style="z-index: 100000;">
                         <div class="inputBox">
                             <input asp-for="Taikhoan" type="text" required>
@@ -70,9 +70,9 @@
                                 <div class="password-strength" id="strongPasswordStrength"></div>
                             </div>
                         </div>
-                        <input class="login" type="submit" value="Đăng ký">
+
                         <div class="login">
-                            
+                            <input class="login" type="submit" value="Đăng ký">
                         </div>
                         <h6>or</h6>
                         <div class="other">

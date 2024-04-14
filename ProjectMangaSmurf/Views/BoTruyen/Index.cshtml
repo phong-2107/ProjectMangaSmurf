@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<ProjectMangaSmurf.Models.BoTruyen>
 @using ProjectMangaSmurf.Repository
 @inject IboTruyenRepository boTruyenRepository
-
+@inject IChapterRepository chapterRepository
 
 <!-- LINK BOOTSTRAP -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
@@ -14,11 +14,28 @@
 <link href="~/css/style.css" rel="stylesheet" />
 
 
+@* <style>
+    .main-Banner {
+        display: flex; /* Sử dụng flexbox */
+        align-items: center; /* Căn giữa theo chiều dọc */
+    }
+
+        .main-Banner img {
+            max-height: 450px; /* Giới hạn chiều cao */
+            max-width: 100%; /* Giới hạn chiều rộng */
+            width: auto; /* Đảm bảo tỷ lệ khung hình được giữ nguyên */
+            height: auto; /* Đảm bảo tỷ lệ khung hình được giữ nguyên */
+            margin: 0 auto; /* Canh giữa theo chiều ngang */
+        }
+</style> *@
+
 <div class="main__top section">
-    <div class="top__container containers">
+    <div class="top__container containers" style="overflow:hidden;">
         <div class="top__content">
-            <span class="section__subtitle">Truyện Mới</span>
-            <p class="section__des">Cập nhật những bộ truyện mới nhất trong năm 2024</p>
+            <div>
+                <span class="section__subtitle">Truyện Mới</span>
+                <p class="section__des">Cập nhật những bộ truyện mới nhất trong năm 2024</p>
+            </div>
         </div>
         <div class=" slick-list autoplay row col-6 w-100 d-flex justify-content-center">
 
@@ -28,9 +45,9 @@
                 <div class="col update-item" asp-action="CTBoTruyen" asp-route-id="botruyen.IdBo">
                     <a asp-action="CTBoTruyen" asp-route-id="@botruyen.IdBo">
                         <figure>
-                            @if (!string.IsNullOrEmpty(botruyen.AnhBanner))
+                            @if (!string.IsNullOrEmpty(botruyen.AnhBia))
                             {
-                                <img src="@botruyen.AnhBanner" alt="truyen Image" />
+                                <img src="@botruyen.AnhBia" alt="truyen Image" />
                             }
                             <figcaption>
                                 <h6 class="item-title"><a href="#">@botruyen.TenBo</a></h6>
@@ -43,20 +60,20 @@
     </div>
 </div>
 <div class="main__bottom containers grid">
-    <section class="home w-100" id="home">
-        <div class="home__container ">
-            <div id="carouselExampleAutoplaying" class="carousel slide home__carousel bg__carousel w-100 " data-bs-ride="carousel">
-                <div class="carousel-inner rounded-3 w-100">
+    <section class="home" id="home">
+        <div class="home__container w-100">
+            <div id="carouselExampleAutoplaying" class="carousel slide home__carousel bg__carousel w-100" data-bs-ride="carousel">
+                <div class="carousel-inner rounded-3 w-100" style="">
                     @{
                         int i = 0;
                         @foreach (var botruyen in Model)
                         {
                             if (i == 0)
                             {
-                                <div class="carousel-item active">
-                                    @if (!string.IsNullOrEmpty(botruyen.AnhBia))
+                                <div class="carousel-item active w-100 main-Banner">
+                                    @if (!string.IsNullOrEmpty(botruyen.AnhBanner))
                                     {
-                                        <img src="@botruyen.AnhBia" class="d-block w-100 rounded-3" alt="...">
+                                        <img src="@botruyen.AnhBanner" class="d-block w-100 rounded-3" alt="Anh banner" style="height: 450px!important; object-fit: cover;">
                                     }
                                     <div class="item-infor">
                                         <div class="item-content">
@@ -75,10 +92,10 @@
                             }
                             else
                             {
-                                <div class="carousel-item">
-                                    @if (!string.IsNullOrEmpty(botruyen.AnhBia))
+                                <div class="carousel-item w-100">
+                                    @if (!string.IsNullOrEmpty(botruyen.AnhBanner))
                                     {
-                                        <img src="@botruyen.AnhBia" class="d-block w-100 rounded-3" alt="...">
+                                        <img src="@botruyen.AnhBanner" class="d-block w-100 rounded-3" alt="Anh banner" style="height: 450px; object-fit: cover;">
                                     }
                                     <div class="item-infor">
                                         <div class="item-content">
@@ -142,46 +159,80 @@
 <section class="new-update containers mt-3" id="update">
     <div class="update__container grids">
         <div class="top__content">
-            <span class="section__subtitle">Mới Cập Nhật</span>
-            <p class="section__des">Cập nhật Cập nhật nhanh và chất lượng nhất các chương truyện</p>
+            <div class="title-infor">
+                <span class="section__subtitle">Mới Cập Nhật</span>
+                <p class="section__des">Cập nhật Cập nhật nhanh và chất lượng nhất các chương truyện</p>
+            </div>
+            <div class="btn-More">
+                <a asp-area="" asp-controller="BoTruyen" asp-action="ListTruyenEarliest">Show More<i class="ri-arrow-right-s-fill"></i></a>
+            </div>
         </div>
         <div class="container">
             <div class="row row-cols-6 justify-content-center">
-
-
                 @foreach (var botruyen in Model)
                 {
                     <div class="col-2 update-item">
                         <a asp-action="CTBoTruyen" asp-route-id="@botruyen.IdBo">
-                            <figure>
-                                @if (!string.IsNullOrEmpty(botruyen.AnhBanner))
-                                {
-                                    <img src="@botruyen.AnhBanner" alt="truyen Image" />
-                                }
-                                <figcaption>
-                                    <h6 class="item-title"><a href="#">@botruyen.TenBo</a></h6>
+                            <figure class="position-relative">
+                                @{
+                                    var EarliestChap = chapterRepository.GetChapterEarliestByIdAsync(botruyen.IdBo);
+                                    if (EarliestChap != null)
+                                    {
+                                        var time = chapterRepository.CalculateTimeAgo(EarliestChap.ThoiGian);
+                                        if (!string.IsNullOrEmpty(botruyen.AnhBia))
+                                        {
+                                            <img src="@botruyen.AnhBia" alt="truyen Image" />
+                                        }
+                                        <figcaption >
+                                            <h6 class="item-title"><a href="#">@botruyen.TenBo</a></h6>
 
-                                    <a class="item-chapter" style="font-size: 13px;">
-                                        <span class="chap" style="margin-right: 10px; ">chap ...</span>
-                                        <span class="time">... giờ trước</span>
-                                    </a>
-                                </figcaption>
+                                            <a class="item-chapter" style="font-size: 13px;">
+                                                <span class="chap" style="margin-right: 10px; ">chap @EarliestChap.SttChap</span>
+                                                <span class="time">@time</span>
+                                            </a>
+                                        </figcaption>
+                                        
+                                    }
+                                    else
+                                    {
+                                        if (!string.IsNullOrEmpty(botruyen.AnhBia))
+                                        {
+                                            <img src="@botruyen.AnhBia" alt="truyen Image" />
+                                        }
+                                        <figcaption>
+                                            <h6 class="item-title"><a href="#">@botruyen.TenBo</a></h6>
+
+                                            <a class="item-chapter" style="font-size: 13px;">
+                                                <span class="chap" style="margin-right: 10px; ">chap ...</span>
+                                                <span class="time">... giờ trước</span>
+                                            </a>
+                                        </figcaption>
+                                    }
+                                }
+                                @if (botruyen.TtPemium == true)
+                                {
+                                    <div class="item-vip">
+                                        <i class="ri-vip-crown-2-fill"></i>
+                                    </div>
+                                }
                             </figure>
                         </a>
                     </div>
                 }
             </div>
         </div>
-        <div class="btn-infor">
-            <a href="#">Xem thêm</a>
-        </div>
     </div>
 </section>
 <section class="new-update containers mt-3" id="update">
     <div class="update__container grids">
         <div class="top__content">
-            <span class="section__subtitle">Danh Sách truyện</span>
-            <p class="section__des">Danh sách các truyện mới nhất cập nhật liên tục </p>
+            <div class="title-infor">
+                <span class="section__subtitle">Danh Sách truyện</span>
+                <p class="section__des">Danh sách các truyện mới nhất cập nhật liên tục </p>
+            </div>
+            <div class="btn-More">
+                <a asp-area="" asp-controller="BoTruyen" asp-action="ListTruyen">Show More<i class="ri-arrow-right-s-fill"></i></a>
+            </div>
         </div>
         <div class="container">
             <div class="row row-cols-6  justify-content-center">
@@ -190,9 +241,9 @@
                     <div class="col-2 update-item">
                         <a asp-action="CTBoTruyen" asp-route-id="@botruyen.IdBo">
                             <figure>
-                                @if (!string.IsNullOrEmpty(botruyen.AnhBanner))
+                                @if (!string.IsNullOrEmpty(botruyen.AnhBia))
                                 {
-                                    <img src="@botruyen.AnhBanner" alt="truyen Image" />
+                                    <img src="@botruyen.AnhBia" alt="truyen Image" />
                                 }
                                 <figcaption>
                                     <h6 class="item-title"><a href="#">@botruyen.TenBo</a></h6>
@@ -207,10 +258,65 @@
                     </div>
                 }
             </div>
-            <div class="btn-infor">
-                <a href="#">Xem thêm</a>
+        </div>
+</section>
+<section class="new-update containers mt-3" id="update">
+    <div class="update__container grids">
+        <div class="top__content">
+            <div class="title-infor">
+                <span class="section__subtitle">Top xếp hạng Hôm nay</span>
+                <p class="section__des"> </p>
             </div>
         </div>
+        <div class="container">
+            <div class="row justify-content-center w-100 position-relative">
+                @{
+                    var listRank = boTruyenRepository.GetRankingAsync();
+                    var item = Model.ElementAt(0);
+                    <div class="col p-3 position-relative">
+                        @if (!string.IsNullOrEmpty(item.AnhBanner))
+                        {
+                            <img src="@item.AnhBanner" alt="truyen Image" class="img-poster"/>
+                        }
+                        @if(item.TtPemium == true)
+                        {
+                            <div class="position-absolute pre-poster">
+                                <img src="/images/PreDark.png" alt="Premium Image"/>
+                            </div>
+                        }
+                        <div class="position-absolute name-poster">
+                            <h3>@item.TenBo</h3>
+                        </div>
+                        <div class="position-absolute btn-poster">
+                            <a asp-action="CTBoTruyen" asp-route-id="@item.IdBo" class="btn-poster-detail">Đọc ngay <i class="ri-arrow-right-s-fill"></i></a>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</section>
+<section class="new-update containers mt-3" id="update">
+    <div class="update__container grids">
+        <div class="top__content">
+            <div class="title-infor">
+                <span class="section__subtitle">Loại truyện phổ biến</span>
+                <p class="section__des"> </p>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row w-100 position-relative">
+                @{
+                    foreach (var loai in ViewBag.LoaiTruyen)
+                    {
+                        <a asp-area="" asp-controller="BoTruyen" asp-action="ListTopic" asp-route-id="@loai.TenLoai" class="col-auto item-loai">
+                            @loai.TenLoai
+                        </a>
+                    }
+                }
+            </div>
+        </div>
+    </div>
 </section>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.js" integrity="sha512-HGOnQO9+SP1V92SrtZfjqxxtLmVzqZpjFFekvzZVWoiASSQgSr4cw9Kqd2+l8Llp4Gm0G8GIFJ4ddwZilcdb8A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -233,9 +339,9 @@
 <script type="text/javascript">
     $('.autoplay').slick({
         slidesToShow: 7,
-        slidesToScroll: 2,
+        slidesToScroll: 3,
         autoplay: true,
-        autoplaySpeed: 2000,
+        autoplaySpeed: 2500,
     });
 </script>
 

@@ -132,6 +132,13 @@
 }
 
 
+input:-internal-autofill-selected {
+    appearance: menulist-button;
+    background-image: none !important;
+    background-color: none !important;
+    color: #fff !important;
+}
+
 
 
 .inputBox {

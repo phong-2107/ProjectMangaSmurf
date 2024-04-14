@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ProjectMangaSmurf.Models;
 
-public partial class TacGium
+public class TacGium
 {
     public string IdTg { get; set; } = null!;
 

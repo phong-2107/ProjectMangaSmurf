@@ -1,13 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using ProjectMangaSmurf.Data;
 using ProjectMangaSmurf.Models;
 
 namespace ProjectMangaSmurf.Repository
 {
     public class EFboTruyenRepository : IboTruyenRepository
     {
-        private readonly MangaSmurfContext _context;
+        private readonly ProjectDBContext _context;
 
-        public EFboTruyenRepository(MangaSmurfContext context)
+        public EFboTruyenRepository(ProjectDBContext context)
         {
             _context = context;
         }
@@ -64,6 +65,11 @@ namespace ProjectMangaSmurf.Repository
             return await _context.LoaiTruyens.FirstOrDefaultAsync(p => p.IdLoai == id);
         }
 
+        public async Task<LoaiTruyen> GetLoaiByNameAsync(string name)
+        {
+            return await _context.LoaiTruyens.FirstOrDefaultAsync(p => p.TenLoai.Trim().Equals(name.Trim()));
+        }
+
         public async Task<BoTruyen> RandomAsync()
         {
             var list =  _context.BoTruyens.ToList();
@@ -93,6 +99,62 @@ namespace ProjectMangaSmurf.Repository
                 }
             }
             return listLoai;
+        }
+
+        public string getNameTGById(string id)
+        {
+            var Tg = _context.TacGia.FirstOrDefault(p => p.IdTg == id);
+            return Tg.TenTg;
+        }
+
+        public async Task<IEnumerable<BoTruyen>> GetAllTrangThaiAsync(int id)
+        {
+            var list = _context.BoTruyens.ToList();
+            List<BoTruyen> listTTActive =  new List<BoTruyen>();
+            if (id == 1)
+            {
+                listTTActive = list.Where(p => p.TrangThai == id).ToList();
+            }
+            else if (id == 0)
+            {
+                listTTActive = list.Where(p => p.TrangThai == id).ToList();
+            }
+            return await Task.FromResult<IEnumerable<BoTruyen>>(listTTActive);
+        }
+
+        public async Task<IEnumerable<BoTruyen>> GetAllAsyncByChapterEarliest()
+        {
+            var danhSachBoTruyen = await _context.BoTruyens
+                                        .OrderByDescending(boTruyen => boTruyen.Chapters.Max(chap => chap.ThoiGian))
+                                        .ToListAsync();
+
+            return danhSachBoTruyen;
+        }
+
+
+        public async Task<IEnumerable<LoaiTruyen>> GetAllLoaiTruyens()
+        {
+            var loaitruyen = await _context.LoaiTruyens.ToListAsync();
+            return loaitruyen;
+        }
+
+        public string GenerateBoTruyenId()
+        {
+            string idPrefix = "BT";
+            int idLength = 8;
+            string maxId = _context.BoTruyens.Select(kh => kh.IdBo)
+                                               .OrderByDescending(id => id)
+                                               .FirstOrDefault();
+            if (maxId == null)
+            {
+                return idPrefix + "00000001";
+            }
+            else
+            {
+                int currentNumber = int.Parse(maxId.Substring(idPrefix.Length));
+                string newId = idPrefix + (currentNumber + 1).ToString().PadLeft(idLength, '0');
+                return newId;
+            }
         }
     }
 }

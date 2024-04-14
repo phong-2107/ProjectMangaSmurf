@@ -15,20 +15,10 @@ namespace ProjectMangaSmurf.Controllers
             _botruyenrepository = botruyenrepository;
             _khachhangrepository = khachHangRepository;
         }
-
-
-
         public IActionResult Index()
         {
             return View();
         }
-
-        public IActionResult Login()
-        {
-            return View();
-        }
-
-
         public bool checkpass(string pass, string passKh)
         {
             if (pass != null && passKh != null)
@@ -44,6 +34,10 @@ namespace ProjectMangaSmurf.Controllers
             }
         }
 
+        public IActionResult Login()
+        {
+            return View();
+        }
         [HttpPost]
         public async Task<IActionResult> Login(string Taikhoan, string matKhau)
         {
@@ -55,7 +49,7 @@ namespace ProjectMangaSmurf.Controllers
                     var check = PasswordHasher.VerifyPassword(matKhau.Trim(), kh.Matkhau.Trim());
                     if (check)
                     {
-                        ViewBag.Title = kh.Taikhoan;
+                        HttpContext.Session.SetObjectAsJson("kh", kh);
                         return RedirectToAction("Index", "BoTruyen");
                     }
                     else
@@ -71,28 +65,8 @@ namespace ProjectMangaSmurf.Controllers
                 }
 
             }
+            ModelState.AddModelError(string.Empty, "tai khoan kh hop le");
             return View();
-            //var check = checkpass(matKhau, khachHang.Matkhau);
-            //if(check)
-            //{
-            //    
-            //}
-            //else
-            //{
-            //    
-
-            //}
-            //if (kh != null)
-            //{
-            //    var result = await
-
-            //    if (result.Succeeded)
-            //    {
-            //        return RedirectToAction("Index", "BoTruyen", new { id = Taikhoan.Trim() });
-            //    }
-            //}
-            //ModelState.AddModelError(string.Empty, "Thông tin đăng nhập không chính xác.");
-            //return View();
         }
 
 
@@ -114,6 +88,7 @@ namespace ProjectMangaSmurf.Controllers
                 kh.Active = true;
                 kh.Matkhau = PasswordHasher.HashPassword(matKhau);
                 await _khachhangrepository.AddAsync(kh);
+                HttpContext.Session.SetObjectAsJson("kh", kh);
                 return RedirectToAction("Index", "BoTruyen");
             }
             return View();
@@ -125,11 +100,8 @@ namespace ProjectMangaSmurf.Controllers
             KhachHang registeredKhachHang = TempData["RegisteredKhachHang"] as KhachHang;
             if (registeredKhachHang == null)
             {
-                // Xử lý trường hợp không có đối tượng KhachHang trong TempData
                 return RedirectToAction("Index", "Register"); 
             }
-
-            // Truyền đối tượng KhachHang vừa đăng ký vào view Success
             return View(registeredKhachHang);
         }
 

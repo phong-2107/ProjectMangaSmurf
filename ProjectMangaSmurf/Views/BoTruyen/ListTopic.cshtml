@@ -48,7 +48,7 @@
                     </script>
                 }
             }-->
-            <span class="section__subtitle">DANH SÁCH TRUYỆN</span>
+            <span class="section__subtitle">DANH SÁCH TRUYỆN @ViewBag.Topic</span>
 
             <div class="controls">
                 <div class="dropdown">
@@ -84,9 +84,9 @@
                         {
                                 <div class="item col-2 update-item">
                                     <figure>
-                                        @if (!string.IsNullOrEmpty(botruyen.AnhBanner))
+                                        @if (!string.IsNullOrEmpty(botruyen.AnhBia))
                                     {
-                                            <img src="@botruyen.AnhBanner" alt="truyen Image" />
+                                        <img src="@botruyen.AnhBia" alt="truyen Image" />
                                     }
                                         <figcaption>
                                             <h6 class="item-title"><a href="#">@botruyen.TenBo</a></h6>

@@ -8,8 +8,12 @@ namespace ProjectMangaSmurf.Repository
         Task<IEnumerable<Chapter>> GetAllByIdAsync(string id);
         Task<IEnumerable<CtChapter>> GetAllCTByIdAsync(string id, int stt);
         Task<Chapter> GetByIdAsync(string id, int stt);
-        Task AddAsync(Chapter botruyen);
-        Task UpdateAsync(Chapter botruyen);
+        int GetEarliestByIdAsync(string id);
+        string CalculateTimeAgo(DateTime date);
+        Chapter GetChapterEarliestByIdAsync(string id);
+        Task AddAsync(Chapter chapter);
+        Task AddAsyncCT(CtChapter CTs);
+        Task UpdateAsync(Chapter chapter);
         Task DeleteAsync(string id);
     }
 }

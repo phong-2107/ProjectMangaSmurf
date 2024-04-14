@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ProjectMangaSmurf.Models;
 
-public partial class LoaiTruyen
+public class LoaiTruyen
 {
     public string IdLoai { get; set; } = null!;
 

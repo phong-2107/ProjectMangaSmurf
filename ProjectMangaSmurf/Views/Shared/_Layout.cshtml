@@ -1,8 +1,10 @@
-﻿
+﻿@using ProjectMangaSmurf
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
+    
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] MangaSmurf</title>
 
@@ -27,6 +29,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.2.0/remixicon.css" integrity="sha512-OQDNdI5rpnZ0BRhhJc+btbbtnxaj+LdQFeh0V9/igiEPDiWE2fG+ZsXl0JEH+bjXKPJ3zcXqNyP4/F/NegVdZg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    @RenderSection("Scripts", required: false)
 </head>
 
 
@@ -38,6 +41,10 @@
     </style>
 
 <body>
+    <div id="global-loader">
+        <div class="whirly-loader"></div>
+    </div>
+
     <header class="header" id="header">
         <div class="nav__side">
             <nav class="containers nav">
@@ -56,15 +63,26 @@
                     <div class="nav__buttons">
                         <i class="ri-moon-fill change-theme" id="theme-button"></i>
                     </div>
-
-
-                    <div class="nav__login">
-                        <div class="btn__regis mr-2">
-                            <a asp-area="" asp-controller="KhachHang" asp-action="Register">Đăng ký</a>
-                        </div>
-                        <div class=" btn__login">
-                            <a asp-area="" asp-controller="KhachHang" asp-action="Login">Đăng nhập</a>
-                        </div>
+                    <div class="nav__login">@* 
+                        @{
+                            KhachHang? kh = ViewBag.KhachHang;
+                            @if (kh != null)
+                            {
+                                <div class="btn__regis mr-2">
+                                    hello @kh.TenKh
+                                </div>
+                            }
+                            else
+                            { *@
+                                <div class="btn__regis mr-2">
+                                    <a asp-area="" asp-controller="KhachHang" asp-action="Register">Đăng ký</a>
+                                </div>
+                                <div class=" btn__login">
+                                    <a asp-area="" asp-controller="KhachHang" asp-action="Login">Đăng nhập</a>
+                                </div>
+                       @*  
+                        }
+                            } *@
                     </div>
                 </div>
 
@@ -120,13 +138,12 @@
                     <a class="nav__item nav__link active-link" asp-area="" asp-controller="BoTruyen" asp-action="Rankings">Xếp hạng</a>
                     <a href="#home" class="nav__item nav__link active-link">Tìm truyện</a>
                     <a class="nav__item nav__link active-link" asp-area="" asp-controller="BoTruyen" asp-action="ListTruyen">Mới cập nhật</a>
-
                     @{
                         if (ViewBag.Title != null)
                         {
                             <div class="nav__login">
                                 <div class="btn__regis mr-2">
-                                    <a href="#">Hello @ViewBag.Title</a>
+                                    <a href="#">@ViewBag.Title</a>
                                 </div>
                             </div>
                         }
@@ -142,6 +159,13 @@
                             </div>
                         }
                     }
+                   @* 
+                    @if (User.IsInRole(SD.Role_Admin))
+                    {
+                        <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="Index">
+                            Quản lý
+                        </a>
+                    } *@
                     
                 </div>
             </nav>
@@ -151,11 +175,12 @@
     
     <main role="main" class="pb-3">
         <div class="background"></div>
+        
         @RenderBody()
         <a onclick="scrollToTop()" id="scrollToTopBtn" title="Go to top"><i class="ri-arrow-up-s-line"></i></a>
     </main>
     <footer class="footer" style="position:relative; padding-block: 1rem; line-height: 20px; padding: 2rem 0;">
-        <div class="footer__container containers grid">z`
+        <div class="footer__container containers grid">
             <div>
                 <p class="footer__description">
                     Website luôn cập nhật nhanh và sớm nhất các đầu truyện hot<br>
@@ -240,8 +265,17 @@
             </span>
         </div>
     </footer>
-    
     <script src="~/js/script.js"></script>
+    <script src="~/js/scriptAdmin.js"></script>
+
+    <script>
+        setTimeout(function () {
+            $('#global-loader');
+            setTimeout(function () {
+                $("#global-loader").fadeOut("slow");
+            }, 100);
+        }, 500);
+    </script>
     <script>
         /*=============== DARK LIGHT THEME ===============*/
         const themeButton = document.getElementById('theme-button');
@@ -251,11 +285,11 @@
         const selectedTheme = localStorage.getItem('selected-theme');
         const selectedIcon = localStorage.getItem('selected-icon');
 
-        const getCurrentTheme = () => document.body.classList.contains(darkTheme) ? 'light' : 'dark';
+        const getCurrentTheme = () => document.body.classList.contains(darkTheme) ? 'dark' : 'dark';
         const getCurrentIcon = () => themeButton.classList.contains(iconTheme) ? 'ri-sun-cloudy-fill' : 'ri-moon-fill';
 
         if (selectedTheme) {
-            document.body.classList[selectedTheme === 'light' ? 'add' : 'remove'](darkTheme)
+            document.body.classList[selectedTheme === 'dark' ? 'add' : 'remove'](darkTheme)
             themeButton.classList[selectedIcon === 'ri-moon-fill' ? 'add' : 'remove'](iconTheme)
         }
         themeButton.addEventListener('click', () => {
@@ -288,8 +322,9 @@
             }
         }
 
-    </script>
 
+    </script>
+    
 </body>
 
 </html>

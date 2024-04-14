@@ -80,7 +80,6 @@
         .controls .dropdown-menu .dropdown-item:hover {
             background-color: var(--body-color-dark);
         }
-
 .update-item {
     margin: .5rem;
 }

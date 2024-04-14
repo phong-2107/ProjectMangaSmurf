@@ -1,7 +1,7 @@
 ﻿@model ProjectMangaSmurf.Models.BoTruyen
 @using ProjectMangaSmurf.Repository
 @inject IboTruyenRepository boTruyenRepository
-
+@inject IChapterRepository chapterRepository
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
@@ -17,14 +17,19 @@
         <div class="detail__infor containers">
             <div class="bg__detail">
                 <div class="bg">
-                    @if (!string.IsNullOrEmpty(Model.AnhBia))
+                    @if (!string.IsNullOrEmpty(Model.AnhBanner))
                     {
-                        <img src="@Model.AnhBia" alt="bg-item" class="bg-main">
+                        <img src="@Model.AnhBanner" alt="bg-item" class="bg-main">
                     }
                     <div class="item-infor bg__detail-infor">
                         <div class="infor">
-
-                            <p class="item-author">@Model.IdTg</p>
+                            <div class="pre">
+                                <img src="/images/PreLight.png" alt="goi premium">
+                            </div>
+                            @{
+                                var tg = boTruyenRepository.getNameTGById(Model.IdTg);
+                            }
+                            <p class="item-author">Tác Giả: @tg</p>
                             <h3 class="item-title">@Model.TenBo</h3>
 
                             <div class="rating">
@@ -35,9 +40,6 @@
                                 <i class="ri-star-fill"></i>
                             </div>
                         </div>
-                        <div class="pre">
-                            <img src="/images/PreLight.png" alt="goi premium">
-                        </div>
                         <div class=" btn__follow">
                             <a href="3">Theo dõi</a>
                             <i class="ri-bookmark-fill"></i>
@@ -46,16 +48,28 @@
                     <div class="background-item"></div>
                 </div>
                 <div class="poster-detail">
-                    <div class="background-detail">
-                        <div class="bg-item"></div>
-                        <a href="">
-                            <i class="fa-solid fa-book-open" title="click here"></i>
-                        </a>
-
-                    </div>
-                    @if (!string.IsNullOrEmpty(Model.AnhBanner))
+                    @{
+                        var listtmp = Model.Chapters.ToList();
+                        if (listtmp.Count > 0)
+                        {
+                            <div class="background-detail">
+                                <div class="bg-item "></div>
+                                <a asp-action="Chapter" asp-route-id="@Model.IdBo" asp-route-stt="1" class="btn-read">
+                                    <i class="ri-book-open-fill" title="click here"></i>
+                                </a>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="background-detail">
+                                <div class="bg-item "></div>
+                            </div>
+                        }
+                    }
+                    
+                    @if (!string.IsNullOrEmpty(Model.AnhBia))
                     {
-                        <img src="@Model.AnhBanner" alt="poster">
+                        <img src="@Model.AnhBia" alt="poster" style="max-width:224px; max-height:336px; object-fit:scale-down;">
                     }
 
                 </div>
@@ -75,7 +89,17 @@
                     </div>
                 </div>
                 <div class="btn-detail">
-                    <a class="btn__action" href="#">Đọc tiếp chap <span class="chapter">01</span></a>
+                    @{
+                        var stt = chapterRepository.GetEarliestByIdAsync(Model.IdBo);
+                        if(stt > 0)
+                        {
+                            <a class="btn__action" asp-action="Chapter" asp-route-id="@Model.IdBo" asp-route-stt="@stt">Đọc tiếp chap <span class="chapter"></span></a>
+                        }
+                        else
+                        {
+                            <a class="btn__action" style="pointer-events: none; background-color: #8f8f8f">Đọc tiếp chap <span class="chapter"></span></a>
+                        }
+                    }
                 </div>
             </div>
             <div class="content-main">
@@ -97,7 +121,7 @@
                         </div>
                         <div class="view">
                             <i class="ri-eye-line"></i>
-                            <span class="count">05</span> Lượt xem
+                            <span class="count">@Model.TongLuotXem</span> Lượt xem
                         </div>
                         <!--
                             <div class="review">
@@ -118,15 +142,16 @@
             </div>
             <div class="d-flex flex-column mb-3 w-100 mt-3">
                 @{
-                    var list = Model.Chapters.ToList();
-                    if (list.Count > 0)
+                    var listChap = Model.Chapters.ToList();
+                    var listRev = Model.Chapters.Reverse();
+                    if (listChap.Count > 0)
                     {
-                        foreach (var chapter in Model.Chapters)
+                        foreach (var chapter in listRev)
                         {
                             <a class="p-2 chapter-item" asp-action="Chapter" asp-route-id="@chapter.IdBo" asp-route-stt="@chapter.SttChap" style="color:var(--title-color);">
                                 <div class="row">
                                     <div class="col chapter">
-                                        Chương @chapter.SttChap
+                                        Chương @chapter.SttChap  
                                     </div>
                                     <div class="col-6 content">
                                         @chapter.TenChap
@@ -136,7 +161,7 @@
                                     </div>
                                     <div class="col view">
                                         @chapter.TkLuotxem lượt xem
-                                    </div>
+                                    </div>   
                                 </div>
                             </a>
                         }

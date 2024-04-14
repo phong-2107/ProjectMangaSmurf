@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ProjectMangaSmurf.Models;
 
-public partial class Footer
+public class Footer
 {
     public string? LinkFb { get; set; }
 

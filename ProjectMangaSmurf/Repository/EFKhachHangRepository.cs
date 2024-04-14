@@ -1,13 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using ProjectMangaSmurf.Data;
 using ProjectMangaSmurf.Models;
 
 namespace ProjectMangaSmurf.Repository
 {
     public class EFKhachHangRepository : IKhachHangRepository
     {
-        private readonly MangaSmurfContext _context;
+        private readonly ProjectDBContext _context;
 
-        public EFKhachHangRepository(MangaSmurfContext context)
+        public EFKhachHangRepository(ProjectDBContext context)
         {
             _context = context;
         }
@@ -40,7 +41,6 @@ namespace ProjectMangaSmurf.Repository
                 return newId;
             }
         }
-
         public Task<KhachHang> GetAccountByIdAsync(string name, string pass)
         {
             throw new NotImplementedException();
@@ -55,7 +55,6 @@ namespace ProjectMangaSmurf.Repository
         {
             return await _context.KhachHangs.FirstOrDefaultAsync(p => p.Taikhoan == id.Trim());
         }
-
         public Task UpdateAsync(KhachHang KhachHang)
         {
             throw new NotImplementedException();

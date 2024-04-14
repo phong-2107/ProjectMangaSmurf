@@ -18,6 +18,8 @@ namespace ProjectMangaSmurf.Controllers
         public async Task<IActionResult> Index()
         {
             var listBotruyen = await _botruyenrepository.GetAllAsync();
+            var listLoaiTruyen = await _botruyenrepository.GetAllLoaiTruyens();
+            ViewBag.LoaiTruyen = listLoaiTruyen;
             return View(listBotruyen);
         }
 
@@ -33,6 +35,18 @@ namespace ProjectMangaSmurf.Controllers
             return View(listBotruyen);
         }
 
+        public async Task<IActionResult> ListTruyenEarliest()
+        {
+            var listBotruyen = await _botruyenrepository.GetAllAsyncByChapterEarliest();
+            return View(listBotruyen);
+        }
+
+        public async Task<IActionResult> ListTruyenTT(int id)
+        {
+            var listBotruyen = await _botruyenrepository.GetAllTrangThaiAsync(id);
+            return View(listBotruyen);
+        }
+
         public async Task<IActionResult> Rankings()
         {
 
@@ -43,6 +57,8 @@ namespace ProjectMangaSmurf.Controllers
         public async Task<IActionResult> ListTopic(string id)
         {
             var listBotruyen = await _botruyenrepository.GetAllByTopic(id);
+            var loai = await _botruyenrepository.GetLoaiByNameAsync(id);
+            ViewBag.Topic = loai.TenLoai;
             return View(listBotruyen);
         }
 
@@ -65,7 +81,6 @@ namespace ProjectMangaSmurf.Controllers
             {
                 return NotFound();
             }
-
             return View(Chapter);
         }
     }
