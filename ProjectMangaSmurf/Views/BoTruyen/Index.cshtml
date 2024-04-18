@@ -321,13 +321,12 @@
     </div>
 </section>
 
-<section class="new-update containers mt-3" id="update">
+<section class="new-update containers mt-6" id="update">
     <div class="update__container grids">
-        <div class="section-bottom container w-100 d-flex flex-column justify-content-center align-center">
-            <img src="~/img/log-in-yuzu.png" />
-            <span>Nếu bạn vẫn chưa biết đọc gì hôm nay</span>
-            <span>hãy xem danh mục Trending cuả chúng tôi!</span>
-            <a asp-area="" asp-controller="BoTruyen" asp-action="ListTruyen"></a>
+        <div class="section-bottom container w-100">
+            <img src="/images/yuzu.png" alt="cat Image" />
+            <span>Bạn vẫn chưa biết đọc gì hôm nay<br />Hãy xem danh mục Trending của chúng tôi!</span>
+            <a asp-area="" asp-controller="BoTruyen" asp-action="ListTruyen">View More</a>
         </div>
     </div>
 </section>
@@ -352,7 +351,7 @@
 <script type="text/javascript">
     $('.autoplay').slick({
         slidesToShow: 7,
-        slidesToScroll: 3,
+        slidesToScroll: 2,
         autoplay: true,
         autoplaySpeed: 2500,
     });

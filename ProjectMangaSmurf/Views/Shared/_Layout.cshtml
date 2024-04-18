@@ -97,7 +97,7 @@
                                         <a class="dropdown-item" asp-area="" asp-controller="BoTruyen" asp-action="ListTopic" asp-route-id="Xuyên không">Xuyên không</a>
                                         <a class="dropdown-item" asp-area="" asp-controller="BoTruyen" asp-action="ListTopic" asp-route-id="Adventure">Adventure</a>
                                         <a class="dropdown-item" asp-area="" asp-controller="BoTruyen" asp-action="ListTopic" asp-route-id="One short">One short</a>
-                                        <a class="dropdown-item" asp-area="" asp-controller="BoTruyen" asp-action="ListTopic" asp-route-id="Chuyển sinh">Chuyển sinh</a>
+                                        <a class="dropdown-item" asp-area="" asp-controller="BoTruyen" asp-action="ListTopic" asp-route-id="Sports">Sports</a>
                                         <a class="dropdown-item" asp-area="" asp-controller="BoTruyen" asp-action="ListTopic" asp-route-id="Truyện màu">Truyện màu</a>
                                     </div>
                                     <div class="col-4">
@@ -120,7 +120,7 @@
                             </div>
                         </div>
                     </a>
-                    <a href="#" class="nav__link active-link">Trending</a>
+                    <a asp-area="" asp-controller="BoTruyen" asp-action="Trending" class="nav__link active-link">Trending</a>
                     <a href="#home" class="nav__item nav__link active-link">Theo dõi</a>
                     <a href="#home" class="nav__item nav__link active-link">Lịch sử</a>
                     <a class="nav__item nav__link active-link" asp-area="" asp-controller="BoTruyen" asp-action="Rankings">Xếp hạng</a>
@@ -189,7 +189,7 @@
 
                     <ul class="footer__links">
                         <li>
-                            <a href="" class="footer__link">Contact</a>
+                            <a asp-area="" asp-controller="KhachHang" asp-action="Contact" class="footer__link">Contact</a>
                         </li>
                         <li>
                             <a href="" class="footer__link">Order & Returns</a>
@@ -234,8 +234,7 @@
             </div>
         </div>
 
-        <div class="footer__info containers" style="margin-top: 1.5rem;">
-
+        <div class="footer__info containers" style="margin-top: 1.5rem; display:flex; justify-content:center; align-items:center">
             <span class="footer__copy">
                 &#169; Copyright TEAM 10. All rights reserved
             </span>
@@ -288,7 +287,6 @@
                 scrollToTopButton.style.display = "none";
             }
         }
-
         function scrollToTop() {
             var currentPosition = document.documentElement.scrollTop || document.body.scrollTop;
 
@@ -297,8 +295,6 @@
                 window.scrollTo(0, currentPosition - currentPosition / 8); // Thay đổi giá trị 8 để điều chỉnh tốc độ cuộn
             }
         }
-
-
     </script>
     
 </body>

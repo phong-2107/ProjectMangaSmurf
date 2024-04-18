@@ -9,6 +9,8 @@ namespace ProjectMangaSmurf.Repository
         Task<IEnumerable<BoTruyen>> GetAllTrangThaiAsync(int id);
         Task<IEnumerable<BoTruyen>> GetAllByTopic(string name);
         Task<IEnumerable<BoTruyen>> GetRankingAsync();
+
+        Task<IEnumerable<BoTruyen>> GetTrendingAsync();
         Task<IEnumerable<LoaiTruyen>> GetAllLoaiTruyens();
 
         string GenerateBoTruyenId();
@@ -21,5 +23,7 @@ namespace ProjectMangaSmurf.Repository
         Task UpdateAsync(BoTruyen botruyen);
         Task DeleteAsync(string id);
         string getNameTGById(string id);
+
+
     }
 }

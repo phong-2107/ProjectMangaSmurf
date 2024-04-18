@@ -157,5 +157,10 @@ namespace ProjectMangaSmurf.Repository
                 return newId;
             }
         }
+
+        public async Task<IEnumerable<BoTruyen>> GetTrendingAsync()
+        {
+            return await _context.BoTruyens.OrderByDescending(p => p.TongLuotXem).ToListAsync();
+        }
     }
 }

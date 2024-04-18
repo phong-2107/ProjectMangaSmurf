@@ -53,6 +53,11 @@ namespace ProjectMangaSmurf.Controllers
             var listBotruyen = await _botruyenrepository.GetRankingAsync();
             return View(listBotruyen);
         }
+        public async Task<IActionResult> Trending()
+        {
+            var listBotruyen = await _botruyenrepository.GetTrendingAsync();
+            return View(listBotruyen);
+        }
 
         public async Task<IActionResult> ListTopic(string id)
         {
@@ -61,6 +66,8 @@ namespace ProjectMangaSmurf.Controllers
             ViewBag.Topic = loai.TenLoai;
             return View(listBotruyen);
         }
+
+        
 
         public async Task<IActionResult> CTBoTruyen(string id)
         {

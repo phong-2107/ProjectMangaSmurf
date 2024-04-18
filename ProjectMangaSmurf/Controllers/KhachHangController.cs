@@ -106,6 +106,11 @@ namespace ProjectMangaSmurf.Controllers
             return View(registeredKhachHang);
         }
 
+        public IActionResult Contact()
+        {
+            return View();
+        }
+
         //public IActionResult account()
         //{
         //    var kh = HttpContext.Session.GetObjectFromJson<KhachHang>("kh") ?? new KhachHang();

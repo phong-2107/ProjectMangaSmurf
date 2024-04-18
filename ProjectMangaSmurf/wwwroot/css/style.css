@@ -1035,6 +1035,33 @@ img {
     border-radius:.7rem;
     background-color: var(--body-color-dark);
 }
+
+    .item-loai:hover{
+        color:var(--containers-color-yellow);
+    }
+
+
+    .section-bottom {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        gap: .5rem;
+        font-size: var(--normal-font-size);
+    }
+.section-bottom img{
+    width:200px;
+}
+
+.section-bottom a{
+    color:var(--title-color);
+    background-color:var(--containers-color-alt);
+    padding:.7rem 1rem;
+    font-size:var(--h3-font-size);
+    margin-top:.5rem;
+    border-radius:3px;
+}
 /*=============== FOOTER ===============*/
 .footer {
     position: relative;
@@ -1143,6 +1170,7 @@ img {
     text-align: center;
     font-size: var(--small-font-size);
     color: var(--text-color-light);
+    width:100%;
 }
 /* New update */
 
