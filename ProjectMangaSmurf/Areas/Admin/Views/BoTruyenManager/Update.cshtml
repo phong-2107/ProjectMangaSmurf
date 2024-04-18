@@ -1,0 +1,170 @@
+﻿@model ProjectMangaSmurf.Models.BoTruyen
+@using Microsoft.AspNetCore.Mvc.Rendering
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<style>
+    .preview {
+        max-width: 50%;
+    }
+</style>
+
+<div class="content">
+    <div class="page-header">
+        <div class="page-title">
+            <h4>Update Bộ truyện</h4>
+            <h6>Cập nhật                                                                                                                                                    bộ truyện</h6>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <form asp-action="Add" method="post" enctype="multipart/form-data" class="row">
+                <div class="col-lg-3 col-sm-6 col-12">
+                    <div class="form-group">
+                        <label asp-for="TenBo">Product Name</label>
+                        <input asp-for="TenBo" type="text" placeholder="Tên bộ truyện">
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-6 col-12">
+                    <div class="form-group">
+                        <label asp-for="Dotuoi">Độ tuổi</label>
+                        <input asp-for="Dotuoi" type="text" placeholder="5,6,7...">
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-6 col-12">
+                    <div class="form-group">
+                        <label asp-for="listloai">Loại truyện</label>
+                        <select asp-for="listloai" asp-items="@ViewBag.types" multiple class="select">
+                            <option>Add Loại truyện</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-6 col-12">
+                    <div class="form-group">
+                        <label asp-for="IdTg">Tác Giả</label>
+                        <select asp-for="IdTg" asp-items="@ViewBag.TGs" class="select">
+                            <option>Add Tác giả</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-6 col-12">
+                    <label asp-for="TtPemium">Truyện Premium</label>
+                    <select asp-for="TtPemium" class="select">
+                        <option>true</option>
+                        <option>false</option>
+                    </select>
+                </div>
+                <div class="col-lg-3 col-sm-6 col-12">
+                    <label asp-for="TrangThai">Category</label>
+                    <select asp-for="TrangThai" class="select">
+                        <option>Hoàn Thành</option>
+                        <option>Đang cập nhật</option>
+                        <option>Sắp ra mắt</option>
+                        <option>Ngừng phát hành</option>
+                    </select>
+                </div>
+
+                <div class="col-lg-12">
+                    <div class="form-group">
+                        <label asp-for="Mota">Mô tả</label>
+                        <textarea asp-for="Mota" class="form-control"></textarea>
+                        <span asp-validation-for="Mota">Password</span>
+                    </div>
+                </div>
+                @*
+                <div class="col-lg-12">
+                <div class="form-group">
+                <input asp-for="TkDanhgia" type="text" value="0.0" hidden>
+                <input asp-for="TkTheodoi" type="text" value="0" hidden>
+                <input asp-for="TongLuotXem" type="text" value="0" hidden>
+                <input asp-for="TtPemium" type="text" value="true" hidden>
+                <input asp-for="Active" type="text" value="true" hidden>
+                </div>
+                </div> *@
+
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label asp-for="AnhBanner">Ảnh Banner</label>
+                        <div class="image-upload  d-flex flex-column justify-content-center align-center">
+
+                            <input type="file" asp-for="AnhBanner" class="imgInput" data-target="preview1">
+                            <img class="preview" id="preview1" src="#" alt="your image" />
+
+                            <div class="image-uploads">
+                                <img src="~/img/icons/upload.svg" alt="img">
+                                <h4>Chọn Ảnh Banner</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label asp-for="AnhBia">Ảnh Poster</label>
+                        <div class="image-upload d-flex flex-column justify-content-center align-center">
+
+                            <input type="file" asp-for="AnhBia" class="imgInput" data-target="preview2">
+                            <img class="preview" id="preview2" src="#" alt="your image" />
+
+                            <div class="image-uploads">
+                                <img src="~/img/icons/upload.svg" alt="img">
+                                <h4>Chọn Ảnh Poster</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div asp-validation-summary="ModelOnly" class="col-lg-12 p-4 text-danger" style="font-size:20px; font-weight:600">
+                </div>
+                <div class="col-lg-12">
+                    <button @* href="javascript:void(0);" *@ type="submit" class="btn btn-submit me-2 update-product" data-product-id="@Model.IdBo" href="javascript:void(0);">Update</button>
+                    <button @* href="productlist.html" *@ class="btn btn-cancel">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    function readURL(input, targetID) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#' + targetID).attr('src', e.target.result);
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    $(document).ready(function () {
+        $(".imgInput").change(function () {
+            var targetID = $(this).data('target');
+            readURL(this, targetID);
+        });
+    });
+
+
+
+    $(document).ready(function () {
+        $('.update-product').click(function () {
+            var productId = $(this).data('product-id');
+            $.ajax({
+                url: `/Admin/BoTruyenManager/Update/${productId}`,
+                type: 'POST',
+                data: { id: productId },
+                success: function (response) {
+                    Swal.fire({
+                        "Good job!",
+                        "You clicked the button!",
+                        "success"
+                            });
+                    location.reload();
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
+                }
+            });
+
+        }
+            }
+</script>
+
+

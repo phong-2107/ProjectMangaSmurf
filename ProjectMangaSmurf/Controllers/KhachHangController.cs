@@ -8,16 +8,17 @@ namespace ProjectMangaSmurf.Controllers
 {
     public class KhachHangController : Controller
     {
-        private readonly IboTruyenRepository _botruyenrepository;
         private readonly IKhachHangRepository _khachhangrepository;
-        public KhachHangController(IboTruyenRepository botruyenrepository, IKhachHangRepository khachHangRepository)
+        public KhachHangController( IKhachHangRepository khachHangRepository)
         {
-            _botruyenrepository = botruyenrepository;
             _khachhangrepository = khachHangRepository;
         }
+
         public IActionResult Index()
         {
-            return View();
+            var kh = HttpContext.Session.GetObjectFromJson<KhachHang>("kh") ?? new KhachHang();
+            ViewBag.Khachhang = kh;
+            return PartialView("_MenuPartial", kh);
         }
         public bool checkpass(string pass, string passKh)
         {
@@ -104,6 +105,14 @@ namespace ProjectMangaSmurf.Controllers
             }
             return View(registeredKhachHang);
         }
+
+        //public IActionResult account()
+        //{
+        //    var kh = HttpContext.Session.GetObjectFromJson<KhachHang>("kh") ?? new KhachHang();
+        //    ViewBag.KH = kh;
+        //    return View();
+        //}
+
 
     }
 }

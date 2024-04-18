@@ -6,8 +6,37 @@ using ProjectMangaSmurf.Repository;
 using System.Data;
 using ProjectMangaSmurf.Data;
 using ProjectMangaSmurf.Areas.Identity.Data;
+using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using System.Security.Claims;
 
 var builder = WebApplication.CreateBuilder(args);
+
+//builder.Services.AddAuthentication(options =>
+//{
+//    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+//    options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
+//})
+//    .AddCookie()
+//    .AddGoogle(googleOptions =>
+//    {
+//        googleOptions.ClientId = "Google:ClientId";
+//        googleOptions.ClientSecret = "Google:ClientSecret";
+//        googleOptions.CallbackPath = "/signin-google";
+//        googleOptions.Scope.Add("https://www.googleapis.com/auth/userinfo.profile");
+//        googleOptions.Scope.Add("https://www.googleapis.com/auth/userinfo.email");
+
+//        googleOptions.Events.OnCreatingTicket = ctx =>
+//        {
+//            var picture = ctx.User.GetProperty("picture").GetString();
+//            ctx.Identity.AddClaim(new Claim("picture", picture));
+//            return Task.CompletedTask;
+//        };
+
+//    });
+//builder.Services.AddControllersWithViews();
+
+
 
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
@@ -16,6 +45,7 @@ builder.Services.AddSession(options =>
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
@@ -57,8 +87,10 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+//app.UseAuthorization();
+app.UseAuthentication();
 app.UseAuthorization();
-app.UseAuthorization();
+
 app.MapRazorPages();
 app.UseEndpoints(endpoints =>
 {
@@ -70,9 +102,8 @@ app.UseEndpoints(endpoints =>
         name: "Admin",
         pattern: "{area:exists}/{controller=BoTruyenManager}/{action=Index}/{id?}"
     );
-});
-app.MapControllerRoute(
+    app.MapControllerRoute(
     name: "default",
     pattern: "{controller=BoTruyen}/{action=Index}/{id?}");
-
+});
 app.Run();

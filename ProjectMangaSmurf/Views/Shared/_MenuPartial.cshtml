@@ -1,0 +1,53 @@
+﻿@model ProjectMangaSmurf.Models.KhachHang
+@{
+    var kh = ViewBag.Khachhang;
+}
+@if(Model != null) 
+{
+    <div class="nav__login">
+        <div class="btn__regis mr-2">
+            <a href="#">@Model.IdKh</a>
+        </div>
+    </div>
+}
+else
+{
+    <div class="nav__login">
+        <div class="btn__regis mr-2">
+            <a >Đăng ký</a>
+        </div>
+        <div class=" btn__login">
+            <a href="#">Đăng nhập</a>
+        </div>
+    </div>
+}
+@* 
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data
+                    target="#myNavbar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+
+        <div class="collapse navbar-collapse" id="myNavbar">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="#" data-toggle="modal" data-target="#modalSignup">
+                        <span class="glyphicon glyphicon-user"></span> Đăng ký
+                    </a>
+                </li>
+                <li>
+                    <a href="#" data-toggle="modal" data-target="#modalLogin">
+                        <span class="glyphicon glyphicon-log-in"></span> Đăng nhập
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav> *@ 
+
+

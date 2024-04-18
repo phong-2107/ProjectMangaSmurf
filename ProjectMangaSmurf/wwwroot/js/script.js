@@ -41,3 +41,13 @@ stars.forEach((star, index1) => {
         });
     });
 });
+
+/*======================== FUNCTION UI TINH ĐIEM ĐÁNH GIÁ ============================*/
+const stars = document.querySelectorAll(".rating i");
+stars.forEach((star, index1) => {
+    star.addEventListener("click", () => {
+        stars.forEach((star, index2) => {
+            index1 >= index2 ? star.classList.add("active") : star.classList.remove("active");
+        });
+    });
+});

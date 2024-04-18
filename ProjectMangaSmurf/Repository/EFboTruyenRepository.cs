@@ -14,12 +14,12 @@ namespace ProjectMangaSmurf.Repository
         }
         public async Task<IEnumerable<BoTruyen>> GetAllAsync()
         {
-            return await _context.BoTruyens.ToListAsync();
+            return await _context.BoTruyens.Where(p => p.Active == true).ToListAsync();
         }
 
         public async Task<BoTruyen> GetByIdAsync(string id)
         {
-            return await _context.BoTruyens.Include(p => p.CtBoTruyens).FirstOrDefaultAsync(p => p.IdBo == id);
+            return await _context.BoTruyens.FirstOrDefaultAsync(p => p.IdBo == id);
         }
 
         public async Task AddAsync(BoTruyen botruyen)
@@ -37,7 +37,8 @@ namespace ProjectMangaSmurf.Repository
         public async Task DeleteAsync(string id)
         {
             var botruyen = await _context.BoTruyens.FindAsync(id);
-            _context.BoTruyens.Remove(botruyen);
+            botruyen.Active = false;
+            _context.BoTruyens.Update(botruyen);
             await _context.SaveChangesAsync();
         }
 

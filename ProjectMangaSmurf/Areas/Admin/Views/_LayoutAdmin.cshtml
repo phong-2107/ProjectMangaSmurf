@@ -12,6 +12,8 @@
     <link href="~/css/bootstrap.min.css" rel="stylesheet" />
     <link href="~/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
     <link href="~/css/datatables.bootstrap4.min.css" rel="stylesheet" />
+    <link href="~/js/owlcarousel/owl.carousel.min.css" rel="stylesheet" />
+
     <link href="~/css/select2.min.css" rel="stylesheet" />
 
     <link href="~/css/styleadmin.css" rel="stylesheet" />
@@ -123,33 +125,6 @@
                         </li>
                         <li class="submenu" style="text-decoration:none;">
                             <a>
-                                <img src="/img/icons/time.svg" alt="img">
-                                <span> Quản lý</span>
-                                <span class="menu-arrow"></span>
-                            </a>
-                            <ul>
-                                <li>
-                                    <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="Add">Quản lý Bộ truyện</a>
-                                </li>
-                                <li>
-                                    <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="Add">Quản lý Khách hàng</a>
-                                </li>
-                                <li>
-                                    <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="Add">Quản lý Nhân viên</a>
-                                </li>
-                                <li>
-                                    <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="Add">Quản lý Chapter</a>
-                                </li>
-                                <li>
-                                    <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="Add">Quản lý Tác giả</a>
-                                </li>
-                                <li>
-                                    <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="Add">Quản lý Loại truyện</a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="submenu" style="text-decoration:none;">
-                            <a>
                                 <img src="/img/icons/product.svg" alt="img">
                                 <span> Thêm Mới</span>
                                 <span class="menu-arrow"></span>
@@ -166,6 +141,33 @@
                                 </li>
                                 <li>
                                     <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="Add">Thêm Loại truyện</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="submenu" style="text-decoration:none;">
+                            <a>
+                                <img src="/img/icons/time.svg" alt="img">
+                                <span> Quản lý</span>
+                                <span class="menu-arrow"></span>
+                            </a>
+                            <ul>
+                                <li>
+                                    <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="ViewList">Quản lý Bộ truyện</a>
+                                </li>
+                                <li>
+                                    <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="ViewList">Quản lý Khách hàng</a>
+                                </li>
+                                <li>
+                                    <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="Add">Quản lý Nhân viên</a>
+                                </li>
+                                <li>
+                                    <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="Add">Quản lý Chapter</a>
+                                </li>
+                                <li>
+                                    <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="Add">Quản lý Tác giả</a>
+                                </li>
+                                <li>
+                                    <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="Add">Quản lý Loại truyện</a>
                                 </li>
                             </ul>
                         </li>
@@ -189,8 +191,55 @@
     <script src="~/plugins/apexchart/chart-data.js"></script>
     <script src="~/js/select2.min.js"></script>
     <script src="~/js/custom-select.js"></script>
+
+    <script src="~/js/owlcarousel/owl.carousel.min.js"></script>
+
+    <script src="~/js/sweetalert/sweetalerts.min.js"></script>
+    <script src="~/js/sweetalert/sweetalert2.all.min.js"></script>
     @*----------------- SCRIPT ADMIN ------------------ *@
     <script src="~/js/scriptAdmin.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('.delete-product').click(function () {
+                var productId = $(this).data('product-id');
+                Swal.fire({
+                    title: "Bạn có chắc?",
+                    text: `Xóa Bộ truyện số ${productId}`,
+                    type: "warning",
+                    showCancelButton: !0,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Yes, delete it!",
+                    confirmButtonClass: "btn btn-primary",
+                    cancelButtonClass: "btn btn-danger ml-1",
+                    buttonsStyling: !1
+
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: `/Admin/BoTruyenManager/DeleteConfirmed/${productId}`,
+                            type: 'POST',
+                            data: { id: productId },
+                            success: function (response) {
+                                Swal.fire(
+                                    'Deleted!',
+                                    'Đã xóa thành công bộ truyện',
+                                    'success'
+                                );
+                                location.reload();
+                            },
+                            error: function (xhr, status, error) {
+                                // Xử lý lỗi nếu cần
+                                console.error(xhr.responseText);
+                            }
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>

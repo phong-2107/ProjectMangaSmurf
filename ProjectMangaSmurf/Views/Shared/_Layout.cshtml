@@ -63,26 +63,14 @@
                     <div class="nav__buttons">
                         <i class="ri-moon-fill change-theme" id="theme-button"></i>
                     </div>
-                    <div class="nav__login">@* 
-                        @{
-                            KhachHang? kh = ViewBag.KhachHang;
-                            @if (kh != null)
-                            {
-                                <div class="btn__regis mr-2">
-                                    hello @kh.TenKh
-                                </div>
-                            }
-                            else
-                            { *@
-                                <div class="btn__regis mr-2">
-                                    <a asp-area="" asp-controller="KhachHang" asp-action="Register">Đăng ký</a>
-                                </div>
-                                <div class=" btn__login">
-                                    <a asp-area="" asp-controller="KhachHang" asp-action="Login">Đăng nhập</a>
-                                </div>
-                       @*  
-                        }
-                            } *@
+                    <div class="nav__login">
+                        <div class="btn__regis mr-2">
+                            <a asp-area="" asp-controller="KhachHang" asp-action="Register">Đăng ký</a>
+                        </div>
+                        <div class=" btn__login">
+                            <a asp-area="" asp-controller="KhachHang" asp-action="Login">Đăng nhập</a>
+                        </div>
+                        @* @await Html.PartialAsync("account") *@
                     </div>
                 </div>
 
@@ -138,33 +126,21 @@
                     <a class="nav__item nav__link active-link" asp-area="" asp-controller="BoTruyen" asp-action="Rankings">Xếp hạng</a>
                     <a href="#home" class="nav__item nav__link active-link">Tìm truyện</a>
                     <a class="nav__item nav__link active-link" asp-area="" asp-controller="BoTruyen" asp-action="ListTruyen">Mới cập nhật</a>
-                    @{
-                        if (ViewBag.Title != null)
-                        {
-                            <div class="nav__login">
-                                <div class="btn__regis mr-2">
-                                    <a href="#">@ViewBag.Title</a>
-                                </div>
-                            </div>
-                        }
-                        else
-                        {
-                            <div class="nav__login">
-                                <div class="btn__regis mr-2">
-                                    <a href="#">Đăng ký</a>
-                                </div>
-                                <div class=" btn__login">
-                                    <a href="#">Đăng nhập</a>
-                                </div>
-                            </div>
-                        }
-                    }
-                   @* 
-                    @if (User.IsInRole(SD.Role_Admin))
+                    
+                    @* @await Html.PartialAsync("_MenuPartial") *@
+                    @* @if (User.IsInRole(SD.Role_Admin))
                     {
                         <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="Index">
                             Quản lý
                         </a>
+                    <div class="nav__login">
+                    <div class="btn__regis mr-2">
+                    <a>Đăng ký</a>
+                    </div>
+                    <div class=" btn__login">
+                    <a href="#">Đăng nhập</a>
+                    </div>
+                    </div>
                     } *@
                     
                 </div>
@@ -177,7 +153,7 @@
         <div class="background"></div>
         
         @RenderBody()
-        <a onclick="scrollToTop()" id="scrollToTopBtn" title="Go to top"><i class="ri-arrow-up-s-line"></i></a>
+        <a onclick="scrollToTop()" id="scrollToTopBtn" title="Go to top"><i class="ri-arrow-up-line"></i></i></a>
     </main>
     <footer class="footer" style="position:relative; padding-block: 1rem; line-height: 20px; padding: 2rem 0;">
         <div class="footer__container containers grid">

@@ -1,0 +1,111 @@
+﻿@model ProjectMangaSmurf.Models.BoTruyen
+
+@using ProjectMangaSmurf.Repository
+@inject IboTruyenRepository boTruyenRepository
+@inject IChapterRepository chapterRepository
+
+@{
+    var tg = boTruyenRepository.getNameTGById(Model.IdTg);
+    var listType = string.Join(",", Model.listloai);
+}
+
+<style>
+    .action-page{
+        display:flex;
+        flex-direction:row;
+        gap:.5rem;
+    }
+
+    .action-page a{
+        font-size:20px;
+        font-weight:600;
+        letter-spacing: .7px;
+        color: #212b36;
+    }
+
+        .action-page a:hover {
+                color: #FE820E;
+        }
+</style>
+<div class="content">
+    <div class="page-header">
+        <div class="page-title">
+            <div class="action-page">
+                <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="Index" >Trang Chủ </a>
+                <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="ViewList"> \ List Truyện </a>
+                <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="Detail" asp-route-id="@Model.IdBo"> \ @Model.IdBo</a>
+            </div>
+            
+            <h6>Chi tiết các thông tin của bộ truyện</h6>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-8 col-sm-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="productdetails">
+                        <ul class="product-bar">
+                            <li>
+                                <h4>Tên Bộ truyện</h4>
+                                <h6>@Model.TenBo</h6>
+                            </li>
+                            <li>
+                                <h4>Độ tuổi</h4>
+                                <h6>@Model.Dotuoi</h6>
+                            </li>
+                            <li>
+                                <h4>Tác giả</h4>
+                                <h6>@tg</h6>
+                            </li>
+                            <li>
+                                <h4>Tổng đánh giá</h4>
+                                <h6>@Model.TkDanhgia</h6>
+                            </li>
+                            <li>
+                                <h4>Tổng lượt xem</h4>
+                                <h6>@Model.TongLuotXem</h6>
+                            </li>
+                            <li>
+                                <h4>Trạng thái Premium</h4>
+                                <h6>@Model.TtPemium</h6>
+                            </li>
+                            <li>
+                                <h4>Trạng thái</h4>
+                                <h6>@Model.TrangThai</h6>
+                            </li>
+                            <li>
+                                <h4>Loại truyện</h4>
+                                <h6>@listType</h6>
+                            </li>
+                            <li>
+                                <h4>Hoạt đông</h4>
+                                <h6>@Model.Active</h6>
+                            </li>
+                            <li>
+                                <h4>Mô tả truyện</h4>
+                                <h6>@Model.Mota</h6>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-sm-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="slider-product-details">
+                        <div class="owl-carousel owl-theme product-slide align-center justify-content-center">
+                            
+                            <div class="slider-product">
+                                <img src="@Model.AnhBanner" alt="img" style="width:100%" />
+                            </div>
+                            <div class="slider-product">
+                                <img src="@Model.AnhBia" alt="img" style="height:100%" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

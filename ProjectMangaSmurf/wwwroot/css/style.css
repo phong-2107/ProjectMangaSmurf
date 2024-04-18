@@ -478,9 +478,9 @@ img {
     border: none;
     outline: none;
     border: 2px solid;
-    color: var(--containers-color-alt);
+    color: var(--title-color);
     cursor: pointer;
-    border-radius: 50%;
+    border-radius: 5px;
     padding: .2rem .5rem;
 }
 
@@ -865,9 +865,6 @@ img {
     width: 100%;
 }
 
-    .main__right .bg {
-        background-image: url('/images/Không tiêu đề.png');
-    }
 
 .main__random {
     position: relative;
@@ -1000,12 +997,13 @@ img {
     margin:2rem;
 }
 .btn-poster{
-    bottom:20px;
+    border-radius:5px;
+    bottom:30px;
     right:20px;
-    margin:1rem 2rem;
+    margin:2rem;
 }
 .btn-poster-detail {
-    padding: 1rem 2rem;
+    padding: .5rem;
     background-color: var(--containers-color-alt);
     color: var(--title-color);
     font-size: var(--h3-font-size);

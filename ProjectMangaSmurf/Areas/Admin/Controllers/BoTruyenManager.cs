@@ -36,16 +36,29 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
             return View(listBotruyen);
         }
 
+        public async Task<IActionResult> ViewList()
+        {
+            var listBotruyen = await _botruyenrepository.GetAllAsync();
+            return View(listBotruyen);
+        }
+        public async Task<IActionResult> Detail(string id)
+        {
+            var product = await _botruyenrepository.GetByIdAsync(id);
+            if (product == null)
+            {
+                return NotFound();
+            }
+            return View(product);
+        }
+
         public async Task<IActionResult> Add()
         {
             var Types = await _loaiTruyenRepository.GetAllAsync();
             var Tgs = await _tacGiaRepository.GetAllAsync();
             ViewBag.Types = new SelectList(Types, "IdLoai", "TenLoai");
             ViewBag.TGs = new SelectList(Tgs, "IdTg", "TenTg");
-
             return View();
         }
-
 
         public bool RangBuoc(BoTruyen bt)
         {
@@ -108,7 +121,7 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
                     await _loaiTruyenRepository.AddAsyncCTLoai(ct);
                 }
 
-                return RedirectToAction("AddChapter","BoTruyenManager", new { id = boTruyen.IdBo.ToString()} );
+                return RedirectToAction("AddChapter", "BoTruyenManager", new { id = boTruyen.IdBo.ToString() });
             }
             else
             {
@@ -120,6 +133,73 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
             }
         }
 
+        public async Task<IActionResult> Update(string id)
+        {
+            var product = await _botruyenrepository.GetByIdAsync(id);
+            if (product == null)
+            {
+                return NotFound();
+            }
+            var Types = await _loaiTruyenRepository.GetAllAsync();
+            var Tgs = await _tacGiaRepository.GetAllAsync();
+            ViewBag.Types = new SelectList(Types, "IdLoai", "TenLoai");
+            ViewBag.TGs = new SelectList(Tgs, "IdTg", "TenTg");
+            return View(product);
+        }
+        // Xử lý cập nhật sản phẩm
+        [HttpPost]
+        public async Task<IActionResult> Update(string id, BoTruyen boTruyen, IFormFile AnhBanner, IFormFile AnhBia)
+        {
+            var rangbuoc = RangBuoc(boTruyen);
+            if (rangbuoc)
+            {
+                ModelState.Remove("AnhBanner");
+                ModelState.Remove("AnhBia");
+                if (id != boTruyen.IdBo)
+                {
+                    return NotFound();
+                }
+                var existingProduct = await _botruyenrepository.GetByIdAsync(id);
+                if (AnhBanner == null || AnhBia == null)
+                {
+                    boTruyen.AnhBanner = existingProduct.AnhBanner;
+                    boTruyen.AnhBia = existingProduct.AnhBia;
+                }
+                else
+                {
+                    if (AnhBanner != null)
+                    {
+                        boTruyen.AnhBanner = await SaveImage(AnhBanner);
+                    }
+                    if (AnhBia != null)
+                    {
+                        boTruyen.AnhBia = await SaveImage(AnhBia);
+                    }
+                }
+                existingProduct.TenBo = boTruyen.TenBo;
+                existingProduct.Dotuoi = boTruyen.Dotuoi;
+                existingProduct.IdTg = boTruyen.IdTg;
+                existingProduct.Mota = boTruyen.Mota;
+                existingProduct.AnhBia = boTruyen.AnhBia;
+                existingProduct.AnhBanner = boTruyen.AnhBanner;
+                existingProduct.TtPemium = boTruyen.TtPemium;
+                existingProduct.TrangThai = boTruyen.TrangThai;
+                existingProduct.Active = boTruyen.Active;                                                                                                                                                                                                                             
+                existingProduct.listloai = boTruyen.listloai;
+
+                await _botruyenrepository.UpdateAsync(existingProduct);
+
+                    return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                    var Tgs = await _tacGiaRepository.GetAllAsync();
+                    ViewBag.TGs = new SelectList(Tgs, "IdTg", "TenTg");
+                    var Types = await _loaiTruyenRepository.GetAllAsync();
+                    ViewBag.Types = new SelectList(Types, "IdLoai", "TenLoai");
+                    return View(boTruyen);
+            }
+        }
         public bool RangBuocChapter(Chapter bt)
         {
             if (bt.SttChap == null)
@@ -173,6 +253,13 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
             {
                 return View(chapter.IdBo.ToString());
             }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteConfirmed(string id)
+        {
+            await _botruyenrepository.DeleteAsync(id);
+            return RedirectToAction(nameof(Index));
         }
 
         private async Task<string> SaveImage(IFormFile image)

@@ -14,7 +14,6 @@ namespace ProjectMangaSmurf.Controllers
             _chapterrepository = chapterrepository;
             _khachhangrepository = khachHangRepository;
         }
-
         public async Task<IActionResult> Index()
         {
             var listBotruyen = await _botruyenrepository.GetAllAsync();
@@ -22,6 +21,7 @@ namespace ProjectMangaSmurf.Controllers
             ViewBag.LoaiTruyen = listLoaiTruyen;
             return View(listBotruyen);
         }
+
 
         //public async Task<IActionResult> Index(string id)
         //{
