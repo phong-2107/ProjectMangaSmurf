@@ -51,12 +51,12 @@
                 <form autocomplete="off" class="form-login" asp-action="Login" method="post">
                     <div class="content-login form-group" style="z-index: 100000;">
                         <div class="inputBox">
-                            <input autocomplete="false" name="hidden" asp-for="Taikhoan" type="text" required>
+                            <input name="hidden" asp-for="Taikhoan" type="text" autocomplete="off" required>
                             <span asp-validation-for="Taikhoan">Username</span>
                             <i></i>
                         </div>
                         <div class="inputBox">
-                            <input autocomplete="false" name="hidden" asp-for="Matkhau" type="password" required>
+                            <input name="hidden" asp-for="Matkhau" type="password" autocomplete="off" required>
                             <span asp-validation-for="Matkhau">Password</span>
                             <i></i>
                         </div>

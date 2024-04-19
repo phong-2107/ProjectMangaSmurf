@@ -1,6 +1,7 @@
 ﻿using ProjectMangaSmurf.Models;
 using ProjectMangaSmurf.Repository;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 namespace ProjectMangaSmurf.Controllers
 {
     public class BoTruyenController : Controller
@@ -47,9 +48,33 @@ namespace ProjectMangaSmurf.Controllers
             return View(listBotruyen);
         }
 
-        public async Task<IActionResult> Rankings()
+        public async Task<IActionResult> Rankings(int id)
         {
-
+            ViewBag.Value = id;
+            if (id == 1)
+            {
+                var listView = await _botruyenrepository.GetRankingAsync();
+                return View(listView);
+            }
+            if (id == 2)
+            {
+                var listFollow = await _botruyenrepository.GetAllAsyncByFollow();
+                return View(listFollow);
+            }
+            if (id == 3){
+                var listRate = await _botruyenrepository.GetAllAsyncByRate();
+                return View(listRate);
+            }
+            if(id == 4)
+            {
+                var listToday = await _botruyenrepository.GetAllAsyncByDay();
+                return View(listToday);
+            }
+            if (id == 5)
+            {
+                var listMonth = await _botruyenrepository.GetAllAsyncByMonth();
+                return View(listMonth);
+            }
             var listBotruyen = await _botruyenrepository.GetRankingAsync();
             return View(listBotruyen);
         }
@@ -80,7 +105,6 @@ namespace ProjectMangaSmurf.Controllers
 
             return View(Botruyen);
         }
-
         public async Task<IActionResult> Chapter(string id, int stt)
         {
             var Chapter = await _chapterrepository.GetByIdAsync(id, stt);
@@ -88,7 +112,57 @@ namespace ProjectMangaSmurf.Controllers
             {
                 return NotFound();
             }
+            else
+            {
+                Chapter.TkLuotxem = Chapter.TkLuotxem + 1;
+                await _chapterrepository.UpdateAsync(Chapter);
+
+                var bt = await _botruyenrepository.GetByIdAsync(id);
+                if(bt != null)
+                {
+                    bt.TongLuotXem = bt.TongLuotXem + 1;
+                    await _botruyenrepository.UpdateAsync(bt);
+                }
+            }
+            var kh = HttpContext.Session.GetObjectFromJson<KhachHang>("kh");
+            if(kh != null)
+            {
+                ViewBag.user = kh;
+            }
+            else
+            {
+                ViewBag.user = null;
+            }
             return View(Chapter);
         }
+        //[HttpPost]
+        //public async Task<IActionResult> OnChapter([FromBody] string id)
+        //{
+        //    // Lấy Chapter từ id
+        //    var chapter = await _chapterrepository.GetByIdAsync(id);
+
+        //    if (chapter != null)
+        //    {
+        //        // Tăng số lượt xem
+        //        chapter.TkLuotxem += 1;
+
+        //        // Cập nhật Chapter
+        //        await _chapterrepository.UpdateAsync(chapter);
+
+        //        // Lấy thông tin bộ truyện tương ứng
+        //        var bt = await _botruyenrepository.GetByIdAsync(id);
+        //        if (bt != null)
+        //        {
+        //            // Tăng tổng số lượt xem
+        //            bt.TongLuotXem += 1;
+
+        //            // Cập nhật thông tin bộ truyện
+        //            await _botruyenrepository.UpdateAsync(bt);
+        //        }
+        //    }
+
+        //    return Ok(); // Hoặc bạn có thể trả về bất kỳ dữ liệu nào bạn muốn trả về
+        //}
+
     }
 }

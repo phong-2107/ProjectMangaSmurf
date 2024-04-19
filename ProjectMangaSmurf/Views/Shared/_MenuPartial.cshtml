@@ -1,4 +1,4 @@
-﻿@model ProjectMangaSmurf.Models.KhachHang
+﻿@* @model ProjectMangaSmurf.Models.KhachHang
 @{
     var kh = ViewBag.Khachhang;
 }
@@ -20,34 +20,57 @@ else
             <a href="#">Đăng nhập</a>
         </div>
     </div>
-}
-@* 
-<nav class="navbar navbar-inverse">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data
-                    target="#myNavbar">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
+} *@
+
+
+
+@using Microsoft.AspNetCore.Identity
+@using ProjectMangaSmurf.Areas.Identity.Data
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+<style>
+    .navbar-nav {
+        display: flex;
+        flex-direction: row;
+        height: 100%;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .nav-item {
+        padding: 0 .5rem;
+        font-weight: 500;
+        font-size: 20px;
+    }
+</style>
+
+<ul class="navbar-nav">
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <li class="nav-item">
+            <a id="manage" class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">@UserManager.GetUserName(User)!</a>
+        </li>
+        <li class="nav-item">
+            <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "BoTruyenManager", new { area = "Admin" })">
+                <button id="logout" type="submit" class="nav-link btn btn-link text-dark border-0">Logout</button>
+            </form>
+        </li>
+    }
+    else
+    {
+        @* <li class="nav-item">
+    <a class="nav-link text-dark" id="register" asp-area="Identity" asp-page="/Account/Register">Register</a>
+    </li> *@
+        <li class="nav-item">
+            <a class="nav-link text-dark" id="login" asp-area="Identity" asp-page="/Account/Login">Login</a>
+        </li>
+        <div class="btn__regis mr-2">
+            <a asp-area="" asp-controller="KhachHang" asp-action="Register">Đăng ký</a>
         </div>
-
-        <div class="collapse navbar-collapse" id="myNavbar">
-            <ul class="nav navbar-nav navbar-right">
-                <li>
-                    <a href="#" data-toggle="modal" data-target="#modalSignup">
-                        <span class="glyphicon glyphicon-user"></span> Đăng ký
-                    </a>
-                </li>
-                <li>
-                    <a href="#" data-toggle="modal" data-target="#modalLogin">
-                        <span class="glyphicon glyphicon-log-in"></span> Đăng nhập
-                    </a>
-                </li>
-            </ul>
+        <div class=" btn__login">
+            <a asp-area="" asp-controller="KhachHang" asp-action="Login">Đăng nhập</a>
         </div>
-    </div>
-</nav> *@ 
-
-
+    }
+</ul>

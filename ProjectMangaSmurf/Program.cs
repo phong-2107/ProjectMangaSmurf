@@ -70,7 +70,7 @@ builder.Services.AddScoped<ILoaiTruyenRepository, EFLoaiTruyenRepository>();
 builder.Services.AddScoped<ITacGiaRepository, EFTacGiaRepository>();
 builder.Services.AddScoped<IChapterRepository, EFChapterRepository>();
 builder.Services.AddScoped<IKhachHangRepository, EFKhachHangRepository>();
-
+builder.Services.AddScoped<IEmailRepository, EFEmailRepository>();
 //builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<MangaSmurfContext>().AddDefaultTokenProviders();
 
 builder.Services.AddControllersWithViews();

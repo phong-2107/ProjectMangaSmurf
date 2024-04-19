@@ -22,7 +22,7 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.2.0/remixicon.css" integrity="sha512-OQDNdI5rpnZ0BRhhJc+btbbtnxaj+LdQFeh0V9/igiEPDiWE2fG+ZsXl0JEH+bjXKPJ3zcXqNyP4/F/NegVdZg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <link href="~/css/style.css" rel="stylesheet" />
 <link href="~/css/styleList.css" rel="stylesheet" />
 <link href="~/css/styleCT.css" rel="stylesheet" />
@@ -100,7 +100,9 @@
                 <a class="btn-next" asp-action="Chapter" asp-route-id="@Model.IdBo" asp-route-stt="@sttchapMax"><i class="ri-arrow-right-s-line"></i></a>
             }
         }
-        <a class="btn-follow""><i class="ri-heart-fill"></i></i></a>
+        <a id="btnFollow" data-url="@Url.Action("TheoDoi", "KhachHang", new { id = Model.IdBo })" data-id="@Model.IdBo" data-stt="@Model.SttChap" class="btn-follow"><i class="fa-solid fa-heart"></i></a>
+        
+    
     </div>
 
     <div class="reading-detail containers">
@@ -131,6 +133,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.js" integrity="sha512-HGOnQO9+SP1V92SrtZfjqxxtLmVzqZpjFFekvzZVWoiASSQgSr4cw9Kqd2+l8Llp4Gm0G8GIFJ4ddwZilcdb8A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="/js/script.js"></script>
 
+
+
 <script>
     let lastScrollTop = 0;
     const control = document.getElementById("control");
@@ -145,5 +149,19 @@
             control.classList.remove("hidden");
         }
         lastScrollTop = currentScroll;
+    });
+</script>
+
+<script>
+    Document.getElementById('btnFollow').addEventListener('click', =>() {
+        if (@ViewBag.user == null) {
+            alert('Bạn cần đăng nhập để theo dõi.');
+        }
+        else {
+            var url = this.getAttribute('data-url');
+            var id = this.getAttribute('data-id');
+            var stt = this.getAttribute('data-stt');
+            window.location.href = url + '?id=' + id + '&stt=' + stt;
+        }
     });
 </script>

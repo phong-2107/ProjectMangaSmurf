@@ -149,9 +149,10 @@
         }
 
         #firstRank .item-number {
-            color: #FE0000;
-            font-size: var(--h1-font-size);
+            color: #ff9c1a;
+            font-size: 2rem;
             z-index: 10;
+            font-weight:700;
         }
 
 #firstRank .rank-img {

@@ -15,5 +15,6 @@ namespace ProjectMangaSmurf.Repository
         Task AddAsyncCT(CtChapter CTs);
         Task UpdateAsync(Chapter chapter);
         Task DeleteAsync(string id);
+
     }
 }

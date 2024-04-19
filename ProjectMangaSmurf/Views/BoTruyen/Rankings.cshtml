@@ -37,20 +37,24 @@
         </div>
         <div class="rank-top ">
             <ul class="rank__type " id="rank__type">
-                <li class="nav__item  active-rank">
-                    <a href="#" class="nav__link active-link">THEO DÕI</a>
+                @if(ViewBag.value == 1)
+                {
+                    
+                }
+                <li class="nav__item">
+                    <a asp-area="" asp-controller="BoTruyen" asp-action="Rankings" asp-route-id="1" class="nav__link active-link">LƯỢT ĐỌC</a>
+                </li>
+                <li class="nav__item  ">
+                    <a asp-area="" asp-controller="BoTruyen" asp-action="Rankings" asp-route-id="2" class="nav__link active-link">THEO DÕI</a>
                 </li>
                 <li class="nav__item">
-                    <a href="#" class="nav__link active-link">NGÀY</a>
+                    <a asp-area="" asp-controller="BoTruyen" asp-action="Rankings" asp-route-id="3" class="nav__link active-link">ĐÁNH GIÁ</a>
                 </li>
                 <li class="nav__item">
-                    <a href="#" class="nav__link active-link">THÁNG</a>
+                    <a asp-area="" asp-controller="BoTruyen" asp-action="Rankings" asp-route-id="4" class="nav__link active-link">HÔM NAY</a>
                 </li>
                 <li class="nav__item">
-                    <a href="#" class="nav__link active-link">NĂM</a>
-                </li>
-                <li class="nav__item">
-                    <a href="#" class="nav__link active-link">LƯỢT ĐỌC</a>
+                    <a asp-area="" asp-controller="BoTruyen" asp-action="Rankings" asp-route-id="5" class="nav__link active-link">THÁNG NÀY</a>
                 </li>
             </ul>
         </div>
@@ -80,13 +84,29 @@
                                         </a>
                                     <div>
                                     <p class="item-type">@loaitruyen</p>
-                                        <div class="rating">
+                                    @{
+                                        int valueF = Convert.ToInt32(item.TkDanhgia);
+                                        if (valueF > 0)
+                                        {
+                                            var tmp = 5 - valueF;
+                                            for (int a = 0; a < valueF; a++)
+                                            {
+                                                <i class="ri-star-fill" style="color: #FAB818;"></i>
+                                            }
+                                            for (int b = 0; b < tmp; b++)
+                                            {
+                                                <i class="ri-star-fill"></i>
+                                            }
+                                        }
+                                        else
+                                        {
                                             <i class="ri-star-fill"></i>
                                             <i class="ri-star-fill"></i>
                                             <i class="ri-star-fill"></i>
                                             <i class="ri-star-fill"></i>
                                             <i class="ri-star-fill"></i>
-                                        </div>
+                                        }
+                                    }
                                     </div>
                                 </div>
                             </div>
@@ -168,6 +188,11 @@
 </div>
 
 <script>
-
+    document.addEventListener('DOMContentLoaded', function () {
+        var activeIndex = @ViewBag.value;
+        var listItems = document.querySelectorAll('#rank__type .nav__item');
+        if (activeIndex >= 1 && activeIndex <= listItems.length) {
+            listItems[activeIndex - 1].classList.add('active-rank');
+        }
+    });
 </script>
-

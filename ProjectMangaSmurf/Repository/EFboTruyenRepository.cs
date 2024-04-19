@@ -80,12 +80,7 @@ namespace ProjectMangaSmurf.Repository
             return await Task.FromResult(randomElement);
         }
 
-        public async Task<IEnumerable<BoTruyen>> GetRankingAsync()
-        {
-            return await _context.BoTruyens.OrderByDescending(p => p.TongLuotXem).Take(10).ToListAsync();
-        }
-
-
+        
 
         public List<string> GetListLoaiAsync(string id)
         {
@@ -161,6 +156,59 @@ namespace ProjectMangaSmurf.Repository
         public async Task<IEnumerable<BoTruyen>> GetTrendingAsync()
         {
             return await _context.BoTruyens.OrderByDescending(p => p.TongLuotXem).ToListAsync();
+        }
+
+        public async Task<IEnumerable<BoTruyen>> GetRankingAsync()
+        {
+            return await _context.BoTruyens.OrderByDescending(p => p.TongLuotXem).Take(10).ToListAsync();
+        }
+
+        public async Task<IEnumerable<BoTruyen>> GetAllAsyncByDay()
+        {
+            DateTime today = DateTime.Today;
+            var booksWithDailyViews = await _context.BoTruyens
+                .Select(b => new
+                {
+                    BoTruyen = b,
+                    DailyViews = b.Chapters
+                        .Where(c => c.ThoiGian.Date == today)
+                        .Sum(c => c.TkLuotxem)
+                })
+                .OrderByDescending(x => x.DailyViews)
+                .ToListAsync();
+            return booksWithDailyViews.Select(x => x.BoTruyen).Take(10);
+        }
+
+        public async Task<IEnumerable<BoTruyen>> GetAllAsyncByFollow()
+        {
+            return await _context.BoTruyens.OrderByDescending(x => x.TkTheodoi).Take(10).ToListAsync();
+        }
+
+        public async Task<IEnumerable<BoTruyen>> GetAllAsyncByRate()
+        {
+            var boTruyens = await _context.BoTruyens
+            .AsNoTracking()
+            .OrderByDescending(bt => bt.TkDanhgia)
+            .ThenByDescending(bt => bt.TongLuotXem).Take(10)
+            .ToListAsync();
+
+            return boTruyens;
+        }
+
+        public async Task<IEnumerable<BoTruyen>> GetAllAsyncByMonth()
+        {
+            int today = DateTime.Now.Month;
+            var booksWithDailyViews = await _context.BoTruyens
+                .Select(b => new
+                {
+                    BoTruyen = b,
+                    DailyViews = b.Chapters
+                        .Where(c => c.ThoiGian.Date.Month == today)
+                        .Sum(c => c.TkLuotxem)
+                })
+                .OrderByDescending(x => x.DailyViews)
+                .ToListAsync();
+            return booksWithDailyViews.Select(x => x.BoTruyen).Take(10);
         }
     }
 }

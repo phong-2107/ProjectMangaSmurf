@@ -553,7 +553,7 @@ img {
 }
 
 
-.search {
+.search-bar {
     position: relative;
     background-color: #fff;
     width: 45px;
@@ -564,12 +564,12 @@ img {
     margin-right: 1rem;
 }
 
-    .search.active {
+    .search-bar.active {
         width: 360px;
         margin-right: 1rem;
     }
 
-    .search .icon {
+    .search-bar .icon-search {
         position: absolute;
         top: 0;
         left: 0;
@@ -586,14 +586,14 @@ img {
     }
 
 
-        .search .icon::before {
+        .search-bar .icon-search::before {
             content: "";
             position: absolute;
             width: 25px;
             height: 25px;
         }
 
-    .search .input {
+    .search-bar .input {
         position: relative;
         width: 100%;
         height: 100%;
@@ -603,7 +603,7 @@ img {
         align-items: center;
     }
 
-        .search .input input {
+        .search-bar .input input {
             position: absolute;
             top: 0;
             border: none;

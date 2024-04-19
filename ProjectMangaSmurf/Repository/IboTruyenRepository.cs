@@ -8,8 +8,13 @@ namespace ProjectMangaSmurf.Repository
         Task<IEnumerable<BoTruyen>> GetAllAsyncByChapterEarliest();
         Task<IEnumerable<BoTruyen>> GetAllTrangThaiAsync(int id);
         Task<IEnumerable<BoTruyen>> GetAllByTopic(string name);
+
         Task<IEnumerable<BoTruyen>> GetRankingAsync();
 
+        Task<IEnumerable<BoTruyen>> GetAllAsyncByFollow();
+        Task<IEnumerable<BoTruyen>> GetAllAsyncByDay();
+        Task<IEnumerable<BoTruyen>> GetAllAsyncByMonth();
+        Task<IEnumerable<BoTruyen>> GetAllAsyncByRate();
         Task<IEnumerable<BoTruyen>> GetTrendingAsync();
         Task<IEnumerable<LoaiTruyen>> GetAllLoaiTruyens();
 

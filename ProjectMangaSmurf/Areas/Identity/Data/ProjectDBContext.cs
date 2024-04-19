@@ -39,6 +39,7 @@ namespace ProjectMangaSmurf.Data
         public DbSet<Premium> Premia { get; set; }
 
         public DbSet<TacGium> TacGia { get; set; }
+        public DbSet<ContactMail> ContactMail { get; set; }
         public DbSet<ApplicationUser> applicationUsers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -409,6 +410,11 @@ namespace ProjectMangaSmurf.Data
                 entity.Property(e => e.TenTg)
                     .HasMaxLength(30)
                     .HasColumnName("ten_tg");
+            });
+
+            modelBuilder.Entity<ContactMail>(entity =>
+            {
+                entity.HasKey(e => e.Email);
             });
 
             //OnModelCreatingPartial(modelBuilder);

@@ -9,6 +9,7 @@ namespace ProjectMangaSmurf.Controllers
     public class KhachHangController : Controller
     {
         private readonly IKhachHangRepository _khachhangrepository;
+        
         public KhachHangController( IKhachHangRepository khachHangRepository)
         {
             _khachhangrepository = khachHangRepository;
@@ -40,14 +41,14 @@ namespace ProjectMangaSmurf.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> Login(string Taikhoan, string matKhau)
+        public async Task<IActionResult> Login(string Taikhoan, string Matkhau)
         {
             if (ModelState.IsValid)
             {
                 var kh = await _khachhangrepository.GetByIdAsync(Taikhoan);
                 if (kh != null)
                 {
-                    var check = PasswordHasher.VerifyPassword(matKhau.Trim(), kh.Matkhau.Trim());
+                    var check = PasswordHasher.VerifyPassword(Matkhau.Trim(), kh.Matkhau.Trim());
                     if (check)
                     {
                         HttpContext.Session.SetObjectAsJson("kh", kh);
@@ -106,10 +107,7 @@ namespace ProjectMangaSmurf.Controllers
             return View(registeredKhachHang);
         }
 
-        public IActionResult Contact()
-        {
-            return View();
-        }
+        
 
         //public IActionResult account()
         //{

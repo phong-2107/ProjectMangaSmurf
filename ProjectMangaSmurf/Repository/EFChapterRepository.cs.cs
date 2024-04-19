@@ -97,9 +97,10 @@ namespace ProjectMangaSmurf.Repository
             }
         }
 
-        public Task UpdateAsync(Chapter chapter)
+        public async Task UpdateAsync(Chapter chapter)
         {
-            throw new NotImplementedException();
+            _context.Chapters.Update(chapter);
+            await _context.SaveChangesAsync();
         }
 
         public async Task AddAsyncCT(CtChapter CTs)

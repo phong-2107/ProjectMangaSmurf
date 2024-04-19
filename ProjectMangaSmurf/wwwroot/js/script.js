@@ -1,7 +1,7 @@
 ﻿
 /*======================= ANIMATION SEARCH BAR ==========================*/
-const icon = document.querySelector(".icon");
-const search = document.querySelector(".search");
+const icon = document.querySelector(".icon-search");
+const search = document.querySelector(".search-bar");
 
 icon.onclick = () => {
     search.classList.toggle('active');
@@ -16,8 +16,6 @@ clear.onclick = () => {
         valueTruyen.value = '';
     }
 }
-
-
 
 /* ======================== active rank ================================ */
 var header = document.getElementById("rank__type");

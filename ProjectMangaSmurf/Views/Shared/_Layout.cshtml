@@ -29,7 +29,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.2.0/remixicon.css" integrity="sha512-OQDNdI5rpnZ0BRhhJc+btbbtnxaj+LdQFeh0V9/igiEPDiWE2fG+ZsXl0JEH+bjXKPJ3zcXqNyP4/F/NegVdZg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    @RenderSection("Scripts", required: false)
+    
 </head>
 
 
@@ -52,8 +52,8 @@
                     <img class="nav__logo-img" src="/images/logo1.png" alt="logo website">
                 </a>
                 <div class="nav__menu nav__menu-list" id="nav-menu">
-                    <div class="search">
-                        <div class="icon"><i class="ri-search-2-line"></i></div>
+                    <div class="search-bar">
+                        <div class="icon-search"><i class="ri-search-2-line"></i></div>
                         <div class="input">
                             <input type="text" placeholder="Tìm Kiếm ..." id="search-truyen">
                         </div>
@@ -64,13 +64,13 @@
                         <i class="ri-moon-fill change-theme" id="theme-button"></i>
                     </div>
                     <div class="nav__login">
-                        <div class="btn__regis mr-2">
+                        @* <div class="btn__regis mr-2">
                             <a asp-area="" asp-controller="KhachHang" asp-action="Register">Đăng ký</a>
                         </div>
                         <div class=" btn__login">
                             <a asp-area="" asp-controller="KhachHang" asp-action="Login">Đăng nhập</a>
-                        </div>
-                        @* @await Html.PartialAsync("account") *@
+                        </div> *@
+                        @await Html.PartialAsync("_MenuPartial")
                     </div>
                 </div>
 
@@ -123,7 +123,7 @@
                     <a asp-area="" asp-controller="BoTruyen" asp-action="Trending" class="nav__link active-link">Trending</a>
                     <a href="#home" class="nav__item nav__link active-link">Theo dõi</a>
                     <a href="#home" class="nav__item nav__link active-link">Lịch sử</a>
-                    <a class="nav__item nav__link active-link" asp-area="" asp-controller="BoTruyen" asp-action="Rankings">Xếp hạng</a>
+                    <a class="nav__item nav__link active-link" asp-area="" asp-controller="BoTruyen" asp-action="Rankings" asp-route-id="1">Xếp hạng</a>
                     <a href="#home" class="nav__item nav__link active-link">Tìm truyện</a>
                     <a class="nav__item nav__link active-link" asp-area="" asp-controller="BoTruyen" asp-action="ListTruyen">Mới cập nhật</a>
                     
@@ -189,7 +189,7 @@
 
                     <ul class="footer__links">
                         <li>
-                            <a asp-area="" asp-controller="KhachHang" asp-action="Contact" class="footer__link">Contact</a>
+                            <a asp-area="" asp-controller="Contact" asp-action="Index" class="footer__link">Contact</a>
                         </li>
                         <li>
                             <a href="" class="footer__link">Order & Returns</a>
@@ -241,7 +241,7 @@
         </div>
     </footer>
     <script src="~/js/script.js"></script>
-    <script src="~/js/scriptAdmin.js"></script>
+    @* <script src="~/js/scriptAdmin.js"></script> *@
 
     <script>
         setTimeout(function () {
@@ -298,6 +298,6 @@
     </script>
     
 </body>
-
+    @RenderSection("Scripts", required: false)
 </html>
 
