@@ -25,6 +25,21 @@
         background-repeat: no-repeat;
         background-position: center center;
     }
+.rating {
+    display: flex;
+    align-items: center;
+    gap: .25rem;
+}
+
+    .rating i {
+        font-size: var(--h2-font-size);
+        cursor: pointer;
+        transition: color 0.2s ease;
+    }
+
+        .rating i.active {
+            color: #ff9c1a;
+        }
 
 .bg__detail {
     width: 100%;
@@ -96,34 +111,12 @@
 
 .btn__follow {
     position: absolute;
-    background-color: transparent;
     text-align: center;
-    font-size: var(--body-font);
-    border-radius: 5px;
-    border: 4px solid var(--containers-color-alt);
     justify-content: center;
-    font-weight: var(--font-medium);
-    padding: .5rem .8rem;
-    cursor: pointer;
-    color: var(--containers-color-alt);
     bottom: 4rem;
     right: 3rem;
     z-index: 10;
 }
-
-    .btn__follow:hover {
-        border: 4px solid var(--containers-color-yellow);
-        color: var(--containers-color-yellow);
-    }
-
-    .btn__follow a {
-        font-size: var(--normal-font-size);
-        color: var(--containers-color-alt);
-    }
-
-    .btn__follow:hover a {
-        color: var(--containers-color-yellow);
-    }
 
 .content-main {
     position: relative;
@@ -137,7 +130,7 @@
 }
 
     .content-main.active-content {
-        height: 300px;
+        height: 350px;
     }
 
 .btn__action {
@@ -257,3 +250,10 @@
         font-size:1.2rem;
         font-weight: var(--font-semi-bold);
     }
+
+.chap-col{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+}

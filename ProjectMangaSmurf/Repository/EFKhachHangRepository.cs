@@ -51,13 +51,19 @@ namespace ProjectMangaSmurf.Repository
             throw new NotImplementedException();
         }
 
+        public async Task<KhachHang> GetByEmailAsync(string id)
+        {
+            return await _context.KhachHangs.FirstOrDefaultAsync(p => p.Email == id.Trim());
+        }
+
         public async Task<KhachHang> GetByIdAsync(string id)
         {
             return await _context.KhachHangs.FirstOrDefaultAsync(p => p.Taikhoan == id.Trim());
         }
-        public Task UpdateAsync(KhachHang KhachHang)
+        public async Task UpdateAsync(KhachHang KhachHang)
         {
-            throw new NotImplementedException();
+             _context.KhachHangs.Update(KhachHang);
+            await _context.SaveChangesAsync();
         }
     }
 }

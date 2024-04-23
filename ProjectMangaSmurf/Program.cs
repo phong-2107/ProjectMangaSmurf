@@ -6,11 +6,16 @@ using ProjectMangaSmurf.Repository;
 using System.Data;
 using ProjectMangaSmurf.Data;
 using ProjectMangaSmurf.Areas.Identity.Data;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
+using System.Configuration;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
+var services = builder.Services;
+var configuration = builder.Configuration;
 
 //builder.Services.AddAuthentication(options =>
 //{
@@ -18,36 +23,43 @@ var builder = WebApplication.CreateBuilder(args);
 //    options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
 //})
 //    .AddCookie()
-//    .AddGoogle(googleOptions =>
+//    .AddGoogle(options =>
 //    {
-//        googleOptions.ClientId = "Google:ClientId";
-//        googleOptions.ClientSecret = "Google:ClientSecret";
-//        googleOptions.CallbackPath = "/signin-google";
-//        googleOptions.Scope.Add("https://www.googleapis.com/auth/userinfo.profile");
-//        googleOptions.Scope.Add("https://www.googleapis.com/auth/userinfo.email");
-
-//        googleOptions.Events.OnCreatingTicket = ctx =>
-//        {
-//            var picture = ctx.User.GetProperty("picture").GetString();
-//            ctx.Identity.AddClaim(new Claim("picture", picture));
-//            return Task.CompletedTask;
-//        };
-
+//        options.ClientId = "Authentication:Google:ClientId";
+//        options.ClientSecret = "Authentication:Google:ClientSecret";
+//        options.Scope.Add("https://www.googleapis.com/auth/userinfo.profile");
+//        options.Scope.Add("https://www.googleapis.com/auth/userinfo.email");
 //    });
-//builder.Services.AddControllersWithViews();
 
 
+builder.Services.AddAuthentication().AddGoogle(googleOptions =>
+{
+    googleOptions.ClientId = "603767058702-cli1i4notmjpfqo2jg2s7t7001o6i0i0.apps.googleusercontent.com";
+    googleOptions.ClientSecret = "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";
+    googleOptions.Scope.Add("https://www.googleapis.com/auth/userinfo.profile");
+    googleOptions.Scope.Add("https://www.googleapis.com/auth/userinfo.email");
+});
+
+builder.Services.AddControllersWithViews();
 
 builder.Services.AddDistributedMemoryCache();
+builder.Services.AddHttpContextAccessor();
+
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(30);
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
-
-// Add services to the container.
 builder.Services.AddControllersWithViews();
+
+services.AddControllersWithViews()
+    .AddSessionStateTempDataProvider();
+
+services.AddControllersWithViews()
+    .AddCookieTempDataProvider(); 
+
+
 
 var connectionString = builder.Configuration.GetConnectionString("ProjectDBContextConnection") ?? 
     throw new InvalidOperationException("Connection string 'ProjectDBContextConnection' " +
@@ -66,6 +78,7 @@ builder.Services.AddRazorPages();
 
 builder.Services.AddScoped<UserManager<ApplicationUser>>();
 builder.Services.AddScoped<IboTruyenRepository, EFboTruyenRepository>();
+builder.Services.AddScoped<ICTBoTruyenRepository, EFCTBoTruyenRepository>();
 builder.Services.AddScoped<ILoaiTruyenRepository, EFLoaiTruyenRepository>();
 builder.Services.AddScoped<ITacGiaRepository, EFTacGiaRepository>();
 builder.Services.AddScoped<IChapterRepository, EFChapterRepository>();
@@ -77,17 +90,18 @@ builder.Services.AddControllersWithViews();
 
 
 var app = builder.Build();
+
 app.UseSession();
+
+app.UseRouting();
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
 }
 app.UseStaticFiles();
+app.UseCookiePolicy();
 
-app.UseRouting();
-
-//app.UseAuthorization();
 app.UseAuthentication();
 app.UseAuthorization();
 
@@ -102,7 +116,7 @@ app.UseEndpoints(endpoints =>
         name: "Admin",
         pattern: "{area:exists}/{controller=BoTruyenManager}/{action=Index}/{id?}"
     );
-    app.MapControllerRoute(
+    endpoints.MapControllerRoute(
     name: "default",
     pattern: "{controller=BoTruyen}/{action=Index}/{id?}");
 });

@@ -1,6 +1,8 @@
 ﻿@using ProjectMangaSmurf
-
-
+@using Microsoft.AspNetCore.Http
+@using ProjectMangaSmurf.Repository
+@inject IHttpContextAccessor HttpContextAccessor
+@inject IKhachHangRepository khachhangrepository
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,10 +11,12 @@
     <title>@ViewData["Title"] MangaSmurf</title>
 
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/MangaSmurf.styles.css" asp-append-version="true" />
+    
     
     <link rel="icon" type="image/png" href="~/images/icon logo.png">
+    <!-- LINK BOOTSTRAP -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
     <!-- LINK REMIXICON -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.2.0/remixicon.css">
@@ -28,8 +32,15 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.2.0/remixicon.css" integrity="sha512-OQDNdI5rpnZ0BRhhJc+btbbtnxaj+LdQFeh0V9/igiEPDiWE2fG+ZsXl0JEH+bjXKPJ3zcXqNyP4/F/NegVdZg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script>
+        // Kiểm tra ngay lập tức theme hiện tại và áp dụng nó
+        if (localStorage.getItem('selected-theme') === 'dark') {
+            document.documentElement.classList.add('dark-theme');
+        }
+    </script>
+    @* <link href="~/css/stylelist.css" rel="stylesheet" /> *@
+    <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
 </head>
 
 
@@ -41,10 +52,6 @@
     </style>
 
 <body>
-    <div id="global-loader">
-        <div class="whirly-loader"></div>
-    </div>
-
     <header class="header" id="header">
         <div class="nav__side">
             <nav class="containers nav">
@@ -64,13 +71,37 @@
                         <i class="ri-moon-fill change-theme" id="theme-button"></i>
                     </div>
                     <div class="nav__login">
-                        @* <div class="btn__regis mr-2">
-                            <a asp-area="" asp-controller="KhachHang" asp-action="Register">Đăng ký</a>
-                        </div>
-                        <div class=" btn__login">
-                            <a asp-area="" asp-controller="KhachHang" asp-action="Login">Đăng nhập</a>
-                        </div> *@
-                        @await Html.PartialAsync("_MenuPartial")
+                        @{
+                            var kh = HttpContextAccessor.HttpContext.Session.GetString("TK");
+                            @if (kh!= null)
+                            {
+                                
+                                <div class=" btn__login dropdown" style="margin-left:1rem; color:#fff;">
+                                    <style>
+                                        .dropdown-menu i {
+                                            margin-right: .5rem;
+                                        }
+                                    </style>
+                                    <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="color:#fff;">
+                                        @kh
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-end" style="max-width:120px; max-height:130px;">
+                                        <li><a asp-area="" asp-controller="KhachHang" asp-action="Account" class="dropdown-item text-start" style="padding:.5rem!important;"><i class="fa-solid fa-user"></i> Account</a></li>
+                                        <li><a asp-area="" asp-controller="KhachHang" asp-action="History" asp-route-id="@kh" class="dropdown-item text-start" style="padding:.5rem!important;" ><i class="fa-solid fa-clock-rotate-left"></i> Histories</a></li>
+                                        <li><a asp-area="" asp-controller="KhachHang" asp-action="Logout" class="dropdown-item text-start" style="padding:.5rem!important;"><i style="color: #FE0000;" class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
+                                    </ul>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="btn__regis mr-2">
+                                    <a asp-area="" asp-controller="KhachHang" asp-action="Register">Đăng ký</a>
+                                </div>
+                                <div class=" btn__login">
+                                    <a asp-area="" asp-controller="KhachHang" asp-action="Login">Đăng nhập</a>
+                                </div>
+                            }
+                        }
                     </div>
                 </div>
 
@@ -121,18 +152,46 @@
                         </div>
                     </a>
                     <a asp-area="" asp-controller="BoTruyen" asp-action="Trending" class="nav__link active-link">Trending</a>
-                    <a href="#home" class="nav__item nav__link active-link">Theo dõi</a>
-                    <a href="#home" class="nav__item nav__link active-link">Lịch sử</a>
+                    @{
+                        if(kh!= null)
+                        {
+                            <a asp-area="" asp-controller="KhachHang" asp-action="Following" asp-route-id="@kh" class="nav__item nav__link active-link">Theo dõi</a>
+                        }
+                        else{
+                            <a id="follow" class="nav__item nav__link active-link">Theo dõi</a>
+                            <script>
+                                document.getElementById('follow').addEventListener('click', function () {
+                                    var userResponse = confirm("Bạn cần đăng nhập để xem danh sách theo dõi. Bạn có muốn đăng nhập ngay?");
+                                    if (userResponse) {
+                                        window.location.href = '@Url.Action("Login", "KhachHang")';
+                                    }
+                                });
+                            </script>
+                        }
+                    }
+                    @{
+                        if (kh != null)
+                        {
+                            <a asp-area="" asp-controller="KhachHang" asp-action="History" asp-route-id="@kh" class="nav__item nav__link active-link">Lịch sử</a>
+                        }
+                        else
+                        {
+                            <a id="history" class="nav__item nav__link active-link">Lịch sử</a>
+                            <script>
+                                document.getElementById('history').addEventListener('click', function () {
+                                    var userResponse = confirm("Bạn cần đăng nhập để xem lịch sử đọc. Bạn có muốn đăng nhập ngay?");
+                                    if (userResponse) {
+                                        window.location.href = '@Url.Action("Login", "KhachHang")';
+                                    }
+                                });
+                            </script>
+                        }
+                    }
                     <a class="nav__item nav__link active-link" asp-area="" asp-controller="BoTruyen" asp-action="Rankings" asp-route-id="1">Xếp hạng</a>
                     <a href="#home" class="nav__item nav__link active-link">Tìm truyện</a>
                     <a class="nav__item nav__link active-link" asp-area="" asp-controller="BoTruyen" asp-action="ListTruyen">Mới cập nhật</a>
                     
-                    @* @await Html.PartialAsync("_MenuPartial") *@
-                    @* @if (User.IsInRole(SD.Role_Admin))
-                    {
-                        <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="Index">
-                            Quản lý
-                        </a>
+                    
                     <div class="nav__login">
                     <div class="btn__regis mr-2">
                     <a>Đăng ký</a>
@@ -141,8 +200,6 @@
                     <a href="#">Đăng nhập</a>
                     </div>
                     </div>
-                    } *@
-                    
                 </div>
             </nav>
         </div>
@@ -150,8 +207,10 @@
 
     
     <main role="main" class="pb-3">
-        <div class="background"></div>
         
+        @* <div id="global-loader">
+            <div class="whirly-loader"></div>
+        </div> *@
         @RenderBody()
         <a onclick="scrollToTop()" id="scrollToTopBtn" title="Go to top"><i class="ri-arrow-up-line"></i></i></a>
     </main>
@@ -159,8 +218,9 @@
         <div class="footer__container containers grid">
             <div>
                 <p class="footer__description">
-                    Website luôn cập nhật nhanh và sớm nhất các đầu truyện hot<br>
-                    Đảm bảo tính bảo mật và trải nghiệm của khách hàng<br>
+                    Website luôn cập nhật nhanh và sớm nhất các đầu truyện hot
+                    Đảm bảo tính bảo mật và trải nghiệm của bạn,<br>
+                    Đăng nhập ngay để lưu lại những bộ truyện ưa thích<br>
                 </p>
             </div>
 
@@ -240,9 +300,10 @@
             </span>
         </div>
     </footer>
+    <script src="~/js/scrollreveal.min.js"></script>
     <script src="~/js/script.js"></script>
     @* <script src="~/js/scriptAdmin.js"></script> *@
-
+    X
     <script>
         setTimeout(function () {
             $('#global-loader');
@@ -267,13 +328,23 @@
             document.body.classList[selectedTheme === 'dark' ? 'add' : 'remove'](darkTheme)
             themeButton.classList[selectedIcon === 'ri-moon-fill' ? 'add' : 'remove'](iconTheme)
         }
+        // themeButton.addEventListener('click', () => {
+        //     document.body.classList.toggle(darkTheme);
+        //     themeButton.classList.toggle(iconTheme);
+
+        //     localStorage.setItem('selected-theme', getCurrentTheme());
+        //     localStorage.setItem('selected-icon', getCurrentIcon());
+        // })
         themeButton.addEventListener('click', () => {
-            document.body.classList.toggle(darkTheme);
-            themeButton.classList.toggle(iconTheme);
+            requestAnimationFrame(() => {
+                document.body.classList.toggle(darkTheme);
+                themeButton.classList.toggle(iconTheme);
+            });
 
             localStorage.setItem('selected-theme', getCurrentTheme());
             localStorage.setItem('selected-icon', getCurrentIcon());
-        })
+        });
+
         /* ======================== cuộn lên đầu trang ================================ */
         
         var scrollToTopButton = document.getElementById("scrollToTopBtn");
@@ -292,9 +363,11 @@
 
             if (currentPosition > 0) {
                 window.requestAnimationFrame(scrollToTop);
-                window.scrollTo(0, currentPosition - currentPosition / 8); // Thay đổi giá trị 8 để điều chỉnh tốc độ cuộn
+                window.scrollTo(0, currentPosition - currentPosition / 7); 
             }
         }
+
+        
     </script>
     
 </body>

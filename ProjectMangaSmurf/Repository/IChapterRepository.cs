@@ -12,6 +12,8 @@ namespace ProjectMangaSmurf.Repository
         string CalculateTimeAgo(DateTime date);
         Chapter GetChapterEarliestByIdAsync(string id);
         Task AddAsync(Chapter chapter);
+        Task AddAsyncCTHD(CtHoatDong ct);
+
         Task AddAsyncCT(CtChapter CTs);
         Task UpdateAsync(Chapter chapter);
         Task DeleteAsync(string id);

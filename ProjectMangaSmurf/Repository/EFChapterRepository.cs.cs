@@ -108,5 +108,15 @@ namespace ProjectMangaSmurf.Repository
             _context.CtChapters.Add(CTs);
             await _context.SaveChangesAsync();
         }
+
+        public async Task AddAsyncCTHD(CtHoatDong ct)
+        {
+            var find = await _context.CtHoatDongs.FirstOrDefaultAsync(p => (p.IdBo == ct.IdBo) && (p.SttChap == ct.SttChap) && (p.IdKh == ct.IdKh));
+            if(find == null)
+            {
+                _context.CtHoatDongs.Add(ct);
+            }
+            await _context.SaveChangesAsync();
+        }
     }
 }

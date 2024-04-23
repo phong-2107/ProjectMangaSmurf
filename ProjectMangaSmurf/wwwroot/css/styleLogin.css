@@ -39,6 +39,42 @@
     align-items: center;
 }
 
+/* Tắt background color cho autofill */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    transition: background-color 5000s ease-in-out 0s;
+    -webkit-text-fill-color: #fff !important;
+    font-size: 1rem !important;
+    letter-spacing: 0.05em !important;
+}
+
+/* Hoặc đặt background color cố định cho autofill */
+input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 30px none inset !important;
+    -webkit-text-fill-color: #fff !important;
+    font-size: 1rem !important;
+    letter-spacing: 0.05em !important;
+}
+
+/* Đối với Firefox */
+input:-moz-autofill {
+    background: none !important;
+    -webkit-text-fill-color: #fff !important;
+    font-size: 1rem !important;
+    letter-spacing: 0.05em !important;
+}
+
+/* Đối với Microsoft Edge */
+input:-ms-autofill {
+    background: none !important;
+    -webkit-text-fill-color: #fff !important;
+    font-size: 1rem !important;
+    letter-spacing: 0.05em !important;
+}
+
+
 
 .cx-decoration {
     z-index: 1;

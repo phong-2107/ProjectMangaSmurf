@@ -2,6 +2,11 @@
     margin-top: 3rem;
 }
 
+img {
+    user-select: none;
+    pointer-events: none;
+}
+
 .reading__container {
     position: relative;
     width: 100%;
@@ -94,8 +99,7 @@
 
     .control .btn-home,
     .control .btn-pre,
-    .control .btn-next,
-    .control .btn-follow {
+    .control .btn-next {
         font-size: var(--h2-font-size);
         color: var(--title-color);
         font-weight: var(--font-medium);
@@ -104,21 +108,51 @@
         border-radius: 5px;
     }
 
+.btn-follow, 
+.btn-unfollow{
+    color: var(--title-color);
+    font-weight: var(--font-medium);
+    padding: 0 .3rem;
+    border-radius: 5px;
+    padding:.3rem .5rem;
+    font-size:.8rem;
+}
 
-    .control .dropdown {
-        z-index: 100;
-        width: 300px;
+.btn-follow {
+    background-color: var(--containers-color-alt);
+}
+
+.btn-unfollow {
+    
+}
+
+    .btn-follow:hover {
+        background-color: var(--containers-color-yellow);
     }
 
-        .control .dropdown .dropdown-btn {
-            padding: .2rem .5rem;
-            border-radius: 5px;
-            background-color: hsl(19, 100%, 97%);
-            font-size: var(--normal-font-size);
-            color: var(--body-item-color)!important;
-            display: flex;
-            justify-content: space-between;
-        }
+.btn-follow i{
+    padding:0 .3rem;
+}
+
+.
+
+
+.control .dropdown {
+    z-index: 100;
+    width: 300px;
+    min-width: 150px !important;
+}
+
+.control .dropdown .dropdown-btn {
+    padding: .2rem .5rem;
+    min-width: 150px !important;
+    border-radius: 5px;
+    background-color: hsl(19, 100%, 97%);
+    font-size: var(--normal-font-size);
+    color: var(--body-item-color) !important;
+    display: flex;
+    justify-content: space-between;
+}
 
             .control .dropdown .dropdown-btn i {
                 font-size: var(--nomal-font-size);

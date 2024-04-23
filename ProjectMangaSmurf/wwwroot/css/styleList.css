@@ -1,6 +1,7 @@
 ﻿.list__container {
     position: relative;
     width: 100%;
+    padding:0 2.5rem;
     animation: name duration timing-function delay iteration-count direction fill-mode;
     background-color: var(--body-main);
     /* border-radius: 10px; */
@@ -33,7 +34,7 @@
     }
 
 .top__content {
-    padding: 2rem 4rem;
+    padding: 3rem 2rem;
     margin-bottom: 0;
     display: flex;
     flex-direction: row;
@@ -80,6 +81,3 @@
         .controls .dropdown-menu .dropdown-item:hover {
             background-color: var(--body-color-dark);
         }
-.update-item {
-    margin: .5rem;
-}

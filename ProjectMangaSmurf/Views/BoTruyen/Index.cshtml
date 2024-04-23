@@ -3,34 +3,7 @@
 @inject IboTruyenRepository boTruyenRepository
 @inject IChapterRepository chapterRepository
 
-<!-- LINK BOOTSTRAP -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.2.0/remixicon.css" integrity="sha512-OQDNdI5rpnZ0BRhhJc+btbbtnxaj+LdQFeh0V9/igiEPDiWE2fG+ZsXl0JEH+bjXKPJ3zcXqNyP4/F/NegVdZg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-<link href="~/css/style.css" rel="stylesheet" />
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-
-@* <style>
-    .main-Banner {
-        display: flex; /* Sử dụng flexbox */
-        align-items: center; /* Căn giữa theo chiều dọc */
-    }
-
-        .main-Banner img {
-            max-height: 450px; /* Giới hạn chiều cao */
-            max-width: 100%; /* Giới hạn chiều rộng */
-            width: auto; /* Đảm bảo tỷ lệ khung hình được giữ nguyên */
-            height: auto; /* Đảm bảo tỷ lệ khung hình được giữ nguyên */
-            margin: 0 auto; /* Canh giữa theo chiều ngang */
-        }
-</style> *@
-
+<div class="background"></div>
 <div class="main__top section">
     <div class="top__container containers" style="overflow:hidden;">
         <div class="top__content">
@@ -61,7 +34,7 @@
         </div>
     </div>
 </div>
-<div class="main__bottom containers grid">
+<div class="main__bottom TruyenNew__Containter containers grid">
     <section class="home" id="home">
         <div class="home__container w-100">
             <div id="carouselExampleAutoplaying" class="carousel slide home__carousel bg__carousel w-100" data-bs-ride="carousel">
@@ -159,7 +132,7 @@
     </div>
 </div>
 <section class="new-update containers mt-3" id="update">
-    <div class="update__container grids">
+    <div class="update__container TruyenNew__Containter grids">
         <div class="top__content">
             <div class="title-infor">
                 <span class="section__subtitle">Mới Cập Nhật</span>
@@ -171,7 +144,10 @@
         </div>
         <div class="container">
             <div class="row row-cols-6 justify-content-center">
-                @foreach (var botruyen in Model)
+                @{
+                    var listtruyenNew = Model.Take(14);
+                }
+                @foreach (var botruyen in listtruyenNew)
                 {
                     <div class="col-2 update-item">
                         <a asp-action="CTBoTruyen" asp-route-id="@botruyen.IdBo">
@@ -203,7 +179,6 @@
                                         }
                                         <figcaption>
                                             <h6 class="item-title"><a href="#">@botruyen.TenBo</a></h6>
-
                                             <a class="item-chapter" style="font-size: 13px;">
                                                 <span class="chap" style="margin-right: 10px; ">chap ...</span>
                                                 <span class="time">... giờ trước</span>
@@ -214,7 +189,8 @@
                                 @if (botruyen.TtPemium == true)
                                 {
                                     <div class="item-vip">
-                                        <i class="fa-solid fa-crown"></i>
+                                        @* <i class="fa-solid fa-crown"></i> *@
+                                        <img style="width:50px!important; height:20px!important; border-radius:0!important;" src="~/images/predark.png" />
                                     </div>
                                 }
                             </figure>
@@ -225,8 +201,8 @@
         </div>
     </div>
 </section>
-<section class="new-update containers mt-3" id="update">
-    <div class="update__container grids">
+<section class="new-update Update__Containter containers mt-3 " id="update">
+    <div class=" update__container grids">
         <div class="top__content">
             <div class="title-infor">
                 <span class="section__subtitle">Danh Sách truyện</span>
@@ -242,19 +218,48 @@
                 {
                     <div class="col-2 update-item">
                         <a asp-action="CTBoTruyen" asp-route-id="@botruyen.IdBo">
-                            <figure>
-                                @if (!string.IsNullOrEmpty(botruyen.AnhBia))
-                                {
-                                    <img src="@botruyen.AnhBia" alt="truyen Image" />
-                                }
-                                <figcaption>
-                                    <h6 class="item-title"><a href="#">@botruyen.TenBo</a></h6>
+                            <figure class="position-relative">
+                                @{
+                                    var EarliestChap = chapterRepository.GetChapterEarliestByIdAsync(botruyen.IdBo);
+                                    if (EarliestChap != null)
+                                    {
+                                        var time = chapterRepository.CalculateTimeAgo(EarliestChap.ThoiGian);
+                                        if (!string.IsNullOrEmpty(botruyen.AnhBia))
+                                        {
+                                            <img src="@botruyen.AnhBia" alt="truyen Image" />
+                                        }
+                                        <figcaption>
+                                            <h6 class="item-title"><a href="#">@botruyen.TenBo</a></h6>
 
-                                    <a href="#" class="item-chapter" style="font-size: 13px;">
-                                        <span class="chap" style="margin-right: 10px; ">chap ...</span>
-                                        <span class="time">... giờ trước</span>
-                                    </a>
-                                </figcaption>
+                                            <a class="item-chapter" style="font-size: 13px;">
+                                                <span class="chap" style="margin-right: 10px; ">chap @EarliestChap.SttChap</span>
+                                                <span class="time">@time</span>
+                                            </a>
+                                        </figcaption>
+
+                                    }
+                                    else
+                                    {
+                                        if (!string.IsNullOrEmpty(botruyen.AnhBia))
+                                        {
+                                            <img src="@botruyen.AnhBia" alt="truyen Image" />
+                                        }
+                                        <figcaption>
+                                            <h6 class="item-title"><a href="#">@botruyen.TenBo</a></h6>
+                                            <a class="item-chapter" style="font-size: 13px;">
+                                                <span class="chap" style="margin-right: 10px; ">chap ...</span>
+                                                <span class="time">... giờ trước</span>
+                                            </a>
+                                        </figcaption>
+                                    }
+                                }
+                                @if (botruyen.TtPemium == true)
+                                {
+                                    <div class="item-vip">
+                                        @* <i class="fa-solid fa-crown"></i> *@
+                                        <img style="width:50px!important; height:20px!important; border-radius:0!important;" src="~/images/predark.png" />
+                                    </div>
+                                }
                             </figure>
                         </a>
                     </div>
@@ -262,7 +267,7 @@
             </div>
         </div>
 </section>
-<section class="new-update containers mt-3" id="update">
+<section class="new-update TopRank__container containers mt-3" id="update">
     <div class="update__container grids">
         <div class="top__content">
             <div class="title-infor">
@@ -274,7 +279,7 @@
             <div class="row justify-content-center w-100 position-relative">
                 @{
                     var listRank = boTruyenRepository.GetRankingAsync();
-                    var item = Model.ElementAt(0);
+                    var item = Model.ElementAt(1);
                     <div class="col p-3 position-relative">
                         @if (!string.IsNullOrEmpty(item.AnhBanner))
                         {
@@ -320,7 +325,6 @@
         </div>
     </div>
 </section>
-
 <section class="new-update containers mt-6" id="update">
     <div class="update__container grids">
         <div class="section-bottom container w-100">
@@ -333,7 +337,7 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.js" integrity="sha512-HGOnQO9+SP1V92SrtZfjqxxtLmVzqZpjFFekvzZVWoiASSQgSr4cw9Kqd2+l8Llp4Gm0G8GIFJ4ddwZilcdb8A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.js"></script>
 <script type="text/javascript">
     const CloseContent = document.querySelector(".content-main .content-close");
     const Content = document.querySelector(".content-main");
@@ -347,6 +351,8 @@
             CloseContent.textContent = "Xem thêm";
         }
     }
+
+    
 </script>
 <script type="text/javascript">
     $('.autoplay').slick({
@@ -356,5 +362,3 @@
         autoplaySpeed: 2500,
     });
 </script>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.js"></script>

@@ -1,30 +1,13 @@
 ﻿@using ProjectMangaSmurf.Repository
+@using Microsoft.AspNetCore.Http
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
+@inject IHttpContextAccessor HttpContextAccessor
 @inject IChapterRepository ChapterRepository
 @inject IboTruyenRepository boTruyenRepository
+@inject IKhachHangRepository khachhangrepository
 @model ProjectMangaSmurf.Models.Chapter
 
-<!-- LINK BOOTSTRAP -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
-<!-- LINK REMIXICON -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.2.0/remixicon.css">
-
-<!-- LINK JQUERY -->
-<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-
-<!-- LINK SLICK -->
-<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.css" />
-<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick-theme.css" />
-
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.2.0/remixicon.css" integrity="sha512-OQDNdI5rpnZ0BRhhJc+btbbtnxaj+LdQFeh0V9/igiEPDiWE2fG+ZsXl0JEH+bjXKPJ3zcXqNyP4/F/NegVdZg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-<link href="~/css/style.css" rel="stylesheet" />
-<link href="~/css/styleList.css" rel="stylesheet" />
 <link href="~/css/styleCT.css" rel="stylesheet" />
 <link href="~/css/styleChapter.css" rel="stylesheet" />
 
@@ -43,10 +26,11 @@
         <div class="infor">
             <div class="detail">
                 @{
-                    var truyen = await boTruyenRepository.GetByIdAsync(Model.IdBo);
+                    var truyen = boTruyenRepository.GetByIdAsync(Model.IdBo);
                     if (truyen != null)
                     {
-                        <h3 class="name"> @truyen.TenBo - <span class="chapter">chap @Model.SttChap</span></h3>
+                        var demo = await truyen;
+                        <h3 class="name">  @demo.TenBo - <span class="chapter">chap @Model.SttChap</span></h3>
                     }
 
                 }
@@ -55,7 +39,7 @@
             <span class="time">@Model.ThoiGian.ToString("dd-MM-yyyy")</span>
             <h4 class="note">@Model.TenChap</h4>
             <div class="btn__error">
-                <a class="error" href="#">Báo lỗi</a>
+                <a asp-area="" asp-controller="Contact" asp-action="Index" class="error">Báo lỗi</a>
             </div>
         </div>
 
@@ -81,14 +65,64 @@
                     var listChapter = ChapterRepository.GetAllByIdAsync(Model.IdBo);
                     IEnumerable<Chapter> chapters = await listChapter;
                     List<Chapter> chapterList = chapters.ToList();
+                    var kh = @HttpContextAccessor.HttpContext.Session.GetString("TK");
+                    KhachHang khach = new KhachHang();
+                    if (kh != null)
+                    {
+                        khach = await khachhangrepository.GetByIdAsync(kh);
+                    }
 
+                    var idKh = khach?.IdKh;
+                    var isPremium = khach?.TtPremium ?? false;
                     if (chapterList != null)
                     {
                         @foreach (var chap in chapterList)
                         {
-                            <li><a class="dropdown-item" asp-action="Chapter" asp-route-id="@chap.IdBo" asp-route-stt="@chap.SttChap">chap @chap.SttChap - @chap.TenChap</a></li>
+                            if (chap.TtPemium == true)
+                            {
+                                <li>
+                                    <a class="dropdown-item premium-chap" data-chapter-id="@chap.IdBo" data-chapter-stt="@chap.SttChap" data-idkh="@idKh" data-ispremium="@isPremium">
+                                         chap @chap.SttChap - @chap.TenChap <img style="width:40px!important; height:15px!important; border-radius:0!important; right:0;" src="~/images/predark.png" />
+                                    </a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li><a class="dropdown-item" asp-action="Chapter" asp-route-id="@chap.IdBo" asp-route-stt="@chap.SttChap">chap @chap.SttChap - @chap.TenChap</a></li>
+                            }
                         }
                     }
+                    <script>
+                        $(document).ready(function () {
+                            $(document).on('click', '.premium-chap', function (event) {
+                                var chapId = $(this).data('chapter-id');
+                                var chapStt = $(this).data('chapter-stt');
+                                var idKh = '@idKh';
+                                var isPremiumBool = '@isPremium';
+                                if (idKh && idKh.trim().length > 0) {
+
+                                    if (isPremiumBool === 'True') {
+                                        $.ajax({
+                                            url: '@Url.Action("Chapter", "BoTruyen")',
+                                            data: { id: chapId, stt: chapStt },
+                                            success: function (response) {
+                                                $('body').html(response);
+                                                history.pushState({ path: this.url }, '', this.url);
+                                            },
+                                            error: function () {
+                                                alert('Không thể gửi yêu cầu. Vui lòng kiểm tra lại.');
+                                            }
+                                        });
+                                    }
+                                    else {
+                                        alert('Bạn cần đăng ký gói premium để đọc nội dung này!');
+                                    }
+                                } else {
+                                    alert('Bạn cần đăng nhập để đọc nội dung này!');
+                                }
+                            });
+                        });
+                    </script>
                 }
             </ul>
         </div>
@@ -100,9 +134,79 @@
                 <a class="btn-next" asp-action="Chapter" asp-route-id="@Model.IdBo" asp-route-stt="@sttchapMax"><i class="ri-arrow-right-s-line"></i></a>
             }
         }
-        <a id="btnFollow" data-url="@Url.Action("TheoDoi", "KhachHang", new { id = Model.IdBo })" data-id="@Model.IdBo" data-stt="@Model.SttChap" class="btn-follow"><i class="fa-solid fa-heart"></i></a>
-        
-    
+        @if (ViewBag.follow)
+        {
+            <a id="btn-unfollow" class="btn-follow" style="background-color: #FE0000; padding:.5rem; border-radius:5px;">
+                <i class="ri-close-fill"></i>
+                <span>Hủy Theo dõi</span>
+            </a>
+            <script>
+                $(document).ready(function () {
+                    $('#btn-unfollow').click(function (event) {
+                        event.preventDefault();
+                        $.ajax({
+                            url: '@Url.Action("UnFollow", "KhachHang")',
+                            type: 'POST',
+                            data: {
+                                __RequestVerificationToken: '@Html.AntiForgeryToken()',
+                                id: '@Model.IdBo',
+                                stt: '@Model.SttChap'
+                            },
+                            success: function (response) {
+                                if (response.success) {
+                                    alert('Lỗi Khi UnFollow, Vui lòng thử lại');
+                                    location.reload();
+                                } else {
+                                    location.reload(true);
+                                }
+                            },
+                            error: function () {
+                                alert('Không thể gửi yêu cầu. Vui lòng kiểm tra lại.');
+                            }
+                        });
+                    });
+                });
+            </script>
+        }
+        @if (ViewBag.follow == false)
+        {
+            <a id="btn-follow" class="btn-follow">
+                <i class="fa-solid fa-heart"></i>
+                <span> Theo dõi</span>
+            </a>
+            <script>
+                $(document).ready(function () {
+                    $('#btn-follow').click(function (event) {
+                        event.preventDefault();
+                        var sessionTK = '@HttpContextAccessor.HttpContext.Session.GetString("TK")';
+
+                        if (sessionTK !== null && sessionTK !== '') {
+                            $.ajax({
+                                url: '@Url.Action("Follow", "KhachHang")',
+                                type: 'POST',
+                                data: {
+                                    __RequestVerificationToken: '@Html.AntiForgeryToken()',
+                                    id: '@Model.IdBo',
+                                    stt: '@Model.SttChap'
+                                },
+                                success: function (response) {
+                                    if (response.success) {
+                                        alert('Lỗi Khi Follow, Vui lòng thử lại');
+                                    } else {
+                                        location.reload();
+                                    }
+                                },
+                                error: function () {
+                                    alert('Không thể gửi yêu cầu. Vui lòng kiểm tra lại.');
+                                }
+                            });
+                        } else {
+                            alert('Bạn cần đăng nhập để theo dõi bộ truyện');
+                        }
+                    });
+                });
+            </script>
+        }
     </div>
 
     <div class="reading-detail containers">
@@ -150,18 +254,18 @@
         }
         lastScrollTop = currentScroll;
     });
-</script>
 
-<script>
-    Document.getElementById('btnFollow').addEventListener('click', =>() {
-        if (@ViewBag.user == null) {
-            alert('Bạn cần đăng nhập để theo dõi.');
+
+    document.addEventListener('contextmenu', function (e) {
+        e.preventDefault();
+    }, false);
+
+    document.onkeydown = function (e) {
+        if (e.ctrlKey && (e.shiftKey && (e.keyCode == 73 || e.keyCode == 74)) || e.keyCode == 83 || e.keyCode == 80) {
+            e.preventDefault();
+        if (e.shiftKey && e.keyCode == 83) {
+            e.preventDefault();
         }
-        else {
-            var url = this.getAttribute('data-url');
-            var id = this.getAttribute('data-id');
-            var stt = this.getAttribute('data-stt');
-            window.location.href = url + '?id=' + id + '&stt=' + stt;
-        }
-    });
+    };
+
 </script>

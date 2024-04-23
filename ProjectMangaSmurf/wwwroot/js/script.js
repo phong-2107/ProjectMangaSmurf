@@ -49,3 +49,27 @@ stars.forEach((star, index1) => {
         });
     });
 });
+
+
+/*=============== SHOW SCROLL UP ===============*/
+const scrollUp = () => {
+    const scrollUp = document.getElementById('scroll-up');
+    this.scrollY >= 350 ? scrollUp.classList.add('show-scroll')
+        : scrollUp.classList.remove('show-scroll')
+}
+window.addEventListener('scroll', scrollUp);
+
+
+/*=============== SCROLL REVEAL ANIMATION ===============*/
+const sr = ScrollReveal({
+    origin: 'top',
+    distance: '60px',
+    duration: 2500,
+    delay: 400,
+})
+
+sr.reveal(`.new-update, .TruyenNew__Containter, .Update__Containter, .TopRank__container, .footer__description, .footer__content`)
+sr.reveal(`.main__top` ,, { origin: 'bottom' })
+sr.reveal(`.main__bottom, .new-update`, { origin: 'left' })
+sr.reveal(`.about__img , .recently__img`, { origin: 'right' })
+sr.reveal(`.popular__card`, { interval: 100 })

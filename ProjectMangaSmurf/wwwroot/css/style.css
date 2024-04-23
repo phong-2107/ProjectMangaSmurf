@@ -4,7 +4,7 @@
 :root {
     /*========== Colors ==========*/
     /*Color mode HSL(hue, saturation, lightness)*/
-    --first-color: #6a4040;
+    /*--first-color: #6a4040;
     --first-color-alt: hsl(19, 64%, 52%);
     --title-color: hsl(19, 16%, 10%);
     --text-color: hsl(19, 16%, 35%);
@@ -17,9 +17,9 @@
     --btn-yellow: #E38645;
     --containers-color-alt: #BD9A43;
     --containers-color-yellow: #B58E3E;
-    --containers-color: hsl(20, 45%, 14%);
+    --containers-color: hsl(20, 45%, 14%);*/
 
-    /*--body-white: #ffffff;
+    --body-white: #ffffff;
     --first-color: hsl(19, 100%, 97%);
     --first-color-alt: hsl(19, 100%, 97%);
     --title-color: hsl(19, 16%, 85%);
@@ -34,8 +34,12 @@
     --containers-color: hsl(19, 10%, 10%);
     --containers-color-alt: #9858F1;
     --containers-color-yellow: #B142F5;
-    --btn-orange: #F47521;*/
+    --btn-orange: #F47521;
+
+
+
     --header-height: 3rem;
+
     /*========== Font and typography ==========*/
     /*.5rem = 8px | 1rem = 16px ...*/
     --body-font: montserrat, Verdana, Segoe, sans-serif;
@@ -134,7 +138,8 @@ body {
     font-size: var(--normal-font-size);
     background-color: var(--body-color);
     color: var(--text-color);
-    transition: background 0; /* for dark mode animation */
+    transition: background 0;
+    will-change: background-color, color;
 }
 
 h1, h2, h3 {
@@ -162,7 +167,6 @@ img {
     height: auto;
 }
 
-
 /* =================loading =====================*/
 #global-loader {
     background: var(--body-color);
@@ -176,7 +180,7 @@ img {
 }
 
     #global-loader .whirly-loader:not(:required) {
-        animation: whirly-loader 1.25s linear infinite;
+        animation: whirly-loader 1s linear infinite;
         background: 0 0;
         box-shadow: 0 26px 0 6px  var(--containers-color-yellow),
             0.90971px 26.05079px 0 5.93333px  var(--containers-color-yellow),
@@ -980,6 +984,11 @@ img {
         font-size: 1.5rem;
         color: #FAB818;
     }
+
+    .item-vip img {
+        width:50px!important;
+        height:25px!important;
+    }
 .img-poster {
     width: 100%;
     border-radius: 8px;
@@ -1184,6 +1193,7 @@ img {
     margin-bottom: .8rem;
     width: 180px;
     float: left;
+    overflow:hidden;
     -moz-transition: all .3s ease-out;
     -ms-transition: all .3s ease-out;
     -o-transition: all .3s ease-out;
@@ -1580,7 +1590,6 @@ img {
 
     .footer__copy {
         order: -1;
-        font-size: var(--font-medium);
     }
 
     .scrollup {

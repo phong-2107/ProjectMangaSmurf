@@ -7,13 +7,15 @@ namespace ProjectMangaSmurf.Controllers
     public class BoTruyenController : Controller
     {
         private readonly IboTruyenRepository _botruyenrepository;
+        private readonly ICTBoTruyenRepository _cTBoTruyenRepository;
         private readonly IChapterRepository _chapterrepository;
         private readonly IKhachHangRepository _khachhangrepository;
-        public BoTruyenController(IboTruyenRepository botruyenrepository, IChapterRepository chapterrepository, IKhachHangRepository khachHangRepository)
+        public BoTruyenController(IboTruyenRepository botruyenrepository, IChapterRepository chapterrepository, IKhachHangRepository khachHangRepository, ICTBoTruyenRepository cTBoTruyenRepository)
         {
             _botruyenrepository = botruyenrepository;
             _chapterrepository = chapterrepository;
             _khachhangrepository = khachHangRepository;
+            _cTBoTruyenRepository = cTBoTruyenRepository;
         }
         public async Task<IActionResult> Index()
         {
@@ -97,16 +99,37 @@ namespace ProjectMangaSmurf.Controllers
         public async Task<IActionResult> CTBoTruyen(string id)
         {
             var Botruyen = await _botruyenrepository.GetByIdAsync(id);
-            var Chapter = await _chapterrepository.GetAllAsync();
             if (Botruyen == null)
             {
                 return NotFound();
+            }
+            var kh = HttpContext.Session.GetString("TK");
+            if (kh != null)
+            {
+                var khtmp = await _khachhangrepository.GetByIdAsync(kh);
+                var findct = _cTBoTruyenRepository.GetByIdFollowAsync(khtmp.IdKh, id);
+                if (await findct != null)
+                {
+                    var ls = await findct;
+                    ViewBag.follow = true;
+                    ViewBag.next = ls.LsMoi;
+                }
+                else
+                {
+                    ViewBag.follow = false;
+                }
+               
+            }
+            else
+            {
+                ViewBag.follow = false;
             }
 
             return View(Botruyen);
         }
         public async Task<IActionResult> Chapter(string id, int stt)
         {
+            
             var Chapter = await _chapterrepository.GetByIdAsync(id, stt);
             if (Chapter == null)
             {
@@ -124,45 +147,57 @@ namespace ProjectMangaSmurf.Controllers
                     await _botruyenrepository.UpdateAsync(bt);
                 }
             }
-            var kh = HttpContext.Session.GetObjectFromJson<KhachHang>("kh");
-            if(kh != null)
+            var kh = HttpContext.Session.GetString("TK");
+            if (kh != null)
             {
-                ViewBag.user = kh;
+                var khtmp = await _khachhangrepository.GetByIdAsync(kh);
+                CtHoatDong ct = new CtHoatDong();
+                ct.IdBo = id;
+                ct.SttChap = stt;
+                ct.IdKh = khtmp.IdKh;
+                ct.TtDoc = true;
+                await _chapterrepository.AddAsyncCTHD(ct);
+
+                var ctBo = _cTBoTruyenRepository.GetByIdAsync(khtmp.IdKh, id);
+                if(await ctBo != null)
+                {
+                    var bo = await ctBo;
+                    bo.LsMoi = stt.ToString();
+                    await _cTBoTruyenRepository.UpdateAsync(bo);
+                }
+                else
+                {
+                    CtBoTruyen ctBoTruyen = new CtBoTruyen();
+                    ctBoTruyen.IdKh = khtmp.IdKh;
+                    ctBoTruyen.IbBo = id;
+                    ctBoTruyen.Theodoi = false;
+                    ctBoTruyen.DanhGia = 0;
+                    ctBoTruyen.LsMoi = stt.ToString();
+                    await _cTBoTruyenRepository.AddAsync(ctBoTruyen);
+                    ViewBag.follow = false;
+                }
+
+                var findct = _cTBoTruyenRepository.GetByIdAsync(khtmp.IdKh, id);
+                if (await findct != null)
+                {
+                    var follow  = await findct;
+                    if(follow.Theodoi == false)
+                        ViewBag.follow = false;
+                    else
+                        ViewBag.follow = true;
+                }
+                else
+                {
+                    ViewBag.follow = false;
+                }
             }
             else
             {
-                ViewBag.user = null;
+                ViewBag.follow = false;
             }
             return View(Chapter);
         }
-        //[HttpPost]
-        //public async Task<IActionResult> OnChapter([FromBody] string id)
-        //{
-        //    // Lấy Chapter từ id
-        //    var chapter = await _chapterrepository.GetByIdAsync(id);
 
-        //    if (chapter != null)
-        //    {
-        //        // Tăng số lượt xem
-        //        chapter.TkLuotxem += 1;
-
-        //        // Cập nhật Chapter
-        //        await _chapterrepository.UpdateAsync(chapter);
-
-        //        // Lấy thông tin bộ truyện tương ứng
-        //        var bt = await _botruyenrepository.GetByIdAsync(id);
-        //        if (bt != null)
-        //        {
-        //            // Tăng tổng số lượt xem
-        //            bt.TongLuotXem += 1;
-
-        //            // Cập nhật thông tin bộ truyện
-        //            await _botruyenrepository.UpdateAsync(bt);
-        //        }
-        //    }
-
-        //    return Ok(); // Hoặc bạn có thể trả về bất kỳ dữ liệu nào bạn muốn trả về
-        //}
 
     }
 }

@@ -2,6 +2,13 @@
 @using Microsoft.AspNetCore.Mvc.Rendering
 @{
     Layout = null;
+    var error = ViewBag.Error;
+    if(error != null)
+    {
+        <script>
+            alert(error);
+        </script>
+    }
 }
 
 <!DOCTYPE html>
@@ -48,17 +55,17 @@
                 <form class="form-login" asp-controller="KhachHang" asp-action="Register" method="post">
                     <div class="content-login" style="z-index: 100000;">
                         <div class="inputBox">
-                            <input asp-for="Taikhoan" type="text" required>
+                            <input asp-for="Taikhoan" type="text" autocomplete="nope" required>
                             <span asp-validation-for="Taikhoan">UserName</span>
                             <i></i>
                         </div>
                         <div class="inputBox">
-                            <input asp-for="Email" type="email" required>
+                            <input asp-for="Email" type="email" autocomplete="nope" required>
                             <span asp-validation-for="Email">Email Address</span>
                             <i></i>
                         </div>
                         <div class="inputBox">
-                            <input asp-for="Matkhau" type="password" id="passwordInput" oninput="checkPasswordSecurity()" required>
+                            <input asp-for="Matkhau" type="password autocomplete=" new-password" id="passwordInput" oninput="checkPasswordSecurity()" required>
                             <span asp-validation-for="Matkhau">Password</span>
                             <i></i>
                         </div>
@@ -78,7 +85,7 @@
                         <div class="other">
 
                             <div class="facebook"><a href="#"><i class="ri-facebook-fill"></i></a></div>
-                            <div class="google"><a href="#"><i class="ri-google-fill"></i></a></div>
+                            <div class="google"><a asp-area="" asp-controller="KhachHang" asp-action="LoginGoogle"><i class="ri-google-fill"></i></a></div>
                         </div>
                         <div class="regis">
                             Bạn đã có tài khoản?<a asp-area="" asp-controller="KhachHang" asp-action="Login" class="reigis">ĐĂNG NHẬP</a>

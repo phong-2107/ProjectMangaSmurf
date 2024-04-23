@@ -6,6 +6,8 @@ namespace ProjectMangaSmurf.Repository
     {
         Task<IEnumerable<KhachHang>> GetAllAsync();
         Task<KhachHang> GetByIdAsync(string id);
+
+        Task<KhachHang> GetByEmailAsync(string id);
         Task<KhachHang> GetAccountByIdAsync(string name, string pass);
 
         Task AddAsync(KhachHang KhachHang);

@@ -1,0 +1,259 @@
+﻿@model ProjectMangaSmurf.Models.KhachHang
+@using ProjectMangaSmurf.Repository
+@inject IboTruyenRepository boTruyenRepository
+@inject IKhachHangRepository khachhangrepository
+@using Microsoft.AspNetCore.Http
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
+@inject IHttpContextAccessor HttpContextAccessor
+
+       
+<style>
+    .ui-w-80 {
+        width: 80px !important;
+        height: auto;
+    }
+
+    .btn-default {
+        border-color: rgba(24,28,33,0.1);
+        background: rgba(0,0,0,0);
+        color: #4E5155;
+    }
+
+    label.btn {
+        margin-bottom: 0;
+    }
+
+    .btn-outline-primary {
+        border-color: #26B4FF;
+        background: transparent;
+        color: #26B4FF;
+    }
+
+    .btn {
+        cursor: pointer;
+    }
+
+    .text-light {
+        color: #babbbc !important;
+    }
+
+    .btn-facebook {
+        border-color: rgba(0,0,0,0);
+        background: #3B5998;
+        color: #fff;
+    }
+
+        .btn-facebook i{
+            margin-left:.8rem;
+            font-size:1.3rem;
+        }
+
+    .btn-instagram {
+        border-color: rgba(0,0,0,0);
+        background: #000;
+        color: #fff;
+    }
+
+    .card {
+        background-clip: padding-box;
+        box-shadow: 0 1px 4px rgba(24,28,33,0.012);
+    }
+
+    .row-bordered {
+        overflow: hidden;
+    }
+
+    .account-settings-fileinput {
+        position: absolute;
+        visibility: hidden;
+        width: 1px;
+        height: 1px;
+        opacity: 0;
+    }
+
+    .account-settings-links .list-group-item.active {
+        font-weight: bold !important;
+    }
+
+    html:not(.dark-style) .account-settings-links .list-group-item.active {
+        background: transparent !important;
+    }
+
+    .account-settings-multiselect ~ .select2-container {
+        width: 100% !important;
+    }
+
+    .light-style .account-settings-links .list-group-item {
+        padding: 0.85rem 1.5rem;
+        border-color: rgba(24, 28, 33, 0.03) !important;
+    }
+
+        .light-style .account-settings-links .list-group-item.active {
+            color: #4e5155 !important;
+        }
+
+    .material-style .account-settings-links .list-group-item {
+        padding: 0.85rem 1.5rem;
+        border-color: rgba(24, 28, 33, 0.03) !important;
+    }
+
+    .list-group-item i{
+        margin-right:.7rem;
+    }
+
+        .material-style .account-settings-links .list-group-item.active {
+            color: #4e5155 !important;
+        }
+
+    .dark-style .account-settings-links .list-group-item {
+        padding: 0.85rem 1.5rem;
+        border-color: rgba(255, 255, 255, 0.03) !important;
+    }
+
+        .dark-style .account-settings-links .list-group-item.active {
+            color: #fff !important;
+        }
+
+    .light-style .account-settings-links .list-group-item.active {
+        color: #4E5155 !important;
+    }
+
+    .light-style .account-settings-links .list-group-item {
+        padding: 0.85rem 1.5rem;
+        border-color: rgba(24,28,33,0.03) !important;
+    }
+
+</style>
+
+<div class="section containers light-style flex-grow-1 container-p-y vh-100">
+    <div class="card overflow-hidden p-4" style="height:100vh; margin-top:1.3rem;">
+        <div class="row no-gutters row-bordered row-border-light">
+            <div class="col-md-3 pt-0">
+                <div class="list-group list-group-flush account-settings-links">
+                    <a class="list-group-item list-group-item-action active" data-toggle="list" href="#account-general"><i class="ri-information-2-line"></i>Thông Tin</a>
+                    <a class="list-group-item list-group-item-action" data-toggle="list" href="#account-change-password"><i class="fa-solid fa-lock-open"></i>Mật khẩu & Bảo mật</a>
+                    <a class="list-group-item list-group-item-action" data-toggle="list" href="#account-connections"><i class="fa-solid fa-arrow-up-right-from-square"></i>Kết nối</a>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <h4 class="font-weight-bold py-3 mb-4">
+                    Cài đặt tài khoản 
+                </h4>
+                <div class="tab-content position-relative">
+                    <div class="tab-pane fade active show" id="account-general">
+                        <form asp-action="UpdateInfor" method="post">
+                            <hr class="border-light m-0">
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label  class="form-label">Username</label>
+                                    <input name="Taikhoan" asp-for="Taikhoan" type="text" class="form-control mb-1" maxlength="20" value="@Model.Taikhoan">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">FullName</label>
+                                    <input name="TenKh" asp-for="TenKh" type="text" class="form-control" value="@Model.TenKh" maxlength="30" placeholder="Nguyen Van ....">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Phone</label>
+                                    <input name="Sdt" asp-for="Sdt" type="text" class="form-control" value="@Model.Sdt" maxlength="10" placeholder="+84 ***">
+                                </div>
+                            
+                                <div class="form-group">
+                                    <label class="form-label">Email</label>
+                                    <input name="Email" asp-for="Email" type="text" class="form-control mb-1" value="@Model.Email" placeholder="Example@gmail.com">
+                                    <div class="alert alert-warning mt-3">
+                                        Thông tin của bạn sẽ được ghi nhận khi Save Change<br>
+                                        <a href="javascript:void(0)">Resend confirmation</a>
+                                    </div>
+                                </div>
+                                <div class="text-right mt-3">
+                                    <button type="submit" class="btn btn-primary">Save changes</button>&nbsp;
+                                    <a class="btn btn-default">Cancel</a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="tab-pane fade" id="account-change-password">
+                        <form asp-action="UpdatePass" method="post">
+                            <div class="card-body pb-2">
+                                @if(Model.LienketGg == null)
+                                {
+                                    <div class="form-group">
+                                        <label class="form-label">Current password</label>
+                                        <input name="currentPassword" asp-for="Matkhau" type="password" class="form-control" required>
+                                    </div>
+                                }
+                                <div class="form-group">
+                                    <label class="form-label">New password</label>
+                                    <input name="newPassword" asp-for="Matkhau" type="password" class="form-control" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label">Repeat new password</label>
+                                    <input name="confirmNewPassword" asp-for="Matkhau" type="password" type="password" class="form-control" required>
+                                </div>
+                                <div asp-validation-summary="All" class="text-danger"></div>
+                                <div class="text-right mt-3">
+                                    <button type="submit" class="btn btn-primary">Save changes</button>&nbsp;
+                                    <a class="btn btn-default">Cancel</>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="tab-pane fade" id="account-connections">
+                        <form asp-action="UpdateConnect" method="post" class="w-100 h-100">
+                            <div class="card-body">
+                                <h5 class="mb-2">
+                                    <a href="javascript:void(0)" class="float-right text-muted text-tiny"><i class="ion ion-md-close"></i> Remove</a>
+                                    <i class="ion ion-logo-google text-google"></i>
+                                    Tài khoản hiện tại liên kết với google:
+                                </h5>
+                                @Model.Email
+                            </div>
+                            <div class="card-body">
+                                <a type="button" class="btn btn-facebook bg-primary">Connect to <strong>Facebook</strong> <i class="fa-brands fa-facebook-f"></i></a>
+                            </div>
+                            <hr class="border-light m-0">
+                            <div class="card-body">
+                                <a asp-area="" asp-controller="KhachHang" asp-action="LoginGoogle" type="button" class="btn btn-facebook bg-danger">Connect to <strong>Google</strong><i class="fa-brands fa-google"></i></a>
+                            </div>
+                        </form>
+                        <div class="card-body">
+                            <form asp-action="UpdateSocial" method="post" class="w-100 h-100  pb-2">
+                                <div class="form-group">
+                                    <label class="form-label">Facebook</label>
+                                    <input name="LienketFb" asp-for="LienketFb" type="text" class="form-control" value="https://www.facebook.com/user">
+                                    <span asp-validation-for="LienketFb" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Google+</label>
+                                    <input name="LienketGg" asp-for="LienketGg" type="text" class="form-control" value="">
+                                    <span asp-validation-for="LienketGg" class="text-danger"></span>
+                                </div>
+                                <div class="text-right mt-3">
+                                    <button type="submit" class="btn btn-primary">Save changes</button>&nbsp;
+                                    <button type="button" class="btn btn-default">Cancel</button>
+                                </div>
+                            </form>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</div>
+
+
+@if (TempData.Peek("info") != null)
+{
+    <script>
+        document.addEventListener("DOMContentLoaded", function (event) {
+            Swal.fire({
+                title: 'Success!',
+                text: '@TempData["info"]',
+                icon: 'success'
+            });
+        });
+    </script>
+}
