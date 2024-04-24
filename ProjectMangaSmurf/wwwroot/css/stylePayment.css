@@ -61,20 +61,20 @@
         height: auto;
     }
 
-.img-pre{
+.img-pre{`
     max-width:330px;
     position:absolute;
     right:0;
-    bottom:5rem;
+    top:5rem;
 }
 
-.btn-pre {
+/*.btn-pre {
     position: relative;
     padding: 20px;
-}
+}*/
 
     /* Hiệu ứng chuyển động cho viền */
-    .btn-pre::after {
+    /*.btn-pre::after {
         content: '';
         position: absolute;
         top: -10px;
@@ -84,10 +84,10 @@
         border: 5px solid #fff;
         border-radius: 50%;
         animation: move-border 2s linear infinite;
-    }
+    }*/
 
 /* Định dạng hiệu ứng chuyển động */
-@keyframes move-border {
+/*@keyframes move-border {
     0% {
         transform: rotate(0deg);
     }
@@ -95,4 +95,4 @@
     100% {
         transform: rotate(360deg);
     }
-}
+}*/
