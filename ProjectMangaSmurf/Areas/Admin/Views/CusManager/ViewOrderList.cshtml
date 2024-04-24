@@ -1,0 +1,85 @@
+﻿@model IEnumerable<ProjectMangaSmurf.Models.HopDong>
+
+@{
+    ViewData["Title"] = "Order List";
+}
+
+
+
+
+<div class="content">
+    <div class="page-header">
+        <div class="page-title">
+            <h4>Order List Manager</h4>
+            <h6>Histories Manager</h6>
+        </div>
+
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="table-top">
+                <div class="search-set">
+                    <div class="search-path">
+                        <a class="btn btn-filter" id="filter_search">
+                            <img src="~/img/icons/filter.svg" alt="img">
+                            <span><img src="~/img/icons/closes.svg" alt="img"></span>
+                        </a>
+                    </div>
+
+                    <div class="search-input">
+                        <a class="btn btn-searchset">
+                            <img src="~/img/icons/search-white.svg" alt="img">
+                        </a>
+                    </div>
+                </div>
+                <div class="wordset">
+                    <ul>
+                        <li>
+                            <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf">
+                                <img src="~/img/icons/pdf.svg" alt="img">
+                            </a>
+                        </li>
+                        <li>
+                            <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel">
+                                <img src="~/img/icons/excel.svg" alt="img">
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+
+            <div class="table-responsive">
+                <table class="table datanew">
+                    <thead>
+                        <tr>
+                            <th><label class="checkboxs"><input type="checkbox" id="select-all"><span class="checkmarks"></span></label></th>
+                            <th>Order ID</th>
+                            <th>Customer ID</th>
+                            <th>Date of Transaction</th>
+                            <th>Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var hopDong in Model)
+                        {
+                            <tr>
+                                <td><label class="checkboxs"><input type="checkbox" class="order-checkbox"><span class="checkmarks"></span></label></td>
+                                <td>@hopDong.IdHd</td>
+                                <td><a href="@Url.Action("Detail", "CusManager", new { id = hopDong.IdKh })">@hopDong.IdKh</a></td>
+                                <td>@hopDong.Ngaylap.ToString("dd/MM/yyyy")</td>
+                                <td>@hopDong.GtThanhtoan</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+

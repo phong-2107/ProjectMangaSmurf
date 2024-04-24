@@ -1,0 +1,112 @@
+﻿@model IEnumerable<ProjectMangaSmurf.Models.TacGium>
+
+@using ProjectMangaSmurf.Repository
+@inject IAuthorRepository authorRepository
+@inject IboTruyenRepository boTruyenRepository
+
+<style>
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .filters {
+        margin-left: 100px;
+        margin-top: 10px;
+    }
+
+    .search-set + .filters {
+        margin-top: 10px;
+    }
+</style>
+
+<div class="content">
+    <div class="page-header d-flex justify-content-between align-items-center">
+        <div class="page-title">
+            <h4>Danh Sách Author</h4>
+            <h6>Quản lý danh sách Author</h6>
+        </div>
+        <div class="page-btn">
+            <a asp-area="Admin" asp-controller="AuthorManager" asp-action="Add" class="btn btn-added">
+                <img src="~/img/icons/plus.svg" alt="img" class="me-1"> Add New Author
+            </a>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="table-top">
+                <div class="search-set">
+                    <div class="search-path">
+                     
+                    </div>
+                    <div class="search-input">
+                        <a class="btn btn-searchset">
+                            <img src="~/img/icons/search-white.svg" alt="img">
+                        </a>
+                    </div>
+                    <div class="filters">
+                        <a href="@Url.Action("Index", "AuthorManager", new { area = "Admin", isActive = (bool?)null })" class="btn btn-primary">See All</a>
+                        <a href="@Url.Action("Index", "AuthorManager", new { area = "Admin", isActive = true })" class="btn btn-success">Activating</a>
+                        <a href="@Url.Action("Index", "AuthorManager", new { area = "Admin", isActive = false })" class="btn btn-danger">Banning</a>
+                    </div>
+                </div>
+                <div class="wordset">
+                    <ul>
+                        <li>
+                            <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf">
+                                <img src="~/img/icons/pdf.svg" alt="img">
+                            </a>
+                        </li>
+                        <li>
+                            <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel">
+                                <img src="~/img/icons/excel.svg" alt="img">
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table datanew">
+                    <thead>
+                        <tr>
+                            <th>ID Author</th>
+                            <th>Name</th>
+                            <th>Number of Series</th>
+                            <th>Active</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var author in Model)
+                        {
+                            <tr>
+                                <td>@author.IdTg</td>
+                                <td>@author.TenTg</td>
+                                <td>@boTruyenRepository.CountByAuthorId(author.IdTg).Result</td> <!-- Consider moving this logic to the controller -->
+                                <td>@(author.Active.HasValue ? (author.Active.Value ? "Yes" : "No") : "Unknown")</td>
+                                <td>
+                                    <a asp-area="Admin" asp-controller="AuthorManager" asp-action="Detail" asp-route-id="@author.IdTg" class="me-3">
+                                        <img src="~/img/icons/eye.svg" alt="View">
+                                    </a>
+                                    <a asp-area="Admin" asp-controller="AuthorManager" asp-action="Edit" asp-route-id="@author.IdTg" class="me-3">
+                                        <img src="~/img/icons/edit.svg" alt="Edit">
+                                    </a>
+                                    <a asp-area="Admin" asp-controller="AuthorManager" asp-action="Delete" asp-route-id="@author.IdTg" class="me-3">
+                                        <img src="~/img/icons/delete.svg" alt="Delete">
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        $('[data-bs-toggle="tooltip"]').tooltip();
+    });
+</script>

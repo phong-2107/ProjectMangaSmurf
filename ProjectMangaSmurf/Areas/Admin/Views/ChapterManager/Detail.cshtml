@@ -1,0 +1,353 @@
+﻿
+@model ProjectMangaSmurf.Models.Chapter
+@using ProjectMangaSmurf.Repository
+@inject IboTruyenRepository boTruyenRepository
+@inject IChapterRepository chapterRepository
+@{
+    var pageDetails = ViewBag.RelatedPage as List<ProjectMangaSmurf.Models.CtChapter>;
+    var pageDetail = ViewBag.RelatedPag as List<ProjectMangaSmurf.Models.BoTruyen>;
+}
+
+<style>
+    .image-grid {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr); /* Fit 7 items per row */
+        gap: 10px; /* Adjust gap to ensure proper spacing */
+        justify-content: center; /* Center align the grid within its container */
+        align-items: center;
+    }
+
+    .image-container {
+        position: relative;
+        width: 200px; /* Width of the image container */
+        height: 300px; /* Total height including space for buttons */
+        overflow: hidden;
+        border-radius: 10px;
+        background-color: #000;
+        border:1px solid #000;
+        margin-bottom: 10px; /* Space after each container */
+    }
+
+    .comic-page {
+        width: auto; /* Auto width to maintain aspect ratio */
+        height: 250px; /* Fixed height as specified */
+        object-fit: cover; /* Ensure the image covers the assigned area */
+        display: block;
+        position: absolute; /* Absolute positioning to align vertically */
+        left: 50%; /* Center horizontally */
+        top: 50%; /* Center vertically */
+        transform: translate(-50%, -50%); /* Adjust the translation to center the image exactly */
+    }
+
+    .page-number {
+        position: absolute;
+        top: 5px; /* Adjust if needed to fit within the top right corner of the image */
+        right: 5px;
+        background-color: rgba(0, 0, 0, 0.5);
+        color: #fff;
+        padding: 5px;
+        border-radius: 5px;
+        font-size: 12px;
+    }
+
+    .button-bar {
+        position: absolute;
+        bottom: 0; /* Align at the bottom of the container */
+        width: 100%; /* Full width of the parent container */
+        height: 50px; /* Height for the button area */
+        display: flex;
+        justify-content: space-around; /* Evenly space the buttons */
+        align-items: center; /* Align buttons vertically within the bar */
+    }
+
+    .icon-button {
+        width: 30px; /* Square, small icons */
+        height: 30px;
+        border-radius: 50%; /* Rounded */
+        border: 1px solid black; /* Black border */
+        background-color: rgba(128, 128, 128, 0.5); /* Semi-transparent gray */
+        background-size: cover;
+        background-position: center;
+        cursor: pointer;
+        display: flex; /* Center the icon inside the button */
+        justify-content: center; /* Center horizontally */
+        align-items: center; /* Center vertically */
+    }
+
+        /* Example of adding a background image with the semi-transparent background */
+        .icon-button.refresh-icon {
+            background-image: url('/img_admin/refresh.png'), linear-gradient(rgba(128, 128, 128, 0.5), rgba(128, 128, 128, 0.5));
+            background-blend-mode: overlay; /* Blend the icon with the background color */
+        }
+    /* Update other button styles similarly if they have icons */
+    .delete-icon, .toggle-view-icon, .edit-icon {
+        background-color: rgba(128, 128, 128, 0.5); /* Apply semi-transparent gray universally */
+    }
+
+    .delete-icon {
+        background-image: url('/img_admin/bin.png'), linear-gradient(rgba(128, 128, 128, 0.5), rgba(128, 128, 128, 0.5));
+        background-blend-mode: overlay;
+    }
+
+    .toggle-view-icon {
+        background-image: url('/img_admin/eye.png'), linear-gradient(rgba(128, 128, 128, 0.5), rgba(128, 128, 128, 0.5));
+        background-blend-mode: overlay;
+    }
+
+    .edit-icon {
+        background-image: url('/img_admin/edit.png'), linear-gradient(rgba(128, 128, 128, 0.5), rgba(128, 128, 128, 0.5));
+        background-blend-mode: overlay;
+    }
+
+
+    .comic-page {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .page-number {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        background-color: rgba(0, 0, 0, 0.5);
+        color: #fff;
+        padding: 5px;
+        border-radius: 5px;
+        font-size: 12px;
+    }
+
+    .action-page {
+        display: flex;
+        flex-direction: row;
+        gap: .5rem;
+    }
+
+        .action-page a {
+            font-size: 20px;
+            font-weight: 600;
+            letter-spacing: .7px;
+            color: #212b36;
+        }
+
+            .action-page a:hover {
+                color: #FE820E;
+            }
+
+    .btn-custom, .btn-update {
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+        display: inline-block;
+        background-color: #f44336; /* Red by default */
+        color: white;
+        border: none;
+        transition: background-color 0.3s, color 0.3s;
+        margin: 10px;
+        border-radius: 5px; /* Rounded corners for buttons */
+    }
+
+        .btn-custom.green, .btn-update.green {
+            background-color: #4CAF50; /* Green */
+        }
+
+            .btn-custom:hover, .btn-custom.green:hover, .btn-update:hover, .btn-update.green:hover {
+                background-color: white;
+                color: black;
+                border: 2px solid #4CAF50; /* Green border on hover */
+            }
+
+    .btn-update {
+        background-color: #FFC107; /* Amber for update button */
+        color: black;
+    }
+
+        .btn-update:hover {
+            background-color: black;
+            color: #FFC107;
+        }
+
+    .button-group {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap; /* Allow buttons to wrap on smaller screens */
+    }
+
+        .button-group form {
+            margin-right: 10px; /* Ensure spacing between buttons */
+        }
+
+    .h3-preview {
+        background-color: rgb(27, 40, 80); /* Purple background */
+        color: white; /* White text */
+        border: 15px solid rgb(27, 40, 80); /* Purple border */
+        font-weight: bold; /* Bold text */
+        padding: 5px; /* Padding for better visibility */
+        text-align: center; /* Center the text */
+        border-radius: 50px; /* Rounded corners */
+        display: flex; /* Use flexbox to align text and icon */
+        justify-content: center; /* Center content horizontally */
+        align-items: center; /* Align content vertically */
+        gap: 1px; /* Space between text and icon */
+    }
+
+    .icon-eye2 {
+        filter: brightness(0) invert(1); /* Invert colors to full white if needed */
+        width: 20px; /* Icon size */
+        height:auto;
+
+    }
+
+</style>
+
+<div class="content">
+    <div class="page-header">
+        <div class="page-title">
+            <div class="action-page">
+                <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="Index">Trang Chủ </a>
+                <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="ViewList"> \ List Truyện </a>
+                <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="Detail" asp-route-id="@Model.IdBo"> \ COMIC : @Model.IdBo</a>
+                <a asp-area="Admin" asp-controller="ChapterManager" asp-action="Detail" asp-route-id="@Model.IdBo" asp-route-stt="@Model.SttChap"> \ Chapter @Model.SttChap</a>
+            </div>
+            <h6>Detail Infographic of the Comic</h6>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-8 col-sm-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="productdetails">
+                        <ul class="product-bar">
+                            <li>
+                                <h4>Chapter No.</h4>
+                                <h6>@Model.SttChap</h6>
+                            </li>
+                            <li>
+                                <h4>Tên Chapter</h4>
+                                <h6>@Model.TenChap</h6>
+                            </li>
+                            <li>
+                                <h4>Uploaded Time</h4>
+                                <h6>@Model.ThoiGian</h6>
+                            </li>
+                            <li>
+                                <h4>Total Views</h4>
+                                <h6>@Model.TkLuotxem</h6>
+                            </li>
+                            <li>
+                                <h4>Trạng thái Premium</h4>
+                                <h6>@Model.TtPemium</h6>
+                            </li>
+                            <li>
+                                <h4>Hoạt động</h4>
+                                <h6>@Model.Active</h6>
+                            </li>
+                            <li>
+                                <div class="button-group">
+                                    <!-- Toggle Active Button -->
+                                    <form asp-action="ToggleActive" asp-controller="ChapterManager" asp-route-comicId="@Model.IdBo" asp-route-chapterNumber="@Model.SttChap" method="post">
+                                        <button type="submit" class="btn-custom @(Model.Active ? "green" : "")">
+                                            @(Model.Active ? "Set to Inactive" : "Set to Active")
+                                        </button>
+                                    </form>
+                                    <!-- Toggle Premium Button -->
+                                    <form asp-action="TogglePremium" asp-controller="ChapterManager" asp-route-comicId="@Model.IdBo" asp-route-chapterNumber="@Model.SttChap" method="post">
+                                        <button type="submit" class="btn-custom @(Model.TtPemium ? "green" : "")">
+                                            @(Model.TtPemium ? "Remove from Premium" : "Add to Premium")
+                                        </button>
+                                    </form>
+                                    <!-- Go to Update Button -->
+                                    <form asp-action="Update" asp-controller="BoTruyenManager" asp-route-id="@Model.IdBo" method="get">
+                                        <button type="submit" class="btn-update">Go to Update</button>
+                                    </form>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="table-responsive">
+        <div class="content">
+            <h3 class="mb-0 h3-preview">
+                <img src="/path/to/eye2.png" class="icon-eye2">
+                Preview Images-Comic Pages in Chapter No.@Model.SttChap
+
+            </h3>
+        </div>
+
+
+        <div class="image-grid">
+            @foreach (var item in ViewBag.RelatedPage as List<ProjectMangaSmurf.Models.CtChapter>)
+            {
+                            <div class="image-container">
+                <img src="@item.AnhTrang" alt="Comic Page" class="comic-page">
+                <span class="page-number">@item.SoTrang</span>
+                <div class="button-bar">
+                        <div class="icon-button refresh-icon" data-idbo="@item.IdBo" data-sttchap="@item.SttChap" data-sotrang="@item.SoTrang">
+                            <img src="/img_admin/re.png">
+                        </div>
+                    <div class="icon-button delete-icon" onclick="deletePage('@item.IdBo', '@item.SttChap', '@item.SoTrang')">
+                        <img src="/img_admin/bin.png">
+                    </div>
+                    <div class="icon-button toggle-view-icon" onclick="toggleActive('@item.IdBo', '@item.SttChap', '@item.SoTrang')">
+                        <img src="/img_admin/eye.png">
+                    </div>
+                    <div class="icon-button edit-icon" onclick="replaceImage('@item.IdBo', '@item.SttChap', '@item.SoTrang')">
+                        <img src="/img_admin/pa.png">
+                    </div>
+                    <!-- Additional elements for page number update -->
+                    <input type="text" class="update-input" style="display:none;" placeholder="New page #">
+                    <button class="confirm-update" style="display:none;" onclick="confirmUpdate(this, '@item.IdBo', '@item.SttChap', '@item.SoTrang')">Confirm</button>
+                </div>
+            </div>
+
+            }
+        </div>
+    </div>
+</div>
+ 
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const grid = document.querySelector('.image-grid');
+
+        grid.addEventListener('click', function (event) {
+            const target = event.target;
+            const button = target.closest('.icon-button'); // Find nearest parent button if click was on an img
+
+            if (button) {
+                const idBo = button.dataset.idbo;
+                const sttChap = button.dataset.sttchap;
+                const soTrang = button.dataset.sotrang;
+
+                if (button.classList.contains('refresh-icon')) {
+                    toggleUpdateMode(button, idBo, sttChap, soTrang);
+                } else if (button.classList.contains('delete-icon')) {
+                    deletePage(idBo, sttChap, soTrang);
+                } else if (button.classList.contains('toggle-view-icon')) {
+                    toggleActive(idBo, sttChap, soTrang);
+                } else if (button.classList.contains('edit-icon')) {
+                    replaceImage(idBo, sttChap, soTrang);
+                }
+            }
+        });
+    });
+
+    function toggleUpdateMode(button, idBo, sttChap, soTrang) {
+        const container = button.parentNode;
+        const input = container.querySelector('.update-input');
+        const confirmButton = container.querySelector('.confirm-update');
+
+        const isVisible = input.style.display === 'block';
+        input.style.display = confirmButton.style.display = isVisible ? 'none' : 'block';
+
+        // Hide other buttons if input is visible
+        container.querySelectorAll('.icon-button').forEach(btn => {
+            if (btn !== button) btn.style.display = isVisible ? 'block' : 'none';
+        });
+    }
+
+    // Define other functions similarly...
+
+</script>

@@ -1,0 +1,198 @@
+﻿@model ProjectMangaSmurf.Models.BoTruyen
+@using ProjectMangaSmurf.Repository
+@inject IboTruyenRepository boTruyenRepository
+@inject IChapterRepository chapterRepository
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.2.0/remixicon.css" integrity="sha512-OQDNdI5rpnZ0BRhhJc+btbbtnxaj+LdQFeh0V9/igiEPDiWE2fG+ZsXl0JEH+bjXKPJ3zcXqNyP4/F/NegVdZg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<link href="~/css/styleList.css" rel="stylesheet" />
+<link href="~/css/styleCT.css" rel="stylesheet" />
+
+<div class=" main__top detail section">
+    <div class=" detail__container containers">
+        <div class="detail__infor containers">
+            <div class="bg__detail">
+                <div class="bg">
+                    @if (!string.IsNullOrEmpty(Model.AnhBanner))
+                    {
+                        <img src="@Model.AnhBanner" alt="bg-item" class="bg-main">
+                    }
+                    <div class="item-infor bg__detail-infor">
+                        <div class="infor">
+                            <div class="pre">
+                                <img src="/images/PreLight.png" alt="goi premium">
+                            </div>
+                            @{
+                                var tg = boTruyenRepository.getNameTGById(Model.IdTg);
+                            }
+                            <p class="item-author">Tác Giả: @tg</p>
+                            <h3 class="item-title">@Model.TenBo</h3>
+
+                            <div class="rating">
+                                <i class="ri-star-fill"></i>
+                                <i class="ri-star-fill"></i>
+                                <i class="ri-star-fill"></i>
+                                <i class="ri-star-fill"></i>
+                                <i class="ri-star-fill"></i>
+                            </div>
+                        </div>
+                        <div class=" btn__follow">
+                            <a href="3">Theo dõi</a>
+                            <i class="ri-bookmark-fill"></i>
+                        </div>
+                    </div>
+                    <div class="background-item"></div>
+                </div>
+                <div class="poster-detail">
+                    @{
+                        var listtmp = Model.Chapters.ToList();
+                        if (listtmp.Count > 0)
+                        {
+                            <div class="background-detail">
+                                <div class="bg-item "></div>
+                                <a asp-action="Chapter" asp-route-id="@Model.IdBo" asp-route-stt="1" class="btn-read">
+                                    <i class="ri-book-open-fill" title="click here"></i>
+                                </a>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="background-detail">
+                                <div class="bg-item "></div>
+                            </div>
+                        }
+                    }
+                    
+                    @if (!string.IsNullOrEmpty(Model.AnhBia))
+                    {
+                        <img src="@Model.AnhBia" alt="poster" style="max-width:224px; max-height:336px; object-fit:scale-down;">
+                    }
+
+                </div>
+                <div class="content-detail">
+                    <div class="time-detail">
+                        <i class="ri-time-line"></i>
+                        <span class="time">... gio truoc</span>
+                    </div>
+                    <div class="type-detail">
+                        @{
+                            var listtop = boTruyenRepository.GetListLoaiAsync(Model.IdBo);
+                            foreach(var i in listtop)
+                            {
+                                <a asp-area="" asp-controller="BoTruyen" asp-action="ListTopic" asp-route-id="@i" class="item-type">@i</a>
+                            }
+                        }
+                    </div>
+                </div>
+                <div class="btn-detail">
+                    @{
+                        var stt = chapterRepository.GetEarliestByIdAsync(Model.IdBo);
+                        if(stt > 0)
+                        {
+                            <a class="btn__action" asp-action="Chapter" asp-route-id="@Model.IdBo" asp-route-stt="@stt">Đọc tiếp chap <span class="chapter"></span></a>
+                        }
+                        else
+                        {
+                            <a class="btn__action" style="pointer-events: none; background-color: #8f8f8f">Đọc tiếp chap <span class="chapter"></span></a>
+                        }
+                    }
+                </div>
+            </div>
+            <div class="content-main">
+                <div class="content-title">
+                    <i class="ri-file-text-line"></i> Nội dung
+                </div>
+                <div class="content">
+                    <p>@Model.Mota</p>
+                </div>
+
+                <div class="content-More">
+                    <div class="content-title">
+                        <i class="ri-file-text-line"></i> Thông tin thêm
+                    </div>
+                    <div class="content">
+                        <div class="chapter">
+                            <i class="ri-send-plane-fill"></i>
+                            <span class="count">@Model.Chapters.ToList().Count</span> Chương đã đăng
+                        </div>
+                        <div class="view">
+                            <i class="ri-eye-line"></i>
+                            <span class="count">@Model.TongLuotXem</span> Lượt xem
+                        </div>
+                        <!--
+                            <div class="review">
+                            <i class="ri-message-2-fill"></i>
+                            <span class="count">00</span> Lượt đánh giá
+                        </div>
+                        -->
+                    </div>
+                </div>
+
+                <div class="content-close">Xem thêm</div>
+            </div>
+        </div>
+
+        <div class="detail__list containers">
+            <div class="content-title">
+                <i class="ri-file-text-line"></i> Danh sách Chương
+            </div>
+            <div class="d-flex flex-column mb-3 w-100 mt-3">
+                @{
+                    var listChap = Model.Chapters.ToList();
+                    var listRev = Model.Chapters.Reverse();
+                    if (listChap.Count > 0)
+                    {
+                        foreach (var chapter in listRev)
+                        {
+                            <a class="p-2 chapter-item" asp-action="Chapter" asp-route-id="@chapter.IdBo" asp-route-stt="@chapter.SttChap" style="color:var(--title-color);">
+                                <div class="row">
+                                    <div class="col chapter">
+                                        Chương @chapter.SttChap  
+                                    </div>
+                                    <div class="col-6 content">
+                                        @chapter.TenChap
+                                    </div>
+                                    <div class="col time">
+                                        @chapter.ThoiGian.ToString("dd-MM-yyyy")
+                                    </div>
+                                    <div class="col view">
+                                        @chapter.TkLuotxem lượt xem
+                                    </div>   
+                                </div>
+                            </a>
+                        }
+                    }
+                    else
+                    {
+                        <script>
+                            alert("Bộ truyện hiện tại chưa được cập nhật chương truyện!!!");
+                        </script>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="./js/script.js"></script>
+<script type="text/javascript">
+    const CloseContent = document.querySelector(".content-main .content-close");
+    const Content = document.querySelector(".content-main");
+    CloseContent.onclick = () => {
+        if (CloseContent.textContent == "Xem thêm") {
+            Content.classList.toggle('active-content');
+            CloseContent.textContent = "Thu gọn";
+        }
+        else if (CloseContent.textContent == "Thu gọn") {
+            Content.classList.remove('active-content');
+            CloseContent.textContent = "Xem thêm";
+        }
+    }
+</script>
+
+
+

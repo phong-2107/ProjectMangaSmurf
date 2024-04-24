@@ -1,0 +1,179 @@
+﻿@model ProjectMangaSmurf.Models.ViewModels.CustomerDetailsViewModel
+
+@{
+    var customer = Model.Customer;
+}
+
+<style>
+    .action-page {
+        display: flex;
+        flex-direction: row;
+        gap: .5rem;
+    }
+
+        .action-page a {
+            font-size: 20px;
+            font-weight: 600;
+            letter-spacing: .7px;
+            color: #212b36;
+        }
+
+            .action-page a:hover {
+                color: #FE820E;
+            }
+
+    .form-section-title {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 10px;
+        color: #333;
+        margin-top: 20px;
+    }
+
+    .productdetails li {
+        margin-bottom: 15px;
+    }
+
+    .card-body form {
+        margin-top: 20px;
+    }
+
+    .card {
+        margin-bottom: 20px;
+    }
+
+    .form-control + .form-section-title {
+        margin-top: 3px;
+    }
+
+    .form-section-title + .form-control {
+        margin-top: 3px;
+    }
+
+    .form-control + .btn {
+        margin-top: 7px; /* Khoảng cách từ các dropdown đến nút submit */
+    }
+
+    /* Đặt khoảng cách giữa các select controls */
+    .form-control {
+        margin-bottom: 3px; /* Thêm khoảng cách giữa các controls */
+    }
+</style>
+
+
+
+
+
+
+<div class="content">
+    <div class="page-header">
+        <div class="page-title">
+            <div class="action-page">
+                <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="Index">Trang Chủ </a>
+                <a asp-area="Admin" asp-controller="CusManager" asp-action="ViewList"> \ List Khách Hàng </a>
+                <a asp-area="Admin" asp-controller="CusManager" asp-action="Detail" asp-route-id="@customer.IdKh"> \ @customer.IdKh  -  @customer.TenKh</a>
+            </div>
+            <h6>Chi tiết các thông tin của khách hàng</h6>
+        </div>
+    </div>
+   
+    <div class="row">
+        <div class="col-lg-8 col-sm-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="productdetails">
+                        <ul class="product-bar">
+                            <li><h4>Tên Khách Hàng</h4><h6>@customer.TenKh</h6></li>
+                            <li><h4>Số Điện Thoại</h4><h6>@customer.Sdt</h6></li>
+                            <li><h4>Địa Chỉ Email</h4><h6>@customer.Email</h6></li>
+                            <li><h4>Premium ?</h4><h6>@customer.TtPremium</h6></li>
+                            <li><h4>Banned ?</h4><h6>@customer.Active</h6></li>
+                            <li><h4>Liên Kết FB</h4><h6>@customer.LienketFb</h6></li>
+                            <li><h4>Liên Kết G+</h4><h6>@customer.LienketGg</h6></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+            <div class="col-lg-4 col-sm-12">
+                <div class="card">
+                    <div class="card-body">
+                        <form asp-action="UpdateCustomerStatus" asp-controller="CusManager" method="post">
+                            <input type="hidden" name="IdKh" value="@customer.IdKh" />
+                        <h5 class="form-section-title">Premium Status</h5>
+                            <select class="form-control" name="TtPremium">
+                                <option value="true" selected="@customer.TtPremium">Yes</option>
+                                <option value="false" selected="@(customer.TtPremium ? false : true)">No</option>
+                            </select>
+
+                        <h5 class="form-section-title">Banned -  Account Active</h5>
+                            <select class="form-control" name="Active">
+                                <option value="true" selected="@customer.Active">Yes</option>
+                                <option value="false" selected="@(customer.Active ? false : true)">No</option>
+                            </select>
+                            <button type="submit" class="btn btn-primary">Update Status</button>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    <div class="page-header">
+        <div class="page-title">
+            <div class="action-page">
+                <h3>Order detail of @customer.IdKh </h3>
+            </div>
+        </div>
+    </div>
+        <div class="table-responsive">
+            <table class="table datanew">
+                <thead>
+                    <tr>
+                        <th><label class="checkboxs"><input type="checkbox" id="select-all"><span class="checkmarks"></span></label></th>
+                        <th>Mã Order</th>
+                        <th>Ngày Giao Dịch</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var hopDong in Model.Orders)
+                    {
+                        <tr>
+                            <td><label class="checkboxs"><input type="checkbox" class="order-checkbox"><span class="checkmarks"></span></label></td>
+                            <td>@hopDong.IdHd</td>
+                            <td>@hopDong.Ngaylap.ToString("dd/MM/yyyy")</td>
+                            <td>@hopDong.GtThanhtoan</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#statusForm').submit(function (event) {
+                event.preventDefault();
+                var form = $(this);
+                $.ajax({
+                    type: form.attr('method'),
+                    url: form.attr('action'),
+                    data: form.serialize(),
+                    success: function (response) {
+                        alert('Status updated successfully');
+                        // Update UI or redirect
+                    },
+                    error: function () {
+                        alert('Failed to update status');
+                    }
+                });
+            });
+
+            $('#select-all').click(function () {
+                $('.order-checkbox').prop('checked', this.checked);
+            });
+        });
+    </script>
+}

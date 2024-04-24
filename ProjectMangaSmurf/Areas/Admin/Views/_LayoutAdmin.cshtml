@@ -13,6 +13,8 @@
     <link href="~/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
     <link href="~/css/datatables.bootstrap4.min.css" rel="stylesheet" />
     <link href="~/js/owlcarousel/owl.carousel.min.css" rel="stylesheet" />
+    <!-- In your _Layout.cshtml head section -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
     <link href="~/css/select2.min.css" rel="stylesheet" />
 
@@ -134,14 +136,15 @@
                                     <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="Add">Thêm Bộ truyện</a>
                                 </li>
                                 <li>
-                                    <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="Add">Thêm Chapter</a>
+                                    <a asp-area="Admin" asp-controller="AuthorManager" asp-action="Add">Thêm Tác giả</a>
                                 </li>
                                 <li>
-                                    <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="Add">Thêm Tác giả</a>
+                                    <a asp-area="Admin" asp-controller="ComicType" asp-action="Add">Thêm Loại truyện</a>
                                 </li>
                                 <li>
-                                    <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="Add">Thêm Loại truyện</a>
+                                    <a asp-area="Admin" asp-controller="StaffManager" asp-action="Add">Thêm Nhân Viên</a>
                                 </li>
+
                             </ul>
                         </li>
                         <li class="submenu" style="text-decoration:none;">
@@ -155,19 +158,22 @@
                                     <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="ViewList">Quản lý Bộ truyện</a>
                                 </li>
                                 <li>
-                                    <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="ViewList">Quản lý Khách hàng</a>
+                                    <a asp-area="Admin" asp-controller="CusManager" asp-action="ViewList">Quản lý Khách hàng</a>
                                 </li>
                                 <li>
-                                    <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="Add">Quản lý Nhân viên</a>
+                                    <a asp-area="Admin" asp-controller="StaffManger" asp-action="Index">Quản lý Nhân viên</a>
                                 </li>
                                 <li>
-                                    <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="Add">Quản lý Chapter</a>
+                                    <a asp-area="Admin" asp-controller="AuthorManager" asp-action="Index">Quản lý Tác giả</a>
                                 </li>
                                 <li>
-                                    <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="Add">Quản lý Tác giả</a>
+                                    <a asp-area="Admin" asp-controller="ComicTypeManager" asp-action="Index">Quản lý Loại truyện</a>
                                 </li>
                                 <li>
-                                    <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="Add">Quản lý Loại truyện</a>
+                                    <a asp-area="Admin" asp-controller="CusManager" asp-action="ViewOrderList">Quản lý Giao Dịch</a>
+                                </li>
+                                <li>
+                                    <a asp-area="Admin" asp-controller="WebManager" asp-action="Index">Config Website</a>
                                 </li>
                             </ul>
                         </li>

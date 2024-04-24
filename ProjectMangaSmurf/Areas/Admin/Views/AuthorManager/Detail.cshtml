@@ -1,0 +1,262 @@
+﻿@model ProjectMangaSmurf.Models.TacGium
+
+@using ProjectMangaSmurf.Repository
+@inject IAuthorRepository auth
+@inject IboTruyenRepository botruyen
+
+@{
+
+    var relatedSeriesCount = botruyen.CountByAuthorId(Model.IdTg);
+}
+
+<style>
+    .button-container {
+        padding-left: 20px; /* Increased padding to push content away from the left border */
+    }
+
+    form, .notice {
+        display: inline-block;
+        vertical-align: top;
+        margin-right: 10px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        margin-left: 20px; /* Ensure left margin for all forms and notice */
+    }
+
+    .btn-custom, .btn-premium, .btn-publish {
+        background-color: rebeccapurple;
+        color: white;
+        transition: all 0.3s;
+        border: none;
+    }
+
+    .notice {
+        color: #D8000C;
+        background-color: #FFD2D2;
+        padding: 8px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        border: 1px solid #D8000C;
+    }
+
+    .action-page a {
+        font-size: 20px;
+        font-weight: 600;
+        letter-spacing: .7px;
+        color: #212b36;
+    }
+
+        .action-page a:hover {
+            color: #FE820E;
+        }
+
+    .center-content {
+        display: flex;
+        justify-content: flex-start; /* Aligns items to the start, respecting left padding and margins */
+        align-items: center;
+        width: 100%;
+        padding-bottom: 10px; /* Padding at the bottom of the container */
+    }
+</style>
+
+
+
+
+
+<div class="content">
+    <div class="page-header">
+        <div class="page-title">
+            <div class="action-page">
+                <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="Index">Trang Chủ </a>
+                <a asp-area="Admin" asp-controller="AuthorManager" asp-action="Index"> \ List of Author </a>
+                <a asp-area="Admin" asp-controller="AuthorManager" asp-action="Detail" asp-route-id="@Model.IdTg"> \ @Model.TenTg</a>
+            </div>
+            <h6>Chi tiết các thông tin của Author </h6>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-8 col-sm-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="productdetails">
+                        <ul class="product-bar">
+                            <li>
+                                <h4>ID Author</h4>
+                                <h6>@Model.IdTg</h6>
+                            </li>
+                            <li>
+                                <h4>Author Name</h4>
+                                <h6>@Model.TenTg</h6>
+                            </li>
+                            <li>
+                                <h4>Nums of Series</h4>
+                                <h6>@ViewBag.RelatedSeriesCount</h6>
+                            </li>
+                            <li>
+                                <h4>Author Licence ( Active )  </h4>
+                                <h6>@Model.Active</h6>
+                            </li>
+                            <li>
+                                <h4>Author Licence (Active)</h4>
+                                <h6>@Model.Active</h6>
+                                <div class="center-content">
+                                    @if (Model.Active.HasValue && Model.Active.Value)
+                                    {
+                                        <form asp-action="ToggleActive" asp-controller="AuthorManager" asp-route-id="@Model.IdTg" method="post">
+                                            <button type="submit" class="btn btn-danger btn-space">Turn Active to False</button>
+                                        </form>
+                                    }
+                                    else if (Model.Active.HasValue && !Model.Active.Value)
+                                    {
+                                        <form asp-action="ToggleActive" asp-controller="AuthorManager" asp-route-id="@Model.IdTg" method="post">
+                                            <button type="submit" class="btn btn-success btn-space">Turn Active to True</button>
+                                        </form>
+                                    }
+                                    <div class="notice">
+                                        Notice: Changing the activation status will unpublish/publish all of @Model.TenTg's comics.
+                                    </div>
+                                </div>
+                            </li>
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-sm-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="slider-product-details">
+                        <div class="owl-carousel owl-theme product-slide align-center justify-content-center">
+                            <div class="slider-product">
+                                <h4 id="comicTitle">Select a comic to view details</h4>
+                                <img src="" alt="Selected Comic Banner Here" style="width:100%" id="comicBanner">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    <div class="table-responsive">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h3 class="mb-0">Related Comic Series of @Model.TenTg</h3>
+        </div>
+        <table class="table datanew">
+            <thead>
+                <tr>
+                    <th>ID Truyện</th>
+                    <th>Tên truyện</th>
+                    <th>Độ tuổi</th>
+                    <th>Tổng Đánh Giá</th>
+                    <th>Tổng lượt xem</th>
+                    <th>Active</th>
+                    <th>Premium Stats</th>
+                    <th>Publish Stats</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (var item in ViewBag.RelatedComics as List<ProjectMangaSmurf.Models.BoTruyen>)
+                {
+                    <tr data-banner-url="@Url.Content(item.AnhBanner)"
+                        data-status="@item.Active ? 'active' : 'banned'"
+                        data-premium="@item.TtPemium ? 'premium' : 'standard'">
+
+                        <td>@item.IdBo</td>
+                        <td>@item.TenBo</td>
+                        <td>@item.Dotuoi</td>
+                        <td>@item.TkDanhgia</td>
+                        <td>@item.TongLuotXem</td>
+                        <td>@(item.Active ? "Already Show" : "Hided")</td>
+                        <td>@(item.TtPemium ? "Premium" : "Standard")</td>
+                        <td>
+                            @switch (item.TrangThai)
+                            {
+                                case 0:
+                                    @:Ngừng phát hành
+                                    break;
+                                case 1:
+                                    @:Hoàn Thiện
+                                    break;
+                                case 2:
+                                    @:Đang cập nhật
+                                    break;
+                                case 3:
+                                    @:Sắp có
+                                    break;
+                                default:
+                                    @:Không xác định
+                                    break;
+                            }
+                        </td>
+
+
+                        <td>
+                            <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="Detail" asp-route-id="@item.IdBo" class="me-3">
+                                <img src="~/img/icons/eye.svg" alt="View">
+                            </a>
+                            <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="Update" asp-route-id="@item.IdBo" class="me-3">
+                                <img src="~/img/icons/edit.svg" alt="Edit">
+                            </a>
+                            <a class="delete-product me-3" data-product-id="@item.IdBo" href="javascript:void(0);">
+                                <img src="~/img/icons/delete.svg" alt="Delete">
+                            </a>
+                        </td>
+                    </tr>
+                }
+
+
+            </tbody>
+
+
+        </table>
+    </div>
+</div>
+@section Scripts {
+    <script>
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const rows = document.querySelectorAll('table.datanew tbody tr');
+            const imageElement = document.getElementById('comicBanner');
+            const titleElement = document.getElementById('comicTitle');
+
+            function setImageAndTitle(url, title) {
+                if (url) {
+                    imageElement.src = url;
+                    imageElement.alt = 'Comic Banner for ' + title;
+                    titleElement.textContent = title;
+                } else {
+                    imageElement.alt = 'No image available';
+                    imageElement.src = '';
+                    titleElement.textContent = 'No comic selected';
+                }
+            }
+
+            rows.forEach(row => {
+                row.addEventListener('click', function () {
+                    const bannerUrl = this.getAttribute('data-banner-url');
+                    const comicName = this.cells[1].textContent;
+                    setImageAndTitle(bannerUrl, comicName);
+                });
+            });
+
+            if (rows.length > 0) {
+                rows[0].click();
+            } else {
+                console.log('No comics available to display.');
+                setImageAndTitle(null, '');
+            }
+        });
+    </script>
+
+}
+
+
+
+
+
