@@ -517,12 +517,6 @@ namespace ProjectMangaSmurf.Migrations
                         .HasColumnType("varchar(100)")
                         .HasColumnName("giayphep");
 
-                    b.Property<string>("LinkDiscord")
-                        .HasMaxLength(255)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(255)")
-                        .HasColumnName("link_discord");
-
                     b.Property<string>("LinkFb")
                         .HasMaxLength(255)
                         .IsUnicode(false)
@@ -542,12 +536,8 @@ namespace ProjectMangaSmurf.Migrations
                         .HasColumnName("link_x");
 
                     b.Property<string>("Noidung")
-                        .HasColumnType("text")
+                        .HasColumnType("nvarchar(max)")
                         .HasColumnName("noidung");
-
-                    b.Property<string>("Note")
-                        .HasColumnType("text")
-                        .HasColumnName("note");
 
                     b.ToTable("Footer", (string)null);
                 });

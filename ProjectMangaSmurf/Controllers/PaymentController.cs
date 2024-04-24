@@ -8,5 +8,6 @@ namespace ProjectMangaSmurf.Controllers
         {
             return View();
         }
+
     }
 }

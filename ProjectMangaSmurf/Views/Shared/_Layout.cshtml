@@ -2,7 +2,9 @@
 @using Microsoft.AspNetCore.Http
 @using ProjectMangaSmurf.Repository
 @inject IHttpContextAccessor HttpContextAccessor
-@inject IKhachHangRepository khachhangrepository
+@inject IboTruyenRepository boTruyenRepository
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -59,47 +61,51 @@
                     <img class="nav__logo-img" src="/images/logo1.png" alt="logo website">
                 </a>
                 <div class="nav__menu nav__menu-list" id="nav-menu">
-                    <div class="search-bar">
-                        <div class="icon-search"><i class="ri-search-2-line"></i></div>
+                    <div class="search">
+                        <div class="icon"><i class="ri-search-2-line"></i></div>
                         <div class="input">
-                            <input type="text" placeholder="Tìm Kiếm ..." id="search-truyen">
+                            <input type="text" placeholder="Tìm Kiếm ..." id="search-truyen" class="searchInput">
                         </div>
                         <span class="clear"><i class="ri-close-large-line"></i></span>
                     </div>
-
+                    <div class="results" id="search-results">
+                        <ul id="results">
+                        </ul>
+                    </div>
+                    
                     <div class="nav__buttons">
                         <i class="ri-moon-fill change-theme" id="theme-button"></i>
                     </div>
                     <div class="nav__login">
                         @{
                             var kh = HttpContextAccessor.HttpContext.Session.GetString("TK");
-                            @if (kh!= null)
+                                @if (kh!= null)
                             {
                                 
-                                <div class=" btn__login dropdown" style="margin-left:1rem; color:#fff;">
-                                    <style>
-                                        .dropdown-menu i {
-                                            margin-right: .5rem;
-                                        }
-                                    </style>
-                                    <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="color:#fff;">
-                                        @kh
-                                    </button>
-                                    <ul class="dropdown-menu dropdown-menu-end" style="max-width:120px; max-height:130px;">
-                                        <li><a asp-area="" asp-controller="KhachHang" asp-action="Account" class="dropdown-item text-start" style="padding:.5rem!important;"><i class="fa-solid fa-user"></i> Account</a></li>
-                                        <li><a asp-area="" asp-controller="KhachHang" asp-action="History" asp-route-id="@kh" class="dropdown-item text-start" style="padding:.5rem!important;" ><i class="fa-solid fa-clock-rotate-left"></i> Histories</a></li>
-                                        <li><a asp-area="" asp-controller="KhachHang" asp-action="Logout" class="dropdown-item text-start" style="padding:.5rem!important;"><i style="color: #FE0000;" class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
-                                    </ul>
-                                </div>
+                                    <div class=" btn__login dropdown" style="margin-left:1rem; color:#fff;">
+                                        <style>
+                                            .dropdown-menu i {
+                                                margin-right: .5rem;
+                                            }
+                                        </style>
+                                        <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="color:#fff;">
+                                            @kh
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-end" style="max-width:120px; max-height:130px;">
+                                            <li><a asp-area="" asp-controller="KhachHang" asp-action="Account" class="dropdown-item text-start" style="padding:.5rem!important;"><i class="fa-solid fa-user"></i> Account</a></li>
+                                            <li><a asp-area="" asp-controller="KhachHang" asp-action="History" asp-route-id="@kh" class="dropdown-item text-start" style="padding:.5rem!important;" ><i class="fa-solid fa-clock-rotate-left"></i> Histories</a></li>
+                                            <li><a asp-area="" asp-controller="KhachHang" asp-action="Logout" class="dropdown-item text-start" style="padding:.5rem!important;"><i style="color: #FE0000;" class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
+                                        </ul>
+                                    </div>
                             }
                             else
                             {
-                                <div class="btn__regis mr-2">
-                                    <a asp-area="" asp-controller="KhachHang" asp-action="Register">Đăng ký</a>
-                                </div>
-                                <div class=" btn__login">
-                                    <a asp-area="" asp-controller="KhachHang" asp-action="Login">Đăng nhập</a>
-                                </div>
+                                    <div class="btn__regis mr-2">
+                                        <a asp-area="" asp-controller="KhachHang" asp-action="Register">Đăng ký</a>
+                                    </div>
+                                    <div class=" btn__login">
+                                        <a asp-area="" asp-controller="KhachHang" asp-action="Login">Đăng nhập</a>
+                                    </div>
                             }
                         }
                     </div>
@@ -155,36 +161,36 @@
                     @{
                         if(kh!= null)
                         {
-                            <a asp-area="" asp-controller="KhachHang" asp-action="Following" asp-route-id="@kh" class="nav__item nav__link active-link">Theo dõi</a>
+                                <a asp-area="" asp-controller="KhachHang" asp-action="Following" asp-route-id="@kh" class="nav__item nav__link active-link">Theo dõi</a>
                         }
                         else{
-                            <a id="follow" class="nav__item nav__link active-link">Theo dõi</a>
-                            <script>
-                                document.getElementById('follow').addEventListener('click', function () {
-                                    var userResponse = confirm("Bạn cần đăng nhập để xem danh sách theo dõi. Bạn có muốn đăng nhập ngay?");
-                                    if (userResponse) {
-                                        window.location.href = '@Url.Action("Login", "KhachHang")';
-                                    }
-                                });
-                            </script>
+                                <a id="follow" class="nav__item nav__link active-link">Theo dõi</a>
+                                <script>
+                                    document.getElementById('follow').addEventListener('click', function () {
+                                        var userResponse = confirm("Bạn cần đăng nhập để xem danh sách theo dõi. Bạn có muốn đăng nhập ngay?");
+                                        if (userResponse) {
+                                            window.location.href = '@Url.Action("Login", "KhachHang")';
+                                        }
+                                    });
+                                </script>
                         }
                     }
                     @{
                         if (kh != null)
                         {
-                            <a asp-area="" asp-controller="KhachHang" asp-action="History" asp-route-id="@kh" class="nav__item nav__link active-link">Lịch sử</a>
+                                <a asp-area="" asp-controller="KhachHang" asp-action="History" asp-route-id="@kh" class="nav__item nav__link active-link">Lịch sử</a>
                         }
                         else
                         {
-                            <a id="history" class="nav__item nav__link active-link">Lịch sử</a>
-                            <script>
-                                document.getElementById('history').addEventListener('click', function () {
-                                    var userResponse = confirm("Bạn cần đăng nhập để xem lịch sử đọc. Bạn có muốn đăng nhập ngay?");
-                                    if (userResponse) {
-                                        window.location.href = '@Url.Action("Login", "KhachHang")';
-                                    }
-                                });
-                            </script>
+                                <a id="history" class="nav__item nav__link active-link">Lịch sử</a>
+                                <script>
+                                    document.getElementById('history').addEventListener('click', function () {
+                                        var userResponse = confirm("Bạn cần đăng nhập để xem lịch sử đọc. Bạn có muốn đăng nhập ngay?");
+                                        if (userResponse) {
+                                            window.location.href = '@Url.Action("Login", "KhachHang")';
+                                        }
+                                    });
+                                </script>
                         }
                     }
                     <a class="nav__item nav__link active-link" asp-area="" asp-controller="BoTruyen" asp-action="Rankings" asp-route-id="1">Xếp hạng</a>
@@ -215,104 +221,23 @@
         <a onclick="scrollToTop()" id="scrollToTopBtn" title="Go to top"><i class="ri-arrow-up-line"></i></i></a>
     </main>
     <footer class="footer" style="position:relative; padding-block: 1rem; line-height: 20px; padding: 2rem 0;">
-        <div class="footer__container containers grid">
-            <div>
-                <p class="footer__description">
-                    Website luôn cập nhật nhanh và sớm nhất các đầu truyện hot
-                    Đảm bảo tính bảo mật và trải nghiệm của bạn,<br>
-                    Đăng nhập ngay để lưu lại những bộ truyện ưa thích<br>
-                </p>
-            </div>
-
-            <div class="footer__content">
-                <div>
-                    <h3 class="footer__title">Main Menu</h3>
-
-                    <ul class="footer__links">
-                        <li>
-                            <a href="" class="footer__link">About</a>
-                        </li>
-                        <li>
-                            <a href="" class="footer__link">Confirm</a>
-                        </li>
-                        <li>
-                            <a href="" class="footer__link">manga</a>
-                        </li>
-                        <li>
-                            <a href="" class="footer__link">Events</a>
-                        </li>
-                    </ul>
-                </div>
-
-                <div>
-                    <h3 class="footer__title">Information</h3>
-
-                    <ul class="footer__links">
-                        <li>
-                            <a asp-area="" asp-controller="Contact" asp-action="Index" class="footer__link">Contact</a>
-                        </li>
-                        <li>
-                            <a href="" class="footer__link">Order & Returns</a>
-                        </li>
-                        <li>
-                            <a href="" class="footer__link">Videos</a>
-                        </li>
-                        <li>
-                            <a href="" class="footer__link">Reservation</a>
-                        </li>
-                    </ul>
-                </div>
-
-                <div>
-                    <h3 class="footer__title">Address</h3>
-                    <ul class="footer__links">
-                        <li class="footer__information">
-                            District 9
-                            HoChiMinh City, VietNam
-                        </li>
-                        <li class="footer__information">
-                            9AM - 11PM
-                        </li>
-                    </ul>
-                </div>
-
-                <div>
-                    <h3 class="footer__title">Social Media</h3>
-
-                    <ul class="footer__social">
-                        <a href="https://www.facebook.com/" target="_blank" class="footer__social-link">
-                            <i class="ri-facebook-circle-line"></i>
-                        </a>
-                        <a href="https://www.instagram.com/" target="_blank" class="footer__social-link">
-                            <i class="ri-instagram-line"></i>
-                        </a>
-                        <a href="https://twitter.com/" target="_blank" class="footer__social-link">
-                            <i class="ri-twitter-line"></i>
-                        </a>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-        <div class="footer__info containers" style="margin-top: 1.5rem; display:flex; justify-content:center; align-items:center">
-            <span class="footer__copy">
-                &#169; Copyright TEAM 10. All rights reserved
-            </span>
-        </div>
+        <partial name="_Footer"/>
     </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.js" integrity="sha512-HGOnQO9+SP1V92SrtZfjqxxtLmVzqZpjFFekvzZVWoiASSQgSr4cw9Kqd2+l8Llp4Gm0G8GIFJ4ddwZilcdb8A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="~/js/scrollreveal.min.js"></script>
-    <script src="~/js/script.js"></script>
-    @* <script src="~/js/scriptAdmin.js"></script> *@
-    X
+
+    
+
     <script>
+
         setTimeout(function () {
             $('#global-loader');
             setTimeout(function () {
                 $("#global-loader").fadeOut("slow");
             }, 100);
         }, 500);
-    </script>
-    <script>
+
         /*=============== DARK LIGHT THEME ===============*/
         const themeButton = document.getElementById('theme-button');
         const darkTheme = 'dark-theme';
@@ -367,9 +292,85 @@
             }
         }
 
-        
+        /*======================= ANIMATION SEARCH BAR ==========================*/
+        const icon = document.querySelector(".icon");
+        const search = document.querySelector(".search");
+        const results = document.querySelector(".results");
+        icon.onclick = () => {
+            search.classList.toggle('active');
+            results.classList.toggle('active');
+        }
+        const clear = document.querySelector(".clear");
+        const valueTruyen = document.getElementById('search-truyen');
+        clear.onclick = () => {
+            if (valueTruyen.value == '') {
+                search.classList.remove('active');
+
+                if (valueTruyen.value === '') {
+                    clearSearchResults();
+                }
+            }
+            else {
+                valueTruyen.value = '';
+            }
+        }
+
+
+        function clearSearchResults() {
+            $('#results').empty();
+        }
     </script>
-    
+
+    <script src="~/js/script.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('.searchInput').on('input', function () {
+                var searchQuery = $(this).val();
+                if (searchQuery === '') {
+                    clearSearchResults();
+                }
+                if (searchQuery.length > 0) {
+                    $.ajax({
+                        url: '@Url.Action("SearchBoTruyen", "BoTruyen")',
+                        type: 'GET',
+                        data: { query: searchQuery },
+                        success: function (data) {
+                            displaySearchResults(data);
+                        },
+                        error: function (error) {
+                            console.error('Error:', error);
+                        }
+                    });
+                }
+            });
+            
+            
+            function displaySearchResults(results) {
+                var resultsContainer = $('#results');
+                resultsContainer.empty();
+
+                results.forEach(function (result) {
+                    resultsContainer.append(
+                        `<li>
+                            <a href="/BoTruyen/CTBoTruyen/${result.id}" class="item-search">
+                                <img src="${result.img}" />
+                                <div>
+                                    <h4>${result.tenBo}</h4>
+                                    <span>${result.view} View</span>
+                                </div>
+                            </a>
+                        </li>`
+                    );
+                });
+            }
+
+            function clearSearchResults() {
+                $('#results').empty();
+            }
+        });
+    </script>
 </body>
     @RenderSection("Scripts", required: false)
 </html>

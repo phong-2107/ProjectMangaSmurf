@@ -239,7 +239,6 @@ namespace ProjectMangaSmurf.Data
                 entity
                     .HasNoKey()
                     .ToTable("Footer");
-
                 entity.Property(e => e.Dieukhoan)
                     .HasColumnType("text")
                     .HasColumnName("dieukhoan");
@@ -247,10 +246,6 @@ namespace ProjectMangaSmurf.Data
                     .HasMaxLength(100)
                     .IsUnicode(false)
                     .HasColumnName("giayphep");
-                entity.Property(e => e.LinkDiscord)
-                    .HasMaxLength(255)
-                    .IsUnicode(false)
-                    .HasColumnName("link_discord");
                 entity.Property(e => e.LinkFb)
                     .HasMaxLength(255)
                     .IsUnicode(false)
@@ -264,11 +259,8 @@ namespace ProjectMangaSmurf.Data
                     .IsUnicode(false)
                     .HasColumnName("link_x");
                 entity.Property(e => e.Noidung)
-                    .HasColumnType("text")
+                    .HasColumnType("nvarchar(max)")
                     .HasColumnName("noidung");
-                entity.Property(e => e.Note)
-                    .HasColumnType("text")
-                    .HasColumnName("note");
             });
 
             modelBuilder.Entity<HopDong>(entity =>

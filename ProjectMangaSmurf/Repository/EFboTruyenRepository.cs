@@ -80,7 +80,11 @@ namespace ProjectMangaSmurf.Repository
             return await Task.FromResult(randomElement);
         }
 
-        
+        public async Task<Footer> GetFirstAsync()
+        {
+            return await _context.Footers.FirstOrDefaultAsync();
+        }
+
 
         public List<string> GetListLoaiAsync(string id)
         {
@@ -209,6 +213,11 @@ namespace ProjectMangaSmurf.Repository
                 .OrderByDescending(x => x.DailyViews)
                 .ToListAsync();
             return booksWithDailyViews.Select(x => x.BoTruyen).Take(10);
+        }
+
+        public async Task<IEnumerable<BoTruyen>> SearchByNameAsync(string name)
+        {
+            return await _context.BoTruyens.Where(b => b.TenBo.ToLower().Contains(name.ToLower())).ToListAsync();
         }
     }
 }

@@ -2,6 +2,7 @@
 using ProjectMangaSmurf.Repository;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Http;
 namespace ProjectMangaSmurf.Controllers
 {
     public class BoTruyenController : Controller
@@ -50,6 +51,12 @@ namespace ProjectMangaSmurf.Controllers
             return View(listBotruyen);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> SearchBoTruyen(string query)
+        {
+            var results = await _botruyenrepository.SearchByNameAsync(query);
+            return Json(results.Select(x => new { id = x.IdBo , img = x.AnhBia, tenBo = x.TenBo, view = x.TongLuotXem}));
+        }
         public async Task<IActionResult> Rankings(int id)
         {
             ViewBag.Value = id;
@@ -93,8 +100,6 @@ namespace ProjectMangaSmurf.Controllers
             ViewBag.Topic = loai.TenLoai;
             return View(listBotruyen);
         }
-
-        
 
         public async Task<IActionResult> CTBoTruyen(string id)
         {

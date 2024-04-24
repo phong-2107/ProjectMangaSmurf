@@ -11,13 +11,9 @@ public class Footer
 
     public string? LinkX { get; set; }
 
-    public string? LinkDiscord { get; set; }
-
     public string? Noidung { get; set; }
 
     public string? Dieukhoan { get; set; }
-
-    public string? Note { get; set; }
 
     public string? Giayphep { get; set; }
 }

@@ -1,0 +1,98 @@
+﻿
+.background {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 37rem;
+    background: linear-gradient( to top,var(--containers-color-yellow), var(--body-white));
+    opacity: .5;
+}
+
+.payment__content {
+    width:100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-top:9rem;
+    z-index:1000;
+}
+    .payment__content .content {
+        position: relative;
+        margin: 2rem;
+        width: 300px;
+    }
+
+.payment__content .content a{
+    position:absolute;
+    
+    align-items:center;
+    padding:.5rem 2rem;
+    color:var(--title-color);
+    font-weight:600;
+    font-size:1.1rem;
+    border-radius:2px;
+}
+
+.cr-product-card-image{
+    position:absolute;
+    top:-10rem;
+}
+
+.btn-basic {
+    left: 90px;
+    top: 320px;
+    border:2px solid #808080;
+}
+
+.btn-pre {
+    left: 80px;
+    top: 350px;
+    /*background-color: #C133F7;*/
+}
+
+    .btn-pre:hover {
+        background-color: var(--containers-color-yellow);
+    }
+
+    .payment__content .content img {
+        display: block;
+        width: 100%;
+        height: auto;
+    }
+
+.img-pre{
+    max-width:330px;
+    position:absolute;
+    right:0;
+    bottom:5rem;
+}
+
+.btn-pre {
+    position: relative;
+    padding: 20px;
+}
+
+    /* Hiệu ứng chuyển động cho viền */
+    .btn-pre::after {
+        content: '';
+        position: absolute;
+        top: -10px;
+        left: -10px;
+        width: calc(100% + 20px);
+        height: calc(100% + 20px);
+        border: 5px solid #fff;
+        border-radius: 50%;
+        animation: move-border 2s linear infinite;
+    }
+
+/* Định dạng hiệu ứng chuyển động */
+@keyframes move-border {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}

@@ -40,57 +40,49 @@
             <div id="carouselExampleAutoplaying" class="carousel slide home__carousel bg__carousel w-100" data-bs-ride="carousel">
                 <div class="carousel-inner rounded-3 w-100" style="">
                     @{
-                        int i = 0;
-                        @foreach (var botruyen in Model)
+                        string TruncateText(string text, int maxLength)
                         {
-                            if (i == 0)
+                            if (text.Length > maxLength)
                             {
-                                <div class="carousel-item active w-100 main-Banner">
-                                    @if (!string.IsNullOrEmpty(botruyen.AnhBanner))
-                                    {
-                                        <img src="@botruyen.AnhBanner" class="d-block w-100 rounded-3" alt="Anh banner" style="height: 450px!important; object-fit: cover;">
-                                    }
-                                    <div class="item-infor">
-                                        <div class="item-content">
-                                            <div class="content">
-                                                <a href="#">@botruyen.TenBo</a>
-                                            </div>
-                                            <div class="item-des">
-                                                <p>@botruyen.Mota</p>
-                                            </div>
-                                        </div>
-                                        <div class=" btn__regis">
-                                            <a asp-action="CTBoTruyen" asp-route-id="@botruyen.IdBo">Xem thông tin</a>
-                                        </div>
-                                    </div>
-                                </div>
+                                string[] words = text.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                                string displayText = string.Join(" ", words.Take(maxLength));
+                                if (words.Length > maxLength)
+                                {
+                                    displayText += "...";
+                                }
+                                return displayText;
                             }
-                            else
-                            {
-                                <div class="carousel-item w-100">
-                                    @if (!string.IsNullOrEmpty(botruyen.AnhBanner))
-                                    {
-                                        <img src="@botruyen.AnhBanner" class="d-block w-100 rounded-3" alt="Anh banner" style="height: 450px; object-fit: cover;">
-                                    }
-                                    <div class="item-infor">
-                                        <div class="item-content">
-                                            <div class="content">
-                                                <a href="#">@botruyen.TenBo</a>
-                                            </div>
-                                            <div class="item-des">
-                                                <p>@botruyen.Mota</p>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class=" btn__regis">
-                                            <a asp-action="CTBoTruyen" asp-route-id="@botruyen.IdBo">Xem thông tin</a>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            }
-                            i++;
+                            return text;
                         }
+                    }
+
+                    @foreach (var botruyen in Model.Select((value, index) => new { Value = value, Index = index }))
+                    {
+                        <div class="carousel-item @(botruyen.Index == 0 ? "active" : "") w-100 main-Banner">
+                            @if (!string.IsNullOrEmpty(botruyen.Value.AnhBanner))
+                            {
+                                <img src="@botruyen.Value.AnhBanner" class="d-block w-100 rounded-3" alt="Anh banner" style="height: 450px!important; object-fit: cover;">
+                            }
+                            @if (botruyen.Value.TtPemium)
+                            {
+                                <div class="item-vip-banner">
+                                    <img style="width:100px!important; height:40px!important; border-radius:0!important;" src="~/images/predark.png" />
+                                </div>
+                            }
+                            <div class="item-infor">
+                                <div class="item-content">
+                                    <div class="content">
+                                        <a href="#">@botruyen.Value.TenBo</a>
+                                    </div>
+                                    <div class="item-des">
+                                        <p>@TruncateText(botruyen.Value.Mota, 35)</p>
+                                    </div>
+                                </div>
+                                <div class="btn__regis w-50">
+                                    <a asp-action="CTBoTruyen" asp-route-id="@botruyen.Value.IdBo">View more</a>
+                                </div>
+                            </div>
+                        </div>
                     }
                 </div>
                 <div class="background-item rounded-3"></div>
@@ -121,13 +113,11 @@
                     </div>
                     random = null;
                 }
-                @* 
-                <div class="background-img"></div> *@
             </div>
 
         </div>
         <div class="main__random bg-random">
-            <a href="#" class="btn-pre"><i class="ri-vip-crown-line"></i> Tham gia</a>
+            <a asp-controller="Payment" asp-action="index" class="btn-pre"><i class="ri-vip-crown-line"></i>Tham gia</a>
         </div>
     </div>
 </div>
@@ -149,47 +139,26 @@
                 }
                 @foreach (var botruyen in listtruyenNew)
                 {
+                    var EarliestChap = chapterRepository.GetChapterEarliestByIdAsync(botruyen.IdBo);
+                    var time = EarliestChap != null ? chapterRepository.CalculateTimeAgo(EarliestChap.ThoiGian) : "... giờ trước";
+                    var chapText = EarliestChap != null ? $"chap {EarliestChap.SttChap}" : "chap ...";
                     <div class="col-2 update-item">
                         <a asp-action="CTBoTruyen" asp-route-id="@botruyen.IdBo">
                             <figure class="position-relative">
-                                @{
-                                    var EarliestChap = chapterRepository.GetChapterEarliestByIdAsync(botruyen.IdBo);
-                                    if (EarliestChap != null)
-                                    {
-                                        var time = chapterRepository.CalculateTimeAgo(EarliestChap.ThoiGian);
-                                        if (!string.IsNullOrEmpty(botruyen.AnhBia))
-                                        {
-                                            <img src="@botruyen.AnhBia" alt="truyen Image" />
-                                        }
-                                        <figcaption >
-                                            <h6 class="item-title"><a href="#">@botruyen.TenBo</a></h6>
-
-                                            <a class="item-chapter" style="font-size: 13px;">
-                                                <span class="chap" style="margin-right: 10px; ">chap @EarliestChap.SttChap</span>
-                                                <span class="time">@time</span>
-                                            </a>
-                                        </figcaption>
-                                        
-                                    }
-                                    else
-                                    {
-                                        if (!string.IsNullOrEmpty(botruyen.AnhBia))
-                                        {
-                                            <img src="@botruyen.AnhBia" alt="truyen Image" />
-                                        }
-                                        <figcaption>
-                                            <h6 class="item-title"><a href="#">@botruyen.TenBo</a></h6>
-                                            <a class="item-chapter" style="font-size: 13px;">
-                                                <span class="chap" style="margin-right: 10px; ">chap ...</span>
-                                                <span class="time">... giờ trước</span>
-                                            </a>
-                                        </figcaption>
-                                    }
+                                @if (!string.IsNullOrEmpty(botruyen.AnhBia))
+                                {
+                                    <img src="@botruyen.AnhBia" alt="truyen Image" />
                                 }
+                                <figcaption>
+                                    <h6 class="item-title"><a href="#">@botruyen.TenBo</a></h6>
+                                    <a class="item-chapter" style="font-size: 13px;">
+                                        <span class="chap" style="margin-right: 10px;">@chapText</span>
+                                        <span class="time">@time</span>
+                                    </a>
+                                </figcaption>
                                 @if (botruyen.TtPemium == true)
                                 {
                                     <div class="item-vip">
-                                        @* <i class="fa-solid fa-crown"></i> *@
                                         <img style="width:50px!important; height:20px!important; border-radius:0!important;" src="~/images/predark.png" />
                                     </div>
                                 }
@@ -272,18 +241,19 @@
         <div class="top__content">
             <div class="title-infor">
                 <span class="section__subtitle">Top xếp hạng Hôm nay</span>
-                <p class="section__des"> </p>
+                <p class="section__des">Top 1 Luợt đọc hôm nay</p>
             </div>
         </div>
-        <div class="container">
-            <div class="row justify-content-center w-100 position-relative">
+        <div class="containers">
+            <div class=" justify-content-center w-100 position-relative">
                 @{
-                    var listRank = boTruyenRepository.GetRankingAsync();
-                    var item = Model.ElementAt(1);
-                    <div class="col p-3 position-relative">
+                    var listRank = boTruyenRepository.GetAllAsyncByDay();
+                    var item = Model.ElementAt(0);
+                    <div class=" position-relative">
                         @if (!string.IsNullOrEmpty(item.AnhBanner))
                         {
                             <img src="@item.AnhBanner" alt="truyen Image" class="img-poster"/>
+                            <div class="background-item rounded-3 w-100" style="z-index:0"></div>
                         }
                         @if(item.TtPemium == true)
                         {
@@ -293,13 +263,40 @@
                         }
                         <div class="position-absolute name-poster">
                             <h3>@item.TenBo</h3>
+                            @{
+                                int valueF = Convert.ToInt32(item.TkDanhgia);
+                                if (valueF > 0)
+                                {
+                                    var tmp = 5 - valueF;
+                                    for (int a = 0; a < valueF; a++)
+                                    {
+                                        <i class="ri-star-fill" style="color: #FAB818;"></i>
+                                    }
+                                    for (int b = 0; b < tmp; b++)
+                                    {
+                                        <i class="ri-star-fill"></i>
+                                    }
+                                }
+                                else
+                                {
+                                    <i class="ri-star-fill"></i>
+                                    <i class="ri-star-fill"></i>
+                                    <i class="ri-star-fill"></i>
+                                    <i class="ri-star-fill"></i>
+                                    <i class="ri-star-fill"></i>
+                                }
+                            }
+                            
                         </div>
                         <div class="position-absolute btn-poster">
                             <a asp-action="CTBoTruyen" asp-route-id="@item.IdBo" class="btn-poster-detail">Đọc ngay <i class="ri-arrow-right-s-fill"></i></a>
                         </div>
+                        
                     </div>
                 }
+               
             </div>
+            
         </div>
     </div>
 </section>
@@ -338,27 +335,63 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.js" integrity="sha512-HGOnQO9+SP1V92SrtZfjqxxtLmVzqZpjFFekvzZVWoiASSQgSr4cw9Kqd2+l8Llp4Gm0G8GIFJ4ddwZilcdb8A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.js"></script>
-<script type="text/javascript">
-    const CloseContent = document.querySelector(".content-main .content-close");
-    const Content = document.querySelector(".content-main");
-    CloseContent.onclick = () => {
-        if (CloseContent.textContent == "Xem thêm") {
-            Content.classList.toggle('active-content');
-            CloseContent.textContent = "Thu gọn";
-        }
-        else if (CloseContent.textContent == "Thu gọn") {
-            Content.classList.remove('active-content');
-            CloseContent.textContent = "Xem thêm";
-        }
-    }
 
-    
-</script>
 <script type="text/javascript">
+
+    // const CloseContent = document.querySelector(".content-main .content-close");
+    // const Content = document.querySelector(".content-main");
+    // CloseContent.onclick = () => {
+    //     if (CloseContent.textContent == "Xem thêm") {
+    //         Content.classList.toggle('active-content');
+    //         CloseContent.textContent = "Thu gọn";
+    //     }
+    //     else if (CloseContent.textContent == "Thu gọn") {
+    //         Content.classList.remove('active-content');
+    //         CloseContent.textContent = "Xem thêm";
+    //     }
+    // }
+
     $('.autoplay').slick({
         slidesToShow: 7,
         slidesToScroll: 2,
         autoplay: true,
-        autoplaySpeed: 2500,
+        autoplaySpeed: 3500,
+        responsive: [
+            {
+                breakpoint: 450, // Breakpoint for devices with width <= 745px
+                settings: {
+                    slidesToShow: 2,
+                    slidesToScroll: 1
+                }
+            },
+            {
+                breakpoint: 576, // Breakpoint for devices with width <= 340px
+                settings: {
+                    slidesToShow: 3,
+                    slidesToScroll: 1
+                }
+            },
+            {
+                breakpoint: 767, // Breakpoint for devices with width <= 340px
+                settings: {
+                    slidesToShow: 3,
+                    slidesToScroll: 1
+                }
+            },
+            {
+                breakpoint: 1064, // Breakpoint for devices with width <= 340px
+                settings: {
+                    slidesToShow: 4,
+                    slidesToScroll: 2
+                }
+            },
+            {
+                breakpoint: 1280, // Breakpoint for devices with width <= 340px
+                settings: {
+                    slidesToShow: 5,
+                    slidesToScroll: 2
+                }
+            }
+        ]
     });
 </script>
