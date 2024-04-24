@@ -1,0 +1,439 @@
+﻿@model ProjectMangaSmurf.Models.BoTruyen
+@using ProjectMangaSmurf.Repository
+@inject IboTruyenRepository boTruyenRepository
+@inject IChapterRepository chapterRepository
+@inject IKhachHangRepository khachhangrepository
+@using Microsoft.AspNetCore.Http
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
+@inject IHttpContextAccessor HttpContextAccessor
+
+<link href="~/css/styleCT.css" rel="stylesheet" />
+<link href="~/css/stylechapter.css" rel="stylesheet" />
+<link href="~/css/stylerank.css" rel="stylesheet" />
+
+<div class=" main__top detail section">
+    <div class=" detail__container containers">
+        <div class="detail__infor containers">
+            <div class="bg__detail">
+                <div class="bg">
+                    @if (!string.IsNullOrEmpty(Model.AnhBanner))
+                    {
+                        <img src="@Model.AnhBanner" alt="bg-item" class="bg-main">
+                    }
+                    <div class="item-infor bg__detail-infor">
+                        <div class="infor">
+                            <div class="pre">
+                                <img src="/images/PreLight.png" alt="goi premium">
+                            </div>
+                            @{
+                                var tg = boTruyenRepository.getNameTGById(Model.IdTg);
+                            }
+                            <p class="item-author">Tác Giả: @tg</p>
+                            <h3 class="item-title">@Model.TenBo</h3>
+
+                            <div class="rating">
+                                <i class="ri-star-fill" data-index="1"></i>
+                                <i class="ri-star-fill" data-index="2"></i>
+                                <i class="ri-star-fill" data-index="3"></i>
+                                <i class="ri-star-fill" data-index="4"></i>
+                                <i class="ri-star-fill" data-index="5"></i>
+                            </div>
+                            <script>
+                                document.addEventListener("DOMContentLoaded", function () {
+                                    const stars = document.querySelectorAll(".rating i");
+                                    const sessionTK = '@HttpContextAccessor.HttpContext?.Session.GetString("TK")';
+                                    const boId = "@Model.IdBo";
+                                    const updateUrl = '@Url.Action("UpdateRating", "KhachHang")';
+
+                                    stars.forEach((star) => {
+                                        star.addEventListener("click", () => {
+                                            const rating = parseInt(star.getAttribute("data-index"), 10);
+                                            stars.forEach((s, idx) => {
+                                                s.classList.toggle("active", idx < rating);
+                                            });
+
+                                            if (sessionTK !== null && sessionTK !== '') {
+                                                $.ajax({
+                                                    url: updateUrl,
+                                                    type: 'POST',
+                                                    headers: {
+                                                        "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val() // Lấy token từ form hoặc meta tag
+                                                    },
+                                                    data: {
+                                                        id: boId,
+                                                        rate: rating.toString()
+                                                    },
+                                                    success: function (response) {
+                                                        if (response.success) {
+                                                            alert('Đánh giá thành công. Cảm ơn bạn đã góp ý!');
+                                                        } else {
+                                                            alert('Lỗi khi đánh giá, vui lòng thử lại');
+                                                        }
+                                                        location.reload(); // Tải lại trang ở cả hai trường hợp
+                                                    },
+                                                    error: function () {
+                                                        alert('Không thể gửi yêu cầu. Vui lòng kiểm tra lại.');
+                                                    }
+                                                });
+                                            } else {
+                                                alert('Bạn cần đăng nhập để đánh giá bộ truyện');
+                                            }
+                                        });
+                                    });
+                                });
+                            </script>
+                            <div class=" btn__follow">
+                                @if (ViewBag.follow)
+                                {
+                                    <a id="btn-unfollow" class="btn-follow" style="background-color: #FE0000; padding:.5rem!important; border-radius:5px;">
+                                        <i class="ri-close-fill"></i>
+                                        <span>Hủy Theo dõi</span>
+                                    </a>
+                                    <script>
+                                        $(document).ready(function () {
+                                            $('#btn-unfollow').click(function (event) {
+                                                $.ajax({
+                                                    url: '@Url.Action("UnFollow", "KhachHang")',
+                                                    type: 'POST',
+                                                    data: {
+                                                        __RequestVerificationToken: '@Html.AntiForgeryToken()',
+                                                        id: '@Model.IdBo',
+                                                        stt: '1'
+                                                    },
+                                                    success: function (response) {
+                                                        if (response.success) {
+                                                            alert('Lỗi Khi UnFollow, Vui lòng thử lại');
+                                                        } else {
+                                                            location.reload();
+                                                        }
+                                                    },
+                                                    error: function () {
+                                                        alert('Không thể gửi yêu cầu. Vui lòng kiểm tra lại.');
+                                                    }
+                                                });
+                                            });
+                                        });
+                                    </script>
+                                }
+                                @if (ViewBag.follow == false)
+                                {
+                                    <a id="btn-follow" class="btn-follow" style="padding:.5rem!important;">
+                                        <i class="fa-solid fa-heart"></i>
+                                        <span> Theo dõi</span>
+                                    </a>
+                                }
+                                <script>
+                                    $(document).ready(function () {
+                                        $('#btn-follow').click(function (event) {
+                                            event.preventDefault();
+                                            var sessionTK = '@HttpContextAccessor.HttpContext.Session.GetString("TK")';
+
+                                            if (sessionTK !== null && sessionTK !== '') {
+                                                $.ajax({
+                                                    url: '@Url.Action("Follow", "KhachHang")',
+                                                    type: 'POST',
+                                                    data: {
+                                                        __RequestVerificationToken: '@Html.AntiForgeryToken()',
+                                                        id: '@Model.IdBo',
+                                                        stt: '1'
+                                                    },
+                                                    success: function (response) {
+                                                        if (response.success) {
+                                                            alert('Lỗi Khi Follow, Vui lòng thử lại');
+                                                        } else {
+                                                            location.reload();
+                                                        }
+                                                    },
+                                                    error: function () {
+                                                        alert('Không thể gửi yêu cầu. Vui lòng kiểm tra lại.');
+                                                    }
+                                                });
+                                            } else {
+                                                alert('Bạn cần đăng nhập để theo dõi bộ truyện');
+                                            }
+                                        });
+                                    });
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="background-item"></div>
+                </div>
+                <div class="poster-detail">
+                    @{
+                        var listtmp = Model.Chapters.ToList();
+                        if (listtmp.Count > 0)
+                        {
+                            <div class="background-detail">
+                                <div class="bg-item "></div>
+                                <a asp-action="Chapter" asp-route-id="@Model.IdBo" asp-route-stt="1" class="btn-read">
+                                    <i class="ri-book-open-fill" title="click here"></i>
+                                </a>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="background-detail">
+                                <div class="bg-item "></div>
+                            </div>
+                        }
+                    }
+
+                    @if (!string.IsNullOrEmpty(Model.AnhBia))
+                    {
+                        <img src="@Model.AnhBia" alt="poster" style="max-width:224px; max-height:336px; object-fit:scale-down;">
+                    }
+
+                </div>
+                <div class="content-detail">
+                    <div class="time-detail" style="margin-top:.5rem;">
+                        @{
+                            var EarliestChap = chapterRepository.GetChapterEarliestByIdAsync(Model.IdBo);
+                            if (EarliestChap != null)
+                            {
+                                var time = chapterRepository.CalculateTimeAgo(EarliestChap.ThoiGian);
+                                <i class="ri-time-line"></i>
+                                <span class="time">@time</span>
+                            }
+                            else
+                            {
+                                <i class="ri-time-line"></i>
+                                <span class="time">... giờ trước</span>
+                            }
+                        }
+
+                    </div>
+                    <div class="type-detail">
+                        @{
+                            var listtop = boTruyenRepository.GetListLoaiAsync(Model.IdBo);
+                            foreach (var i in listtop)
+                            {
+                                <a asp-area="" asp-controller="BoTruyen" asp-action="ListTopic" asp-route-id="@i" class="item-type">@i</a>
+                            }
+                        }
+                    </div>
+                </div>
+                <div class="btn-detail">
+                    @{
+                        var stt = chapterRepository.GetEarliestByIdAsync(Model.IdBo);
+                        if (stt > 0)
+                        {
+                            <a class="btn__action" asp-action="Chapter" asp-route-id="@Model.IdBo" asp-route-stt="@stt">Đọc tiếp chap <span class="chapter"></span></a>
+                        }
+                        else
+                        {
+                            <a class="btn__action" style="pointer-events: none; background-color: #8f8f8f">
+                                Đọc tiếp chap
+                                @if (ViewBag.next != null && ViewBag.next != -1)
+                                {
+                                    @ViewBag.next
+                                }
+                            </a>
+                        }
+                    }
+                </div>
+            </div>
+            <div class="content-main">
+                <div class="content-title">
+                    <i class="ri-file-text-line"></i> Nội dung
+                </div>
+                <div class="content">
+                    <p>@Model.Mota</p>
+                </div>
+
+                <div class="content-More">
+                    <div class="content-title">
+                        <i class="ri-file-text-line"></i> Thông tin thêm
+                    </div>
+                    <div class="content">
+                        <div class="chapter">
+                            <i class="ri-send-plane-fill"></i>
+                            <span class="count">@Model.Chapters.ToList().Count</span> Chương đã đăng
+                        </div>
+                        <div class="view">
+                            <i class="ri-eye-line"></i>
+                            <span class="count">@Model.TongLuotXem</span> Lượt xem
+                        </div>
+                        <div class="review">
+                            <i class="ri-message-2-fill"></i>
+                            <span class="count">@Model.TkTheodoi</span> Theo Dõi
+                        </div>
+                    </div>
+
+                    <div class="content-close">Xem thêm</div>
+                </div>
+            </div>
+
+            <div class="detail__list containers">
+                <div class="content-title">
+                    <i class="ri-file-text-line"></i> Danh sách Chương
+                </div>
+                <div class="d-flex flex-column mb-3 w-100 mt-3">
+                    @{
+                        var listChap = Model.Chapters.ToList();
+                        var listRev = Model.Chapters.Reverse();
+                        var kh = @HttpContextAccessor.HttpContext.Session.GetString("TK");
+                        KhachHang khach = new KhachHang();
+                        if (kh != null)
+                        {
+                            khach = await khachhangrepository.GetByIdAsync(kh);
+                        }
+
+                        var idKh = khach?.IdKh;
+                        var isPremium = khach?.TtPremium ?? false;
+                    }
+                    @if (listChap.Count > 0)
+                    {
+                        foreach (var chapter in listRev)
+                        {
+                            if (chapter.TtPemium == true)
+                            {
+                                <a class="p-2 chapter-item premium-chap" data-chapter-id="@chapter.IdBo" data-chapter-stt="@chapter.SttChap" data-idkh="@idKh" data-ispremium="@isPremium" style="color:var(--title-color);">
+                                    <div class="row">
+                                        <div class="col chapter chap-col">
+                                            Chương @chapter.SttChap
+                                        </div>
+                                        <div class="col-6 content chap-col">
+                                            @chapter.TenChap
+                                        </div>
+                                        <div class="col time chap-col">
+                                            @chapter.ThoiGian.ToString("dd-MM-yyyy")
+                                        </div>
+                                        <div class="col view chap-col">
+                                            @chapter.TkLuotxem lượt xem
+                                        </div>
+                                        <div class="col-1 view chap-col position-relative">
+                                            <img style="width:65px!important; height:27px!important; border-radius:0!important;" src="~/images/predark.png" />
+                                        </div>
+                                    </div>
+
+                                </a>
+
+                            }
+                            else
+                            {
+                                <a asp-controller="BoTruyen" asp-action="Chapter" asp-route-id="@chapter.IdBo" asp-route-stt="@chapter.SttChap" class="p-2 chapter-item" style="color:var(--title-color);">
+                                    <div class="row">
+                                        <div class="col chapter chap-col">
+                                            Chương @chapter.SttChap
+                                        </div>
+                                        <div class="col-6 content chap-col">
+                                            @chapter.TenChap
+                                        </div>
+                                        <div class="col time chap-col">
+                                            @chapter.ThoiGian.ToString("dd-MM-yyyy")
+                                        </div>
+                                        <div class="col view chap-col">
+                                            @chapter.TkLuotxem lượt xem
+                                        </div>
+                                        <div class="col-1 view chap-col position-relative">
+                                        </div>
+                                    </div>
+                                </a>
+                            }
+                        }
+                    }
+                    else
+                    {
+                        <script>
+                            alert("Bộ truyện hiện tại chưa được cập nhật chương truyện!!!");
+                        </script>
+                    }
+                    <script>
+                        $(document).ready(function () {
+                            $(document).on('click', '.premium-chap', function (event) {
+                                var chapId = $(this).data('chapter-id');
+                                var chapStt = $(this).data('chapter-stt');
+                                var idKh = '@idKh';
+                                var isPremiumBool = '@isPremium';
+                                if (idKh && idKh.trim().length > 0) {
+
+                                    if (isPremiumBool === 'True') {
+                                        $.ajax({
+                                            url: '@Url.Action("Chapter", "BoTruyen")',
+                                            data: { id: chapId, stt: chapStt },
+                                            success: function (response) {
+                                                $('body').html(response);
+                                                history.pushState({ path: this.url }, '', this.url);
+                                            },
+                                            error: function () {
+                                                alert('Không thể gửi yêu cầu. Vui lòng kiểm tra lại.');
+                                            }
+                                        });
+                                    }
+                                    else {
+                                        alert('Bạn cần đăng ký gói premium để đọc nội dung này!');
+                                    }
+                                } else {
+                                    alert('Bạn cần đăng nhập để đọc nội dung này!');
+                                }
+                            });
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="./js/script.js"></script>
+    <script type="text/javascript">
+        const CloseContent = document.querySelector(".content-main .content-close");
+        const Content = document.querySelector(".content-main");
+        CloseContent.onclick = () => {
+            if (CloseContent.textContent == "Xem thêm") {
+                Content.classList.toggle('active-content');
+                CloseContent.textContent = "Thu gọn";
+            }
+            else if (CloseContent.textContent == "Thu gọn") {
+                Content.classList.remove('active-content');
+                CloseContent.textContent = "Xem thêm";
+            }
+        }
+
+        const stars = document.querySelectorAll(".rating i");
+        const sessionTK = '@HttpContextAccessor.HttpContext?.Session.GetString("TK")';
+        const boId = "@Model.IdBo";
+        const updateUrl = '@Url.Action("UpdateRating", "KhachHang")';
+
+        stars.forEach((star) => {
+            star.addEventListener("click", () => {
+                const rating = parseInt(star.getAttribute("data-index"), 10);
+                stars.forEach((s, idx) => {
+                    s.classList.toggle("active", idx < rating);
+                });
+
+                if (sessionTK !== null && sessionTK !== '') {
+                    $.ajax({
+                        url: updateUrl,
+                        type: 'POST',
+                        headers: {
+                            "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val() // Lấy token từ form hoặc meta tag
+                        },
+                        data: {
+                            id: boId,
+                            rate: rating.toString()
+                        },
+                        success: function (response) {
+                            if (response.success) {
+                                alert('Đánh giá thành công. Cảm ơn bạn đã góp ý!');
+                            } else {
+                                alert('Lỗi khi đánh giá, vui lòng thử lại');
+                            }
+                            location.reload(); // Tải lại trang ở cả hai trường hợp
+                        },
+                        error: function () {
+                            alert('Không thể gửi yêu cầu. Vui lòng kiểm tra lại.');
+                        }
+                    });
+                } else {
+                    alert('Bạn cần đăng nhập để đánh giá bộ truyện');
+                }
+            });
+        });
+
+
+
+    </script>
+
+
+

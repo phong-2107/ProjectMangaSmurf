@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using ProjectMangaSmurf.Areas.Identity.Data;
 using ProjectMangaSmurf.Data;
 using ProjectMangaSmurf.Models;
 using System.Linq.Expressions;
@@ -61,13 +62,9 @@ namespace ProjectMangaSmurf.Repository
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<NhanVien>> GetAllAsync(Expression<Func<NhanVien, bool>> filter = null)
+        public async Task<IEnumerable<ApplicationUser>> GetAllAsync()
         {
-            if (filter != null)
-            {
-                return await _context.NhanViens.Where(filter).ToListAsync();
-            }
-            return await _context.NhanViens.ToListAsync();
+            return await _context.applicationUsers.Where(p => p.LockoutEnabled == true).ToListAsync();
         }
 
         public async Task<NhanVien> GetByIdAsync(string id)

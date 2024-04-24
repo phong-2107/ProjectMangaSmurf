@@ -111,7 +111,7 @@ namespace ProjectMangaSmurf.Controllers
             var kh = HttpContext.Session.GetString("TK");
             if (kh != null)
             {
-                var khtmp = await _khachhangrepository.GetByIdAsync(kh);
+                var khtmp = await _khachhangrepository.GetByAccountAsync(kh);
                 var findct = _cTBoTruyenRepository.GetByIdFollowAsync(khtmp.IdKh, id);
                 if (await findct != null)
                 {
@@ -155,7 +155,7 @@ namespace ProjectMangaSmurf.Controllers
             var kh = HttpContext.Session.GetString("TK");
             if (kh != null)
             {
-                var khtmp = await _khachhangrepository.GetByIdAsync(kh);
+                var khtmp = await _khachhangrepository.GetByAccountAsync(kh);
                 CtHoatDong ct = new CtHoatDong();
                 ct.IdBo = id;
                 ct.SttChap = stt;

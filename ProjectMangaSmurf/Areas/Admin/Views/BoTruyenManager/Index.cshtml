@@ -14,7 +14,7 @@
                 </div>
                 <div class="dash-widgetcontent">
                     <h5>
-                        $ <span class="counters" data-count="307144.00">$307,144.00</span>
+                        VND <span class="counters" data-count="@ViewBag.Money">@ViewBag.Money</span>
                     </h5>
                     <h6>Lợị nhuận</h6>
                 </div>
@@ -29,7 +29,7 @@
                 </div>
                 <div class="dash-widgetcontent">
                     <h5>
-                        <span class="counters" data-count="999">999</span>
+                        <span class="counters" data-count="@ViewBag.cus">@ViewBag.cus</span>
                     </h5>
                     <h6>Khách hàng</h6>
                 </div>
@@ -44,7 +44,7 @@
                 </div>
                 <div class="dash-widgetcontent">
                     <h5>
-                        <span class="counters" data-count="48">48</span> bộ
+                        <span class="counters" data-count="@ViewBag.Bo">@ViewBag.Bo</span> bộ
                     </h5>
                     <h6>Bộ truyện đã đăng tải</h6>
                 </div>
@@ -59,7 +59,7 @@
                 </div>
                 <div class="dash-widgetcontent">
                     <h5>
-                        <span class="counters" data-count="12334">12334</span> view
+                        <span class="counters" data-count="@ViewBag.View">@ViewBag.View</span> view
                     </h5>
                     <h6>Tổng lượt truy cập </h6>
                 </div>
@@ -83,7 +83,7 @@
                                     <i class="fa-solid fa-clipboard-user"></i>
                                 </div>
                                 <div class="dash-counts">
-                                    <h5>Quản lý thành viên</h5>
+                                    <h5>Quản lý nhân viên</h5>
                                 </div>
                             </div>
                         </div>
@@ -114,46 +114,6 @@
                                 </div>
                                 <div class="dash-counts">
                                     <h5>Cài đặt hệ thống</h5>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-md-4 col-sm-12 col-12">
-                            <div class="dash-count das3 d-flex flex-column">
-                                <div class="dash-imgs">
-                                    <i class="fa-solid fa-link"></i>
-                                </div>
-                                <div class="dash-counts">
-                                    <h5>Custom footer</h5>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-md-4 col-sm-12 col-12">
-                            <div class="dash-count das3 d-flex flex-column">
-                                <div class="dash-imgs">
-                                    <i class="fa-regular fa-square-plus"></i>
-                                </div>
-                                <div class="dash-counts">
-                                    <h5>Thêm truyện mới</h5>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-md-4 col-sm-12 col-12">
-                            <div class="dash-count das3 d-flex flex-column">
-                                <div class="dash-imgs">
-                                    <i class="fa-regular fa-pen-to-square"></i>
-                                </div>
-                                <div class="dash-counts">
-                                    <h5>Thư viện bài viết</h5>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-md-4 col-sm-12 col-12">
-                            <div class="dash-count das3 d-flex flex-column">
-                                <div class="dash-imgs">
-                                    <i class="fa-solid fa-user-plus"></i>
-                                </div>
-                                <div class="dash-counts">
-                                    <h5>Khách hàng</h5>
                                 </div>
                             </div>
                         </div>
@@ -230,16 +190,24 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td class="productimgname">
-                                        <a href="productlist.html" class="product-img">
-                                            <img src="assets/img/product/product22.jpg" alt="product">
-                                        </a>
-                                        <a href="productlist.html">Demo1</a>
-                                    </td>
-                                    <td>$891.2</td>
-                                </tr>
+                                @{
+                                    int i = 1;
+                                    foreach (var b in ViewBag.listPopular)
+                                    {
+                                        var chap = boTruyenRepository.CountChapterById(b.IdBo);
+                                        <tr>
+                                            <td>@i</td>
+                                            <td class="productimgname">
+                                                <a class="product-img">
+                                                    <img src="@b.AnhBia" alt="product">
+                                                </a>
+                                                <a>@b.TenBo</a>
+                                            </td>
+                                            <td>@chap</td>
+                                        </tr>
+                                        i++;
+                                    }
+                                }
                             </tbody>
                         </table>
                     </div>
@@ -258,42 +226,35 @@
                             <th>Tên Truyện</th>
                             <th>Image</th>
                             <th>Thể loại</th>
-                            <th>Số chap</th>
+                            <th>Chapter</th>
                             <th>Ngày cập nhật</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>
-                                <a href="javascript:void(0);">IT0001</a>
-                            </td>
-                            <td class="productimgname">
-                                <a class="product-img" href="productlist.html">
-                                    <img src="assets/img/product/product2.jpg" alt="product">
-                                </a>
-                                <a href="productlist.html">Orange</a>
-                            </td>
-                            <td>N/D</td>
-                            <td>Fruits</td>
-                            <td>12-12-2022</td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>
-                                <a href="javascript:void(0);">IT0002</a>
-                            </td>
-                            <td class="productimgname">
-                                <a class="product-img" href="productlist.html">
-                                    <img src="assets/img/product/product3.jpg" alt="product">
-                                </a>
-                                <a href="productlist.html">Pineapple</a>
-                            </td>
-                            <td>N/D</td>
-                            <td>Fruits</td>
-                            <td>25-11-2022</td>
-                        </tr>
-
+                        @{
+                            foreach (var bo in ViewBag.ListEarliest)
+                            {
+                                var list = boTruyenRepository.GetListLoaiAsync(bo.IdBo);
+                                var EarliestChap = chapterRepository.GetChapterEarliestByIdAsync(bo.IdBo);
+                                var time = EarliestChap != null ? chapterRepository.CalculateTimeAgo(EarliestChap.ThoiGian) : "... giờ trước";
+                                var chapText = EarliestChap != null ? $"chap {EarliestChap.SttChap}" : "chap ...";
+                                string loaitruyen = string.Join(", ", list);
+                                <tr>
+                                    <td>@bo.IdBo</td>
+                                    <td>
+                                        <a href="javascript:void(0);">@bo.TenBo</a>
+                                    </td>
+                                    <td class="productimgname">
+                                        <a class="product-img" >
+                                            <img src="@bo.AnhBia" alt="product">
+                                        </a>
+                                    </td>
+                                    <td>@loaitruyen</td>
+                                    <td>@chapText</td>
+                                    <td>@time</td>
+                                </tr>
+                            }
+                        }
                     </tbody>
                 </table>
             </div>

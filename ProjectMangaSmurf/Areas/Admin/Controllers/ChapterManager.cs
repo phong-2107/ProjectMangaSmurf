@@ -7,7 +7,7 @@ using ProjectMangaSmurf.Repository;
 namespace ProjectMangaSmurf.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Roles = SD.Role_Admin)]
+    [Authorize(Roles = SD.Role_Admin + "," + SD.Role_Staff)]
     public class ChapterManager : Controller
     {
         private readonly IboTruyenRepository _botruyenrepository;

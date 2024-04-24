@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 namespace ProjectMangaSmurf.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Roles = SD.Role_Admin)]
+    [Authorize(Roles = SD.Role_Admin + "," + SD.Role_Staff)]
     public class ComicTypeManager : Controller
     {
         private readonly IComicTypeRepository _comicTypeRepository;

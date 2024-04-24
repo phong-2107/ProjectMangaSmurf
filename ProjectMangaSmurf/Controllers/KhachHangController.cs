@@ -52,7 +52,7 @@ namespace ProjectMangaSmurf.Controllers
         public async Task<ActionResult> Account()
         {
 
-            var kh = await _khachhangrepository.GetByIdAsync(HttpContext.Session.GetString("TK"));
+            var kh = await _khachhangrepository.GetByAccountAsync(HttpContext.Session.GetString("TK"));
             if (kh != null)
             {
                 return View(kh);
@@ -94,7 +94,6 @@ namespace ProjectMangaSmurf.Controllers
                 var nameClaim = claims?.FirstOrDefault(x => x.Type == ClaimTypes.Name)?.Value;
                 HttpContext.Session.SetString("Email", emailClaim);
                 HttpContext.Session.SetString("TK", nameClaim);
-
                 var find = _khachhangrepository.GetByEmailAsync(HttpContext.Session.GetString("Email"));
                 if(await find == null)
                 {
@@ -102,7 +101,7 @@ namespace ProjectMangaSmurf.Controllers
                     kh.IdKh = _khachhangrepository.GenerateCustomerId();
                     kh.Email = HttpContext.Session.GetString("Email");
                     kh.Taikhoan = HttpContext.Session.GetString("TK");
-                    kh.LienketGg = HttpContext.Session.GetString("TK");
+                    kh.LienketGg = HttpContext.Session.GetString("Email");
                     kh.Matkhau = RandomPass();
                     kh.TtPremium = false;
                     kh.Active = true;
@@ -132,7 +131,7 @@ namespace ProjectMangaSmurf.Controllers
         {
             if (ModelState.IsValid)
             {
-                var kh = await _khachhangrepository.GetByIdAsync(Taikhoan);
+                var kh = await _khachhangrepository.GetByAccountAsync(Taikhoan);
                 if (kh != null)
                 {
                     var check = PasswordHasher.VerifyPassword(Matkhau.Trim(), kh.Matkhau.Trim());
@@ -195,14 +194,14 @@ namespace ProjectMangaSmurf.Controllers
 
         public async Task<IActionResult> Following(string id)
         {
-            var kh = await _khachhangrepository.GetByIdAsync(id);
+            var kh = await _khachhangrepository.GetByAccountAsync(id);
             var list = await _cTBoTruyenRepository.GetAllAsyncFollowByID(kh.IdKh);
             return View(list);
         }
 
         public async Task<IActionResult> History(string id)
         {
-            var kh = await _khachhangrepository.GetByIdAsync(id);
+            var kh = await _khachhangrepository.GetByAccountAsync(id);
             var list = await _cTBoTruyenRepository.GetAllAsyncHistoryByID(kh.IdKh);
             return View(list);
         }
@@ -213,7 +212,7 @@ namespace ProjectMangaSmurf.Controllers
             if (ModelState.IsValid)
             {
                 var botruyen = await _botruyenrepository.GetByIdAsync(id);
-                var kh = await _khachhangrepository.GetByIdAsync(HttpContext.Session.GetString("TK"));
+                var kh = await _khachhangrepository.GetByAccountAsync(HttpContext.Session.GetString("TK"));
 
                 botruyen.TkTheodoi = botruyen.TkTheodoi + 1;
                 await _botruyenrepository.UpdateAsync(botruyen);
@@ -246,7 +245,7 @@ namespace ProjectMangaSmurf.Controllers
             if (ModelState.IsValid)
             {
                 var botruyen = await _botruyenrepository.GetByIdAsync(id);
-                var kh = await _khachhangrepository.GetByIdAsync(HttpContext.Session.GetString("TK"));
+                var kh = await _khachhangrepository.GetByAccountAsync(HttpContext.Session.GetString("TK"));
 
                 botruyen.TkTheodoi = botruyen.TkTheodoi + 1;
                 await _botruyenrepository.UpdateAsync(botruyen);
@@ -302,7 +301,7 @@ namespace ProjectMangaSmurf.Controllers
             if (ModelState.IsValid)
             {
                 var idkh = HttpContext.Session.GetString("TK");
-                var kh = await _khachhangrepository.GetByIdAsync(idkh);
+                var kh = await _khachhangrepository.GetByAccountAsync(idkh);
                 var botruyen =  _cTBoTruyenRepository.GetByIdAsync(kh.IdKh, id);
                 if (await botruyen != null)
                 {
@@ -319,7 +318,7 @@ namespace ProjectMangaSmurf.Controllers
         public async Task<IActionResult> UpdateInfor(string Taikhoan, string TenKh, string Sdt, string Email)
         {
                 var idkh = HttpContext.Session.GetString("TK");
-                var khach =  _khachhangrepository.GetByIdAsync(idkh);
+                var khach =  _khachhangrepository.GetByAccountAsync(idkh);
                 if (await khach != null)
                 {
                     var kh = await khach;
@@ -340,7 +339,7 @@ namespace ProjectMangaSmurf.Controllers
         public async Task<IActionResult> UpdatePass(string currentPassword, string newPassword, string confirmNewPassword)
         {
             var idkh = HttpContext.Session.GetString("TK");
-            var khach = await _khachhangrepository.GetByIdAsync(idkh);
+            var khach = await _khachhangrepository.GetByAccountAsync(idkh);
             if ( khach != null)
             {
                 if(khach.LienketGg == null)
@@ -379,7 +378,7 @@ namespace ProjectMangaSmurf.Controllers
         public async Task<IActionResult> UpdateSocial(string LienketFb, string LienketGg)
         {
             var idkh = HttpContext.Session.GetString("TK");
-            var khach = await _khachhangrepository.GetByIdAsync(idkh);
+            var khach = await _khachhangrepository.GetByAccountAsync(idkh);
             if (khach != null)
             {
                 if (khach.LienketGg == null)
@@ -403,7 +402,7 @@ namespace ProjectMangaSmurf.Controllers
         public async Task<IActionResult> UpdateConnect(string LienketFb, string LienketGg)
         {
             var idkh = HttpContext.Session.GetString("TK");
-            var khach = await _khachhangrepository.GetByIdAsync(idkh);
+            var khach = await _khachhangrepository.GetByAccountAsync(idkh);
             if (khach != null)
             {
                 if (khach.LienketGg == null)

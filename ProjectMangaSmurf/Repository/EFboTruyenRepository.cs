@@ -2,6 +2,7 @@
 using Microsoft.IdentityModel.Tokens;
 using ProjectMangaSmurf.Data;
 using ProjectMangaSmurf.Models;
+using System;
 
 namespace ProjectMangaSmurf.Repository
 {
@@ -248,6 +249,24 @@ namespace ProjectMangaSmurf.Repository
         public async Task<IEnumerable<BoTruyen>> SearchByNameAsync(string name)
         {
             return await _context.BoTruyens.Where(b => b.TenBo.ToLower().Contains(name.ToLower())).ToListAsync();
+        }
+
+        public async Task<int> GetAllView()
+        {
+            var sum = await _context.BoTruyens.SumAsync(b => b.TongLuotXem);
+            return sum;
+        }
+
+        public async Task<IEnumerable<Chapter>> GetListChapter(string id)
+        {
+            return await _context.Chapters.Where(c => c.IdBo == id).ToListAsync();
+            
+        }
+
+        public async Task<int> CountChapterById(string id)
+        {
+            var chaps = await _context.Chapters.Where(c => c.IdBo == id).ToListAsync();
+            return chaps.Count();
         }
     }
 }

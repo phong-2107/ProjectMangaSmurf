@@ -7,6 +7,7 @@ using ProjectMangaSmurf.Repository;
 using ProjectMangaSmurf.Models;
 using ProjectMangaSmurf.Models.ViewModels;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 
 
@@ -20,37 +21,15 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
         private readonly IStaffRepository _Staff;
 
         public StaffManager(IStaffRepository Nv)
-
         {
             _Staff = Nv;
-
         }
 
-        public async Task<IActionResult> ViewList(string status = "all", bool TypeS = false)
+        public async Task<IActionResult> ViewList()
         {
-            IQueryable<NhanVien> query = _Staff.GetQuery();  // Get base query from the repository
-
-            // Apply status filters
-            switch (status)
-            {
-                case "active":
-                    query = query.Where(kh => kh.Active);  
-                    break;
-                case "lock":
-                    query = query.Where(kh => !kh.Active);
-                    break;
-            }
-
-            // Apply premium filter if checked
-            if (TypeS)
-            {
-                query = query.Where(kh => kh.LoaiNv); 
-            }
-
-            var list = await query.ToListAsync(); 
+            var list = await _Staff.GetAllAsync();
             return View(list); 
         }
-
 
         [HttpPost]
         public async Task<IActionResult> UpdateCustomerStatus(string IdNv, bool LoaiNv, bool Active)

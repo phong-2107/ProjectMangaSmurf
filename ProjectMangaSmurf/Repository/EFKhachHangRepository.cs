@@ -90,6 +90,11 @@ namespace ProjectMangaSmurf.Repository
         {
             return await _context.KhachHangs.FirstOrDefaultAsync(p => p.IdKh == id.Trim());
         }
+
+        public async Task<KhachHang> GetByAccountAsync(string id)
+        {
+            return await _context.KhachHangs.FirstOrDefaultAsync(p => p.Taikhoan == id.Trim());
+        }
         public async Task UpdateAsync(KhachHang KhachHang)
         {
             try

@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 namespace ProjectMangaSmurf.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Roles = SD.Role_Admin)]
+    [Authorize(Roles = SD.Role_Admin + "," + SD.Role_Staff)]
     public class BoTruyenManager : Controller
     {
         private readonly IboTruyenRepository _botruyenrepository;
@@ -19,22 +19,52 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
         private readonly ILoaiTruyenRepository _loaiTruyenRepository;
         private readonly ITacGiaRepository _tacGiaRepository;
         private readonly IAuthorRepository _authRepository;
+        private readonly IHopdongRepository _hopdongRepository;
         public BoTruyenManager( IboTruyenRepository botruyenrepository,
                                 IChapterRepository chapterrepository,
                                 IKhachHangRepository khachHangRepository,
                                 ILoaiTruyenRepository loaiTruyenRepository,
-                                ITacGiaRepository tacGiaRepository)
+                                ITacGiaRepository tacGiaRepository,
+                                IHopdongRepository hopdongRepository)
         {
             _botruyenrepository = botruyenrepository;
             _chapterrepository = chapterrepository;
             _khachhangrepository = khachHangRepository;
             _loaiTruyenRepository = loaiTruyenRepository;
             _tacGiaRepository = tacGiaRepository;
+            _hopdongRepository = hopdongRepository;
+        }
+
+        public decimal SumMoney(IEnumerable<HopDong> list)
+        {
+            decimal money = new decimal();
+            if (list != null)
+            {
+                foreach (var i in list)
+                {
+                    money += i.GtThanhtoan;
+                }
+                return money;
+            }
+            else
+                return 0;
         }
 
         public async Task<IActionResult> Index()
         {
             var listBotruyen = await _botruyenrepository.GetAllAsync();
+            var ListEarliest = await _botruyenrepository.GetAllAsyncByChapterEarliest();
+            var listPopular = await _botruyenrepository.GetAllAsyncByDay();
+            var listMoney = await _hopdongRepository.GetAllAsync();
+            var sumView = await _botruyenrepository.GetAllView();
+            var Cus = await _khachhangrepository.GetAllAsync();
+            var Money = SumMoney(listMoney);
+            ViewBag.Money = Money;
+            ViewBag.cus = Cus.Count();
+            ViewBag.Bo = listBotruyen.Count();
+            ViewBag.View = sumView;
+            ViewBag.ListEarliest = ListEarliest.Take(4);
+            ViewBag.listPopular = listPopular.Take(4);
             return View(listBotruyen);
         }
 

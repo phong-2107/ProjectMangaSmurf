@@ -12,7 +12,7 @@ namespace ProjectMangaSmurf.Repository
         Task<IEnumerable<HopDong>> GetAllIdHDAsync(string id);
         Task<IEnumerable<HopDong>> GetAllHopDongAsync();
         Task<KhachHang> GetByIdAsync(string id);
-
+        Task<KhachHang> GetByAccountAsync(string id);
         Task<KhachHang> GetByEmailAsync(string id);
         Task<KhachHang> GetAccountByIdAsync(string name, string pass);
         Task AddAsync(KhachHang KhachHang);

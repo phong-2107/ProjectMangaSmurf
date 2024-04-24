@@ -87,6 +87,15 @@ namespace ProjectMangaSmurf.Areas.Identity.Pages.Account
             public string FullName { get; set; }
 
             [Required]
+            public string PhoneNumber { get; set; }
+
+            [Required]
+            public string Age { get; set; }
+
+            [Required]
+            public string Address { get; set; }
+
+            [Required]
             [EmailAddress]
             [Display(Name = "Email")]
             public string Email { get; set; }
@@ -120,10 +129,8 @@ namespace ProjectMangaSmurf.Areas.Identity.Pages.Account
         {
             if (!_roleManager.RoleExistsAsync(SD.Role_Customer).GetAwaiter().GetResult())
             {
-                _roleManager.CreateAsync(new IdentityRole(SD.Role_Customer)).GetAwaiter().GetResult();
-                _roleManager.CreateAsync(new IdentityRole(SD.Role_Employee)).GetAwaiter().GetResult();
+                _roleManager.CreateAsync(new IdentityRole(SD.Role_Staff)).GetAwaiter().GetResult();
                 _roleManager.CreateAsync(new IdentityRole(SD.Role_Admin)).GetAwaiter().GetResult();
-                _roleManager.CreateAsync(new IdentityRole(SD.Role_Company)).GetAwaiter().GetResult();
             }
             Input = new()
             {
@@ -145,6 +152,9 @@ namespace ProjectMangaSmurf.Areas.Identity.Pages.Account
             {
                 var user = CreateUser();
                 user.FullName = Input.FullName;
+                user.Address = Input.Address;
+                user.PhoneNumber = Input.PhoneNumber;
+                user.Age = Input.Age;
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
