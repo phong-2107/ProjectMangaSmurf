@@ -1,0 +1,269 @@
+﻿@model ProjectMangaSmurf.Models.LoaiTruyen
+
+@using ProjectMangaSmurf.Repository
+@inject IComicTypeRepository comicTypeRepository
+@inject IboTruyenRepository botruyen
+
+@{
+
+    var relatedSeriesCount = botruyen.CountByComicTypeId(Model.IdLoai);
+}
+
+<style>
+    form {
+        display: inline-block; 
+        margin-right: 10px; 
+        margin-top: 10px;
+    }
+
+
+
+    .btn-custom, .btn-premium, .btn-publish {
+        background-color: rebeccapurple;
+        color: white;
+        transition: all 0.3s;
+        border: none;
+    }
+
+    .action-page a {
+        font-size: 20px;
+        font-weight: 600;
+        letter-spacing: .7px;
+        color: #212b36;
+    }
+
+        .action-page a:hover {
+            color: #FE820E;
+        }
+</style>
+
+
+
+<div class="content">
+    <div class="page-header">
+        <div class="page-title">
+            <div class="action-page">
+                <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="Index">Trang Chủ </a>
+                <a asp-area="Admin" asp-controller="ComicTypeManager" asp-action="Index"> \ List Type </a>
+                <a asp-area="Admin" asp-controller="ComicTypeManager" asp-action="Detail" asp-route-id="@Model.IdLoai"> \ @Model.TenLoai</a>
+            </div>
+            <h6>Chi tiết các thông tin của loại truyện</h6>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-8 col-sm-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="productdetails">
+                        <ul class="product-bar">
+                            <li>
+                                <h4>ID Loại</h4>
+                                <h6>@Model.IdLoai</h6>
+                            </li>
+                            <li>
+                                <h4>Tên Loại truyện</h4>
+                                <h6>@Model.TenLoai</h6>
+                            </li>
+                            <li>
+                                <h4>Số lượng bộ truyện</h4>
+                                <h6>@ViewBag.RelatedSeriesCount</h6>
+                            </li>
+                            <li>
+                                <h4>Cấp Phép Hoạt động </h4>
+                                <h6>@Model.Active</h6>
+                            </li>
+                            
+                            @if (Model.Active)
+                            {
+                                <form asp-action="ToggleActive" asp-controller="ComicTypeManager" asp-route-id="@Model.IdLoai" method="post">
+                                    <button type="submit" class="btn btn-danger btn-space">Turn Active to False</button>
+                                </form>
+                            }
+                            else
+                            {
+                                <form asp-action="ToggleActive" asp-controller="ComicTypeManager" asp-route-id="@Model.IdLoai" method="post">
+                                    <button type="submit" class="btn btn-success btn-space">Turn Active to True</button>
+                                </form>
+                            }
+                            <form asp-action="Update" asp-controller="ComicTypeManager" method="get" style="display: inline-block;">
+                                <button type="submit" class="btn btn-primary btn-top-space">Go to Update</button>
+                            </form>
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-sm-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="slider-product-details">
+                        <div class="owl-carousel owl-theme product-slide align-center justify-content-center">
+                            <div class="slider-product">
+                                <h4 id="comicTitle">Select a comic to view details</h4>
+                                <img src="" alt="Selected Comic Banner Here" style="width:100%" id="comicBanner">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    <div class="table-responsive">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h3 class="mb-0">Related Comic Series</h3>
+                <div>
+                    <button class="btn btn-primary" onclick="applyFilter('all')">See All</button>
+                    <button class="btn btn-success" onclick="applyFilter('active')">Activating</button>
+                    <button class="btn btn-danger" onclick="applyFilter('banned')">Banning</button>
+                    <button class="btn btn-premium" onclick="applyFilter('premium')" id="premium-btn">Premium Stats</button>
+                </div>
+
+        </div>
+        <table class="table datanew">
+            <thead>
+                <tr>
+                    <th>ID Truyện</th>
+                    <th>Tên truyện</th>
+                    <th>Độ tuổi</th>
+                    <th>ID Tác Giả</th>
+                    <th>Tổng Đánh Giá</th>
+                    <th>Tổng lượt xem</th>
+                    <th>Active</th>
+                    <th>Premium Stats</th>
+                    <th>Publish Stats</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+                <tbody>
+                   
+                    @foreach (var item in ViewBag.RelatedComics as List<ProjectMangaSmurf.Models.BoTruyen>)
+                    {
+                    <tr data-banner-url="@Url.Content(item.AnhBanner)"
+                        data-status="@item.Active ? 'active' : 'banned'"
+                        data-premium="@item.TtPemium ? 'premium' : 'standard'">
+
+                        <td>@item.IdBo</td>
+                        <td>@item.TenBo</td>
+                        <td>@item.Dotuoi</td>
+                        <td>@item.IdTg</td>
+                        <td>@item.TkDanhgia</td>
+                        <td>@item.TongLuotXem</td>
+                        <td>@(item.Active ? "Already Show" : "Hided")</td>
+                        <td>@(item.TtPemium ? "Premium" : "Standard")</td>
+                        <td>
+                            @switch (item.TrangThai)
+                            {
+                                case 0:
+                                    @:Ngừng phát hành
+                                    break;
+                                case 1:
+                                    @:Hoàn Thiện
+                                    break;
+                                case 2:
+                                    @:Đang cập nhật
+                                    break;
+                                case 3:
+                                    @:Sắp có
+                                    break;
+                                default:
+                                    @:Không xác định
+                                    break;
+                            }
+                        </td>
+             
+
+                            <td>
+                                <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="Detail" asp-route-id="@item.IdBo" class="me-3">
+                                    <img src="~/img/icons/eye.svg" alt="View">
+                                </a>
+                                <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="Update" asp-route-id="@item.IdBo" class="me-3">
+                                    <img src="~/img/icons/edit.svg" alt="Edit">
+                                </a>
+                                <a class="delete-product me-3" data-product-id="@item.IdBo" href="javascript:void(0);">
+                                    <img src="~/img/icons/delete.svg" alt="Delete">
+                                </a>
+                            </td>
+                        </tr>
+                    }
+
+                    
+                </tbody>
+
+
+        </table>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        function applyFilter(filterType) {
+            const rows = document.querySelectorAll('table.datanew tbody tr');
+            rows.forEach(row => {
+                const status = row.getAttribute('data-status');
+                const premium = row.getAttribute('data-premium');
+
+                console.log(`Filtering for ${filterType}: Status is ${status}, Premium is ${premium}`); // Logging for debugging
+
+                let isVisible = false;
+
+                switch (filterType) {
+                    case 'all':
+                        isVisible = true;
+                        break;
+                    case 'active':
+                        isVisible = (status === 'active');
+                        break;
+                    case 'banned':
+                        isVisible = (status === 'banned');
+                        break;
+                    case 'premium':
+                        isVisible = (premium === 'premium');
+                        break;
+                }
+
+                row.style.display = isVisible ? '' : 'none';
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const rows = document.querySelectorAll('table.datanew tbody tr');
+            const imageElement = document.getElementById('comicBanner');
+            const titleElement = document.getElementById('comicTitle');
+
+            function setImageAndTitle(url, title) {
+                if (url) {
+                    imageElement.src = url;
+                    imageElement.alt = 'Comic Banner for ' + title;
+                    titleElement.textContent = title;
+                } else {
+                    imageElement.alt = 'No image available';
+                    imageElement.src = '';
+                    titleElement.textContent = 'No comic selected';
+                }
+            }
+
+            rows.forEach(row => {
+                row.addEventListener('click', function () {
+                    const bannerUrl = this.getAttribute('data-banner-url');
+                    const comicName = this.cells[1].textContent;
+                    setImageAndTitle(bannerUrl, comicName);
+                });
+            });
+
+            if (rows.length > 0) {
+                rows[0].click();
+            } else {
+                console.log('No comics available to display.');
+                setImageAndTitle(null, '');
+            }
+        });
+    </script>
+
+}
+
+
+
+
+

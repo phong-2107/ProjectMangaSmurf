@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using ProjectMangaSmurf.Data;
 using ProjectMangaSmurf.Models;
 
@@ -15,6 +16,10 @@ namespace ProjectMangaSmurf.Repository
         public async Task<IEnumerable<BoTruyen>> GetAllAsync()
         {
             return await _context.BoTruyens.Where(p => p.Active == true).ToListAsync();
+        }
+        public async Task<IEnumerable<BoTruyen>> GetAllAllAsync()
+        {
+            return await _context.BoTruyens.ToListAsync();
         }
 
         public async Task<BoTruyen> GetByIdAsync(string id)
@@ -136,6 +141,31 @@ namespace ProjectMangaSmurf.Repository
         {
             var loaitruyen = await _context.LoaiTruyens.ToListAsync();
             return loaitruyen;
+        }
+
+        public async Task<int> CountByComicTypeId(string comicTypeId)
+        {
+            if (string.IsNullOrEmpty(comicTypeId))
+                return 0;
+
+            var count = await _context.BoTruyens.CountAsync(b => b.listloai.Contains(comicTypeId));
+            return count; // This will return 0 if no matches are found
+        }
+
+        public async Task<int> CountByAuthorId(string comicAuthId)
+        {
+            if (string.IsNullOrEmpty(comicAuthId))
+                return 0;
+
+            return await _context.BoTruyens.CountAsync(b => b.IdTg == comicAuthId);
+        }
+
+
+        public async Task<List<BoTruyen>> GetComicsByAuthorId(string authorId)
+        {
+            return await _context.BoTruyens
+                .Where(bt => bt.IdTg == authorId)
+                .ToListAsync();
         }
 
         public string GenerateBoTruyenId()

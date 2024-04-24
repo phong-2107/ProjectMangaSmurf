@@ -10,32 +10,76 @@
 }
 
 <style>
-    .action-page{
-        display:flex;
-        flex-direction:row;
-        gap:.5rem;
+    .action-page {
+        display: flex;
+        flex-direction: row;
+        gap: .5rem;
     }
 
-    .action-page a{
-        font-size:20px;
-        font-weight:600;
-        letter-spacing: .7px;
-        color: #212b36;
-    }
+        .action-page a {
+            font-size: 20px;
+            font-weight: 600;
+            letter-spacing: .7px;
+            color: #212b36;
+        }
 
-        .action-page a:hover {
+            .action-page a:hover {
                 color: #FE820E;
+            }
+
+    .btn-custom, .btn-update {
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+        display: inline-block;
+        background-color: #f44336; /* Red by default */
+        color: white;
+        border: none;
+        transition: background-color 0.3s, color 0.3s;
+        margin: 10px;
+        border-radius: 5px; /* Rounded corners for buttons */
+    }
+
+        .btn-custom.green, .btn-update.green {
+            background-color: #4CAF50; /* Green */
+        }
+
+            .btn-custom:hover, .btn-custom.green:hover, .btn-update:hover, .btn-update.green:hover {
+                background-color: white;
+                color: black;
+                border: 2px solid #4CAF50; /* Green border on hover */
+            }
+
+    .btn-update {
+        background-color: #FFC107; /* Amber for update button */
+        color: black;
+    }
+
+        .btn-update:hover {
+            background-color: black;
+            color: #FFC107;
+        }
+
+    .button-group {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap; /* Allow buttons to wrap on smaller screens */
+    }
+
+        .button-group form {
+            margin-right: 10px; /* Ensure spacing between buttons */
         }
 </style>
+
 <div class="content">
     <div class="page-header">
         <div class="page-title">
             <div class="action-page">
-                <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="Index" >Trang Chủ </a>
+                <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="Index">Trang Chủ </a>
                 <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="ViewList"> \ List Truyện </a>
-                <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="Detail" asp-route-id="@Model.IdBo"> \ @Model.IdBo</a>
+                <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="Detail" asp-route-id="@Model.IdBo"> \ COMIC : @Model.TenBo</a>
             </div>
-            
+
             <h6>Chi tiết các thông tin của bộ truyện</h6>
         </div>
     </div>
@@ -85,6 +129,34 @@
                                 <h4>Mô tả truyện</h4>
                                 <h6>@Model.Mota</h6>
                             </li>
+                            <li>
+                                <div class="button-group">
+                                    <form asp-action="ToggleActive" asp-controller="BoTruyenManager" asp-route-id="@Model.IdBo" method="post">
+                                        <button type="submit" class="btn-custom @(Model.Active ? "" : "green")">
+                                            <i class="fa-regular fa-eye"></i>
+                                            @(Model.Active ? "Set to Inactive" : "Set to Active")
+                                        </button>
+                                    </form>
+
+                                    <form asp-action="TogglePremium" asp-controller="BoTruyenManager" asp-route-id="@Model.IdBo" method="post">
+                                        <button type="submit" class="btn-custom @(Model.TtPemium ? "" : "green")">
+                                            <i class="fa-solid fa-circle-dollar-to-slot"></i>
+                                            @(Model.TtPemium ? "Remove from Premium" : "Add to Premium" )
+                                        </button>
+                                    </form>
+
+                                    <form asp-action="Update" asp-controller="BoTruyenManager" asp-route-id="@Model.IdBo" method="get">
+                                        <button type="submit" class="btn-update"><i class="fa-sharp fa-solid fa-arrows-up-to-line"></i>Go to Update</button>
+                                    </form>
+
+                                    <form asp-action="AddChapter" asp-controller="BoTruyenManager" asp-route-id="@Model.IdBo" method="get">
+                                        
+                                        <button type="submit" class="btn-update"><i class="fa-solid fa-plus"></i> Upload new Chapter</button>
+                                    </form>
+                                </div>
+
+
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -95,17 +167,72 @@
                 <div class="card-body">
                     <div class="slider-product-details">
                         <div class="owl-carousel owl-theme product-slide align-center justify-content-center">
-                            
                             <div class="slider-product">
-                                <img src="@Model.AnhBanner" alt="img" style="width:100%" />
+                                <h5 class="image-title">Banner Image</h5> <!-- Title for the Banner Image -->
+                                <img src="@Model.AnhBanner" alt="Banner Image" style="width:100%" />
                             </div>
                             <div class="slider-product">
-                                <img src="@Model.AnhBia" alt="img" style="height:100%" />
+                                <h5 class="image-title">Background Image</h5> <!-- Title for the Background Image -->
+                                <img src="@Model.AnhBia" alt="Background Image" style="height:100%" />
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
+    </div>
+    <div class="table-responsive">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h3 class="mb-0">Related Chapter of @Model.TenBo</h3>
+        </div>
+        <table class="table datanew">
+            <thead>
+                <tr>
+                    <th>ID Chap</th>
+                    <th>Tên chap</th>
+                    <th>Uploaded time</th>
+                    <th>Views</th>
+                    <th>Active</th>
+                    <th>Premium Stats</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (var item in ViewBag.RelatedChapter as List<ProjectMangaSmurf.Models.Chapter>)
+                {
+                    <tr 
+                        data-status="@item.Active ? 'active' : 'banned'"
+                        data-premium="@item.TtPemium ? 'premium' : 'standard'">
+
+                        <td>@item.SttChap</td>
+                        <td>@item.TenChap</td>
+                        <td>@item.ThoiGian</td>
+                        <td>@item.TkLuotxem</td>
+                        <td>@(item.Active ? "Already Show" : "Hided")</td>
+                        <td>@(item.TtPemium ? "Premium" : "Standard")</td>
+                        <td>
+                            <a asp-area="Admin"
+                               asp-controller="ChapterManager"
+                               asp-action="Detail"
+                               asp-route-id="@item.IdBo"
+                               asp-route-stt="@item.SttChap"><img src="~/img/icons/eye.svg" alt="View"></a>
+
+                            <a asp-area="Admin" asp-controller="ChapterManager" asp-action="Update" asp-route-id="@item.SttChap && @item.IdBo" class="me-3">
+                                <img src="~/img/icons/edit.svg" alt="Edit">
+                            </a>
+                            <a class="delete-product me-3" data-product-id="@item.SttChap && @item.IdBo" href="javascript:void(0);">
+                                <img src="~/img/icons/delete.svg" alt="Delete">
+                            </a>
+                        </td>
+                    </tr>
+                }
+
+
+            </tbody>
+
+
+        </table>
     </div>
 </div>

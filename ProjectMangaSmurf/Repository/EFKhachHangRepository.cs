@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ProjectMangaSmurf.Data;
 using ProjectMangaSmurf.Models;
+using System.Linq.Expressions;
 
 namespace ProjectMangaSmurf.Repository
 {
@@ -14,13 +15,27 @@ namespace ProjectMangaSmurf.Repository
         }
         public async Task AddAsync(KhachHang KhachHang)
         {
-            _context.KhachHangs.Add(KhachHang);
-            await _context.SaveChangesAsync();
+            try
+            {
+                _context.KhachHangs.Add(KhachHang);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex) { throw new NotImplementedException(); }
         }
-
-        public Task DeleteAsync(KhachHang id)
+        public IQueryable<KhachHang> GetQuery()
         {
-            throw new NotImplementedException();
+            return _context.KhachHangs;
+        }
+        public async Task DeleteAsync(KhachHang id)
+        {
+            try
+            {
+                var n = await _context.KhachHangs.FindAsync(id);
+                n.Active = false;
+                _context.KhachHangs.Update(id);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex) { throw new NotImplementedException(); }
         }
 
         public string GenerateCustomerId()
@@ -46,9 +61,24 @@ namespace ProjectMangaSmurf.Repository
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<KhachHang>> GetAllAsync()
+        public async Task<IEnumerable<KhachHang>> GetAllAsync(Expression<Func<KhachHang, bool>> filter = null)
         {
-            throw new NotImplementedException();
+            if (filter != null)
+            {
+                return await _context.KhachHangs.Where(filter).ToListAsync();
+            }
+            return await _context.KhachHangs.ToListAsync();
+        }
+
+        public async Task<IEnumerable<HopDong>> GetAllHopDongAsync()
+        {
+            return await _context.HopDongs.ToListAsync();
+        }
+
+
+        public async Task<IEnumerable<HopDong>> GetAllIdHDAsync(string id)
+        {
+            return await _context.HopDongs.Where(p => p.IdKh == id).ToListAsync();
         }
 
         public async Task<KhachHang> GetByEmailAsync(string id)
@@ -58,12 +88,16 @@ namespace ProjectMangaSmurf.Repository
 
         public async Task<KhachHang> GetByIdAsync(string id)
         {
-            return await _context.KhachHangs.FirstOrDefaultAsync(p => p.Taikhoan == id.Trim());
+            return await _context.KhachHangs.FirstOrDefaultAsync(p => p.IdKh == id.Trim());
         }
         public async Task UpdateAsync(KhachHang KhachHang)
         {
-             _context.KhachHangs.Update(KhachHang);
-            await _context.SaveChangesAsync();
+            try
+            {
+                _context.KhachHangs.Update(KhachHang);
+                await _context.SaveChangesAsync();
+            } catch (Exception ex) { throw new NotImplementedException();  }
+            
         }
     }
 }

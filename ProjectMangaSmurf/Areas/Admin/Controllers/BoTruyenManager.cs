@@ -5,6 +5,7 @@ using ProjectMangaSmurf;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ProjectMangaSmurf.Models;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.EntityFrameworkCore;
 
 namespace ProjectMangaSmurf.Areas.Admin.Controllers
 {
@@ -17,6 +18,7 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
         private readonly IKhachHangRepository _khachhangrepository;
         private readonly ILoaiTruyenRepository _loaiTruyenRepository;
         private readonly ITacGiaRepository _tacGiaRepository;
+        private readonly IAuthorRepository _authRepository;
         public BoTruyenManager( IboTruyenRepository botruyenrepository,
                                 IChapterRepository chapterrepository,
                                 IKhachHangRepository khachHangRepository,
@@ -38,9 +40,10 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
 
         public async Task<IActionResult> ViewList()
         {
-            var listBotruyen = await _botruyenrepository.GetAllAsync();
+            var listBotruyen = await _botruyenrepository.GetAllAsync(); // Correct use of repository
             return View(listBotruyen);
         }
+
         public async Task<IActionResult> Detail(string id)
         {
             var product = await _botruyenrepository.GetByIdAsync(id);
@@ -48,8 +51,52 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
             {
                 return NotFound();
             }
+
+            var relatedComics = await _chapterrepository.GetChaptersByComicId(id);
+            ViewBag.RelatedChapter = relatedComics ?? new List<ProjectMangaSmurf.Models.Chapter>();
+            ViewBag.RelatedSeriesCount = relatedComics.Count;
+
             return View(product);
         }
+
+        public async Task<IActionResult> ToggleActive(string id)
+        {
+            var boTruyen = await _botruyenrepository.GetByIdAsync(id);
+            if (boTruyen == null)
+            {
+                return NotFound();
+            }
+
+            boTruyen.Active = !boTruyen.Active;
+            await _botruyenrepository.UpdateAsync(boTruyen);
+            return RedirectToAction(nameof(Detail), new { id = id });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> TogglePremium(string id)
+        {
+            var comic = await _botruyenrepository.GetByIdAsync(id);
+            if (comic == null)
+            {
+                return NotFound("Comic not found.");
+            }
+
+            // Toggle the premium status of the comic.
+            comic.TtPemium = !comic.TtPemium;
+            await _botruyenrepository.UpdateAsync(comic);
+
+            // Retrieve all chapters of the comic and update their premium status.
+            var chapters = await _chapterrepository.GetChaptersByComicId(id);
+            foreach (var chapter in chapters)
+            {
+                chapter.TtPemium = comic.TtPemium;
+                await _chapterrepository.UpdateAsync(chapter);
+            }
+
+            TempData["Message"] = "Comic and all related chapters' premium status updated successfully!";
+            return RedirectToAction(nameof(Detail), new { id = id });
+        }
+
 
         public async Task<IActionResult> Add()
         {
@@ -202,11 +249,7 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
         }
         public bool RangBuocChapter(Chapter bt)
         {
-            if (bt.SttChap == null)
-            {
-                ModelState.AddModelError(string.Empty, "Ban Chưa nhâp stt chap");
-                return false;
-            }
+
             if (bt.TenChap == null)
             {
                 ModelState.AddModelError(string.Empty, "Ban Chưa nhâp ten chap");
@@ -220,9 +263,10 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
             return true;
         }
 
-        public async Task<IActionResult> AddChapter(string id)
+        public async Task<IActionResult> AddChapter(string id , int stt)
         {
             ViewBag.Id = id;
+            ViewBag.Stt = stt;
             return View();
         }
 
@@ -238,7 +282,7 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
                 foreach (var image in images)
                 {
                     CtChapter CTChap = new CtChapter();
-                    CTChap.SoTrang = i;
+                    CTChap.SoTrang = i; 
                     CTChap.IdBo = chapter.IdBo;
                     CTChap.SttChap = chapter.SttChap;
                     CTChap.AnhTrang = await SaveImageChapter(image);

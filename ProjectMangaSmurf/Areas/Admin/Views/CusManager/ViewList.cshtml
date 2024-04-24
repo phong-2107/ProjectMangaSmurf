@@ -1,0 +1,147 @@
+﻿@model IEnumerable<ProjectMangaSmurf.Models.KhachHang>
+
+@using ProjectMangaSmurf.Repository
+@inject  IKhachHangRepository kh
+
+<style>
+    .btn-custom {
+        background-color: rebeccapurple;
+        color: white;
+        transition: all 0.3s;
+    }
+
+    .btn-active {
+        background-color: magenta; /* Change color when active */
+    }
+
+</style>
+
+
+<div class="content">
+    <div class="page-header">
+        <div class="page-title">
+            <h4>Danh Sách Khách Hàng</h4>
+            <h6>Quản Lý danh sách Khách hàng </h6>
+        </div>
+        
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="table-top">
+                <div class="search-set">
+                    <div class="search-path">
+                        <a class="btn btn-filter" id="filter_search">
+                            <img src="~/img/icons/filter.svg" alt="img">
+                            <span><img src="~/img/icons/closes.svg" alt="img"></span>
+                        </a>
+                    </div>
+
+                    <div class="search-input">
+                        <a class="btn btn-searchset">
+                            <img src="~/img/icons/search-white.svg" alt="img">
+                        </a>
+                    </div>
+                </div>
+                <div class="filters">
+                    <button class="btn btn-primary" onclick="applyFilter('all')">See All</button>
+                    <button class="btn btn-success" onclick="applyFilter('active')">Activating</button>
+                    <button class="btn btn-danger" onclick="applyFilter('banned')">Banning</button>
+                    <button class="btn btn-custom" onclick="togglePremium()" id="premium-btn">Premium Stats</button>
+                </div>
+
+                <div class="wordset">
+                    <ul>
+                        <li>
+                            <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf">
+                                <img src="~/img/icons/pdf.svg" alt="img">
+                            </a>
+                        </li>
+                        <li>
+                            <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel">
+                                <img src="~/img/icons/excel.svg" alt="img">
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+
+            <div class="table-responsive">
+                <table class="table  datanew">
+                    <thead>
+                        <tr>
+                            <th>
+                                <label class="checkboxs">
+                                    <input type="checkbox" id="select-all">
+                                    <span class="checkmarks"></span>
+                                </label>
+                            </th>
+                            <th>Mã Khách Hàng</th>
+                            <th>Tên Khách Hàng</th>
+                            <th>SĐT</th>
+                            <th>Email</th>
+                            <th>Pre Stats</th>
+                            <th>Banned</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var i in Model)
+                        {
+                            <tr>
+
+                                <td>
+                                    <label class="checkboxs">
+                                        <input type="checkbox">
+                                        <span class="checkmarks"></span>
+                                    </label>
+                                </td>
+                                <td>@i.IdKh</td>
+                                <td>@i.TenKh</td>
+                                <td>@i.Sdt</td>
+                                <td>@i.Email</td>
+                                <td>@i.TtPremium</td>
+                                <td>@i.Active</td>
+                                <td>
+                                    <a asp-area="Admin" asp-controller="CusManager" asp-action="Detail" asp-route-id="@i.IdKh" class="me-3">
+                                        <img src="~/img/icons/eye.svg" alt="img">
+                                    </a>
+
+                                    <a class="delete-product me-3" data-product-id="@i.IdKh" href="javascript:void(0);">
+                                        <img src="~/img/icons/delete.svg" alt="img">
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var currentFilter = 'all';  // Default filter
+    var premiumOnly = false;    // Premium filter state
+
+    function applyFilter(filter) {
+        currentFilter = filter;
+        updateList();
+    }
+
+    function togglePremium() {
+        premiumOnly = !premiumOnly;  // Toggle premium state
+        document.getElementById('premium-btn').classList.toggle('btn-active'); // Toggle button class for visual feedback
+        updateList();
+    }
+
+    function updateList() {
+        // Build the URL with current filters
+        var url = '@Url.Action("ViewList", "CusManager", new { Area = "Admin" })' +
+            `?status=${currentFilter}&premium=${premiumOnly}`;
+        window.location.href = url; // Redirect to the updated URL
+    }
+</script>
+
+
+

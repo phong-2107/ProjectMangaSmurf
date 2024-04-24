@@ -29,6 +29,7 @@
   <ItemGroup>
     <Folder Include="wwwroot\images\chapter\" />
     <Folder Include="wwwroot\images\truyen\" />
+    <Folder Include="wwwroot\SmurfMangaData\" />
   </ItemGroup>
 
 </Project>

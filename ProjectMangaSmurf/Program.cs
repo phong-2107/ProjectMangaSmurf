@@ -77,6 +77,8 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
 builder.Services.AddRazorPages();
 
 builder.Services.AddScoped<UserManager<ApplicationUser>>();
+builder.Services.AddScoped<IComicTypeRepository, EFComicTypeRepository>();
+builder.Services.AddScoped<IAuthorRepository, EFAuthorRepository>();
 builder.Services.AddScoped<IboTruyenRepository, EFboTruyenRepository>();
 builder.Services.AddScoped<ICTBoTruyenRepository, EFCTBoTruyenRepository>();
 builder.Services.AddScoped<ILoaiTruyenRepository, EFLoaiTruyenRepository>();
