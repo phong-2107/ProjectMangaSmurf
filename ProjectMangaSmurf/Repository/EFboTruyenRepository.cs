@@ -26,6 +26,27 @@ namespace ProjectMangaSmurf.Repository
         {
             return await _context.BoTruyens.FirstOrDefaultAsync(p => p.IdBo == id);
         }
+        public async Task DeleteAllChaptersAndDetails(string idBo)
+        {
+            var comic = await _context.BoTruyens
+                .Include(c => c.Chapters)
+                    .ThenInclude(ch => ch.CtChapters)
+                .FirstOrDefaultAsync(c => c.IdBo == idBo);
+
+            if (comic != null)
+            {
+                foreach (var chapter in comic.Chapters)
+                {
+                    foreach (var detail in chapter.CtChapters)
+                    {
+                        _context.CtChapters.Remove(detail);
+                    }
+                    _context.Chapters.Remove(chapter);
+                }
+                _context.BoTruyens.Remove(comic);
+                await _context.SaveChangesAsync();
+            }
+        }
 
         public async Task AddAsync(BoTruyen botruyen)
         {

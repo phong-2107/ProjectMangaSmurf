@@ -39,6 +39,43 @@ namespace ProjectMangaSmurf.Repository
         {
             return await _context.TacGia.Where(a => a.Active == isActive).ToListAsync();
         }
+        public async Task<List<BoTruyen>> GetComicsByAuthorId(string authorId)
+        {
+            return await _context.BoTruyens.Where(c => c.IdTg == authorId).ToListAsync();
+        }
+
+        public async Task DeleteAllChaptersAndDetails(string idBo)
+        {
+            var comicl = await _context.BoTruyens
+                .Include(lh => lh.CtLoaiTruyens)
+                        .FirstOrDefaultAsync(c => c.IdBo == idBo);
+            var comic = await _context.BoTruyens
+                .Include(c => c.Chapters)
+                    .ThenInclude(ch => ch.CtChapters)
+                        .FirstOrDefaultAsync(c => c.IdBo == idBo);
+
+            if (comicl != null)
+            {
+                foreach (var chapter in comicl.CtLoaiTruyens)
+                {
+                    _context.CtLoaiTruyens.Remove(chapter);
+                }
+            }
+
+            if (comic != null)
+            {
+                foreach (var chapter in comic.Chapters)
+                {
+                    foreach (var detail in chapter.CtChapters)
+                    {
+                        _context.CtChapters.Remove(detail);
+                    }
+                    _context.Chapters.Remove(chapter);
+                }
+                _context.BoTruyens.Remove(comic);
+                await _context.SaveChangesAsync();
+            }
+        }
 
         public async Task DeleteAsync(string id)
         {
@@ -50,16 +87,16 @@ namespace ProjectMangaSmurf.Repository
             }
         }
 
-        public string GenerateAuthorId()
+        public async Task<string> GenerateAuthorId()
         {
-            string idPrefix = "A";
-            int idLength = 8;
-            string maxId = _context.BoTruyens.Select(kh => kh.IdBo)
+            string idPrefix = "TG";
+            int idLength = 4;
+            string maxId = _context.TacGia.Select(kh => kh.IdTg)
                                                .OrderByDescending(id => id)
                                                .FirstOrDefault();
             if (maxId == null)
             {
-                return idPrefix + "00001";
+                return idPrefix + "0001";
             }
             else
             {

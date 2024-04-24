@@ -46,11 +46,11 @@
                             <img src="~/img/icons/search-white.svg" alt="img">
                         </a>
                     </div>
-                    <div class="filters">
+                    @* <div class="filters">
                         <a href="@Url.Action("Index", "AuthorManager", new { area = "Admin", isActive = (bool?)null })" class="btn btn-primary">See All</a>
                         <a href="@Url.Action("Index", "AuthorManager", new { area = "Admin", isActive = true })" class="btn btn-success">Activating</a>
                         <a href="@Url.Action("Index", "AuthorManager", new { area = "Admin", isActive = false })" class="btn btn-danger">Banning</a>
-                    </div>
+                    </div> *@
                 </div>
                 <div class="wordset">
                     <ul>
@@ -90,11 +90,11 @@
                                     <a asp-area="Admin" asp-controller="AuthorManager" asp-action="Detail" asp-route-id="@author.IdTg" class="me-3">
                                         <img src="~/img/icons/eye.svg" alt="View">
                                     </a>
-                                    <a asp-area="Admin" asp-controller="AuthorManager" asp-action="Edit" asp-route-id="@author.IdTg" class="me-3">
+                                    <a asp-area="Admin" asp-controller="AuthorManager" asp-action="Update" asp-route-id="@author.IdTg" class="me-3">
                                         <img src="~/img/icons/edit.svg" alt="Edit">
                                     </a>
-                                    <a asp-area="Admin" asp-controller="AuthorManager" asp-action="Delete" asp-route-id="@author.IdTg" class="me-3">
-                                        <img src="~/img/icons/delete.svg" alt="Delete">
+                                    <a class="delete-author me-3" data-product-id="@author.IdTg" href="javascript:void(0);">
+                                        <img src="~/img/icons/delete.svg" alt="img">
                                     </a>
                                 </td>
                             </tr>
@@ -105,8 +105,48 @@
         </div>
     </div>
 </div>
+
 <script>
-    $(function () {
-        $('[data-bs-toggle="tooltip"]').tooltip();
+    $(document).ready(function () {
+        $('.delete-author').click(function () {
+            var productId = $(this).data('product-id');
+            Swal.fire({
+                title: "Are you sure you want to delete this author and all related comics, chapters, and chapter details?",
+                text: `This action cannot be undone and will remove all related data for author ID ${productId}.`,
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#007bff",  // Typically the primary button color in Bootstrap is blue
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, delete everything!",
+                confirmButtonClass: "btn btn-primary",  // Use the primary class for the confirm button
+                cancelButtonClass: "btn btn-danger ml-1",
+                buttonsStyling: false
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: `/Admin/AuthorManager/DeleteConfirmed/${productId}`,
+                        type: 'POST',
+                        data: { id: productId },
+                        success: function (response) {
+                            Swal.fire(
+                                'Deleted!',
+                                'The author and all related data have been successfully deleted.',
+                                'success'
+                            );
+                            location.reload(); // Reloads the page to reflect the changes
+                        },
+                        error: function (xhr, status, error) {
+                            Swal.fire(
+                                'Error!',
+                                'Failed to delete the author and related data. Please try again.',
+                                'error'
+                            );
+                        }
+                    });
+                }
+            });
+        });
     });
 </script>
+
+

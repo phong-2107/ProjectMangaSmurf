@@ -40,7 +40,7 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
 
         public async Task<IActionResult> ViewList()
         {
-            var listBotruyen = await _botruyenrepository.GetAllAsync(); // Correct use of repository
+            var listBotruyen = await _botruyenrepository.GetAllAllAsync(); // Correct use of repository
             return View(listBotruyen);
         }
 
@@ -137,47 +137,57 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
                 ModelState.AddModelError(string.Empty, "Ban Chưa nhâp trạng thái");
                 return false;
             }
+            if (bt.TkDanhgia == null)
+            {
+                ModelState.AddModelError(string.Empty, "Bạn chưa nhập đánh giá.");
+                return false;
+            }
+            else if (bt.TkDanhgia < 0 || bt.TkDanhgia > 10)
+            {
+                ModelState.AddModelError(string.Empty, "Đánh giá phải từ 0 đến 10.");
+                return false;
+            }
             return true;
-        }
 
+        }
         [HttpPost]
         public async Task<IActionResult> Add(BoTruyen boTruyen, IFormFile AnhBanner, IFormFile AnhBia)
         {
             var rangbuoc = RangBuoc(boTruyen);
-            if (rangbuoc)
+            if (!rangbuoc)
             {
-                if (AnhBanner != null && AnhBia != null)
-                {
-                    boTruyen.IdBo = _botruyenrepository.GenerateBoTruyenId();
-                    boTruyen.TkDanhgia = 0;
-                    boTruyen.TkTheodoi = 0;
-                    boTruyen.TongLuotXem = 0;
-                    boTruyen.TtPemium = false;
-                    boTruyen.AnhBanner = await SaveImage(AnhBanner);
-                    boTruyen.AnhBia = await SaveImage(AnhBia);
-                    boTruyen.Active = true;
-                }
-                await _botruyenrepository.AddAsync(boTruyen);
-
-                foreach (var i in boTruyen.listloai)
-                {
-                    CtLoaiTruyen ct = new CtLoaiTruyen();
-                    ct.IdLoai = i;
-                    ct.IdBo = boTruyen.IdBo;
-                    ct.Active = true;
-                    await _loaiTruyenRepository.AddAsyncCTLoai(ct);
-                }
-
-                return RedirectToAction("AddChapter", "BoTruyenManager", new { id = boTruyen.IdBo.ToString() });
+                var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+                return Json(new { success = false, message = string.Join(" ", errors) });
             }
-            else
+
+            if (AnhBanner != null)
             {
-                var Tgs = await _tacGiaRepository.GetAllAsync();
-                ViewBag.TGs = new SelectList(Tgs, "IdTg", "TenTg");
-                var Types = await _loaiTruyenRepository.GetAllAsync();
-                ViewBag.Types = new SelectList(Types, "IdLoai", "TenLoai");
-                return View(boTruyen);
+                boTruyen.AnhBanner = await SaveImage(AnhBanner);
             }
+            if (AnhBia != null)
+            {
+                boTruyen.AnhBia = await SaveImage(AnhBia);
+            }
+
+            boTruyen.IdBo = _botruyenrepository.GenerateBoTruyenId();
+            boTruyen.TkDanhgia = 0;
+            boTruyen.TrangThai = 1;
+            boTruyen.TkTheodoi = 0;
+            boTruyen.TongLuotXem = 0;
+            await _botruyenrepository.AddAsync(boTruyen);
+
+            // Assume success if no exceptions thrown
+            return Json(new { success = true, message = "Comic added successfully!", redirectUrl = Url.Action("Index") });
+        }
+
+        private async Task<string> SaveFile(IFormFile file)
+        {
+            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", file.FileName);
+            using (var stream = new FileStream(path, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+            return path.Substring(path.IndexOf("wwwroot") + "wwwroot".Length).Replace('\\', '/');
         }
 
         public async Task<IActionResult> Update(string id)
@@ -197,56 +207,48 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> Update(string id, BoTruyen boTruyen, IFormFile AnhBanner, IFormFile AnhBia)
         {
-            var rangbuoc = RangBuoc(boTruyen);
-            if (rangbuoc)
+            if (!ModelState.IsValid)
             {
-                ModelState.Remove("AnhBanner");
-                ModelState.Remove("AnhBia");
-                if (id != boTruyen.IdBo)
-                {
-                    return NotFound();
-                }
-                var existingProduct = await _botruyenrepository.GetByIdAsync(id);
-                if (AnhBanner == null || AnhBia == null)
-                {
-                    boTruyen.AnhBanner = existingProduct.AnhBanner;
-                    boTruyen.AnhBia = existingProduct.AnhBia;
-                }
-                else
-                {
-                    if (AnhBanner != null)
-                    {
-                        boTruyen.AnhBanner = await SaveImage(AnhBanner);
-                    }
-                    if (AnhBia != null)
-                    {
-                        boTruyen.AnhBia = await SaveImage(AnhBia);
-                    }
-                }
-                existingProduct.TenBo = boTruyen.TenBo;
-                existingProduct.Dotuoi = boTruyen.Dotuoi;
-                existingProduct.IdTg = boTruyen.IdTg;
-                existingProduct.Mota = boTruyen.Mota;
-                existingProduct.AnhBia = boTruyen.AnhBia;
-                existingProduct.AnhBanner = boTruyen.AnhBanner;
-                existingProduct.TtPemium = boTruyen.TtPemium;
-                existingProduct.TrangThai = boTruyen.TrangThai;
-                existingProduct.Active = boTruyen.Active;                                                                                                                                                                                                                             
-                existingProduct.listloai = boTruyen.listloai;
-
-                await _botruyenrepository.UpdateAsync(existingProduct);
-
-                    return RedirectToAction(nameof(Index));
+                var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+                return Json(new { success = false, message = "Validation errors: " + string.Join(", ", errors) });
             }
-            else
+
+            if (id != boTruyen.IdBo)
             {
-                    var Tgs = await _tacGiaRepository.GetAllAsync();
-                    ViewBag.TGs = new SelectList(Tgs, "IdTg", "TenTg");
-                    var Types = await _loaiTruyenRepository.GetAllAsync();
-                    ViewBag.Types = new SelectList(Types, "IdLoai", "TenLoai");
-                    return View(boTruyen);
+                return Json(new { success = false, message = "Mismatched ID." });
             }
+
+            var existingProduct = await _botruyenrepository.GetByIdAsync(id);
+            if (existingProduct == null)
+            {
+                return Json(new { success = false, message = "Product not found." });
+            }
+
+            // Handling Image Upload
+            if (AnhBanner != null)
+            {
+                existingProduct.AnhBanner = await SaveImage(AnhBanner);
+            }
+            if (AnhBia != null)
+            {
+                existingProduct.AnhBia = await SaveImage(AnhBia);
+            }
+
+            // Update other properties
+            existingProduct.TenBo = boTruyen.TenBo;
+            existingProduct.Dotuoi = boTruyen.Dotuoi;
+            existingProduct.IdTg = boTruyen.IdTg;
+            existingProduct.Mota = boTruyen.Mota;
+            existingProduct.TtPemium = boTruyen.TtPemium;
+            existingProduct.TrangThai = boTruyen.TrangThai;
+            existingProduct.Active = boTruyen.Active;
+            existingProduct.listloai = boTruyen.listloai; // Make sure this property is correctly bound and updated
+
+            await _botruyenrepository.UpdateAsync(existingProduct);
+
+            return Json(new { success = true, message = "Update successful!" });
         }
+
         public bool RangBuocChapter(Chapter bt)
         {
 
@@ -276,13 +278,15 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
             var rangbuoc = RangBuocChapter(chapter);
             if (rangbuoc)
             {
+                // 1. Lưu Chapter đầu tiên
                 await _chapterrepository.AddAsync(chapter);
 
                 int i = 1;
                 foreach (var image in images)
                 {
+                    // 2. Lưu từng CtChapter sau đó
                     CtChapter CTChap = new CtChapter();
-                    CTChap.SoTrang = i; 
+                    CTChap.SoTrang = i;
                     CTChap.IdBo = chapter.IdBo;
                     CTChap.SttChap = chapter.SttChap;
                     CTChap.AnhTrang = await SaveImageChapter(image);
@@ -298,6 +302,7 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
                 return View(chapter.IdBo.ToString());
             }
         }
+
 
         [HttpPost]
         public async Task<IActionResult> DeleteConfirmed(string id)

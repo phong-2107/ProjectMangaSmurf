@@ -42,5 +42,16 @@ public class BoTruyen
     public virtual TacGium IdTgNavigation { get; set; } = null!;
 
 
+    public void UpdateFrom(BoTruyen source)
+    {
+        TenBo = source.TenBo;
+        Dotuoi = source.Dotuoi;
+        IdTg = source.IdTg;
+        Mota = source.Mota;
+        TtPemium = source.TtPemium;
+        TrangThai = source.TrangThai;
+        Active = source.Active;
+        listloai = source.listloai;
+    }
 
 }

@@ -1,0 +1,74 @@
+﻿@model ProjectMangaSmurf.Models.TacGium
+@{
+    ViewData["Title"] = "Update Author";
+}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<style>
+    .preview {
+        max-width: 50%;
+        max-height: 50%;
+    }
+
+    .notice {
+        color: #D8000C;
+        background-color: #FFD2D2;
+        padding: 8px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        border: 1px solid #D8000C;
+    }
+</style>
+
+<div class="content">
+    <div class="page-header">
+        <div class="page-title">
+            <h2>Update Author : @Model.TenTg </h2>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <form asp-action="Update" method="post">
+
+                <!-- Label cảnh báo -->
+                <div class="col-lg-3 col-sm-6 col-12">
+
+                <div class="notice">
+                    Notice: Changing the activation status will unpublish/publish all of @Model.TenTg's comics.
+                </div>
+        </div>
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="IdTg" />
+                <div class="col-lg-3 col-sm-6 col-12">
+                <div class="form-group">
+                    <label asp-for="TenTg" class="control-label">Author Name</label>
+                    <input asp-for="TenTg" class="form-control" />
+                    <span asp-validation-for="TenTg" class="text-danger"></span>
+                </div>
+                </div>
+                <div class="col-lg-3 col-sm-6 col-12">
+                <div class="form-group">
+                    <label asp-for="Active" class="control-label">Active Status</label>
+                    <select asp-for="Active" class="form-control" id="activeStatus">
+                        <option value="true">Active</option>
+                        <option value="false">Inactive</option>
+                    </select>
+                    <span asp-validation-for="Active" class="text-danger"></span>
+                </div>
+                </div>
+
+                <!-- Nút để xem danh sách truyện tranh của tác giả -->
+                <button type="submit" class="btn btn-success">Update</button>
+
+                <td>
+                <a asp-area="Admin" asp-controller="AuthorManager" asp-action="Detail" asp-route-id="@Model.IdTg" class="me-3">
+                    <button class="btn btn-primary">View Author's Comics List </button>
+                </a>
+                </td>
+                <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+            </form>
+        </div>
+    </div>
+</div>
+
+

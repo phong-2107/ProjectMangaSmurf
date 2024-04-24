@@ -1,0 +1,72 @@
+﻿@model ProjectMangaSmurf.Models.TacGium
+@using Microsoft.AspNetCore.Mvc.Rendering
+@using ProjectMangaSmurf.Repository
+@inject IAuthorRepository auth
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<style>
+    .preview {
+        max-width: 50%;
+        max-height: 50%;
+    }
+</style>
+
+<div class="content">
+    <div class="page-header">
+        <div class="page-title">
+            <h3>Upload new Author </h3>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <form asp-action="Add" method="post" enctype="multipart/form-data" class="row">
+                <div class="col-lg-3 col-sm-6 col-12">
+                    <div class="form-group">
+                        <label asp-for="IdTg">Comic Author Id</label>
+                        <input asp-for="IdTg" type="text" value="@ViewBag.Id" readonly>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-6 col-12">
+                    <div class="form-group">
+                        <label asp-for="TenTg">Comic Author Name</label>
+                        <input asp-for="TenTg" type="text" placeholder="Ex : Bantumlum ...">
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-6 col-12">
+                    <label asp-for="Active">Active Stats</label>
+                    <select asp-for="Active" class="select">
+                        <option>true</option>
+                        <option>false</option>
+                    </select>
+                </div>
+                <div asp-validation-summary="ModelOnly" class="col-lg-12 p-4 text-danger" style="font-size:20px; font-weight:600">
+                </div>
+                <div class="col-lg-12">
+                    <button @* href="javascript:void(0);" *@ type="submit" class="btn btn-submit me-2">Submit</button>
+                    <button @* href="productlist.html" *@ class="btn btn-cancel">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $('#authorForm').on('submit', function (e) {
+            var authorId = $('#IdTg').val().trim();
+            var authorName = $('#TenTg').val().trim();
+            var isActive = $('#Active').val(); // Retrieve the value of the Active select dropdown
+
+            if (authorName === "") {
+                alert("Please enter the author's name.");
+                e.preventDefault(); // Prevent form submission
+            } else {
+                var message = "Are you sure you want to submit the form?"; // Base message
+                message += "\nAuthor Active Status: " + (isActive === 'true' ? 'Active' : 'Inactive');
+
+                var confirmSubmit = confirm(message);
+                if (!confirmSubmit) {
+                    e.preventDefault(); // Prevent form submission
+                }
+            }
+        });
+    });
+</script>

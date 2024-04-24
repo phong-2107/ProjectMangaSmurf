@@ -28,6 +28,15 @@ namespace ProjectMangaSmurf.Repository
                 .OrderBy(chapter => chapter.SttChap) 
                 .ToListAsync();
         }
+        public async Task AddAsyncCTHD(CtHoatDong ct)
+        {
+            var find = await _context.CtHoatDongs.FirstOrDefaultAsync(p => (p.IdBo == ct.IdBo) && (p.SttChap == ct.SttChap) && (p.IdKh == ct.IdKh));
+            if (find == null)
+            {
+                _context.CtHoatDongs.Add(ct);
+            }
+            await _context.SaveChangesAsync();
+        }
         public async Task<CtChapter> GetPageByIdAsync(string idBo, int sttChap, int soTrang)
         {
             return await _context.CtChapters

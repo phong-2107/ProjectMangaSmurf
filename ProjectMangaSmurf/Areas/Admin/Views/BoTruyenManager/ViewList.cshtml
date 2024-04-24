@@ -4,18 +4,33 @@
 @inject IboTruyenRepository boTruyenRepository
 @inject IChapterRepository chapterRepository
 
+<style>
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .filters {
+        margin-left: 100px;
+        margin-top: 10px;
+    }
+
+    .search-set + .filters {
+        margin-top: 10px;
+    }
+</style>
 <div class="content">
     <div class="page-header">
         <div class="page-title">
             <h4>Danh Sách Bộ Truyện</h4>
             <h6>Quản Lý danh sách bộ truyện </h6>
-        </div>  
-    </div>
-    <div class="page-btn">
-        <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="Add" class="btn btn-added">
-            <img src="~/img/icons/plus.svg" alt="img"
-                 class="me-1">Thêm mới bộ truyện
-        </a>
+        </div>
+        <div class="page-btn">
+            <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="add" class="btn btn-added">
+                <img src="~/img/icons/plus.svg" alt="img" class="me-1"> Add New Author
+            </a>
+        </div>
     </div>
 
     <div class="card">
@@ -32,6 +47,11 @@
                         <a class="btn btn-searchset">
                             <img src="~/img/icons/search-white.svg" alt="img">
                         </a>
+                    </div>
+                    <div class="filters">
+                        <a href="@Url.Action("ViewList","BoTruyenManager", new { area = "Admin", isActive = (bool?)null })" class="btn btn-primary">See All</a>
+                        <a href="@Url.Action("ViewList", "BoTruyenManager", new { area = "Admin", isActive = true })" class="btn btn-success">Activating</a>
+                        <a href="@Url.Action("ViewList", "BoTruyenManager", new { area = "Admin", isActive = false })" class="btn btn-danger">Banning</a>
                     </div>
                 </div>
                 <div class="wordset">
@@ -50,76 +70,12 @@
                 </div>
             </div>
 
-            <div class="card mb-0" id="filter_inputs">
-                <div class="card-body pb-0">
-                    <div class="row">
-                        <div class="col-lg-12 col-sm-12">
-                            <div class="row">
-                                <div class="col-lg col-sm-6 col-12">
-                                    <div class="form-group">
-                                        <select class="select">
-                                            <option>Choose Product</option>
-                                            <option>Macbook pro</option>
-                                            <option>Orange</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-lg col-sm-6 col-12">
-                                    <div class="form-group">
-                                        <select class="select">
-                                            <option>Choose Category</option>
-                                            <option>Computers</option>
-                                            <option>Fruits</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-lg col-sm-6 col-12">
-                                    <div class="form-group">
-                                        <select class="select">
-                                            <option>Choose Sub Category</option>
-                                            <option>Computer</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-lg col-sm-6 col-12">
-                                    <div class="form-group">
-                                        <select class="select">
-                                            <option>Brand</option>
-                                            <option>N/D</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-lg col-sm-6 col-12 ">
-                                    <div class="form-group">
-                                        <select class="select">
-                                            <option>Price</option>
-                                            <option>150.00</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-lg-1 col-sm-6 col-12">
-                                    <div class="form-group">
-                                        <a class="btn btn-filters ms-auto">
-                                            <img src="~/img/icons/search-whites.svg" alt="img">
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            
 
             <div class="table-responsive">
                 <table class="table  datanew">
                     <thead>
                         <tr>
-                            <th>
-                                <label class="checkboxs">
-                                    <input type="checkbox" id="select-all">
-                                    <span class="checkmarks"></span>
-                                </label>
-                            </th>
                             <th>ID Truyện</th>
                             <th>Tên truyện</th>
                             <th>Độ tuổi</th>
@@ -140,12 +96,6 @@
                                     var tg = boTruyenRepository.getNameTGById(i.IdTg);
                                     var listloai = string.Join(",", i.listloai);
                                 }
-                                <td>
-                                    <label class="checkboxs">
-                                        <input type="checkbox">
-                                        <span class="checkmarks"></span>
-                                    </label>
-                                </td>
                                 <td>@i.IdBo</td>
                                 <td>@i.TenBo</td>
                                 <td>@i.Dotuoi</td>
