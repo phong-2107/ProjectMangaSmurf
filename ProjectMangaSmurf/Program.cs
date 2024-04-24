@@ -17,21 +17,6 @@ var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
 var configuration = builder.Configuration;
 
-//builder.Services.AddAuthentication(options =>
-//{
-//    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-//    options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
-//})
-//    .AddCookie()
-//    .AddGoogle(options =>
-//    {
-//        options.ClientId = "Authentication:Google:ClientId";
-//        options.ClientSecret = "Authentication:Google:ClientSecret";
-//        options.Scope.Add("https://www.googleapis.com/auth/userinfo.profile");
-//        options.Scope.Add("https://www.googleapis.com/auth/userinfo.email");
-//    });
-
-
 builder.Services.AddAuthentication().AddGoogle(googleOptions =>
 {
     googleOptions.ClientId = "603767058702-cli1i4notmjpfqo2jg2s7t7001o6i0i0.apps.googleusercontent.com";
@@ -39,6 +24,18 @@ builder.Services.AddAuthentication().AddGoogle(googleOptions =>
     googleOptions.Scope.Add("https://www.googleapis.com/auth/userinfo.profile");
     googleOptions.Scope.Add("https://www.googleapis.com/auth/userinfo.email");
 });
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+})
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/KhachHang/Login";
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+    });
 
 builder.Services.AddControllersWithViews();
 
@@ -88,6 +85,9 @@ builder.Services.AddScoped<IKhachHangRepository, EFKhachHangRepository>();
 builder.Services.AddScoped<IHopdongRepository, EFHopDongRepository>();
 builder.Services.AddScoped<IFooterRepository, EFFooterRepository>();
 builder.Services.AddScoped<IEmailRepository, EFEmailRepository>();
+
+//======================= Payment =======================
+builder.Services.AddScoped<IVNPayRepository, EFVNPayRepository>();
 
 //======================= Manager =======================
 builder.Services.AddScoped<IStaffRepository, EFStaffRepository>();

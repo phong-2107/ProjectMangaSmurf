@@ -1,0 +1,404 @@
+﻿
+
+.header {
+    padding: 1rem;
+    display: flex;
+    justify-content: center;
+    background-color: #141519;
+    border-radius: 0;
+}
+
+
+
+.nav__logo img {
+    width: 130px;
+}
+
+.main {
+    background-color: #fff;
+    position: relative;
+    height: 100vh;
+}
+
+.main__top {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.main__title {
+    font-size: var(--h1-font-size);
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: #141519;
+}
+
+.main__content {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.background-pre {
+    position:absolute;
+    width: 100%;
+    height: 100%;
+    background-image: url('../images/mangabanner.jpg');
+}
+/* Tắt background color cho autofill */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    transition: background-color 5000s ease-in-out 0s;
+    -webkit-text-fill-color: #141519 !important;
+    font-size: 1rem !important;
+    letter-spacing: 0.05em !important;
+}
+
+/* Hoặc đặt background color cố định cho autofill */
+input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 30px none inset !important;
+    -webkit-text-fill-color: #141519 !important;
+    font-size: 1rem !important;
+    letter-spacing: 0.05em !important;
+}
+
+/* Đối với Firefox */
+input:-moz-autofill {
+    background: none !important;
+    -webkit-text-fill-color: #141519 !important;
+    font-size: 1rem !important;
+    letter-spacing: 0.05em !important;
+}
+
+/* Đối với Microsoft Edge */
+input:-ms-autofill {
+    background: none !important;
+    -webkit-text-fill-color: #141519 !important;
+    font-size: 1rem !important;
+    letter-spacing: 0.05em !important;
+}
+
+
+
+.cx-decoration {
+    z-index: 1;
+    position: absolute;
+    inset-block: 0;
+    inset-inline: 0;
+    background-color: var(--body-color);
+}
+.cx-decoration__lines {
+    --lines-top-shift: -3.75rem;
+    position: absolute;
+    max-height: 100%;
+    z-index: -1;
+    fill: #9858F1;
+    opacity: .4;
+}
+
+.form-login {
+    position: relative;
+}
+
+
+    .form-login .content-login {
+        position: relative;
+        background-color: #fff;
+        padding: 2rem 3rem;
+        border-radius: 5px;
+        z-index: 100;
+    }
+
+.content-login .forgot {
+    color: #8f8f8f;
+    font-size: var(--smaller-font-size);
+    margin: .3rem .5rem;
+    letter-spacing: 0;
+    font-weight: 500;
+}
+
+    .content-login .forgot:hover {
+        color: #141519;
+    }
+
+.content-login .regis {
+    margin-top: 2rem;
+    font-weight: 500;
+    font-size: var(--nomal-font-size);
+    color: #8f8f8f;
+}
+
+    .content-login .regis a {
+        margin-left: .3rem;
+        font-weight: 600;
+        color: #9858F1;
+        cursor: pointer;
+    }
+
+        .content-login .regis a:hover {
+            transform: translateY(-2px);
+            color: #B142F5;
+        }
+
+
+.form-login .img {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    z-index: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.img-login {
+    position: absolute;
+    height: 550px;
+    left: -200px;
+    top: -100px;
+}
+
+.img-regis {
+    position: absolute;
+    height: 550px;
+    left: -170px;
+    top: 0;
+}
+
+.img-login-cat {
+    position: absolute;
+    height: 150px;
+    bottom: -100px;
+    right: -150px;
+}
+
+
+input:-internal-autofill-selected {
+    appearance: menulist-button;
+    background-image: none !important;
+    background-color: none !important;
+    color: #141519 !important;
+}
+
+
+
+.inputBox {
+    position: relative;
+    width: 400px;
+    margin-top: 35px;
+}
+
+    .inputBox:first-child {
+        margin-top: 10px;
+    }
+
+    .inputBox input {
+        position: relative;
+        width: 100%;
+        padding: 20px 10px 10px;
+        background: transparent;
+        border: none;
+        outline: none;
+        color: #141519;
+        font-size: 1rem;
+        letter-spacing: 0.05em;
+        z-index: 10;
+    }
+
+.login, .other, .regis, .content-login > h6 {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin: 1rem 0;
+}
+
+.other {
+}
+
+    .other div {
+        padding: .45rem .8rem;
+        margin: 0 .5rem;
+        border-radius: 50%;
+    }
+
+    .other a {
+        color: #141519;
+    }
+
+    .other .facebook {
+        background-color: #3572CB;
+    }
+
+    .other .google {
+        background-color: #F0442C;
+    }
+
+    .other i {
+        font-size: 1.2rem;
+        font-weight: 600;
+    }
+
+
+input[type="submit"] {
+    font-size: 1rem;
+    border: none;
+    outline: none;
+    color: #141519;
+    background: #9858F1;
+    padding: .5rem 1rem;
+    margin-top: 10px;
+    border-radius: 2px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+    input[type="submit"]:hover {
+        background-color: #B142F5;
+    }
+
+    input[type="submit"]:active {
+        background: linear-gradient(90deg, #9858F1, #d9138a);
+        opacity: 0.8;
+    }
+
+
+
+.inputBox span {
+    position: absolute;
+    left: 0;
+    padding: 20px 10px 10px;
+    font-size: 1rem;
+    color: #141519;
+    font-weight: 600;
+    pointer-events: none;
+    letter-spacing: 0.05em;
+    transition: 0.5s;
+}
+
+.inputBox input:valid ~ span,
+.inputBox input:focus ~ span {
+    font-weight: 400;
+    color: #9858F1;
+    transform: translateX(-10px) translateY(-30px);
+    font-size: 0.75em;
+}
+
+.inputBox i {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 2px;
+    background: #8f8f8f;
+    border-radius: 4px;
+    transition: 0.5s;
+    pointer-events: none;
+    z-index: 9;
+}
+
+.inputBox input:valid ~ i,
+.inputBox input:focus ~ i {
+    background: #9858F1;
+}
+
+.option {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 1rem;
+}
+
+    .option a {
+        color: #141519;
+        font-weight: 500;
+        font-size: 1rem;
+        margin: 0 .5rem;
+        cursor: pointer;
+    }
+
+        .option a:hover {
+            font-weight: 600;
+        }
+
+/* =================================== REGISTER ======================================== */
+.passSecurity {
+    height: 4px;
+    margin-top: 1rem;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+    .passSecurity span {
+        font-size: var(--small-font-size);
+    }
+
+.strengthList {
+    display: flex;
+    flex-direction: row;
+    gap: .5rem;
+    transition: width 0.3s ease;
+}
+
+.password-strength {
+    height: 4px;
+    width: 16px;
+    background-color: #8f8f8f;
+    transition: width 0.3s ease;
+}
+
+.weak {
+    background-color: red;
+}
+
+.moderate {
+    background-color: orange;
+}
+
+.strong {
+    background-color: green;
+}
+
+#securityText {
+    color: #555555;
+}
+
+
+@media (min-width: 35.5em) {
+    .cx-decoration__top-left-lines {
+        display: block;
+        max-width: 24.25rem;
+        inset-block-start: 0;
+        inset-inline-start: 0;
+        /* transform: translateY(var(--lines-top-shift)); */
+    }
+
+    .cx-decoration__top-right-lines {
+        display: block;
+        max-width: 28.5625rem;
+        inset-block-start: 0;
+        inset-inline-end: 0;
+        transform: translateY(var(--lines-top-shift));
+    }
+
+    .cx-decoration__bottom-left-lines {
+        display: block;
+        max-width: 12.8125rem;
+        inset-block-end: 0;
+        inset-inline-start: 0;
+    }
+
+    .cx-decoration__bottom-right-lines {
+        display: block;
+        max-width: 50.875rem;
+        inset-block-end: 0;
+        inset-inline-end: 0;
+    }
+}

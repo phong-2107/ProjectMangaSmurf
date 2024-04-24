@@ -153,26 +153,7 @@
                     <div class="form-group">
                         <label asp-for="TkTheodoi">Initial Total Follows</label>
                         <input asp-for="TkTheodoi" type="number" class="form-control" placeholder="Enter initial total follows" />
-                        <span asp-
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        validation-for="TkTheodoi" class="text-danger"></span>
+                        <span asp-validation-for="TkTheodoi" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-6 col-12">
@@ -244,7 +225,6 @@
             }
             reader.readAsDataURL(input.files[0]);
         } else {
-            // Hide preview and show placeholder if no image is loaded
             var preview = $('#' + targetID);
             preview.hide();
             preview.siblings('.image-uploads').show();

@@ -39,7 +39,7 @@ namespace ProjectMangaSmurf.Controllers
             return View(listBotruyen);
         }
 
-        public async Task<IActionResult> ListTruyenEarliest()
+        public async Task<IActionResult> ListTruyenEarliest() 
         {
             var listBotruyen = await _botruyenrepository.GetAllAsyncByChapterEarliest();
             return View(listBotruyen);

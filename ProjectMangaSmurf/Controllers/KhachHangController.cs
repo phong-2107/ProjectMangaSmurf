@@ -13,6 +13,7 @@ using NuGet.Protocol;
 using System.Security.Claims;
 using System.Text;
 using System;
+using Microsoft.AspNetCore.Http;
 namespace ProjectMangaSmurf.Controllers
 {
     public class KhachHangController : Controller
@@ -94,8 +95,8 @@ namespace ProjectMangaSmurf.Controllers
                 var nameClaim = claims?.FirstOrDefault(x => x.Type == ClaimTypes.Name)?.Value;
                 HttpContext.Session.SetString("Email", emailClaim);
                 HttpContext.Session.SetString("TK", nameClaim);
-                var find = _khachhangrepository.GetByEmailAsync(HttpContext.Session.GetString("Email"));
-                if(await find == null)
+                var find = await _khachhangrepository.GetByEmailAsync(HttpContext.Session.GetString("Email"));
+                if(find == null)
                 {
                     KhachHang kh = new KhachHang();
                     kh.IdKh = _khachhangrepository.GenerateCustomerId();
@@ -105,8 +106,13 @@ namespace ProjectMangaSmurf.Controllers
                     kh.Matkhau = RandomPass();
                     kh.TtPremium = false;
                     kh.Active = true;
-                    _khachhangrepository.AddAsync(kh);
+                    await _khachhangrepository.AddAsync(kh);
+					HttpContext.Session.SetString("IdKH", kh.IdKh);
                 }
+                else
+                {
+					HttpContext.Session.SetString("IdKH", find.IdKh);
+				}
                 return RedirectToAction("Index", "BoTruyen");
             }
             else
@@ -138,6 +144,7 @@ namespace ProjectMangaSmurf.Controllers
                     if (check)
                     {
                         HttpContext.Session.SetString("TK", kh.Taikhoan);
+                        HttpContext.Session.SetString("IdKH", kh.IdKh);
                         return RedirectToAction("Index", "BoTruyen");
                         
                     }
@@ -185,9 +192,9 @@ namespace ProjectMangaSmurf.Controllers
                     kh.Matkhau = PasswordHasher.HashPassword(matKhau);
                     await _khachhangrepository.AddAsync(kh);
                     HttpContext.Session.SetString("TK", kh.Taikhoan);
+                    HttpContext.Session.SetString("IdKH", kh.IdKh);
                     return RedirectToAction("Index", "BoTruyen");
                 }
-                
             }
             return View();
         }

@@ -276,7 +276,7 @@
                         KhachHang khach = new KhachHang();
                         if (kh != null)
                         {
-                            khach = await khachhangrepository.GetByIdAsync(kh);
+                            khach = await khachhangrepository.GetByAccountAsync(kh);
                         }
 
                         var idKh = khach?.IdKh;

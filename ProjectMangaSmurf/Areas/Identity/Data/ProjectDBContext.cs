@@ -94,7 +94,6 @@ namespace ProjectMangaSmurf.Data
                 entity.HasKey(e => new { e.SttChap, e.IdBo });
 
                 entity.ToTable("Chapter");
-
                 entity.Property(e => e.SttChap).HasColumnName("stt_chap");
                 entity.Property(e => e.IdBo)
                     .HasMaxLength(10)
@@ -282,6 +281,10 @@ namespace ProjectMangaSmurf.Data
                     .IsUnicode(false)
                     .IsFixedLength()
                     .HasColumnName("id_kh");
+                entity.Property(e => e.NoiDung)
+                   .HasColumnName("noidung")
+                   .HasColumnType("nvarchar(max)");
+                entity.Property(e => e.MaGiaoDich).HasColumnName("MaGiaoDich");
                 entity.Property(e => e.Ngaylap)
                     .HasColumnType("datetime")
                     .HasColumnName("ngaylap");

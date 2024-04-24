@@ -3,7 +3,7 @@
     position: absolute;
     top: 0;
     width: 100%;
-    height: 37rem;
+    height: 27rem;
     background: linear-gradient( to top,var(--containers-color-yellow), var(--body-white));
     opacity: .5;
 }
@@ -48,7 +48,7 @@
 .btn-pre {
     left: 80px;
     top: 350px;
-    /*background-color: #C133F7;*/
+    background-color: #C133F7;
 }
 
     .btn-pre:hover {
@@ -61,7 +61,7 @@
         height: auto;
     }
 
-.img-pre{`
+.img-pre{
     max-width:330px;
     position:absolute;
     right:0;

@@ -12,6 +12,32 @@ namespace ProjectMangaSmurf.Repository
         {
             _context = context;
         }
+
+        public async Task AddAsync(HopDong hd)
+        {
+             _context.HopDongs.Add(hd);
+            await _context.SaveChangesAsync();
+        }
+
+        public string GenerateHD()
+        {
+            string idPrefix = "HD";
+            int idLength = 10;
+            string maxId = _context.HopDongs.Select(kh => kh.IdHd)
+                                               .OrderByDescending(id => id)
+                                               .FirstOrDefault();
+            if (maxId == null)
+            {
+                return idPrefix + "0000000001";
+            }
+            else
+            {
+                int currentNumber = int.Parse(maxId.Substring(idPrefix.Length));
+                string newId = idPrefix + (currentNumber + 1).ToString().PadLeft(idLength, '0');
+                return newId;
+            }
+        }
+
         public async Task<IEnumerable<HopDong>> GetAllAsync()
         {
             return await _context.HopDongs.ToListAsync();

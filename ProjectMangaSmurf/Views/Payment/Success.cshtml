@@ -1,0 +1,21 @@
+﻿@{
+	ViewData["Title"] = "Thanh Toán Gói Hội Viên Thành Công";
+}
+
+<div class=" main__top rank section vh-100">
+	<div class="container  contact py-5">
+		<div class="container">
+			<div class="p-5 bg-light rounded">
+				<div class="row g-4">
+					<div class="col-12">
+						<div class="text-center mx-auto" style="max-width: 700px;">
+							<h1 class="text-primary">Payment Success</h1>
+							<h3 class="text-danger">@TempData["Message"]</h3>
+						</div>
+					</div>
+					<a asp-controller="BoTruyen" asp-action="Index" class="btn btn-primary" style="padding:.5rem 1rem; margin:1rem 0; max-width:300px;">Quay lại trang chủ</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
