@@ -82,8 +82,8 @@
     <div class="page-header">
         <div class="page-title">
             <div class="action-page">
-                <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="Index">Trang Chủ </a>
-                <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="ViewList"> \ List Truyện </a>
+                <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="Index">HOME PAGE</a>
+                <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="ViewList"> \ LIST COMIC </a>
                 <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="Detail" asp-route-id="@Model.IdBo"> \ COMIC : @Model.TenBo</a>
             </div>
 
@@ -229,9 +229,10 @@
                             <a asp-area="Admin" asp-controller="ChapterManager" asp-action="Update" asp-route-id="@item.SttChap && @item.IdBo" class="me-3">
                                 <img src="~/img/icons/edit.svg" alt="Edit">
                             </a>
-                            <a class="delete-product me-3" data-product-id="@item.SttChap && @item.IdBo" href="javascript:void(0);">
+                            <a class="delete-chapter" data-idbo="@item.IdBo" data-sttchap="@item.SttChap" href="javascript:void(0);">
                                 <img src="~/img/icons/delete.svg" alt="Delete">
                             </a>
+
                         </td>
                     </tr>
                 }
@@ -243,3 +244,39 @@
         </table>
     </div>
 </div>
+
+<script>
+    $('.delete-chapter').click(function () {
+        var idBo = $(this).data('idbo');
+        var sttChap = $(this).data('sttchap');
+
+        Swal.fire({
+            title: "Are you sure you want to delete this chapter?",
+            text: "This action cannot be undone and will remove all related data.",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: `/Admin/ChapterManager/DeleteConfirmed/${idBo}/${sttChap}`,
+                    type: 'POST',
+                    success: function (response) {
+                        if (response.success) {
+                            Swal.fire('Deleted!', response.message, 'success');
+                            location.reload(); // Or other UI update logic
+                        } else {
+                            Swal.fire('Error!', response.message, 'error');
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        Swal.fire('Error!', 'Failed to delete. Please try again.', 'error');
+                    }
+                });
+            }
+        });
+    });
+
+</script>

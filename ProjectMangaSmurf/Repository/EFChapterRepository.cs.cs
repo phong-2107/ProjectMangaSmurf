@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using ProjectMangaSmurf.Data;
 using ProjectMangaSmurf.Helper;
 using ProjectMangaSmurf.Models;
@@ -28,6 +29,17 @@ namespace ProjectMangaSmurf.Repository
                 .OrderBy(chapter => chapter.SttChap) 
                 .ToListAsync();
         }
+        public async Task<CtChapter> GetCTChapterByIdAsync(string idBo, int sttChap, int soTrang)
+        {
+            return await _context.CtChapters.FirstOrDefaultAsync(c => c.IdBo == idBo && c.SttChap == sttChap && c.SoTrang == soTrang);
+        }
+
+        public async Task UpdateCTChapterAsync(CtChapter ctChapter)
+        {
+            _context.CtChapters.Update(ctChapter);
+            await _context.SaveChangesAsync();
+        }
+
         public async Task AddAsyncCTHD(CtHoatDong ct)
         {
             var find = await _context.CtHoatDongs.FirstOrDefaultAsync(p => (p.IdBo == ct.IdBo) && (p.SttChap == ct.SttChap) && (p.IdKh == ct.IdKh));
@@ -253,6 +265,43 @@ namespace ProjectMangaSmurf.Repository
                 .Where(p => p.IdBo == idBo && p.SttChap == sttChap)
                 .MaxAsync(p => (int?)p.SoTrang) ?? 0; // Return 0 if no pages found
             return maxPageNumber;
+        }
+        public async Task DeleteCTChapterAsync(CtChapter ctChapter)
+        {
+            if (ctChapter == null)
+            {
+                throw new ArgumentNullException(nameof(ctChapter), "Provided chapter detail is null");
+            }
+
+            _context.CtChapters.Remove(ctChapter);
+            await _context.SaveChangesAsync();
+        }
+        public async Task DeleteChapterAsync(Chapter chapter)
+        {
+            if (chapter == null)
+            {
+                throw new ArgumentNullException(nameof(chapter), "Provided chapter is null");
+            }
+
+            _context.Chapters.Remove(chapter);
+            await _context.SaveChangesAsync();
+        }
+
+        // In EFChapterRepository class
+        public async Task<IEnumerable<CtHoatDong>> GetAllCtHoatDongByIdAsync(string idBo, int sttChap)
+        {
+            return await _context.CtHoatDongs
+                                 .Where(hd => hd.IdBo == idBo && hd.SttChap == sttChap)
+                                 .ToListAsync();
+        }
+        // In EFChapterRepository class
+        public async Task DeleteCtHoatDongAsync(CtHoatDong ctHoatDong)
+        {
+            if (ctHoatDong == null)
+                throw new ArgumentNullException(nameof(ctHoatDong));
+
+            _context.CtHoatDongs.Remove(ctHoatDong);
+            await _context.SaveChangesAsync();
         }
 
     }

@@ -96,39 +96,32 @@
 
 <script>
     $(document).ready(function () {
-        $('.delete-author').click(function () {
-            var productId = $(this).data('product-id');
+        $(".delete-chapter").click(function (e) {
+            e.preventDefault(); // Prevent the default form submission
+            var idBo = $(this).data('idbo');
+            var sttChap = $(this).data('sttchap');
+
             Swal.fire({
-                title: "Are you sure you want to delete this author and all related comics, chapters, and chapter details?",
-                text: `This action cannot be undone and will remove all related data for author ID ${productId}.`,
+                title: "Are you sure?",
+                text: "You will not be able to recover this chapter!",
                 icon: "warning",
                 showCancelButton: true,
-                confirmButtonColor: "#007bff",  // Typically the primary button color in Bootstrap is blue
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Yes, delete everything!",
-                confirmButtonClass: "btn btn-primary",  // Use the primary class for the confirm button
-                cancelButtonClass: "btn btn-danger ml-1",
-                buttonsStyling: false
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
-                        url: `/Admin/AuthorManager/DeleteConfirmed/${productId}`,
+                        url: '@Url.Action("DeleteConfirmed", "ChapterManager")',
                         type: 'POST',
-                        data: { id: productId },
+                        data: { idBo: idBo, sttChap: sttChap },
                         success: function (response) {
-                            Swal.fire(
-                                'Deleted!',
-                                'The author and all related data have been successfully deleted.',
-                                'success'
-                            );
-                            location.reload(); // Reloads the page to reflect the changes
-                        },
-                        error: function (xhr, status, error) {
-                            Swal.fire(
-                                'Error!',
-                                'Failed to delete the author and related data. Please try again.',
-                                'error'
-                            );
+                            if (response.success) {
+                                Swal.fire('Deleted!', response.message, 'success');
+                                // Optionally reload the page or remove the chapter row from the table
+                            } else {
+                                Swal.fire('Error!', response.message, 'error');
+                            }
                         }
                     });
                 }
@@ -136,5 +129,6 @@
         });
     });
 </script>
+
 
 
