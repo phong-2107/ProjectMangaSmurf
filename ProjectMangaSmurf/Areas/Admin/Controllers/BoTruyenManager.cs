@@ -266,42 +266,51 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
             return true;
         }
 
-        public async Task<IActionResult> AddChapter(string id , int stt)
+        public async Task<IActionResult> AddChapter(string id , int stt )
         {
             ViewBag.Id = id;
             ViewBag.Stt = stt;
+            var relatedComics = await _chapterrepository.GetChaptersByComicId(id);
+            ViewBag.RelatedChapter = relatedComics ?? new List<ProjectMangaSmurf.Models.Chapter>();
             return View();
+
         }
 
         [HttpPost]
         public async Task<IActionResult> AddChapter(Chapter chapter, List<IFormFile> images)
         {
-            var rangbuoc = RangBuocChapter(chapter);
-            if (rangbuoc)
+            if (!ModelState.IsValid)
             {
-                // 1. Lưu Chapter đầu tiên
-                await _chapterrepository.AddAsync(chapter);
+                // If the model state is invalid, directly return to the view with the current model to show validation errors.
+                return View(chapter);
+            }
 
-                int i = 1;
-                foreach (var image in images)
-                {
-                    // 2. Lưu từng CtChapter sau đó
-                    CtChapter CTChap = new CtChapter();
-                    CTChap.SoTrang = i;
-                    CTChap.IdBo = chapter.IdBo;
-                    CTChap.SttChap = chapter.SttChap;
-                    CTChap.AnhTrang = await SaveImageChapter(image);
-                    CTChap.Active = true;
-                    await _chapterrepository.AddAsyncCT(CTChap);
-                    i++;
-                }
-                TempData["Message"] = "New chapter added successfully, do you want to continue?";
-                return RedirectToAction("AddChapter", "BoTruyenManager", new { id = chapter.IdBo.ToString() });
-            }
-            else
+            var rangbuoc = RangBuocChapter(chapter);
+            if (!rangbuoc)
             {
-                return View(chapter.IdBo.ToString());
+                // If business rules validation fails, return to the view with the current model.
+                return View(chapter);
             }
+
+            // Proceed with adding the chapter if all validations pass.
+            await _chapterrepository.AddAsync(chapter);
+
+            int i = 1;
+            foreach (var image in images)
+            {
+                CtChapter CTChap = new CtChapter
+                {
+                    SoTrang = i++,
+                    IdBo = chapter.IdBo,
+                    SttChap = chapter.SttChap,
+                    AnhTrang = await SaveImageChapter(image),
+                    Active = true
+                };
+                await _chapterrepository.AddAsyncCT(CTChap);
+            }
+
+            TempData["Message"] = "New chapter added successfully, do you want to continue?";
+            return RedirectToAction("AddChapter", new { id = chapter.IdBo });
         }
 
 
