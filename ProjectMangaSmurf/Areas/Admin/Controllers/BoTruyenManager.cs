@@ -332,8 +332,6 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
                 return View(chapter.IdBo.ToString());
             }
         }
-
-
         [HttpPost]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {

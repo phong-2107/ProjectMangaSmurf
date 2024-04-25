@@ -65,15 +65,6 @@ namespace ProjectMangaSmurf.Repository
             }
         }
 
-        public async Task AddAsyncCTHD(CtHoatDong ct)
-        {
-            var find = await _context.CtHoatDongs.FirstOrDefaultAsync(p => (p.IdBo == ct.IdBo) && (p.SttChap == ct.SttChap) && (p.IdKh == ct.IdKh));
-            if (find == null)
-            {
-                _context.CtHoatDongs.Add(ct);
-            }
-            await _context.SaveChangesAsync();
-        }
         public async Task DeletePageAsync(string idBo, int sttChap, int soTrang)
         {
             var page = await GetPageByIdAsync(idBo, sttChap, soTrang);
