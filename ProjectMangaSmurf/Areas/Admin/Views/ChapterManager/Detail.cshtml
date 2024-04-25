@@ -61,44 +61,27 @@
     }
 
     .icon-button {
-        width: 30px; /* Square, small icons */
-        height: 30px;
-        border-radius: 50%; /* Rounded */
-        border: 1px solid black; /* Black border */
-        background-color: rgba(128, 128, 128, 0.5); /* Semi-transparent gray */
-        background-size: cover;
-        background-position: center;
+        width: 40px; /* Size of the button */
+        height: 40px;
+        border-radius: 50%; /* Makes the button circular */
+        background-color: white; /* Button background color */
+        border: 1px solid #ccc; /* Border to enhance visibility */
+        display: flex;
+        justify-content: center;
+        align-items: center;
         cursor: pointer;
-        display: flex; /* Center the icon inside the button */
-        justify-content: center; /* Center horizontally */
-        align-items: center; /* Center vertically */
     }
 
-        /* Example of adding a background image with the semi-transparent background */
-        .icon-button.refresh-icon {
-            background-image: url('/img_admin/refresh.png'), linear-gradient(rgba(128, 128, 128, 0.5), rgba(128, 128, 128, 0.5));
-            background-blend-mode: overlay; /* Blend the icon with the background color */
+        .icon-button i {
+            color: #555; /* Icon color for better visibility against white background */
+            font-size: 18px; /* Suitable icon size within the button */
         }
-    /* Update other button styles similarly if they have icons */
-    .delete-icon, .toggle-view-icon, .edit-icon {
-        background-color: rgba(128, 128, 128, 0.5); /* Apply semi-transparent gray universally */
-    }
 
-    .delete-icon {
-        background-image: url('/img_admin/bin.png'), linear-gradient(rgba(128, 128, 128, 0.5), rgba(128, 128, 128, 0.5));
-        background-blend-mode: overlay;
+    .image-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Responsive grid layout */
+        gap: 10px;
     }
-
-    .toggle-view-icon {
-        background-image: url('/img_admin/eye.png'), linear-gradient(rgba(128, 128, 128, 0.5), rgba(128, 128, 128, 0.5));
-        background-blend-mode: overlay;
-    }
-
-    .edit-icon {
-        background-image: url('/img_admin/edit.png'), linear-gradient(rgba(128, 128, 128, 0.5), rgba(128, 128, 128, 0.5));
-        background-blend-mode: overlay;
-    }
-
 
     .comic-page {
         width: 100%;
@@ -198,6 +181,12 @@
 
     }
 
+    .related-comic-series {
+        background-color: #1b2850;
+        color: white;
+        border-radius: 15px;
+        padding: 10px 15px;
+    }
 </style>
 
 <div class="content">
@@ -247,18 +236,14 @@
                                     <!-- Toggle Active Button -->
                                     <form asp-action="ToggleActive" asp-controller="ChapterManager" asp-route-comicId="@Model.IdBo" asp-route-chapterNumber="@Model.SttChap" method="post">
                                         <button type="submit" class="btn-custom @(Model.Active ? "green" : "")">
-                                            @(Model.Active ? "Set to Inactive" : "Set to Active")
+                                            <i class="fa-regular fa-eye"></i>  @(Model.Active ? "Set to Inactive" : "Set to Active")
                                         </button>
                                     </form>
                                     <!-- Toggle Premium Button -->
                                     <form asp-action="TogglePremium" asp-controller="ChapterManager" asp-route-comicId="@Model.IdBo" asp-route-chapterNumber="@Model.SttChap" method="post">
                                         <button type="submit" class="btn-custom @(Model.TtPemium ? "green" : "")">
-                                            @(Model.TtPemium ? "Remove from Premium" : "Add to Premium")
+                                            <i class="fa-solid fa-circle-dollar-to-slot"></i>    @(Model.TtPemium ? "Remove from Premium" : "Add to Premium")
                                         </button>
-                                    </form>
-                                    <!-- Go to Update Button -->
-                                    <form asp-action="Update" asp-controller="BoTruyenManager" asp-route-id="@Model.IdBo" method="get">
-                                        <button type="submit" class="btn-update">Go to Update</button>
                                     </form>
                                 </div>
                             </li>
@@ -270,84 +255,52 @@
     </div>
     <div class="table-responsive">
         <div class="content">
-            <h3 class="mb-0 h3-preview">
-                <img src="/path/to/eye2.png" class="icon-eye2">
-                Preview Images-Comic Pages in Chapter No.@Model.SttChap
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h4 class="mb-0 related-comic-series"><i class="fa-solid fa-tag"></i> Preview for chapter @Model.SttChap</h4>
 
-            </h3>
+            </div>
         </div>
 
 
         <div class="image-grid">
             @foreach (var item in ViewBag.RelatedPage as List<ProjectMangaSmurf.Models.CtChapter>)
             {
-                            <div class="image-container">
-                <img src="@item.AnhTrang" alt="Comic Page" class="comic-page">
-                <span class="page-number">@item.SoTrang</span>
-                <div class="button-bar">
-                        <div class="icon-button refresh-icon" data-idbo="@item.IdBo" data-sttchap="@item.SttChap" data-sotrang="@item.SoTrang">
-                            <img src="/img_admin/re.png">
-                        </div>
-                    <div class="icon-button delete-icon" onclick="deletePage('@item.IdBo', '@item.SttChap', '@item.SoTrang')">
-                        <img src="/img_admin/bin.png">
+                <div class="image-container">
+                    <img src="@item.AnhTrang" alt="Comic Page" class="comic-page">
+                    <span class="page-number">@item.SoTrang</span>
+                    <div class="button-bar">
+                        <form asp-action="ToggleCTActive" asp-controller="ChapterManager" asp-route-idBo="@item.IdBo" asp-route-sttChap="@item.SttChap" asp-route-soTrang="@item.SoTrang" method="post">
+                            <button type="submit" class="icon-button">
+                                <i class="fa @(item.Active ? "fa-eye" : "fa-eye-slash" )"></i>
+                            </button>
+                        </form>
                     </div>
-                    <div class="icon-button toggle-view-icon" onclick="toggleActive('@item.IdBo', '@item.SttChap', '@item.SoTrang')">
-                        <img src="/img_admin/eye.png">
-                    </div>
-                    <div class="icon-button edit-icon" onclick="replaceImage('@item.IdBo', '@item.SttChap', '@item.SoTrang')">
-                        <img src="/img_admin/pa.png">
-                    </div>
-                    <!-- Additional elements for page number update -->
-                    <input type="text" class="update-input" style="display:none;" placeholder="New page #">
-                    <button class="confirm-update" style="display:none;" onclick="confirmUpdate(this, '@item.IdBo', '@item.SttChap', '@item.SoTrang')">Confirm</button>
                 </div>
-            </div>
-
             }
         </div>
+
+
     </div>
 </div>
  
 <script>
+    function toggleActive(idBo, sttChap, soTrang) {
+        // Simulated function to toggle active status
+        console.log('Toggling active status for', idBo, sttChap, soTrang);
+        // Actual implementation would involve an AJAX call or similar to update the server
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
         const grid = document.querySelector('.image-grid');
-
         grid.addEventListener('click', function (event) {
-            const target = event.target;
-            const button = target.closest('.icon-button'); // Find nearest parent button if click was on an img
-
+            const button = event.target.closest('.icon-button');
             if (button) {
-                const idBo = button.dataset.idbo;
-                const sttChap = button.dataset.sttchap;
-                const soTrang = button.dataset.sotrang;
-
-                if (button.classList.contains('refresh-icon')) {
-                    toggleUpdateMode(button, idBo, sttChap, soTrang);
-                } else if (button.classList.contains('delete-icon')) {
-                    deletePage(idBo, sttChap, soTrang);
-                } else if (button.classList.contains('toggle-view-icon')) {
-                    toggleActive(idBo, sttChap, soTrang);
-                } else if (button.classList.contains('edit-icon')) {
-                    replaceImage(idBo, sttChap, soTrang);
-                }
+                const idBo = button.getAttribute('data-idbo');
+                const sttChap = button.getAttribute('data-sttchap');
+                const soTrang = button.getAttribute('data-sotrang');
+                toggleActive(idBo, sttChap, soTrang);
             }
         });
     });
-
-    function toggleUpdateMode(button, idBo, sttChap, soTrang) {
-        const container = button.parentNode;
-        const input = container.querySelector('.update-input');
-        const confirmButton = container.querySelector('.confirm-update');
-
-        const isVisible = input.style.display === 'block';
-        input.style.display = confirmButton.style.display = isVisible ? 'none' : 'block';
-
-        // Hide other buttons if input is visible
-        container.querySelectorAll('.icon-button').forEach(btn => {
-            if (btn !== button) btn.style.display = isVisible ? 'block' : 'none';
-        });
-    }
-
-    // Define other functions similarly...
 
 </script>

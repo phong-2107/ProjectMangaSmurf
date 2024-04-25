@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using ProjectMangaSmurf.Models;
 using ProjectMangaSmurf.Repository;
 
@@ -92,11 +93,19 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> ToggleActive(string comicId, int chapterNumber)
         {
+            // Validate the input parameters.
+            if (string.IsNullOrEmpty(comicId) || chapterNumber <= 0)
+            {
+                TempData["Error"] = "Invalid comic ID or chapter number.";
+                return RedirectToAction(nameof(Index));
+            }
+
             // Retrieve the chapter using the provided comic ID and chapter number.
             var chapter = await _chapterrepository.GetByIdAsync(comicId, chapterNumber);
             if (chapter == null)
             {
-                return NotFound("Chapter not found.");
+                TempData["Error"] = "Chapter not found.";
+                return NotFound();
             }
 
             // Toggle the active status of the chapter.
@@ -104,10 +113,12 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
             await _chapterrepository.UpdateAsync(chapter);
 
             // Optionally add a success message or similar feedback.
-            TempData["Message"] = "Chapter active status updated successfully!";
+            TempData["Message"] = $"Chapter active status updated successfully to {(chapter.Active ? "Active" : "Inactive")}.";
 
+            // Redirect back to the detail view of the chapter to see the change.
             return RedirectToAction(nameof(Detail), new { id = comicId, stt = chapterNumber });
         }
+
 
 
         public bool RangBuoc(BoTruyen bt)
@@ -223,20 +234,24 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
             }
         }
 
-
-        [HttpPost]
-        public async Task<IActionResult> DeletePage(string idBo, int sttChap, int soTrang)
-        {
-            await _chapterrepository.DeletePageAndUpdateSubsequentAsync(idBo, sttChap, soTrang);
-            return RedirectToAction("Detail", new { idBo = idBo, sttChap = sttChap });
-        }
-
         [HttpPost]
         public async Task<IActionResult> ToggleCTActive(string idBo, int sttChap, int soTrang)
         {
-            await _chapterrepository.ToggleActiveStatus(idBo, sttChap, soTrang);
-            return RedirectToAction("Detail", new { idBo = idBo, sttChap = sttChap });
+            var ctChapter = await _chapterrepository.GetCTChapterByIdAsync(idBo, sttChap, soTrang);
+            if (ctChapter == null)
+            {
+                TempData["Error"] = "Chapter page not found.";
+                return NotFound();
+            }
+
+            // Toggle the active status
+            ctChapter.Active = !ctChapter.Active;
+            await _chapterrepository.UpdateCTChapterAsync(ctChapter);
+
+            TempData["Message"] = $"Page active status updated successfully to {(ctChapter.Active ? "Active" : "Inactive")}.";
+            return RedirectToAction("Detail", new { id = idBo, stt = sttChap });
         }
+
 
         [HttpPost]
         public async Task<IActionResult> ReplaceImage(string idBo, int sttChap, int soTrang, IFormFile newImage)
@@ -247,6 +262,47 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
             }
             return RedirectToAction("Detail", new { idBo = idBo, sttChap = sttChap });
         }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteConfirmed(string idBo, int sttChap)
+        {
+            if (string.IsNullOrEmpty(idBo) || sttChap <= 0)
+            {
+                return Json(new { success = false, message = "Invalid chapter information provided." });
+            }
+
+            try
+            {
+                // Retrieve and delete all CtHoatDong entries
+                var ctHoatDongs = await _chapterrepository.GetAllCtHoatDongByIdAsync(idBo, sttChap);
+                foreach (var ctHoatDong in ctHoatDongs)
+                {
+                    await _chapterrepository.DeleteCtHoatDongAsync(ctHoatDong);
+                }
+
+                // Retrieve and delete all CtChapters
+                var ctChapters = await _chapterrepository.GetAllCTByIdAsync(idBo, sttChap);
+                foreach (var ctChapter in ctChapters)
+                {
+                    await _chapterrepository.DeleteCTChapterAsync(ctChapter);
+                }
+
+                // Retrieve and delete the chapter
+                var chapter = await _chapterrepository.GetByIdAsync(idBo, sttChap);
+                if (chapter != null)
+                {
+                    await _chapterrepository.DeleteChapterAsync(chapter);
+                }
+
+                return Json(new { success = true, message = "Chapter and all related activities and pages deleted successfully." });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Error deleting chapter: " + ex.Message });
+            }
+        }
+
+
 
     }
 }

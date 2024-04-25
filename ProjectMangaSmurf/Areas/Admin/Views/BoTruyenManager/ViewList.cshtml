@@ -23,12 +23,12 @@
 <div class="content">
     <div class="page-header">
         <div class="page-title">
-            <h4>Danh Sách Bộ Truyện</h4>
-            <h6>Quản Lý danh sách bộ truyện </h6>
+            <h3><i class="fa-brands fa-readme"></i> List of Comic</h3>
+            <h6>Manage - View </h6>
         </div>
         <div class="page-btn">
             <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="add" class="btn btn-added">
-                <img src="~/img/icons/plus.svg" alt="img" class="me-1"> Add New Author
+                <img src="~/img/icons/plus.svg" alt="img" class="me-1"> Add New Comic
             </a>
         </div>
     </div>
@@ -38,36 +38,15 @@
             <div class="table-top">
                 <div class="search-set">
                     <div class="search-path">
-                        <a class="btn btn-filter" id="filter_search">
-                            <img src="~/img/icons/filter.svg" alt="img">
-                            <span><img src="~/img/icons/closes.svg" alt="img"></span>
-                        </a>
+                 
                     </div>
                     <div class="search-input">
                         <a class="btn btn-searchset">
                             <img src="~/img/icons/search-white.svg" alt="img">
                         </a>
                     </div>
-@*                     <div class="filters">
-                        <a href="@Url.Action("ViewList","BoTruyenManager", new { area = "Admin", isActive = (bool?)null })" class="btn btn-primary">See All</a>
-                        <a href="@Url.Action("ViewList", "BoTruyenManager", new { area = "Admin", isActive = true })" class="btn btn-success">Activating</a>
-                        <a href="@Url.Action("ViewList", "BoTruyenManager", new { area = "Admin", isActive = false })" class="btn btn-danger">Banning</a>
-                    </div> *@
                 </div>
-                <div class="wordset">
-                    <ul>
-                        <li>
-                            <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf">
-                                <img src="~/img/icons/pdf.svg" alt="img">
-                            </a>
-                        </li>
-                        <li>
-                            <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel">
-                                <img src="~/img/icons/excel.svg" alt="img">
-                            </a>
-                        </li>
-                    </ul>
-                </div>
+             
             </div>
 
             
@@ -76,13 +55,13 @@
                 <table class="table  datanew">
                     <thead>
                         <tr>
-                            <th>ID Truyện</th>
-                            <th>Tên truyện</th>
-                            <th>Độ tuổi</th>
-                            <th>Tác Giả</th>
-                            <th>Tổng Đánh Giá</th>
-                            <th>Tổng lượt xem</th>
-                            <th>Loại Truyện</th>
+                            <th>ID Comic</th>
+                            <th>Name</th>
+                            <th>Age Rating</th>
+                            <th>Author</th>
+                            <th>Total Rating</th>
+                            <th>Views</th>
+                            <th>Types</th>
                             @* <th>Ảnh bìa</th>
                             <th>Ảnh banner<th> *@
                             <th>Action</th>

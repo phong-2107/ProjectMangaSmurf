@@ -20,8 +20,8 @@
 <div class="content">
     <div class="page-header">
         <div class="page-title">
-            <h4>Danh Sách Khách Hàng</h4>
-            <h6>Quản Lý danh sách Khách hàng </h6>
+            <h3> <i class="fa-solid fa-circle-user"></i>  List of Costumer</h3>
+            <h6>       Manager - View </h6>
         </div>
         
     </div>
@@ -31,10 +31,7 @@
             <div class="table-top">
                 <div class="search-set">
                     <div class="search-path">
-                        <a class="btn btn-filter" id="filter_search">
-                            <img src="~/img/icons/filter.svg" alt="img">
-                            <span><img src="~/img/icons/closes.svg" alt="img"></span>
-                        </a>
+                    
                     </div>
 
                     <div class="search-input">
@@ -44,26 +41,13 @@
                     </div>
                 </div>
                 <div class="filters">
-                    <button class="btn btn-primary" onclick="applyFilter('all')">See All</button>
-                    <button class="btn btn-success" onclick="applyFilter('active')">Activating</button>
-                    <button class="btn btn-danger" onclick="applyFilter('banned')">Banning</button>
-                    <button class="btn btn-custom" onclick="togglePremium()" id="premium-btn">Premium Stats</button>
+                    <button class="btn btn-primary" onclick="applyFilter('all')">See All <i class="fa-solid fa-border-all"></i></button>
+                    <button class="btn btn-success" onclick="applyFilter('active')">Activating <i class="fa-solid fa-person-digging"></i></button>
+                    <button class="btn btn-danger" onclick="applyFilter('banned')">Banning  <i class="fa-solid fa-ban"></i></button>
+                    <button class="btn btn-custom" onclick="togglePremium()" id="premium-btn">Premium Stats  <i class="fa-solid fa-hand-holding-dollar"></i></button>
                 </div>
 
-                <div class="wordset">
-                    <ul>
-                        <li>
-                            <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf">
-                                <img src="~/img/icons/pdf.svg" alt="img">
-                            </a>
-                        </li>
-                        <li>
-                            <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel">
-                                <img src="~/img/icons/excel.svg" alt="img">
-                            </a>
-                        </li>
-                    </ul>
-                </div>
+             
             </div>
 
 
@@ -71,17 +55,12 @@
                 <table class="table  datanew">
                     <thead>
                         <tr>
-                            <th>
-                                <label class="checkboxs">
-                                    <input type="checkbox" id="select-all">
-                                    <span class="checkmarks"></span>
-                                </label>
-                            </th>
-                            <th>Mã Khách Hàng</th>
-                            <th>Tên Khách Hàng</th>
-                            <th>SĐT</th>
+            
+                            <th>ID Costumer</th>
+                            <th>Costumer Name</th>
+                            <th>Phone Number</th>
                             <th>Email</th>
-                            <th>Pre Stats</th>
+                            <th>Premium Stats</th>
                             <th>Banned</th>
                             <th>Action</th>
                         </tr>
@@ -91,12 +70,7 @@
                         {
                             <tr>
 
-                                <td>
-                                    <label class="checkboxs">
-                                        <input type="checkbox">
-                                        <span class="checkmarks"></span>
-                                    </label>
-                                </td>
+                           
                                 <td>@i.IdKh</td>
                                 <td>@i.TenKh</td>
                                 <td>@i.Sdt</td>
@@ -108,9 +82,6 @@
                                         <img src="~/img/icons/eye.svg" alt="img">
                                     </a>
 
-                                    <a class="delete-product me-3" data-product-id="@i.IdKh" href="javascript:void(0);">
-                                        <img src="~/img/icons/delete.svg" alt="img">
-                                    </a>
                                 </td>
                             </tr>
                         }

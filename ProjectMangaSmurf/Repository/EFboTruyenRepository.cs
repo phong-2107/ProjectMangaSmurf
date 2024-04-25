@@ -29,10 +29,21 @@ namespace ProjectMangaSmurf.Repository
         }
         public async Task DeleteAllChaptersAndDetails(string idBo)
         {
+            var comicl = await _context.BoTruyens
+                .Include(lh => lh.CtLoaiTruyens)
+                        .FirstOrDefaultAsync(c => c.IdBo == idBo);
             var comic = await _context.BoTruyens
                 .Include(c => c.Chapters)
                     .ThenInclude(ch => ch.CtChapters)
-                .FirstOrDefaultAsync(c => c.IdBo == idBo);
+                        .FirstOrDefaultAsync(c => c.IdBo == idBo);
+
+            if (comicl != null)
+            {
+                foreach (var chapter in comicl.CtLoaiTruyens)
+                {
+                    _context.CtLoaiTruyens.Remove(chapter);
+                }
+            }
 
             if (comic != null)
             {
@@ -63,10 +74,12 @@ namespace ProjectMangaSmurf.Repository
 
         public async Task DeleteAsync(string id)
         {
-            var botruyen = await _context.BoTruyens.FindAsync(id);
-            botruyen.Active = false;
-            _context.BoTruyens.Update(botruyen);
-            await _context.SaveChangesAsync();
+            var author = await _context.BoTruyens.FindAsync(id);
+            if (author != null)
+            {
+                _context.BoTruyens.Remove(author);
+                await _context.SaveChangesAsync();
+            }
         }
 
         public async Task<IEnumerable<BoTruyen>> GetAllByTopic(string name)

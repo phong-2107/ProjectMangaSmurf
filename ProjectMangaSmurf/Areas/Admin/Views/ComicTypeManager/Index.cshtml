@@ -16,7 +16,7 @@
 <div class="content">
     <div class="page-header d-flex justify-content-between align-items-center">
         <div class="page-title">
-            <h4>Danh Sách Loại Truyện</h4>
+            <h4><i class="fa-solid fa-book-skull"></i> Danh Sách Loại Truyện</h4>
             <h6>Quản lý danh sách loại truyện</h6>
         </div>
         <div class="page-btn">
@@ -31,10 +31,7 @@
             <div class="table-top">
                 <div class="search-set">
                     <div class="search-path">
-                        <a class="btn btn-filter" id="filter_search">
-                            <img src="~/img/icons/filter.svg" alt="img">
-                            <span><img src="~/img/icons/closes.svg" alt="img"></span>
-                        </a>
+      
                     </div>
                     <div class="search-input">
                         <a class="btn btn-searchset">
@@ -42,20 +39,7 @@
                         </a>
                     </div>
                 </div>
-                <div class="wordset">
-                    <ul>
-                        <li>
-                            <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf">
-                                <img src="~/img/icons/pdf.svg" alt="img">
-                            </a>
-                        </li>
-                        <li>
-                            <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel">
-                                <img src="~/img/icons/excel.svg" alt="img">
-                            </a>
-                        </li>
-                    </ul>
-                </div>
+               
             </div>
 
             <div class="card mb-0" id="filter_inputs">
@@ -141,10 +125,10 @@
                                     <a asp-area="Admin" asp-controller="ComicTypeManager" asp-action="Detail" asp-route-id="@type.IdLoai" class="class=" me-3">
                                         <img src="~/img/icons/eye.svg" alt="img">
                                     </a>
-                                    <a asp-area="Admin" asp-controller="ComicTypeManager" asp-action="Edit" asp-route-id="@type.IdLoai" class="class=" me-3">
+                                    <a asp-area="Admin" asp-controller="ComicTypeManager" asp-action="Update" asp-route-id="@type.IdLoai" class="class=" me-3">
                                         <img src="~/img/icons/edit.svg" alt="img">
                                     </a>
-                                    <a asp-area="Admin" asp-controller="ComicTypeManager" asp-action="Delete" asp-route-id="@type.IdLoai" class="class=" me-3">
+                                    <a class="delete-type me-3" data-product-id="@type.IdLoai" href="javascript:void(0);">
                                         <img src="~/img/icons/delete.svg" alt="img">
                                     </a>
                                 </td>
@@ -157,3 +141,46 @@
         </div>
     </div>
 </div>
+<script>
+    $(document).ready(function () {
+        $('.delete-type').click(function () {
+            var productId = $(this).data('product-id');
+            Swal.fire({
+                title: "Are you sure you want to delete this Type ?",
+                text: `This action cannot be undone and will remove all related data for ID ${productId}.`,
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#007bff",  // Typically the primary button color in Bootstrap is blue
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, delete everything!",
+                confirmButtonClass: "btn btn-primary",  // Use the primary class for the confirm button
+                cancelButtonClass: "btn btn-danger ml-1",
+                buttonsStyling: false
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: `/Admin/ComicTypeManager/DeleteConfirmed/${productId}`,
+                        type: 'POST',
+                        data: { id: productId },
+                        success: function (response) {
+                            Swal.fire(
+                                'Deleted!',
+                                'All related data have been successfully deleted.',
+                                'success'
+                            );
+                            location.reload(); // Reloads the page to reflect the changes
+                        },
+                        error: function (xhr, status, error) {
+                            Swal.fire(
+                                'Error!',
+                                'Failed to delete  and related data cause there are one or more comic under control of this types. Please try to delete them fisrt and try again.',
+                                'error'
+                            );
+                        }
+                    });
+                }
+            });
+        });
+    });
+</script>
+

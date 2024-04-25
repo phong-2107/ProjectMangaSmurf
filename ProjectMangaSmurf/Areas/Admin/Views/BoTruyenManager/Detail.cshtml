@@ -69,14 +69,21 @@
         .button-group form {
             margin-right: 10px; /* Ensure spacing between buttons */
         }
+
+    .related-comic-series {
+        background-color: #1b2850;
+        color: white;
+        border-radius: 15px;
+        padding: 10px 15px;
+    }
 </style>
 
 <div class="content">
     <div class="page-header">
         <div class="page-title">
             <div class="action-page">
-                <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="Index">Trang Chủ </a>
-                <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="ViewList"> \ List Truyện </a>
+                <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="Index">HOME PAGE</a>
+                <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="ViewList"> \ LIST COMIC </a>
                 <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="Detail" asp-route-id="@Model.IdBo"> \ COMIC : @Model.TenBo</a>
             </div>
 
@@ -133,25 +140,24 @@
                                 <div class="button-group">
                                     <form asp-action="ToggleActive" asp-controller="BoTruyenManager" asp-route-id="@Model.IdBo" method="post">
                                         <button type="submit" class="btn-custom @(Model.Active ? "" : "green")">
-                                            <i class="fa-regular fa-eye"></i>
-                                            @(Model.Active ? "Set to Inactive" : "Set to Active")
+                                            <i class="fa-regular fa-eye"></i>   @(Model.Active ? "Set to Inactive" : "Set to Active")
+                                            
                                         </button>
                                     </form>
 
                                     <form asp-action="TogglePremium" asp-controller="BoTruyenManager" asp-route-id="@Model.IdBo" method="post">
                                         <button type="submit" class="btn-custom @(Model.TtPemium ? "" : "green")">
-                                            <i class="fa-solid fa-circle-dollar-to-slot"></i>
-                                            @(Model.TtPemium ? "Remove from Premium" : "Add to Premium" )
+                                            <i class="fa-solid fa-circle-dollar-to-slot"></i>   @(Model.TtPemium ? "Remove from Premium" : "Add to Premium" )
                                         </button>
                                     </form>
 
                                     <form asp-action="Update" asp-controller="BoTruyenManager" asp-route-id="@Model.IdBo" method="get">
-                                        <button type="submit" class="btn-update"><i class="fa-sharp fa-solid fa-arrows-up-to-line"></i>Go to Update</button>
+                                        <button type="submit" class="btn-update"><i class="fa-sharp fa-solid fa-arrows-up-to-line"></i>  Go to Update</button>
                                     </form>
 
                                     <form asp-action="AddChapter" asp-controller="BoTruyenManager" asp-route-id="@Model.IdBo" method="get">
                                         
-                                        <button type="submit" class="btn-update"><i class="fa-solid fa-plus"></i> Upload new Chapter</button>
+                                        <button type="submit" class="btn-update"><i class="fa-solid fa-plus"></i>  Upload new Chapter</button>
                                     </form>
                                 </div>
 
@@ -184,7 +190,8 @@
     </div>
     <div class="table-responsive">
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h3 class="mb-0">Related Chapter of @Model.TenBo</h3>
+            <h4 class="mb-0 related-comic-series"><i class="fa-solid fa-tag"></i> Related Comic Series Of @Model.TenBo</h4>
+
         </div>
         <table class="table datanew">
             <thead>
@@ -222,9 +229,10 @@
                             <a asp-area="Admin" asp-controller="ChapterManager" asp-action="Update" asp-route-id="@item.SttChap && @item.IdBo" class="me-3">
                                 <img src="~/img/icons/edit.svg" alt="Edit">
                             </a>
-                            <a class="delete-product me-3" data-product-id="@item.SttChap && @item.IdBo" href="javascript:void(0);">
+                            <a class="delete-chapter" data-idbo="@item.IdBo" data-sttchap="@item.SttChap" href="javascript:void(0);">
                                 <img src="~/img/icons/delete.svg" alt="Delete">
                             </a>
+
                         </td>
                     </tr>
                 }
@@ -236,3 +244,39 @@
         </table>
     </div>
 </div>
+
+<script>
+    $('.delete-chapter').click(function () {
+        var idBo = $(this).data('idbo');
+        var sttChap = $(this).data('sttchap');
+
+        Swal.fire({
+            title: "Are you sure you want to delete this chapter?",
+            text: "This action cannot be undone and will remove all related data.",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: `/Admin/ChapterManager/DeleteConfirmed/${idBo}/${sttChap}`,
+                    type: 'POST',
+                    success: function (response) {
+                        if (response.success) {
+                            Swal.fire('Deleted!', response.message, 'success');
+                            location.reload(); // Or other UI update logic
+                        } else {
+                            Swal.fire('Error!', response.message, 'error');
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        Swal.fire('Error!', 'Failed to delete. Please try again.', 'error');
+                    }
+                });
+            }
+        });
+    });
+
+</script>

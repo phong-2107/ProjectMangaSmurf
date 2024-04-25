@@ -14,7 +14,8 @@ namespace ProjectMangaSmurf.Repository
         Task<LoaiTruyen> GetLoaiByIdAsync(string id);
         Task<LoaiTruyen> GetLoaiByNameAsync(string name);
 
-        List<string> GetListLoaiAsync(string id);
-        string GenerateLoaiTruyenId();
+        Task<List<string>> GetListLoaiAsync(string id);
+
+        Task<string> GenerateLoaiTruyenId();
     }
 }

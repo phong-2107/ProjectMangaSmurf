@@ -236,8 +236,10 @@ namespace ProjectMangaSmurf.Data
             modelBuilder.Entity<Footer>(entity =>
             {
                 entity
-                    .HasNoKey()
-                    .ToTable("Footer");
+                    .HasKey(e => e.Giayphep);
+
+                entity.ToTable("Footer");
+
                 entity.Property(e => e.Dieukhoan)
                     .HasColumnType("text")
                     .HasColumnName("dieukhoan");
@@ -382,9 +384,9 @@ namespace ProjectMangaSmurf.Data
 
             modelBuilder.Entity<Premium>(entity =>
             {
-                entity
-                    .HasNoKey()
-                    .ToTable("Premium");
+               entity.HasKey(e => e.GiaThanh);
+
+                entity.ToTable("Premium");
 
                 entity.Property(e => e.Active).HasColumnName("active");
                 entity.Property(e => e.GiaThanh)

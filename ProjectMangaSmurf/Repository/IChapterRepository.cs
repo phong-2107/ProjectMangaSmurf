@@ -17,7 +17,8 @@ namespace ProjectMangaSmurf.Repository
         Chapter GetChapterEarliestByIdAsync(string id);
         Task AddAsync(Chapter chapter);
         Task AddAsyncCTHD(CtHoatDong ct);
-
+        Task<CtChapter> GetCTChapterByIdAsync(string idBo, int sttChap, int soTrang);
+        Task UpdateCTChapterAsync(CtChapter ctChapter);
         Task AddAsyncCT(CtChapter CTs);
         Task UpdateAsync(Chapter chapter);
         Task DeleteAsync(string id);
@@ -27,5 +28,12 @@ namespace ProjectMangaSmurf.Repository
         Task ReplaceImageAsync(string idBo, int sttChap, int soTrang, IFormFile newImage);
         Task DeletePageAndUpdateSubsequentAsync(string idBo, int sttChap, int soTrang);
         Task<int> GetMaxPageNumber(string idBo, int sttChap);
+        Task DeleteCTChapterAsync(CtChapter ctChapter);
+        Task DeleteChapterAsync(Chapter chapter);
+        // In IChapterRepository interface
+        Task<IEnumerable<CtHoatDong>> GetAllCtHoatDongByIdAsync(string idBo, int sttChap);
+        // In IChapterRepository interface
+        Task DeleteCtHoatDongAsync(CtHoatDong ctHoatDong);
+
     }
 }
