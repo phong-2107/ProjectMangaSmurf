@@ -19,18 +19,19 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
             _logger = logger;
         }
 
+        // GET: Displays existing data to be edited
         public IActionResult Edit()
         {
             try
             {
-                // Directly fetch the first or default record assuming only one record is present
-                var footer = _context.Footers.FirstOrDefault() ?? new Footer();
-                var premium = _context.Premia.FirstOrDefault() ?? new Premium();
+                // Fetch existing records to display for editing
+                var footer = _context.Footers.FirstOrDefault();
+                var premium = _context.Premia.FirstOrDefault();
 
                 var viewModel = new EditViewModel
                 {
-                    Footer = footer,
-                    Premium = premium
+                    Footer = footer ?? new Footer(),
+                    Premium = premium ?? new Premium()
                 };
 
                 return View(viewModel);
@@ -42,6 +43,7 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
             }
         }
 
+        // POST: Updates the data by first removing all entries and adding new ones
         [HttpPost]
         public IActionResult Edit(EditViewModel model)
         {
@@ -50,37 +52,34 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
                 return View(model);
             }
 
-            try
+            using (var transaction = _context.Database.BeginTransaction())
             {
-                // Assume only one record exists, and directly update or create it
-                var existingFooter = _context.Footers.FirstOrDefault();
-                var existingPremium = _context.Premia.FirstOrDefault();
+                try
+                {
+                    // Delete all existing records
+                    var footers = _context.Footers.ToList();
+                    _context.Footers.RemoveRange(footers);
 
-                if (existingFooter != null)
-                {
-                    _context.Entry(existingFooter).CurrentValues.SetValues(model.Footer);
-                }
-                else
-                {
+                    var premia = _context.Premia.ToList();
+                    _context.Premia.RemoveRange(premia);
+
+                    _context.SaveChanges(); // Ensure deletion is completed before adding new entries
+
+                    // Add new records from the provided model data
                     _context.Footers.Add(model.Footer);
-                }
-
-                if (existingPremium != null)
-                {
-                    _context.Entry(existingPremium).CurrentValues.SetValues(model.Premium);
-                }
-                else
-                {
                     _context.Premia.Add(model.Premium);
-                }
 
-                _context.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError("Failed to update: {Message}", ex.Message);
-                return View("Error");
+                    _context.SaveChanges(); // Save new entries
+                    transaction.Commit();
+
+                    return RedirectToAction("Index", "BotruyenManager");
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    _logger.LogError("Failed to update with new data: {Message}", ex.Message);
+                    return View("Error");
+                }
             }
         }
     }

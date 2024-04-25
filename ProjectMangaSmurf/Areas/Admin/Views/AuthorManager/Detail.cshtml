@@ -58,6 +58,13 @@
         width: 100%;
         padding-bottom: 10px; /* Padding at the bottom of the container */
     }
+
+    .related-comic-series {
+        background-color: #1b2850;
+        color: white;
+        border-radius: 15px;
+        padding: 10px 15px;
+    }
 </style>
 
 
@@ -98,24 +105,22 @@
                                 <h6>@Model.Active</h6>
                             </li>
                             <li>
-                                <h4>Author Licence (Active)</h4>
-                                <h6>@Model.Active</h6>
                                 <div class="center-content">
                                     @if (Model.Active.HasValue && Model.Active.Value)
                                     {
                                         <form asp-action="ToggleActive" asp-controller="AuthorManager" asp-route-id="@Model.IdTg" method="post">
-                                            <button type="submit" class="btn btn-danger btn-space">Turn Active to False</button>
+                                            <button type="submit" class="btn btn-danger btn-space"><i class="fa-solid fa-ban"></i> Turn Active to False</button>
                                         </form>
                                     }
                                     else if (Model.Active.HasValue && !Model.Active.Value)
                                     {
                                         <form asp-action="ToggleActive" asp-controller="AuthorManager" asp-route-id="@Model.IdTg" method="post">
-                                            <button type="submit" class="btn btn-success btn-space">Turn Active to True</button>
+                                            <button type="submit" class="btn btn-success btn-space"><i class="fa-brands fa-bandcamp"></i> Turn Active to True</button>
                                         </form>
                                     }
                                     <td>
-                                        <form asp-action="Update" asp-controller="AuthorManager" asp-route-id="@Model.IdTg" method="post">
-                                            <button type="submit" class="btn btn-primary btn-space">Go to update</button>
+                                        <form asp-action="Update" asp-controller="AuthorManager" asp-route-id="@Model.IdTg" method="get">
+                                            <button type="submit" class="btn btn-primary btn-space"><i class="fa-solid fa-pen-to-square"></i> Go to Update</button>
                                         </form>
                                     </td>
                               
@@ -149,7 +154,7 @@
     </div>
     <div class="table-responsive">
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h3 class="mb-0">Related Comic Series of @Model.TenTg</h3>
+            <h4 class="mb-0 related-comic-series"><i class="fa-solid fa-tag"></i> Related Comic Series Of @Model.TenTg</h4>
         </div>
         <table class="table datanew">
             <thead>

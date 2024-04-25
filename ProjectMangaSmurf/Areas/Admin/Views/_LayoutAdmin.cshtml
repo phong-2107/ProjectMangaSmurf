@@ -128,51 +128,49 @@
                         <li class="submenu" style="text-decoration:none;">
                             <a>
                                 <img src="/img/icons/product.svg" alt="img">
-                                <span> Thêm Mới</span>
+                                <span> Upload Data</span>
                                 <span class="menu-arrow"></span>
                             </a>
                             <ul>
                                 <li>
-                                    <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="Add">Thêm Bộ truyện</a>
+                                    <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="Add">Add New Comic</a>
                                 </li>
                                 <li>
-                                    <a asp-area="Admin" asp-controller="AuthorManager" asp-action="Add">Thêm Tác giả</a>
+                                    <a asp-area="Admin" asp-controller="AuthorManager" asp-action="Add">Add New Comic Author</a>
                                 </li>
                                 <li>
-                                    <a asp-area="Admin" asp-controller="ComicType" asp-action="Add">Thêm Loại truyện</a>
+                                    <a asp-area="Admin" asp-controller="ComicTypeManager" asp-action="Add">Add New Comic Types</a>
                                 </li>
                                 <li>
-                                    <a asp-area="Admin" asp-controller="StaffManager" asp-action="Add">Thêm Nhân Viên</a>
+                                    <a asp-area="Admin" asp-controller="StaffManager" asp-action="Add">Add New Staff Account</a>
                                 </li>
-                                <li>
-                                    <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="Update">Thêm Loại truyện</a>
-                                </li>
+                            
                             </ul>
                         </li>
                         <li class="submenu" style="text-decoration:none;">
                             <a>
                                 <img src="/img/icons/time.svg" alt="img">
-                                <span> Quản lý</span>
+                                <span> Manage Service</span>
                                 <span class="menu-arrow"></span>
                             </a>
                             <ul>
                                 <li>
-                                    <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="ViewList">Quản lý Bộ truyện</a>
+                                    <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="ViewList">Manage Comics List</a>
                                 </li>
                                 <li>
-                                    <a asp-area="Admin" asp-controller="CusManager" asp-action="ViewList">Quản lý Khách hàng</a>
+                                    <a asp-area="Admin" asp-controller="CusManager" asp-action="ViewList">Manage Customers List</a>
                                 </li>
                                 <li>
-                                    <a asp-area="Admin" asp-controller="StaffManger" asp-action="Index">Quản lý Nhân viên</a>
+                                    <a asp-area="Admin" asp-controller="StaffManger" asp-action="Index">Manage Staff List</a>
                                 </li>
                                 <li>
-                                    <a asp-area="Admin" asp-controller="AuthorManager" asp-action="Index">Quản lý Tác giả</a>
+                                    <a asp-area="Admin" asp-controller="AuthorManager" asp-action="Index">Manage Author List</a>
                                 </li>
                                 <li>
-                                    <a asp-area="Admin" asp-controller="ComicTypeManager" asp-action="Index">Quản lý Loại truyện</a>
+                                    <a asp-area="Admin" asp-controller="ComicTypeManager" asp-action="Index">Manage Comic-Types List</a>
                                 </li>
                                 <li>
-                                    <a asp-area="Admin" asp-controller="CusManager" asp-action="ViewOrderList">Quản lý Giao Dịch</a>
+                                    <a asp-area="Admin" asp-controller="CusManager" asp-action="ViewOrderList">Manage Payment-Order List</a>
                                 </li>
                                 <li>
                                     <a asp-area="Admin" asp-controller="WebManager" asp-action="Edit">Config Website</a>
@@ -212,8 +210,8 @@
             $('.delete-product').click(function () {
                 var productId = $(this).data('product-id');
                 Swal.fire({
-                    title: "Bạn có chắc?",
-                    text: `Xóa Bộ truyện số ${productId}`,
+                    title: "Are you sure?",
+                    text: `Delete Comic ID ${productId}`,
                     type: "warning",
                     showCancelButton: !0,
                     confirmButtonColor: "#3085d6",
@@ -232,7 +230,7 @@
                             success: function (response) {
                                 Swal.fire(
                                     'Deleted!',
-                                    'Đã xóa thành công bộ truyện',
+                                    'Successfully',
                                     'success'
                                 );
                                 location.reload();

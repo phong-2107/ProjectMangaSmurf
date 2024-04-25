@@ -58,13 +58,13 @@ namespace ProjectMangaSmurf.Repository
             return await _context.LoaiTruyens.FirstOrDefaultAsync(p => p.TenLoai.Trim().Equals(name.Trim()));
         }
 
-        public List<string> GetListLoaiAsync(string id)
+        public async Task<List<string>> GetListLoaiAsync(string id)
         {
             var list = _context.CtLoaiTruyens.Where(p => p.IdBo == id.Trim()).ToList();
             List<string> listLoai = new List<string>();
             foreach (var item in list)
             {
-                var loai = _context.LoaiTruyens.FirstOrDefault(p => p.IdLoai == item.IdLoai);
+                var loai = await _context.LoaiTruyens.FirstOrDefaultAsync(p => p.IdLoai == item.IdLoai);
                 if (loai != null)
                 {
                     listLoai.Add(loai.TenLoai);
@@ -72,20 +72,21 @@ namespace ProjectMangaSmurf.Repository
             }
             return listLoai;
         }
+
         public async Task<List<BoTruyen>> GetAllBoTruyensAsync()
         {
             return await _context.BoTruyens.ToListAsync();
         }
-        public string GenerateLoaiTruyenId()
+        public async Task<string> GenerateLoaiTruyenId()
         {
             string idPrefix = "LT";
-            int idLength = 8;
+            int idLength = 3;
             string maxId = _context.LoaiTruyens.Select(lt => lt.IdLoai)
                                                .OrderByDescending(id => id)
                                                .FirstOrDefault();
             if (maxId == null)
             {
-                return idPrefix + "00000001";
+                return idPrefix + "001";
             }
             else
             {

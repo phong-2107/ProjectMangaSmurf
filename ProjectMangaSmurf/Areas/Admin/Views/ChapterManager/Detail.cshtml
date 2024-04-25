@@ -65,7 +65,7 @@
         height: 30px;
         border-radius: 50%; /* Rounded */
         border: 1px solid black; /* Black border */
-        background-color: rgba(128, 128, 128, 0.5); /* Semi-transparent gray */
+        background-color: aliceblue /* Semi-transparent gray */
         background-size: cover;
         background-position: center;
         cursor: pointer;
@@ -285,21 +285,9 @@
                 <img src="@item.AnhTrang" alt="Comic Page" class="comic-page">
                 <span class="page-number">@item.SoTrang</span>
                 <div class="button-bar">
-                        <div class="icon-button refresh-icon" data-idbo="@item.IdBo" data-sttchap="@item.SttChap" data-sotrang="@item.SoTrang">
-                            <img src="/img_admin/re.png">
-                        </div>
-                    <div class="icon-button delete-icon" onclick="deletePage('@item.IdBo', '@item.SttChap', '@item.SoTrang')">
-                        <img src="/img_admin/bin.png">
-                    </div>
                     <div class="icon-button toggle-view-icon" onclick="toggleActive('@item.IdBo', '@item.SttChap', '@item.SoTrang')">
-                        <img src="/img_admin/eye.png">
+                            <i class="fa-solid fa-eye"></i>
                     </div>
-                    <div class="icon-button edit-icon" onclick="replaceImage('@item.IdBo', '@item.SttChap', '@item.SoTrang')">
-                        <img src="/img_admin/pa.png">
-                    </div>
-                    <!-- Additional elements for page number update -->
-                    <input type="text" class="update-input" style="display:none;" placeholder="New page #">
-                    <button class="confirm-update" style="display:none;" onclick="confirmUpdate(this, '@item.IdBo', '@item.SttChap', '@item.SoTrang')">Confirm</button>
                 </div>
             </div>
 

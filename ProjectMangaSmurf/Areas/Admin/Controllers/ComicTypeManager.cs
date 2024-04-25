@@ -59,24 +59,23 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
             return View(comicType);
         }
 
-
-        // Display form to add a new comic type
-        public IActionResult Add()
+        public async Task<IActionResult> Add()
         {
-            return View();
+            ViewBag.Id = await _comicTypeRepository.GenerateLoaiTruyenId(); // Call without any arguments
+            return View(new LoaiTruyen()); // Assuming TacGium is the author model
         }
 
-        // Handle adding a new comic type
         [HttpPost]
-        public async Task<IActionResult> Add(LoaiTruyen comicType)
+        public async Task<IActionResult> Add(LoaiTruyen author)
         {
             if (ModelState.IsValid)
             {
-                await _comicTypeRepository.AddAsync(comicType);
+                await _comicTypeRepository.AddAsync(author);
                 return RedirectToAction(nameof(Index));
             }
-            return View(comicType);
+            return View(author);
         }
+
 
         // Display form to update a comic type
         public async Task<IActionResult> Update(string id)
@@ -107,15 +106,13 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
         }
 
         // Handle deletion of a comic type
-        public async Task<IActionResult> Delete(string id)
+        [HttpPost]
+        public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            var comicType = await _comicTypeRepository.GetLoaiByIdAsync(id);
-            if (comicType != null)
-            {
-                await _comicTypeRepository.DeleteAsync(id);
-                return RedirectToAction(nameof(Index));
-            }
-            return NotFound();
+            await _comicTypeRepository.DeleteAsync(id);
+            return RedirectToAction(nameof(Index));
         }
     }
+
+  
 }

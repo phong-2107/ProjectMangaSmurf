@@ -35,6 +35,14 @@
         .action-page a:hover {
             color: #FE820E;
         }
+
+    .related-comic-series {
+        background-color: #1b2850;
+        color: white;
+        border-radius: 15px;
+        padding: 10px 15px;
+    }
+
 </style>
 
 
@@ -76,17 +84,17 @@
                             @if (Model.Active)
                             {
                                 <form asp-action="ToggleActive" asp-controller="ComicTypeManager" asp-route-id="@Model.IdLoai" method="post">
-                                    <button type="submit" class="btn btn-danger btn-space">Turn Active to False</button>
+                                    <button type="submit" class="btn btn-danger btn-space"><i class="fa-solid fa-ban"></i> Turn Active to False</button>
                                 </form>
                             }
                             else
                             {
                                 <form asp-action="ToggleActive" asp-controller="ComicTypeManager" asp-route-id="@Model.IdLoai" method="post">
-                                    <button type="submit" class="btn btn-success btn-space">Turn Active to True</button>
+                                    <button type="submit" class="btn btn-success btn-space"><i class="fa-brands fa-bandcamp"></i> Turn Active to True</button>
                                 </form>
                             }
-                            <form asp-action="Update" asp-controller="ComicTypeManager" method="get" style="display: inline-block;">
-                                <button type="submit" class="btn btn-primary btn-top-space">Go to Update</button>
+                            <form asp-action="Update" asp-controller="ComicTypeManager" asp-route-id="@Model.IdLoai"  method="get" style="display: inline-block;">
+                                <button type="submit" class="btn btn-primary btn-top-space"><i class="fa-solid fa-pen-to-square"></i> Go to Update</button>
                             </form>
 
                         </ul>
@@ -113,13 +121,7 @@
     </div>
     <div class="table-responsive">
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h3 class="mb-0">Related Comic Series</h3>
-                <div>
-                    <button class="btn btn-primary" onclick="applyFilter('all')">See All</button>
-                    <button class="btn btn-success" onclick="applyFilter('active')">Activating</button>
-                    <button class="btn btn-danger" onclick="applyFilter('banned')">Banning</button>
-                    <button class="btn btn-premium" onclick="applyFilter('premium')" id="premium-btn">Premium Stats</button>
-                </div>
+            <h4 class="mb-0 related-comic-series"><i class="fa-solid fa-tag"></i> Related Comic Series</h4>
 
         </div>
         <table class="table datanew">

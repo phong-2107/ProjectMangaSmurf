@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using ProjectMangaSmurf.Models;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.EntityFrameworkCore;
+using Org.BouncyCastle.Crypto.Macs;
 
 namespace ProjectMangaSmurf.Areas.Admin.Controllers
 {
@@ -307,9 +308,19 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
+            // Lấy bộ truyện cần xóa dựa trên ID
+            var boTruyen = await _botruyenrepository.GetByIdAsync(id);
+            if (boTruyen == null)
+            {
+                return NotFound();
+            }
+            await _botruyenrepository.DeleteAllChaptersAndDetails(id);
+
             await _botruyenrepository.DeleteAsync(id);
-            return RedirectToAction(nameof(Index));
+
+            return RedirectToAction(nameof(ViewList));
         }
+
 
         private async Task<string> SaveImage(IFormFile image)
         {
