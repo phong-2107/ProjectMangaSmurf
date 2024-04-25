@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using ProjectMangaSmurf.Models;
 using ProjectMangaSmurf.Repository;
 
@@ -91,8 +92,9 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
             return View(author);
         }
 
-        public IActionResult Add()
+        public async Task<IActionResult> Add()
         {
+            ViewBag.Id = await _authorRepository.GenerateAuthorId(); // Call without any arguments
             return View(new TacGium()); // Assuming TacGium is the author model
         }
 
@@ -109,29 +111,96 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
 
         public async Task<IActionResult> Update(string id)
         {
+            if (string.IsNullOrEmpty(id))
+            {
+                return NotFound();
+            }
+
             var author = await _authorRepository.GetAuthorById(id);
             if (author == null)
             {
                 return NotFound();
             }
+
             return View(author);
         }
 
+
         [HttpPost]
-        public async Task<IActionResult> Update(string id, TacGium author)
+        public async Task<IActionResult> Update(TacGium author)
         {
-            if (id != author.IdTg) // Assuming 'Id' is the identifier in TacGium
+            if (!ModelState.IsValid)
+            {
+                return View(author);
+            }
+
+            // Check if Active status is being set to False
+            if (author.Active == false)
+            {
+                // Fetch all comics by this author
+                var comics = await _botruyen.GetComicsByAuthorId(author.IdTg);
+
+                // Update all comics' active status to match the author's new status
+                if (comics != null)
+                {
+                    foreach (var comic in comics)
+                    {
+                        comic.Active = false;
+                        await _botruyen.UpdateAsync(comic);
+                    }
+                }
+            }
+
+            try
+            {
+                await _authorRepository.UpdateAsync(author);
+                TempData["Message"] = "Author updated successfully!";
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                // Log the error
+                ModelState.AddModelError("", "Unable to save changes.");
+                return View(author);
+            }
+
+        }
+
+
+        private bool AuthorExists(string id)
+        {
+            return _authorRepository.GetAuthorById(id) != null;
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteConfirmed(string id)
+        {
+            var author = await _authorRepository.GetAuthorById(id);
+            if (author == null)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            // Fetch all comics by this author
+            var comics = await _botruyen.GetComicsByAuthorId(id);
+            if (comics != null)
             {
-                await _authorRepository.UpdateAsync(author);
-                return RedirectToAction(nameof(Index));
+                foreach (var comic in comics)
+                {
+                    // Assuming a method to delete all chapters and details of a comic
+                    await _authorRepository.DeleteAllChaptersAndDetails(comic.IdBo);
+                    // Now delete the comic
+                    await _authorRepository.DeleteAsync(comic.IdBo);
+                }
             }
-            return View(author);
+
+            // Finally, delete the author
+            await _authorRepository.DeleteAsync(id);
+            return RedirectToAction(nameof(Index));
         }
+
+
 
         public async Task<IActionResult> Delete(string id)
         {

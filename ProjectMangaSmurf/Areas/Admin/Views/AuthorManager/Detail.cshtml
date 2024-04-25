@@ -113,6 +113,12 @@
                                             <button type="submit" class="btn btn-success btn-space">Turn Active to True</button>
                                         </form>
                                     }
+                                    <td>
+                                        <form asp-action="Update" asp-controller="AuthorManager" asp-route-id="@Model.IdTg" method="post">
+                                            <button type="submit" class="btn btn-primary btn-space">Go to update</button>
+                                        </form>
+                                    </td>
+                              
                                     <div class="notice">
                                         Notice: Changing the activation status will unpublish/publish all of @Model.TenTg's comics.
                                     </div>

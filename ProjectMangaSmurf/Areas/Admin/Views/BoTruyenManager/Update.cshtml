@@ -5,166 +5,272 @@
 
 <style>
     .preview {
-        max-width: 50%;
+        display: none; /* Initially hidden, shown when file is loaded */
+        width: 100%; /* Ensure it covers the area */
+        height: 100%; /* Ensure it covers the area */
+        object-fit: contain; /* Image will be scaled to maintain its aspect ratio while fitting within the element’s content box */
+        border-radius: 5px; /* Rounded corners */
+    }
+
+    .image-upload {
+        position: relative;
+        width: 500px; /* Fixed width */
+        height: 500px; /* Fixed height */
+        border: 2px dashed #ccc;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #f8f8f8;
+        overflow: hidden;
+    }
+
+    .image-uploads {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        background: rgba(255, 255, 255, 0.75); /* Slightly transparent white background */
+        z-index: 1; /* Above the image */
+    }
+
+    .imgInput {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+        opacity: 0; /* Invisible but functional */
+        z-index: 2; /* Ensures it's above the preview image for clicks */
+    }
+
+    .btn-cancel {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background-color: red;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        width: 30px;
+        height: 30px;
+        font-size: 16px;
+        display: none; /* Initially hidden */
+    }
+
+        .btn-cancel:hover {
+            background-color: darkred;
+        }
+    /* Hover effect for image uploads area */
+    .image-upload:hover .image-uploads {
+        background-color: #e9e9e9;
+    }
+
+    /* Adjusting padding and margins for columns */
+    .col-lg-6, .col-lg-3 {
+        padding: 0 15px;
+        margin-bottom: 20px;
+    }
+
+    /* Styling for form groups */
+    .form-group {
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* Button styling */
+    .btn {
+        padding: 10px 20px;
+        margin: 5px 0;
+        width: auto;
     }
 </style>
 
 <div class="content">
     <div class="page-header">
         <div class="page-title">
-            <h4>Update Bộ truyện</h4>
-            <h6>Cập nhật                                                                                                                                                    bộ truyện</h6>
+            <h4>Update Comic Series</h4>
+            <h6>Update details of the comic series</h6>
         </div>
     </div>
     <div class="card">
         <div class="card-body">
-            <form asp-action="Add" method="post" enctype="multipart/form-data" class="row">
+            <form asp-action="Update" method="post" enctype="multipart/form-data" class="row">
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
-                        <label asp-for="TenBo">Product Name</label>
-                        <input asp-for="TenBo" type="text" placeholder="Tên bộ truyện">
+                        <label asp-for="TenBo">Comic Series Name</label>
+                        <input asp-for="TenBo" type="text" placeholder="Enter the name of the comic series" class="form-control">
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
-                        <label asp-for="Dotuoi">Độ tuổi</label>
-                        <input asp-for="Dotuoi" type="text" placeholder="5,6,7...">
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-6 col-12">
-                    <div class="form-group">
-                        <label asp-for="listloai">Loại truyện</label>
-                        <select asp-for="listloai" asp-items="@ViewBag.types" multiple class="select">
-                            <option>Add Loại truyện</option>
+                        <label asp-for="Dotuoi">Age Rating</label>
+                        <select asp-for="Dotuoi" class="select">
+                            <option value="0">[E] Everyone</option>
+                            <option value="3">[C] Child 3+</option>
+                            <option value="12">[T] Teenagers</option>
+                            <option value="16">[R] Violent-Sexually</option>
+                            <option value="18">[R18] Audutl only</option>
                         </select>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
-                        <label asp-for="IdTg">Tác Giả</label>
-                        <select asp-for="IdTg" asp-items="@ViewBag.TGs" class="select">
-                            <option>Add Tác giả</option>
+                        <label asp-for="listloai">Types of this Comic</label>
+                        <select asp-for="listloai" asp-items="ViewBag.types" multiple="multiple" class="select" name="listloai">
+                            @foreach (var type in ViewBag.types)
+                            {
+                                <option value="@type.Value">@type.Text</option>
+                            }
+                        </select>
+
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-6 col-12">
+                    <div class="form-group">
+                        <label asp-for="IdTg">Author</label>
+                        <select asp-for="IdTg" asp-items="@ViewBag.TGs" class="form-control">
+                            <option>Select Author</option>
                         </select>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-6 col-12">
-                    <label asp-for="TtPemium">Truyện Premium</label>
-                    <select asp-for="TtPemium" class="select">
-                        <option>true</option>
-                        <option>false</option>
+                    <label asp-for="TtPemium">Premium Status</label>
+                    <select asp-for="TtPemium" class="form-control">
+                        <option value="true">Yes</option>
+                        <option value="false">No</option>
                     </select>
                 </div>
                 <div class="col-lg-3 col-sm-6 col-12">
-                    <label asp-for="TrangThai">Category</label>
-                    <select asp-for="TrangThai" class="select">
-                        <option>Hoàn Thành</option>
-                        <option>Đang cập nhật</option>
-                        <option>Sắp ra mắt</option>
-                        <option>Ngừng phát hành</option>
+                    <label asp-for="TrangThai">Status</label>
+                    <select asp-for="TrangThai" class="form-control">
+                        <option value="0">0-End/Finish</option>
+                        <option value="1">1-Updating</option>
+                        <option value="3">2-Coming Soon</option>
+                        <option value="3">3-Stopped Publish</option>
                     </select>
                 </div>
 
                 <div class="col-lg-12">
                     <div class="form-group">
-                        <label asp-for="Mota">Mô tả</label>
+                        <label asp-for="Mota">Description</label>
                         <textarea asp-for="Mota" class="form-control"></textarea>
-                        <span asp-validation-for="Mota">Password</span>
+                        <span asp-validation-for="Mota" class="text-danger"></span>
                     </div>
                 </div>
-                @*
-                <div class="col-lg-12">
-                <div class="form-group">
-                <input asp-for="TkDanhgia" type="text" value="0.0" hidden>
-                <input asp-for="TkTheodoi" type="text" value="0" hidden>
-                <input asp-for="TongLuotXem" type="text" value="0" hidden>
-                <input asp-for="TtPemium" type="text" value="true" hidden>
-                <input asp-for="Active" type="text" value="true" hidden>
-                </div>
-                </div> *@
-
-                <div class="col-lg-6">
+                <div class="col-lg-6 col-sm-6">
                     <div class="form-group">
-                        <label asp-for="AnhBanner">Ảnh Banner</label>
-                        <div class="image-upload  d-flex flex-column justify-content-center align-center">
-
-                            <input type="file" asp-for="AnhBanner" class="imgInput" data-target="preview1">
-                            <img class="preview" id="preview1" src="#" alt="your image" />
-
-                            <div class="image-uploads">
-                                <img src="~/img/icons/upload.svg" alt="img">
-                                <h4>Chọn Ảnh Banner</h4>
+                        <label for="AnhBanner">Banner Image</label>
+                        <div class="image-upload" id="uploadBanner">
+                            <div class="image-uploads" onclick="document.getElementById('AnhBanner').click();">
+                                <img src="~/img/icons/upload.svg" alt="Upload Icon">
+                                <h4>Upload Banner</h4>
                             </div>
+                            <input type="file" id="AnhBanner" name="AnhBanner" class="imgInput" data-target="preview1" style="display:none;">
+                            <img class="preview" id="preview1" src="@Model.AnhBanner" alt="Banner preview" style="display:block;">
+                            <button type="button" class="btn-cancel" style="display:none;" onclick="revertChanges('preview1', 'AnhBanner')">X</button>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-6">
+                <div class="col-lg-6 col-sm-6">
                     <div class="form-group">
-                        <label asp-for="AnhBia">Ảnh Poster</label>
-                        <div class="image-upload d-flex flex-column justify-content-center align-center">
-
-                            <input type="file" asp-for="AnhBia" class="imgInput" data-target="preview2">
-                            <img class="preview" id="preview2" src="#" alt="your image" />
-
-                            <div class="image-uploads">
-                                <img src="~/img/icons/upload.svg" alt="img">
-                                <h4>Chọn Ảnh Poster</h4>
+                        <label for="AnhBia">Poster Image</label>
+                        <div class="image-upload" id="uploadPoster">
+                            <div class="image-uploads" onclick="document.getElementById('AnhBia').click();">
+                                <img src="~/img/icons/upload.svg" alt="Upload Icon">
+                                <h4>Upload Poster</h4>
                             </div>
+                            <input type="file" id="AnhBia" name="AnhBia" class="imgInput" data-target="preview2" style="display:none;">
+                            <img class="preview" id="preview2" src="@Model.AnhBia" alt="Poster preview" style="display:block;">
+                            <button type="button" class="btn-cancel" style="display:none;" onclick="revertChanges('preview2', 'AnhBia')">X</button>
                         </div>
                     </div>
                 </div>
+
                 <div asp-validation-summary="ModelOnly" class="col-lg-12 p-4 text-danger" style="font-size:20px; font-weight:600">
                 </div>
                 <div class="col-lg-12">
-                    <button @* href="javascript:void(0);" *@ type="submit" class="btn btn-submit me-2 update-product" data-product-id="@Model.IdBo" href="javascript:void(0);">Update</button>
-                    <button @* href="productlist.html" *@ class="btn btn-cancel">Cancel</button>
+                    <button type="submit" class="btn btn-primary me-2">Update</button>
+
+                    <a href="@Url.Action("Detail", "BoTruyenManager", new { area = "Admin", id = Model.IdBo })" class="btn btn-secondary">Back to Detail</a>
+
                 </div>
             </form>
         </div>
     </div>
 </div>
+
 <script>
-    function readURL(input, targetID) {
-        if (input.files && input.files[0]) {
-            var reader = new FileReader();
-
-            reader.onload = function (e) {
-                $('#' + targetID).attr('src', e.target.result);
+    $(document).ready(function () {
+        // Function to handle image previews
+        function readURL(input, targetID) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#' + targetID).attr('src', e.target.result).show();
+                    $('#' + targetID.replace('preview', 'btn-cancel')).show();
+                };
+                reader.readAsDataURL(input.files[0]);
             }
-            reader.readAsDataURL(input.files[0]);
         }
-    }
 
-    $(document).ready(function () {
-        $(".imgInput").change(function () {
-            var targetID = $(this).data('target');
-            readURL(this, targetID);
+        $('.imgInput').change(function () {
+            var previewID = $(this).data('target');
+            readURL(this, previewID);
         });
-    });
 
+        $('.image-uploads').click(function () {
+            $(this).siblings('.imgInput').click();
+        });
 
+        $('.btn-cancel').click(function () {
+            var previewID = $(this).data('target');
+            $('#' + previewID).attr('src', $('#' + previewID).data('original-src'));
+            $('#' + previewID).hide();
+            $(this).hide();
+            $('#' + previewID.replace('preview', 'imgInput')).val('');
+        });
 
-    $(document).ready(function () {
-        $('.update-product').click(function () {
-            var productId = $(this).data('product-id');
+        // Ensure correct handling of form submission
+        $('form').submit(function (event) {
+            event.preventDefault();
+            var form = $(this);
+            var formData = new FormData(form[0]); // Use form[0] to get the actual DOM form element
+
+            // Debugging: Log each FormData key and value to ensure data integrity
+            for (var pair of formData.entries()) {
+                console.log(pair[0] + ', ' + pair[1]);
+            }
+
+            // Ajax call to submit the form data
             $.ajax({
-                url: `/Admin/BoTruyenManager/Update/${productId}`,
+                url: form.attr('action'),
                 type: 'POST',
-                data: { id: productId },
+                data: formData,
+                processData: false,
+                contentType: false,
                 success: function (response) {
-                    Swal.fire({
-                        "Good job!",
-                        "You clicked the button!",
-                        "success"
-                            });
-                    location.reload();
+                    console.log("Form submitted successfully");
+                    alert('Update Successful!');
+                    window.location.href = response.redirectUrl; // Use the redirectUrl returned from the controller
                 },
-                error: function (xhr, status, error) {
-                    console.error(xhr.responseText);
+                error: function (xhr) {
+                    console.error("Error submitting form: ", xhr.status, xhr.responseText);
+                    alert('Failed to update. Error: ' + xhr.responseText);
                 }
             });
+        });
 
-        }
-            }
+    });
+
 </script>
+
 
 

@@ -1,0 +1,75 @@
+﻿@using ProjectMangaSmurf.Models.ViewModels
+@model EditViewModel
+
+<form asp-action="Edit" method="post" enctype="multipart/form-data">
+    <div class="content">
+        <div class="page-header">
+            <h4>Edit Footer</h4>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-3 col-sm-6 col-12">
+                        <div class="form-group">
+                            <label asp-for="Footer.LinkFb">Facebook Link</label>
+                            <input asp-for="Footer.LinkFb" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-sm-6 col-12">
+                        <div class="form-group">
+                            <label asp-for="Footer.LinkX">X Link</label>
+                            <input asp-for="Footer.LinkX" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-sm-6 col-12">
+                        <div class="form-group">
+                            <label asp-for="Footer.LinkIns">Instagram Link</label>
+                            <input asp-for="Footer.LinkIns" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
+                        <div class="form-group">
+                            <label asp-for="Footer.Noidung">Description</label>
+                            <textarea asp-for="Footer.Noidung" class="form-control"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Footer.Dieukhoan">Policy</label>
+                            <textarea asp-for="Footer.Dieukhoan" class="form-control"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Footer.Giayphep">License</label>
+                            <textarea asp-for="Footer.Giayphep" class="form-control"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-header">
+            <h4>Edit Premium Price Pack</h4>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-3 col-sm-6 col-12">
+                        <div class="form-group">
+                            <label asp-for="Premium.Active">Active</label>
+                            <select asp-for="Premium.Active" class="form-control">
+                                <option value="true">Active</option>
+                                <option value="false">Inactive</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-sm-6 col-12">
+                        <div class="form-group">
+                            <label asp-for="Premium.GiaThanh">Price</label>
+                            <input asp-for="Premium.GiaThanh" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+    </div>
+</form>
