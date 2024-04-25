@@ -100,10 +100,10 @@
                                     <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="Add">Add New Comic</a>
                                 </li>
                                 <li>
-                                    <a asp-area="Admin" asp-controller="AuthorManager" asp-action="Add">Add New Comic Author</a>
+                                    <a asp-area="Admin" asp-controller="AuthorManager" asp-action="Add">Thêm mới tác giả</a>
                                 </li>
                                 <li>
-                                    <a asp-area="Admin" asp-controller="ComicTypeManager" asp-action="Add">Add New Comic Types</a>
+                                    <a asp-area="Admin" asp-controller="ComicTypeManager" asp-action="Add">Thêm mới loại truyện</a>
                                 </li>
                                 @if (User.IsInRole("Admin"))
                                 {
@@ -130,7 +130,7 @@
                                     <a asp-area="Admin" asp-controller="CusManager" asp-action="ViewList">Manage Customers List</a>
                                 </li>
                                 <li>
-                                    <a asp-area="Admin" asp-controller="StaffManger" asp-action="Index">Quản lý Nhân viên</a>
+                                    <a asp-area="Admin" asp-controller="StaffManager" asp-action="ViewList">Quản lý Nhân viên</a>
                                 </li>
                                 <li>
                                     <a asp-area="Admin" asp-controller="AuthorManager" asp-action="Index">Manage Author List</a>

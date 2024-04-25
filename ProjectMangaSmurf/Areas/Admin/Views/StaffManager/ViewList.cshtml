@@ -28,7 +28,7 @@
             <h6>Quản lý danh sách Nhân Viên</h6>
         </div>
         <div class="page-btn">
-            <a asp-area="Admin" asp-controller="AuthorManager" asp-action="Add" class="btn btn-added">
+            <a asp-area="Identity" asp-page="/Account/Register" class="btn btn-added">
                 <img src="~/img/icons/plus.svg" alt="img" class="me-1"> Thêm mới nhân viên
             </a>
         </div>
@@ -85,9 +85,9 @@
                                 <td>@a.Email</td>
                                 <td>@a.LockoutEnabled</td>
                                 <td>
-                                    <a asp-area="Admin" asp-controller="AuthorManager" asp-action="Detail" asp-route-id="@a.Id" class="me-3">
+                                    @* <a asp-area="Admin" asp-controller="AuthorManager" asp-action="Detail" asp-route-id="@a.Id" class="me-3">
                                         <img src="~/img/icons/eye.svg" alt="View">
-                                    </a>
+                                    </a> *@
                                     <a asp-area="Admin" asp-controller="AuthorManager" asp-action="Edit" asp-route-id="@a.Id" class="me-3">
                                         <img src="~/img/icons/edit.svg" alt="Edit">
                                     </a>

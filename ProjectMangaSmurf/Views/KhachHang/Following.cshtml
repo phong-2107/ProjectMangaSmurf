@@ -76,7 +76,7 @@
                                                 var kh = HttpContextAccessor.HttpContext.Session.GetString("TK");
                                                 if (kh != null)
                                                 {
-                                                    var khach = await khachhangrepository.GetByIdAsync(kh);
+                                                    var khach = await khachhangrepository.GetByAccountAsync(kh);
 
                                                     <a onclick="deleteFollow('@khach.IdKh', '@ct.IbBo');" class="unfollow">
                                                         <i style="color:#fff;" class="fa-solid fa-trash-can"></i>
