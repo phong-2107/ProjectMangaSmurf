@@ -32,7 +32,7 @@ namespace ProjectMangaSmurf.Repository
             try
             {
                 var n = await _context.KhachHangs.FindAsync(id);
-                n.Active = false;
+                n.IdUserNavigation.Active = false;
                 _context.NhanViens.Update(id);
                 await _context.SaveChangesAsync();
             }
@@ -43,7 +43,7 @@ namespace ProjectMangaSmurf.Repository
         {
             string idPrefix = "S";
             int idLength = 8;
-            string maxId = _context.NhanViens.Select(kh => kh.IdNv)
+            string maxId = _context.NhanViens.Select(kh => kh.IdUser)
                                                .OrderByDescending(id => id)
                                                .FirstOrDefault();
             if (maxId == null)
@@ -69,7 +69,7 @@ namespace ProjectMangaSmurf.Repository
 
         public async Task<NhanVien> GetByIdAsync(string id)
         {
-            return await _context.NhanViens.FirstOrDefaultAsync(p => p.IdNv == id.Trim());
+            return await _context.NhanViens.FirstOrDefaultAsync(p => p.IdUser == id.Trim());
         }
         public async Task UpdateAsync(NhanVien Nv)
         {

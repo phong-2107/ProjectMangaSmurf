@@ -3,17 +3,13 @@ using System.Collections.Generic;
 
 namespace ProjectMangaSmurf.Models;
 
-public class NhanVien
+public partial class NhanVien
 {
-    public string IdNv { get; set; } = null!;
+    public string IdUser { get; set; } = null!;
 
-    public string Ten { get; set; } = null!;
+    public bool? StaffRole { get; set; }
 
-    public string Taikhoan { get; set; } = null!;
+    public virtual ICollection<StaffPermissionsDetail> StaffPermissionsDetails { get; set; } = new List<StaffPermissionsDetail>();
 
-    public string Matkhau { get; set; } = null!;
-
-    public bool LoaiNv { get; set; }
-
-    public bool Active { get; set; }
+    public virtual User? User { get; set; }
 }

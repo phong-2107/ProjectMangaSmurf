@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ProjectMangaSmurf.Models;
 
-public class BoTruyen
+public partial class BoTruyen
 {
     public string IdBo { get; set; } = null!;
 
@@ -19,6 +18,7 @@ public class BoTruyen
     public double TkDanhgia { get; set; }
 
     public int TkTheodoi { get; set; }
+
     public int TongLuotXem { get; set; }
 
     public string AnhBia { get; set; } = null!;
@@ -31,8 +31,8 @@ public class BoTruyen
 
     public bool Active { get; set; }
 
+    public string? Listloai { get; set; }
 
-    public List<string>? listloai { get; set; }
     public virtual ICollection<Chapter> Chapters { get; set; } = new List<Chapter>();
 
     public virtual ICollection<CtBoTruyen> CtBoTruyens { get; set; } = new List<CtBoTruyen>();
@@ -40,18 +40,4 @@ public class BoTruyen
     public virtual ICollection<CtLoaiTruyen> CtLoaiTruyens { get; set; } = new List<CtLoaiTruyen>();
 
     public virtual TacGium IdTgNavigation { get; set; } = null!;
-
-
-    public void UpdateFrom(BoTruyen source)
-    {
-        TenBo = source.TenBo;
-        Dotuoi = source.Dotuoi;
-        IdTg = source.IdTg;
-        Mota = source.Mota;
-        TtPemium = source.TtPemium;
-        TrangThai = source.TrangThai;
-        Active = source.Active;
-        listloai = source.listloai;
-    }
-
 }

@@ -26,12 +26,16 @@ namespace ProjectMangaSmurf.Repository
         {
             return _context.KhachHangs;
         }
+
+
+
+        // Sửa lại 
         public async Task DeleteAsync(KhachHang id)
         {
             try
             {
                 var n = await _context.KhachHangs.FindAsync(id);
-                n.Active = false;
+                n.IdUserNavigation.Active = false;
                 _context.KhachHangs.Update(id);
                 await _context.SaveChangesAsync();
             }
@@ -42,7 +46,7 @@ namespace ProjectMangaSmurf.Repository
         {
             string idPrefix = "KH";
             int idLength = 8;
-            string maxId = _context.KhachHangs.Select(kh => kh.IdKh)
+            string maxId = _context.Users.Select(kh => kh.IdUser)
                                                .OrderByDescending(id => id)
                                                .FirstOrDefault();
             if (maxId == null)
@@ -70,30 +74,30 @@ namespace ProjectMangaSmurf.Repository
             return await _context.KhachHangs.ToListAsync();
         }
 
-        public async Task<IEnumerable<HopDong>> GetAllHopDongAsync()
+        public async Task<IEnumerable<Payment>> GetAllPaymentAsync()
         {
-            return await _context.HopDongs.ToListAsync();
+            return await _context.Payments.ToListAsync();
         }
 
 
-        public async Task<IEnumerable<HopDong>> GetAllIdHDAsync(string id)
+        public async Task<IEnumerable<Payment>> GetAllIdHDAsync(string id)
         {
-            return await _context.HopDongs.Where(p => p.IdKh == id).ToListAsync();
+            return await _context.Payments.Where(p => p.IdUser == id).ToListAsync();
         }
 
         public async Task<KhachHang> GetByEmailAsync(string id)
         {
-            return await _context.KhachHangs.FirstOrDefaultAsync(p => p.Email == id.Trim());
+            return await _context.KhachHangs.FirstOrDefaultAsync(p => p.GoogleAccount == id.Trim());
         }
 
         public async Task<KhachHang> GetByIdAsync(string id)
         {
-            return await _context.KhachHangs.FirstOrDefaultAsync(p => p.IdKh == id.Trim());
+            return await _context.KhachHangs.FirstOrDefaultAsync(p => p.IdUser == id.Trim());
         }
 
         public async Task<KhachHang> GetByAccountAsync(string id)
         {
-            return await _context.KhachHangs.FirstOrDefaultAsync(p => p.Taikhoan == id.Trim());
+            return await _context.KhachHangs.FirstOrDefaultAsync(p => p.IdUserNavigation.UserName == id.Trim());
         }
         public async Task UpdateAsync(KhachHang KhachHang)
         {
@@ -103,6 +107,11 @@ namespace ProjectMangaSmurf.Repository
                 await _context.SaveChangesAsync();
             } catch (Exception ex) { throw new NotImplementedException();  }
             
+        }
+
+        public Task<IEnumerable<Payment>> GetAllHopDongAsync()
+        {
+            throw new NotImplementedException();
         }
     }
 }

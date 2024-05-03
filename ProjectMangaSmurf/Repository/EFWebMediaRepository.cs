@@ -4,18 +4,18 @@ using ProjectMangaSmurf.Models;
 
 namespace ProjectMangaSmurf.Repository
 {
-    public class EFFooterRepository : IFooterRepository
+    public class EFWebMediaRepository : IWebMediaRepository
     {
         private readonly ProjectDBContext _context;
 
-        public EFFooterRepository(ProjectDBContext context)
+        public EFWebMediaRepository(ProjectDBContext context)
         {
             _context = context;
         }
 
-        Footer IFooterRepository.GetFirstAsync()
+        WebMediaConfig IWebMediaRepository.GetFirstAsync()
         {
-            return _context.Footers.FirstOrDefault();
+            return _context.WebMediaConfigs.FirstOrDefault();
         }
     }
 }

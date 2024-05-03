@@ -9,8 +9,8 @@ namespace ProjectMangaSmurf.Repository
     public interface IKhachHangRepository
     {
         Task<IEnumerable<KhachHang>> GetAllAsync(Expression<Func<KhachHang, bool>> filter = null);
-        Task<IEnumerable<HopDong>> GetAllIdHDAsync(string id);
-        Task<IEnumerable<HopDong>> GetAllHopDongAsync();
+        Task<IEnumerable<Payment>> GetAllIdHDAsync(string id);
+        Task<IEnumerable<Payment>> GetAllHopDongAsync();
         Task<KhachHang> GetByIdAsync(string id);
         Task<KhachHang> GetByAccountAsync(string id);
         Task<KhachHang> GetByEmailAsync(string id);
@@ -18,7 +18,7 @@ namespace ProjectMangaSmurf.Repository
         Task AddAsync(KhachHang KhachHang);
         Task UpdateAsync(KhachHang KhachHang);
         Task DeleteAsync(KhachHang id);
-        IQueryable<KhachHang> GetQuery(); // Correct return type
+        IQueryable<KhachHang> GetQuery(); 
         string GenerateCustomerId();
     }
 

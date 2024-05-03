@@ -278,8 +278,8 @@
                             khach = await khachhangrepository.GetByIdAsync(kh);
                         }
 
-                        var idKh = khach?.IdKh;
-                        var isPremium = khach?.TtPremium ?? false;
+                        var idKh = khach?.IdUser;
+                        var isPremium = khach?.ActivePremium ?? false;
                     }
                         @if (listChap.Count > 0)
                         {

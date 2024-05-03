@@ -13,9 +13,9 @@ namespace ProjectMangaSmurf.Repository
             _context = context;
         }
 
-        public async Task AddAsync(HopDong hd)
+        public async Task AddAsync(Payment hd)
         {
-             _context.HopDongs.Add(hd);
+             _context.Payments.Add(hd);
             await _context.SaveChangesAsync();
         }
 
@@ -23,7 +23,7 @@ namespace ProjectMangaSmurf.Repository
         {
             string idPrefix = "HD";
             int idLength = 10;
-            string maxId = _context.HopDongs.Select(kh => kh.IdHd)
+            string maxId = _context.Payments.Select(kh => kh.IdUser)
                                                .OrderByDescending(id => id)
                                                .FirstOrDefault();
             if (maxId == null)
@@ -38,9 +38,9 @@ namespace ProjectMangaSmurf.Repository
             }
         }
 
-        public async Task<IEnumerable<HopDong>> GetAllAsync()
+        public async Task<IEnumerable<Payment>> GetAllAsync()
         {
-            return await _context.HopDongs.ToListAsync();
+            return await _context.Payments.ToListAsync();
         }
     }
 }

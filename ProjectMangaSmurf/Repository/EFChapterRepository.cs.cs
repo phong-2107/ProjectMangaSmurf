@@ -42,7 +42,7 @@ namespace ProjectMangaSmurf.Repository
 
         public async Task AddAsyncCTHD(CtHoatDong ct)
         {
-            var find = await _context.CtHoatDongs.FirstOrDefaultAsync(p => (p.IdBo == ct.IdBo) && (p.SttChap == ct.SttChap) && (p.IdKh == ct.IdKh));
+            var find = await _context.CtHoatDongs.FirstOrDefaultAsync(p => (p.IdBo == ct.IdBo) && (p.SttChap == ct.SttChap) && (p.IdUser == ct.IdUser));
             if (find == null)
             {
                 _context.CtHoatDongs.Add(ct);

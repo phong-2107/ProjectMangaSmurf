@@ -170,10 +170,10 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
                 }
                 await _botruyenrepository.AddAsync(boTruyen);
 
-                foreach (var i in boTruyen.listloai)
+                foreach (var i in boTruyen.Listloai)
                 {
                     CtLoaiTruyen ct = new CtLoaiTruyen();
-                    ct.IdLoai = i;
+                    ct.IdLoai = i.ToString();
                     ct.IdBo = boTruyen.IdBo;
                     ct.Active = true;
                     await _loaiTruyenRepository.AddAsyncCTLoai(ct);

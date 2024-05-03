@@ -22,12 +22,14 @@ namespace ProjectMangaSmurf.Controllers
         private readonly IboTruyenRepository _botruyenrepository;
         private readonly IChapterRepository _chapterrepository;
         private readonly ICTBoTruyenRepository _cTBoTruyenRepository;
-        public KhachHangController( IKhachHangRepository khachHangRepository, IboTruyenRepository boTruyenRepository, IChapterRepository chapterRepository, ICTBoTruyenRepository cTBoTruyenRepository)
+        private readonly IUserRepository _userRepository;
+        public KhachHangController( IKhachHangRepository khachHangRepository, IboTruyenRepository boTruyenRepository, IChapterRepository chapterRepository, ICTBoTruyenRepository cTBoTruyenRepository, IUserRepository userRepository)
         {
             _khachhangrepository = khachHangRepository;
             _botruyenrepository = boTruyenRepository;
             _chapterrepository = chapterRepository;
             _cTBoTruyenRepository = cTBoTruyenRepository;
+            _userRepository = userRepository;
         }
 
         public bool checkpass(string pass, string passKh)
@@ -102,20 +104,29 @@ namespace ProjectMangaSmurf.Controllers
                 var find = await _khachhangrepository.GetByEmailAsync(HttpContext.Session.GetString("Email"));
                 if(find == null)
                 {
+                    User user = new User();
+                    user.IdUser = _khachhangrepository.GenerateCustomerId();
+                    user.UserName = HttpContext.Session.GetString("TK");
+                    user.Password = RandomPass();
+                    user.Email = HttpContext.Session.GetString("Email");
+                    user.TimeCreated = DateTime.Now;
+                    user.TimeUpdated = DateTime.Now;
+                    user.Active = true;
+                    await _userRepository.AddAsync(user);
+
                     KhachHang kh = new KhachHang();
-                    kh.IdKh = _khachhangrepository.GenerateCustomerId();
-                    kh.Email = HttpContext.Session.GetString("Email");
-                    kh.Taikhoan = HttpContext.Session.GetString("TK");
-                    kh.LienketGg = HttpContext.Session.GetString("Email");
-                    kh.Matkhau = RandomPass();
-                    kh.TtPremium = false;
-                    kh.Active = true;
+                    kh.IdUser = user.IdUser;
+                    kh.GoogleAccount = HttpContext.Session.GetString("Email");
+                    kh.ActivePremium = false;
+                    kh.TicketSalary = 0;
+                    kh.ActiveStats = 1;
+
                     await _khachhangrepository.AddAsync(kh);
-					HttpContext.Session.SetString("IdKH", kh.IdKh);
+					HttpContext.Session.SetString("IdKH", kh.IdUser);
                 }
                 else
                 {
-					HttpContext.Session.SetString("IdKH", find.IdKh);
+					HttpContext.Session.SetString("IdKH", find.IdUser);
 				}
                 return RedirectToAction("Index", "BoTruyen");
             }
@@ -144,11 +155,11 @@ namespace ProjectMangaSmurf.Controllers
                 var kh = await _khachhangrepository.GetByAccountAsync(Taikhoan);
                 if (kh != null)
                 {
-                    var check = PasswordHasher.VerifyPassword(Matkhau.Trim(), kh.Matkhau.Trim());
+                    var check = PasswordHasher.VerifyPassword(Matkhau.Trim(), kh.IdUserNavigation.Password.Trim());
                     if (check)
                     {
-                        HttpContext.Session.SetString("TK", kh.Taikhoan);
-                        HttpContext.Session.SetString("IdKH", kh.IdKh);
+                        HttpContext.Session.SetString("TK", kh.IdUserNavigation.UserName);
+                        HttpContext.Session.SetString("IdKH", kh.IdUser);
                         return RedirectToAction("Index", "BoTruyen");
                         
                     }
@@ -183,12 +194,12 @@ namespace ProjectMangaSmurf.Controllers
                 var kh = await _khachhangrepository.GetByAccountAsync(Taikhoan);
                 if (kh != null)
                 {
-                    var check = PasswordHasher.VerifyPassword(Matkhau.Trim(), kh.Matkhau.Trim());
+                    var check = PasswordHasher.VerifyPassword(Matkhau.Trim(), kh.IdUserNavigation.Password.Trim());
                     if (check)
                     {
                         // Set session variables
-                        HttpContext.Session.SetString("TK", kh.Taikhoan);
-                        HttpContext.Session.SetString("IdKH", kh.IdKh);
+                        HttpContext.Session.SetString("TK", kh.IdUserNavigation.UserName);
+                        HttpContext.Session.SetString("IdKH", kh.IdUser);
 
                         // Check if the returnUrl is not null and is a local URL to prevent Open Redirect vulnerabilities
                         if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
@@ -234,16 +245,26 @@ namespace ProjectMangaSmurf.Controllers
                 }
                 else
                 {
+                    User user = new User();
+                    user.IdUser = _khachhangrepository.GenerateCustomerId();
+                    user.UserName = HttpContext.Session.GetString("TK");
+                    user.Password = PasswordHasher.HashPassword(matKhau);
+                    user.Email = HttpContext.Session.GetString("Email");
+                    user.TimeCreated = DateTime.Now;
+                    user.TimeUpdated = DateTime.Now;
+                    user.Active = true;
+                    await _userRepository.AddAsync(user);
+
                     KhachHang kh = new KhachHang();
-                    kh.IdKh = _khachhangrepository.GenerateCustomerId();
-                    kh.Email = Email.Trim();
-                    kh.Taikhoan = Taikhoan.Trim();
-                    kh.TtPremium = false;
-                    kh.Active = true;
-                    kh.Matkhau = PasswordHasher.HashPassword(matKhau);
+                    kh.IdUser = _khachhangrepository.GenerateCustomerId();
+                    kh.IdUser = user.IdUser;
+                    kh.GoogleAccount = HttpContext.Session.GetString("Email");
+                    kh.ActivePremium = false;
+                    kh.TicketSalary = 0;
+                    kh.ActiveStats = 1;
                     await _khachhangrepository.AddAsync(kh);
-                    HttpContext.Session.SetString("TK", kh.Taikhoan);
-                    HttpContext.Session.SetString("IdKH", kh.IdKh);
+                    HttpContext.Session.SetString("TK", kh.IdUserNavigation.UserName);
+                    HttpContext.Session.SetString("IdKH", kh.IdUser);
                     return RedirectToAction("Index", "BoTruyen");
                 }
             }
@@ -253,14 +274,14 @@ namespace ProjectMangaSmurf.Controllers
         public async Task<IActionResult> Following(string id)
         {
             var kh = await _khachhangrepository.GetByAccountAsync(id);
-            var list = await _cTBoTruyenRepository.GetAllAsyncFollowByID(kh.IdKh);
+            var list = await _cTBoTruyenRepository.GetAllAsyncFollowByID(kh.IdUser);
             return View(list);
         }
 
         public async Task<IActionResult> History(string id)
         {
             var kh = await _khachhangrepository.GetByAccountAsync(id);
-            var list = await _cTBoTruyenRepository.GetAllAsyncHistoryByID(kh.IdKh);
+            var list = await _cTBoTruyenRepository.GetAllAsyncHistoryByID(kh.IdUser);
             return View(list);
         }
 
@@ -275,11 +296,11 @@ namespace ProjectMangaSmurf.Controllers
                 botruyen.TkTheodoi = botruyen.TkTheodoi + 1;
                 await _botruyenrepository.UpdateAsync(botruyen);
 
-                var ctbo = _cTBoTruyenRepository.GetByIdAsync(kh.IdKh, id);
+                var ctbo = _cTBoTruyenRepository.GetByIdAsync(kh.IdUser, id);
                 if( await ctbo == null)
                 {
                     CtBoTruyen ct = new CtBoTruyen();
-                    ct.IdKh = kh.IdKh;
+                    ct.IdUser = kh.IdUser;
                     ct.IbBo = id;
                     ct.Theodoi = true;
                     ct.DanhGia = 0;
@@ -308,7 +329,7 @@ namespace ProjectMangaSmurf.Controllers
                 botruyen.TkTheodoi = botruyen.TkTheodoi + 1;
                 await _botruyenrepository.UpdateAsync(botruyen);
 
-                var ctbo = _cTBoTruyenRepository.GetByIdAsync(kh.IdKh, id);
+                var ctbo = _cTBoTruyenRepository.GetByIdAsync(kh.IdUser, id);
                 if (await ctbo != null)
                 {
                     var ctbotruyen = await ctbo;
@@ -360,7 +381,7 @@ namespace ProjectMangaSmurf.Controllers
             {
                 var idkh = HttpContext.Session.GetString("TK");
                 var kh = await _khachhangrepository.GetByAccountAsync(idkh);
-                var botruyen =  _cTBoTruyenRepository.GetByIdAsync(kh.IdKh, id);
+                var botruyen =  _cTBoTruyenRepository.GetByIdAsync(kh.IdUser, id);
                 if (await botruyen != null)
                 {
                     var bt = await botruyen;
@@ -379,11 +400,18 @@ namespace ProjectMangaSmurf.Controllers
                 var khach =  _khachhangrepository.GetByAccountAsync(idkh);
                 if (await khach != null)
                 {
+                    //User user = new User();
+                    //user.IdUser = _khachhangrepository.GenerateCustomerId();
+                    //user.UserName = HttpContext.Session.GetString("TK");
+                    //user.Email = HttpContext.Session.GetString("Email");
+                    //user.TimeCreated = DateTime.Now;
+                    //user.TimeUpdated = DateTime.Now;
+                    //user.Active = true;
+                    //await _userRepository.AddAsync(user);
+
                     var kh = await khach;
-                    kh.TenKh = TenKh;
-                    kh.Sdt = Sdt;
-                    kh.Email = Email;
-                    kh.Taikhoan = Taikhoan;
+                    kh.GoogleAccount = Email;
+
                     await _khachhangrepository.UpdateAsync(kh);
 
                     TempData["info"] = "Cập nhật thông tin thành công";
@@ -400,9 +428,9 @@ namespace ProjectMangaSmurf.Controllers
             var khach = await _khachhangrepository.GetByAccountAsync(idkh);
             if ( khach != null)
             {
-                if(khach.LienketGg == null)
+                if(khach.GoogleAccount == null)
                 {
-                    var check = PasswordHasher.VerifyPassword(currentPassword.Trim(), khach.Matkhau.Trim());
+                    var check = PasswordHasher.VerifyPassword(currentPassword.Trim(), khach.IdUserNavigation.Password.Trim());
                     if (!check)
                     {
                         ModelState.AddModelError("", "Mật khẩu cũ không trùng khớp.");
@@ -422,7 +450,7 @@ namespace ProjectMangaSmurf.Controllers
                         return View("Account");
                     }
                 }
-                khach.Matkhau = PasswordHasher.HashPassword(confirmNewPassword);
+                khach.IdUserNavigation.Password = PasswordHasher.HashPassword(confirmNewPassword);
                 await _khachhangrepository.UpdateAsync(khach);
 
                 TempData["info"] = "Cập nhật thành công mật khẩu";
@@ -439,10 +467,10 @@ namespace ProjectMangaSmurf.Controllers
             var khach = await _khachhangrepository.GetByAccountAsync(idkh);
             if (khach != null)
             {
-                if (khach.LienketGg == null)
+                if (khach.GoogleAccount == null)
                 {
-                    khach.LienketFb = LienketFb;
-                    khach.LienketGg = LienketGg;
+                    khach.FacebookAccount = LienketFb;
+                    khach.GoogleAccount = LienketGg;
                 }
                 else
                 {
@@ -463,10 +491,10 @@ namespace ProjectMangaSmurf.Controllers
             var khach = await _khachhangrepository.GetByAccountAsync(idkh);
             if (khach != null)
             {
-                if (khach.LienketGg == null)
+                if (khach.GoogleAccount == null)
                 {
-                    khach.LienketFb = LienketFb;
-                    khach.LienketGg = LienketGg;
+                    khach.FacebookAccount = LienketFb;
+                    khach.GoogleAccount = LienketGg;
                 }
                 else
                 {

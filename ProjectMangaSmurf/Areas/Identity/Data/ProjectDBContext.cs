@@ -13,43 +13,73 @@ namespace ProjectMangaSmurf.Data
             : base(options)
         {
         }
+        public virtual DbSet<Avatar> Avatars { get; set; }
 
-        public DbSet<BoTruyen> BoTruyens { get; set; }
+        public virtual DbSet<BoTruyen> BoTruyens { get; set; }
 
-        public DbSet<Chapter> Chapters { get; set; }
+        public virtual DbSet<Chapter> Chapters { get; set; }
 
-        public DbSet<CtBoTruyen> CtBoTruyens { get; set; }
+        public virtual DbSet<ContactMail> ContactMails { get; set; }
 
-        public DbSet<CtChapter> CtChapters { get; set; }
+        public virtual DbSet<CtBoTruyen> CtBoTruyens { get; set; }
 
-        public DbSet<CtHoatDong> CtHoatDongs { get; set; }
+        public virtual DbSet<CtChapter> CtChapters { get; set; }
 
-        public DbSet<CtLoaiTruyen> CtLoaiTruyens { get; set; }
+        public virtual DbSet<CtHoatDong> CtHoatDongs { get; set; }
 
-        public DbSet<Footer> Footers { get; set; }
+        public virtual DbSet<CtLoaiTruyen> CtLoaiTruyens { get; set; }
 
-        public DbSet<HopDong> HopDongs { get; set; }
+        public virtual DbSet<CustomerLogin> CustomerLogins { get; set; }
 
-        public DbSet<KhachHang> KhachHangs { get; set; }
+        public virtual DbSet<KhachHang> KhachHangs { get; set; }
 
-        public DbSet<LoaiTruyen> LoaiTruyens { get; set; }
+        public virtual DbSet<LoaiTruyen> LoaiTruyens { get; set; }
 
-        public DbSet<NhanVien> NhanViens { get; set; }
+        public virtual DbSet<NhanVien> NhanViens { get; set; }
 
-        public DbSet<Premium> Premia { get; set; }
+        public virtual DbSet<Payment> Payments { get; set; }
 
-        public DbSet<TacGium> TacGia { get; set; }
-        public DbSet<ContactMail> ContactMail { get; set; }
+        public virtual DbSet<PermissionsList> PermissionsLists { get; set; }
+
+        public virtual DbSet<ServicePackConfig> ServicePackConfigs { get; set; }
+
+        public virtual DbSet<StaffActiveLog> StaffActiveLogs { get; set; }
+
+        public virtual DbSet<StaffPermissionsDetail> StaffPermissionsDetails { get; set; }
+
+        public virtual DbSet<TacGium> TacGia { get; set; }
+
+        public virtual DbSet<User> Users { get; set; }
+
+        public virtual DbSet<WebMediaConfig> WebMediaConfigs { get; set; }
+
+
         public DbSet<ApplicationUser> applicationUsers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Avatar>(entity =>
+            {
+                entity.HasKey(e => e.IdAvatar).HasName("PK__Avatar__58BB37B073CA3349");
+
+                entity.ToTable("Avatar");
+
+                entity.Property(e => e.IdAvatar)
+                    .HasMaxLength(5)
+                    .IsUnicode(false)
+                    .IsFixedLength();
+                entity.Property(e => e.AvatarContent).IsUnicode(false);
+            });
+
             modelBuilder.Entity<BoTruyen>(entity =>
             {
                 entity.HasKey(e => e.IdBo);
 
                 entity.ToTable("BoTruyen");
+
+                entity.HasIndex(e => e.IdTg, "IX_BoTruyen_id_tg");
 
                 entity.Property(e => e.IdBo)
                     .HasMaxLength(10)
@@ -71,18 +101,16 @@ namespace ProjectMangaSmurf.Data
                     .IsUnicode(false)
                     .IsFixedLength()
                     .HasColumnName("id_tg");
+                entity.Property(e => e.Listloai).HasColumnName("listloai");
+                entity.Property(e => e.Mota).HasColumnName("mota");
                 entity.Property(e => e.TenBo)
                     .HasMaxLength(30)
                     .HasColumnName("ten_bo");
-                entity.Property(e => e.Mota)
-                    .HasColumnName("mota")
-                    .HasColumnType("nvarchar(max)");
                 entity.Property(e => e.TkDanhgia).HasColumnName("tk_danhgia");
-
                 entity.Property(e => e.TkTheodoi).HasColumnName("tk_theodoi");
                 entity.Property(e => e.TrangThai).HasColumnName("trang_thai");
                 entity.Property(e => e.TtPemium).HasColumnName("tt_pemium");
-                entity.Property(e => e.TongLuotXem).HasColumnName("TongLuotXem");
+
                 entity.HasOne(d => d.IdTgNavigation).WithMany(p => p.BoTruyens)
                     .HasForeignKey(d => d.IdTg)
                     .OnDelete(DeleteBehavior.ClientSetNull)
@@ -94,6 +122,9 @@ namespace ProjectMangaSmurf.Data
                 entity.HasKey(e => new { e.SttChap, e.IdBo });
 
                 entity.ToTable("Chapter");
+
+                entity.HasIndex(e => e.IdBo, "IX_Chapter_id_bo");
+
                 entity.Property(e => e.SttChap).HasColumnName("stt_chap");
                 entity.Property(e => e.IdBo)
                     .HasMaxLength(10)
@@ -101,6 +132,7 @@ namespace ProjectMangaSmurf.Data
                     .IsFixedLength()
                     .HasColumnName("id_bo");
                 entity.Property(e => e.Active).HasColumnName("active");
+                entity.Property(e => e.ChapterContent).IsUnicode(false);
                 entity.Property(e => e.TenChap)
                     .HasMaxLength(30)
                     .HasColumnName("ten_chap");
@@ -116,17 +148,25 @@ namespace ProjectMangaSmurf.Data
                     .HasConstraintName("FK_Chapter_BoTruyen");
             });
 
+            modelBuilder.Entity<ContactMail>(entity =>
+            {
+                entity.HasKey(e => e.Email);
+
+                entity.ToTable("ContactMail");
+            });
+
             modelBuilder.Entity<CtBoTruyen>(entity =>
             {
-                entity.HasKey(e => new { e.IdKh, e.IbBo });
+                entity.HasKey(e => new { e.IdUser, e.IbBo });
 
                 entity.ToTable("CT_BoTruyen");
 
-                entity.Property(e => e.IdKh)
+                entity.HasIndex(e => e.IbBo, "IX_CT_BoTruyen_ib_bo");
+
+                entity.Property(e => e.IdUser)
                     .HasMaxLength(10)
                     .IsUnicode(false)
-                    .IsFixedLength()
-                    .HasColumnName("id_kh");
+                    .IsFixedLength();
                 entity.Property(e => e.IbBo)
                     .HasMaxLength(10)
                     .IsUnicode(false)
@@ -144,8 +184,8 @@ namespace ProjectMangaSmurf.Data
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_CT_BoTruyen_BoTruyen");
 
-                entity.HasOne(d => d.IdKhNavigation).WithMany(p => p.CtBoTruyens)
-                    .HasForeignKey(d => d.IdKh)
+                entity.HasOne(d => d.IdUserNavigation).WithMany(p => p.CtBoTruyens)
+                    .HasForeignKey(d => d.IdUser)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_CT_BoTruyen_KhachHang");
             });
@@ -155,6 +195,8 @@ namespace ProjectMangaSmurf.Data
                 entity.HasKey(e => new { e.SoTrang, e.SttChap, e.IdBo });
 
                 entity.ToTable("CT_Chapter");
+
+                entity.HasIndex(e => new { e.SttChap, e.IdBo }, "IX_CT_Chapter_stt_chap_id_bo");
 
                 entity.Property(e => e.SoTrang).HasColumnName("so_trang");
                 entity.Property(e => e.SttChap).HasColumnName("stt_chap");
@@ -177,15 +219,16 @@ namespace ProjectMangaSmurf.Data
 
             modelBuilder.Entity<CtHoatDong>(entity =>
             {
-                entity.HasKey(e => new { e.IdKh, e.SttChap, e.IdBo });
+                entity.HasKey(e => new { e.IdUser, e.SttChap, e.IdBo });
 
                 entity.ToTable("CT_HoatDong");
 
-                entity.Property(e => e.IdKh)
+                entity.HasIndex(e => new { e.SttChap, e.IdBo }, "IX_CT_HoatDong_stt_chap_id_bo");
+
+                entity.Property(e => e.IdUser)
                     .HasMaxLength(10)
                     .IsUnicode(false)
-                    .IsFixedLength()
-                    .HasColumnName("id_kh");
+                    .IsFixedLength();
                 entity.Property(e => e.SttChap).HasColumnName("stt_chap");
                 entity.Property(e => e.IdBo)
                     .HasMaxLength(10)
@@ -194,8 +237,8 @@ namespace ProjectMangaSmurf.Data
                     .HasColumnName("id_bo");
                 entity.Property(e => e.TtDoc).HasColumnName("tt_doc");
 
-                entity.HasOne(d => d.IdKhNavigation).WithMany(p => p.CtHoatDongs)
-                    .HasForeignKey(d => d.IdKh)
+                entity.HasOne(d => d.IdUserNavigation).WithMany(p => p.CtHoatDongs)
+                    .HasForeignKey(d => d.IdUser)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_CT_HoatDong_KhachHang");
 
@@ -211,6 +254,8 @@ namespace ProjectMangaSmurf.Data
 
                 entity.ToTable("CT_LoaiTruyen");
 
+                entity.HasIndex(e => e.IdBo, "IX_CT_LoaiTruyen_id_bo");
+
                 entity.Property(e => e.IdLoai)
                     .HasMaxLength(5)
                     .IsUnicode(false)
@@ -222,6 +267,7 @@ namespace ProjectMangaSmurf.Data
                     .IsFixedLength()
                     .HasColumnName("id_bo");
                 entity.Property(e => e.Active).HasColumnName("active");
+
                 entity.HasOne(d => d.IdBoNavigation).WithMany(p => p.CtLoaiTruyens)
                     .HasForeignKey(d => d.IdBo)
                     .OnDelete(DeleteBehavior.ClientSetNull)
@@ -233,110 +279,51 @@ namespace ProjectMangaSmurf.Data
                     .HasConstraintName("FK_CT_LoaiTruyen_LoaiTruyen");
             });
 
-            modelBuilder.Entity<Footer>(entity =>
+            modelBuilder.Entity<CustomerLogin>(entity =>
             {
-                entity
-                    .HasKey(e => e.Giayphep);
+                entity.HasKey(e => new { e.LoginProvider, e.ProviderKey }).HasName("PK__Customer__2B2C5B526B2A5304");
 
-                entity.ToTable("Footer");
+                entity.ToTable("Customer_Login");
 
-                entity.Property(e => e.Dieukhoan)
-                    .HasColumnType("text")
-                    .HasColumnName("dieukhoan");
-                entity.Property(e => e.Giayphep)
-                    .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasColumnName("giayphep");
-                entity.Property(e => e.LinkFb)
-                    .HasMaxLength(255)
-                    .IsUnicode(false)
-                    .HasColumnName("link_fb");
-                entity.Property(e => e.LinkIns)
-                    .HasMaxLength(255)
-                    .IsUnicode(false)
-                    .HasColumnName("link_ins");
-                entity.Property(e => e.LinkX)
-                    .HasMaxLength(255)
-                    .IsUnicode(false)
-                    .HasColumnName("link_x");
-                entity.Property(e => e.Noidung)
-                    .HasColumnType("nvarchar(max)")
-                    .HasColumnName("noidung");
-            });
-
-            modelBuilder.Entity<HopDong>(entity =>
-            {
-                entity.HasKey(e => e.IdHd);
-
-                entity.ToTable("HopDong");
-
-                entity.Property(e => e.IdHd)
-                    .HasMaxLength(12)
-                    .IsUnicode(false)
-                    .IsFixedLength()
-                    .HasColumnName("id_hd");
-                entity.Property(e => e.GtThanhtoan)
-                    .HasColumnType("decimal(6, 0)")
-                    .HasColumnName("gt_thanhtoan");
-                entity.Property(e => e.IdKh)
+                entity.Property(e => e.LoginProvider).HasMaxLength(225);
+                entity.Property(e => e.ProviderKey).HasMaxLength(225);
+                entity.Property(e => e.IdUser)
                     .HasMaxLength(10)
                     .IsUnicode(false)
-                    .IsFixedLength()
-                    .HasColumnName("id_kh");
-                entity.Property(e => e.NoiDung)
-                   .HasColumnName("noidung")
-                   .HasColumnType("nvarchar(max)");
-                entity.Property(e => e.MaGiaoDich).HasColumnName("MaGiaoDich");
-                entity.Property(e => e.Ngaylap)
-                    .HasColumnType("datetime")
-                    .HasColumnName("ngaylap");
+                    .IsFixedLength();
 
-                entity.HasOne(d => d.IdKhNavigation).WithMany(p => p.HopDongs)
-                    .HasForeignKey(d => d.IdKh)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_HopDong_KhachHang");
+                entity.HasOne(d => d.IdUserNavigation).WithMany(p => p.CustomerLogins)
+                    .HasForeignKey(d => d.IdUser)
+                    .HasConstraintName("FK_Customer_Login_KhachHang");
             });
 
             modelBuilder.Entity<KhachHang>(entity =>
             {
-                entity.HasKey(e => e.IdKh);
+                entity.HasKey(e => e.IdUser).HasName("PK_KhachHang_1");
 
                 entity.ToTable("KhachHang");
 
-                entity.Property(e => e.IdKh)
+                entity.Property(e => e.IdUser)
                     .HasMaxLength(10)
                     .IsUnicode(false)
-                    .IsFixedLength()
-                    .HasColumnName("id_kh");
-                entity.Property(e => e.Active).HasColumnName("active");
-                entity.Property(e => e.Email)
-                    .HasMaxLength(30)
-                    .HasColumnName("email");
-                entity.Property(e => e.LienketFb)
-                    .HasMaxLength(100)
+                    .IsFixedLength();
+                entity.Property(e => e.ActivePremium).HasColumnName("Active_Premium");
+                entity.Property(e => e.ActiveStats).HasColumnName("Active_Stats");
+                entity.Property(e => e.FacebookAccount).IsUnicode(false);
+                entity.Property(e => e.GoogleAccount).IsUnicode(false);
+                entity.Property(e => e.IdAvatar)
+                    .HasMaxLength(5)
                     .IsUnicode(false)
-                    .HasColumnName("lienket_fb");
-                entity.Property(e => e.LienketGg)
-                    .HasMaxLength(30)
-                    .IsUnicode(false)
-                    .HasColumnName("lienket_gg");
-                entity.Property(e => e.Matkhau)
-                    .HasColumnType("nvarchar(max)")
-                    .IsUnicode(false)
-                    .HasColumnName("matkhau");
-                entity.Property(e => e.Sdt)
-                    .HasMaxLength(10)
-                    .IsUnicode(false)
-                    .IsFixedLength()
-                    .HasColumnName("sdt");
-                entity.Property(e => e.Taikhoan)
-                    .HasMaxLength(20)
-                    .IsUnicode(false)
-                    .HasColumnName("taikhoan");
-                entity.Property(e => e.TenKh)
-                    .HasMaxLength(30)
-                    .HasColumnName("ten_kh");
-                entity.Property(e => e.TtPremium).HasColumnName("tt_premium");
+                    .IsFixedLength();
+
+                entity.HasOne(d => d.IdAvatarNavigation).WithMany(p => p.KhachHangs)
+                    .HasForeignKey(d => d.IdAvatar)
+                    .HasConstraintName("FK_KhachHang_Avatar");
+
+                entity.HasOne(d => d.IdUserNavigation).WithOne(p => p.KhachHang)
+                    .HasForeignKey<KhachHang>(d => d.IdUser)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_KhachHang_Users");
             });
 
             modelBuilder.Entity<LoaiTruyen>(entity =>
@@ -358,40 +345,121 @@ namespace ProjectMangaSmurf.Data
 
             modelBuilder.Entity<NhanVien>(entity =>
             {
-                entity.HasKey(e => e.IdNv);
+                entity.HasKey(e => e.IdUser).HasName("PK_NhanVien_1");
 
                 entity.ToTable("NhanVien");
 
-                entity.Property(e => e.IdNv)
-                    .HasMaxLength(3)
+                entity.Property(e => e.IdUser)
+                    .HasMaxLength(10)
                     .IsUnicode(false)
-                    .IsFixedLength()
-                    .HasColumnName("id_nv");
-                entity.Property(e => e.Active).HasColumnName("active");
-                entity.Property(e => e.LoaiNv).HasColumnName("loai_nv");
-                entity.Property(e => e.Matkhau)
-                    .HasMaxLength(20)
-                    .IsUnicode(false)
-                    .HasColumnName("matkhau");
-                entity.Property(e => e.Taikhoan)
-                    .HasMaxLength(20)
-                    .IsUnicode(false)
-                    .HasColumnName("taikhoan");
-                entity.Property(e => e.Ten)
-                    .HasMaxLength(30)
-                    .HasColumnName("ten");
+                    .IsFixedLength();
             });
 
-            modelBuilder.Entity<Premium>(entity =>
+            modelBuilder.Entity<Payment>(entity =>
             {
-               entity.HasKey(e => e.GiaThanh);
+                entity.HasKey(e => e.IdPayment).HasName("PK__Payment__613289C0E7CD2C77");
 
-                entity.ToTable("Premium");
+                entity.ToTable("Payment");
 
-                entity.Property(e => e.Active).HasColumnName("active");
-                entity.Property(e => e.GiaThanh)
-                    .HasColumnType("decimal(6, 0)")
-                    .HasColumnName("gia_thanh");
+                entity.Property(e => e.IdPayment)
+                    .HasMaxLength(10)
+                    .IsUnicode(false)
+                    .IsFixedLength();
+                entity.Property(e => e.IdPack)
+                    .HasMaxLength(4)
+                    .IsUnicode(false)
+                    .IsFixedLength();
+                entity.Property(e => e.IdUser)
+                    .HasMaxLength(10)
+                    .IsUnicode(false)
+                    .IsFixedLength();
+                entity.Property(e => e.PayAmount).HasColumnType("decimal(7, 2)");
+
+                entity.HasOne(d => d.IdPackNavigation).WithMany(p => p.Payments)
+                    .HasForeignKey(d => d.IdPack)
+                    .HasConstraintName("FK_Payment_Service_Pack_Config");
+
+                entity.HasOne(d => d.IdPaymentNavigation).WithOne(p => p.Payment)
+                    .HasForeignKey<Payment>(d => d.IdPayment)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Payment_KhachHang");
+            });
+
+            modelBuilder.Entity<PermissionsList>(entity =>
+            {
+                entity.HasKey(e => e.IdPermissions).HasName("PK__Permissi__0671E6D9E28B434E");
+
+                entity.ToTable("PermissionsList");
+
+                entity.Property(e => e.Description).HasMaxLength(50);
+                entity.Property(e => e.ParentPermissions).HasColumnName("Parent_Permissions");
+                entity.Property(e => e.PermissionsName).HasMaxLength(20);
+            });
+
+            modelBuilder.Entity<ServicePackConfig>(entity =>
+            {
+                entity.HasKey(e => e.IdPack).HasName("PK__Service___FC84C5ABF37A7BFC");
+
+                entity.ToTable("Service_Pack_Config");
+
+                entity.Property(e => e.IdPack)
+                    .HasMaxLength(4)
+                    .IsUnicode(false)
+                    .IsFixedLength();
+                entity.Property(e => e.Amount).HasColumnType("decimal(7, 2)");
+                entity.Property(e => e.Description).HasMaxLength(60);
+                entity.Property(e => e.Discount).HasColumnType("decimal(7, 2)");
+                entity.Property(e => e.PackName).HasMaxLength(20);
+                entity.Property(e => e.ParentPack)
+                    .HasMaxLength(4)
+                    .IsUnicode(false)
+                    .IsFixedLength()
+                    .HasColumnName("Parent_Pack");
+            });
+
+            modelBuilder.Entity<StaffActiveLog>(entity =>
+            {
+                entity.HasKey(e => e.IdLog).HasName("PK_Staff_Active_Logs_1");
+
+                entity.ToTable("Staff_Active_Logs");
+
+                entity.Property(e => e.IdLog)
+                    .HasMaxLength(15)
+                    .IsUnicode(false)
+                    .IsFixedLength();
+                entity.Property(e => e.ChangeDescription).HasMaxLength(50);
+                entity.Property(e => e.IdUser)
+                    .HasMaxLength(10)
+                    .IsUnicode(false)
+                    .IsFixedLength();
+                entity.Property(e => e.TimeChanged).HasColumnType("datetime");
+
+                entity.HasOne(d => d.StaffPermissionsDetail).WithMany(p => p.StaffActiveLogs)
+                    .HasForeignKey(d => new { d.IdUser, d.IdPermissions })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Staff_Active_Logs_Staff_Permissions_Detail");
+            });
+
+            modelBuilder.Entity<StaffPermissionsDetail>(entity =>
+            {
+                entity.HasKey(e => new { e.IdUser, e.IdPermissions }).HasName("PK__Staff_Pe__37AE38558BE70804");
+
+                entity.ToTable("Staff_Permissions_Detail");
+
+                entity.Property(e => e.IdUser)
+                    .HasMaxLength(10)
+                    .IsUnicode(false)
+                    .IsFixedLength();
+
+                entity.HasOne(d => d.IdPermissionsNavigation).WithMany(p => p.StaffPermissionsDetails)
+                    .HasForeignKey(d => d.IdPermissions)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Staff_Permissions_Detail_PermissionsList");
+
+                entity.HasOne(d => d.IdUserNavigation).WithMany(p => p.StaffPermissionsDetails)
+                    .HasForeignKey(d => d.IdUser)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Staff_Permissions_Detail_NhanVien");
             });
 
             modelBuilder.Entity<TacGium>(entity =>
@@ -409,12 +477,43 @@ namespace ProjectMangaSmurf.Data
                     .HasColumnName("ten_tg");
             });
 
-            modelBuilder.Entity<ContactMail>(entity =>
+            modelBuilder.Entity<User>(entity =>
             {
-                entity.HasKey(e => e.Email);
+                entity.HasKey(e => e.IdUser).HasName("PK__Users__B7C92638206D968B");
+
+                entity.Property(e => e.IdUser)
+                    .HasMaxLength(10)
+                    .IsUnicode(false)
+                    .IsFixedLength();
+                entity.Property(e => e.Email)
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
+                entity.Property(e => e.FullName).HasMaxLength(30);
+                entity.Property(e => e.Phone)
+                    .HasMaxLength(10)
+                    .IsUnicode(false)
+                    .IsFixedLength();
+
+                entity.HasOne(d => d.IdUserNavigation).WithOne(p => p.User)
+                    .HasForeignKey<User>(d => d.IdUser)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Users_NhanVien");
             });
 
+            modelBuilder.Entity<WebMediaConfig>(entity =>
+            {
+                entity.HasKey(e => e.IdConfig).HasName("PK__WebMedia__79F21764D24494B8");
+
+                entity.ToTable("WebMedia_Config");
+
+                entity.Property(e => e.IdConfig).ValueGeneratedNever();
+                entity.Property(e => e.ConfigTitle).HasMaxLength(30);
+            });
+
+
+
             //OnModelCreatingPartial(modelBuilder);
+
         }
         //partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
     }

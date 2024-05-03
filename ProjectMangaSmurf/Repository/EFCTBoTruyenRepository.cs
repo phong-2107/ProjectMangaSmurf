@@ -28,27 +28,27 @@ namespace ProjectMangaSmurf.Repository
 
         public async Task<IEnumerable<CtBoTruyen>> GetAllAsyncByID(string id)
         {
-            return await _context.CtBoTruyens.Where(p => p.IdKh == id).ToListAsync();
+            return await _context.CtBoTruyens.Where(p => p.IdUser == id).ToListAsync();
         }
 
         public async Task<IEnumerable<CtBoTruyen>> GetAllAsyncFollowByID(string id)
         {
-            return await _context.CtBoTruyens.Where(p => (p.IdKh == id) && (p.Theodoi == true)).ToListAsync();
+            return await _context.CtBoTruyens.Where(p => (p.IdUser == id) && (p.Theodoi == true)).ToListAsync();
         }
 
         public async Task<IEnumerable<CtBoTruyen>> GetAllAsyncHistoryByID(string id)
         {
-            return await _context.CtBoTruyens.Where(p => (p.IdKh == id) && (p.LsMoi != "-1")).ToListAsync();
+            return await _context.CtBoTruyens.Where(p => (p.IdUser == id) && (p.LsMoi != "-1")).ToListAsync();
         }
 
-        public async Task<CtBoTruyen> GetByIdAsync(string idkh, string idbo)
+        public async Task<CtBoTruyen> GetByIdAsync(string IdUser, string idbo)
         {
-            return await _context.CtBoTruyens.FirstOrDefaultAsync(p => (p.IdKh == idkh) && (p.IbBo == idbo));
+            return await _context.CtBoTruyens.FirstOrDefaultAsync(p => (p.IdUser == IdUser) && (p.IbBo == idbo));
         }
 
-        public async Task<CtBoTruyen> GetByIdFollowAsync(string idkh, string idbo)
+        public async Task<CtBoTruyen> GetByIdFollowAsync(string IdUser, string idbo)
         {
-            return await _context.CtBoTruyens.FirstOrDefaultAsync(p => (p.IdKh == idkh) && (p.IbBo == idbo) && (p.Theodoi == true));
+            return await _context.CtBoTruyens.FirstOrDefaultAsync(p => (p.IdUser == IdUser) && (p.IbBo == idbo) && (p.Theodoi == true));
         }
 
         public async Task UpdateAsync(CtBoTruyen botruyen)

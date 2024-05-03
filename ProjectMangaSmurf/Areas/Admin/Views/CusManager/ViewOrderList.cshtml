@@ -1,4 +1,4 @@
-﻿@model IEnumerable<ProjectMangaSmurf.Models.HopDong>
+﻿@model IEnumerable<ProjectMangaSmurf.Models.Payment>
 
 @{
     ViewData["Title"] = "Order List";
@@ -50,10 +50,10 @@
                         {
                             <tr>
 
-                                <td>@hopDong.IdHd</td>
-                                <td><a href="@Url.Action("Detail", "CusManager", new { id = hopDong.IdKh })">@hopDong.IdKh</a></td>
-                                <td>@hopDong.Ngaylap.ToString("dd/MM/yyyy")</td>
-                                <td>@hopDong.GtThanhtoan</td>
+                                <td>@hopDong.IdPayment</td>
+                                <td><a href="@Url.Action("Detail", "CusManager", new { id = hopDong.IdUser })">@hopDong.IdUser</a></td>
+                                <td>@hopDong.PayDate.GetValueOrDefault().ToString("dd/MM/yyyy")</td>
+                                <td>@hopDong.PayAmount</td>
                             </tr>
                         }
                     </tbody>

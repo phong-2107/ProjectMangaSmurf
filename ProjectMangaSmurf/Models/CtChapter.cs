@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ProjectMangaSmurf.Models;
 
-public class CtChapter
+public partial class CtChapter
 {
     public int SoTrang { get; set; }
 

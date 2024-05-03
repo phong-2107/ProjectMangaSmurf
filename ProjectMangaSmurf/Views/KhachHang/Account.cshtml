@@ -146,20 +146,20 @@
                             <div class="card-body">
                                 <div class="form-group">
                                     <label  class="form-label">Username</label>
-                                    <input name="Taikhoan" asp-for="Taikhoan" type="text" class="form-control mb-1" maxlength="20" value="@Model.Taikhoan">
+                                    <input name="Taikhoan"  type="text" class="form-control mb-1" maxlength="20" value="@Model.IdUserNavigation.UserName">
                                 </div>
                                 <div class="form-group">
                                     <label class="form-label">FullName</label>
-                                    <input name="TenKh" asp-for="TenKh" type="text" class="form-control" value="@Model.TenKh" maxlength="30" placeholder="Nguyen Van ....">
+                                    <input name="TenKh"  type="text" class="form-control" value="@Model.IdUserNavigation.FullName" maxlength="30" placeholder="Nguyen Van ....">
                                 </div>
                                 <div class="form-group">
                                     <label class="form-label">Phone</label>
-                                    <input name="Sdt" asp-for="Sdt" type="text" class="form-control" value="@Model.Sdt" maxlength="10" placeholder="+84 ***">
+                                    <input name="Sdt"  type="text" class="form-control" value="@Model.IdUserNavigation.Phone" maxlength="10" placeholder="+84 ***">
                                 </div>
                             
                                 <div class="form-group">
                                     <label class="form-label">Email</label>
-                                    <input name="Email" asp-for="Email" type="text" class="form-control mb-1" value="@Model.Email" placeholder="Example@gmail.com">
+                                    <input name="Email" type="text" class="form-control mb-1" value="@Model.IdUserNavigation.Email" placeholder="Example@gmail.com">
                                     <div class="alert alert-warning mt-3">
                                         Thông tin của bạn sẽ được ghi nhận khi Save Change<br>
                                         <a href="javascript:void(0)">Resend confirmation</a>
@@ -175,21 +175,21 @@
                     <div class="tab-pane fade" id="account-change-password">
                         <form asp-action="UpdatePass" method="post">
                             <div class="card-body pb-2">
-                                @if(Model.LienketGg == null)
+                                @if(Model.GoogleAccount == null)
                                 {
                                     <div class="form-group">
                                         <label class="form-label">Current password</label>
-                                        <input name="currentPassword" asp-for="Matkhau" type="password" class="form-control" required>
+                                        <input name="currentPassword" type="password" class="form-control" required>
                                     </div>
                                 }
                                 <div class="form-group">
                                     <label class="form-label">New password</label>
-                                    <input name="newPassword" asp-for="Matkhau" type="password" class="form-control" required>
+                                    <input name="newPassword"  type="password" class="form-control" required>
                                 </div>
 
                                 <div class="form-group">
                                     <label class="form-label">Repeat new password</label>
-                                    <input name="confirmNewPassword" asp-for="Matkhau" type="password" type="password" class="form-control" required>
+                                    <input name="confirmNewPassword" type="password" type="password" class="form-control" required>
                                 </div>
                                 <div asp-validation-summary="All" class="text-danger"></div>
                                 <div class="text-right mt-3">
@@ -207,7 +207,7 @@
                                     <i class="ion ion-logo-google text-google"></i>
                                     Tài khoản hiện tại liên kết với google:
                                 </h5>
-                                @Model.Email
+                                @Model.GoogleAccount
                             </div>
                             <div class="card-body">
                                 <a type="button" class="btn btn-facebook bg-primary">Connect to <strong>Facebook</strong> <i class="fa-brands fa-facebook-f"></i></a>
@@ -221,13 +221,13 @@
                             <form asp-action="UpdateSocial" method="post" class="w-100 h-100  pb-2">
                                 <div class="form-group">
                                     <label class="form-label">Facebook</label>
-                                    <input name="LienketFb" asp-for="LienketFb" type="text" class="form-control" value="https://www.facebook.com/user">
-                                    <span asp-validation-for="LienketFb" class="text-danger"></span>
+                                    <input name="LienketFb" asp-for="GoogleAccount" type="text" class="form-control" value="https://www.facebook.com/user">
+                                    <span asp-validation-for="FacebookAccount" class="text-danger"></span>
                                 </div>
                                 <div class="form-group">
                                     <label class="form-label">Google+</label>
-                                    <input name="LienketGg" asp-for="LienketGg" type="text" class="form-control" value="">
-                                    <span asp-validation-for="LienketGg" class="text-danger"></span>
+                                    <input name="LienketGg" asp-for="GoogleAccount" type="text" class="form-control" value="">
+                                    <span asp-validation-for="FacebookAccount" class="text-danger"></span>
                                 </div>
                                 <div class="text-right mt-3">
                                     <button type="submit" class="btn btn-primary">Save changes</button>&nbsp;

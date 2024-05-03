@@ -1,4 +1,4 @@
-﻿@model ProjectMangaSmurf.Models.KhachHang
+﻿@model ProjectMangaSmurf.Models.User
 @using Microsoft.AspNetCore.Mvc.Rendering
 @{
     Layout = null;
@@ -55,18 +55,18 @@
                 <form class="form-login" asp-controller="KhachHang" asp-action="Register" method="post">
                     <div class="content-login" style="z-index: 100000;">
                         <div class="inputBox">
-                            <input asp-for="Taikhoan" type="text" autocomplete="nope" required>
-                            <span asp-validation-for="Taikhoan">UserName</span>
+                            <input name="Taikhoan" asp-for="UserName" type="text" autocomplete="nope" required>
+                            <span asp-validation-for="UserName">UserName</span>
                             <i></i>
                         </div>
                         <div class="inputBox">
-                            <input asp-for="Email" type="email" autocomplete="nope" required>
+                            <input name="Email" asp-for="Email" type="email" autocomplete="nope" required>
                             <span asp-validation-for="Email">Email Address</span>
                             <i></i>
                         </div>
                         <div class="inputBox">
-                            <input asp-for="Matkhau" type="password" autocomplete="new-password" id="passwordInput" oninput="checkPasswordSecurity()" required>
-                            <span asp-validation-for="Matkhau">Password</span>
+                            <input name="matKhau" asp-for="Password" type="password" autocomplete="new-password" id="passwordInput" oninput="checkPasswordSecurity()" required>
+                            <span asp-validation-for="Password">Password</span>
                             <i></i>
                         </div>
                         <div class="passSecurity">

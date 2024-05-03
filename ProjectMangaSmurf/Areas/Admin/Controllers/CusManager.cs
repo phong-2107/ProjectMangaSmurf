@@ -1,146 +1,145 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using ProjectMangaSmurf.Repository;
+﻿////using Microsoft.AspNetCore.Authorization;
+////using Microsoft.AspNetCore.Mvc;
+////using ProjectMangaSmurf.Repository;
 
-using ProjectMangaSmurf.Models;
-using ProjectMangaSmurf.Models.ViewModels;
-using Microsoft.EntityFrameworkCore;
-
-
-
-
-namespace ProjectMangaSmurf.Areas.Admin.Controllers
-{
-    [Area("Admin")]
-    [Authorize(Roles = SD.Role_Admin + "," + SD.Role_Staff)]
-    public class CusManager : Controller
-    {
-        private readonly IKhachHangRepository _khachhangrepository;
-
-       public CusManager(IKhachHangRepository khachHangRepository)
-
-        {
-            _khachhangrepository = khachHangRepository;
-
-        }
+////using ProjectMangaSmurf.Models;
+////using Microsoft.EntityFrameworkCore;
 
 
 
 
-        public async Task<IActionResult> ViewList(string status = "all", bool premium = false)
-        {
-            IQueryable<KhachHang> query = _khachhangrepository.GetQuery();  // Get base query from the repository
+////namespace ProjectMangaSmurf.Areas.Admin.Controllers
+////{
+////    [Area("Admin")]
+////    [Authorize(Roles = SD.Role_Admin + "," + SD.Role_Staff)]
+////    public class CusManager : Controller
+////    {
+////        private readonly IKhachHangRepository _khachhangrepository;
 
-            // Apply status filters
-            switch (status)
-            {
-                case "active":
-                    query = query.Where(kh => kh.Active);  // Active customers
-                    break;
-                case "banned":
-                    query = query.Where(kh => !kh.Active); // Banned customers
-                    break;
-            }
+////       public CusManager(IKhachHangRepository khachHangRepository)
 
-            // Apply premium filter if checked
-            if (premium)
-            {
-                query = query.Where(kh => kh.TtPremium); // Premium status customers
-            }
+////        {
+////            _khachhangrepository = khachHangRepository;
 
-            var list = await query.ToListAsync(); // Execute the query and get the list
-            return View(list); // Pass the list to the view
-        }
-
-        public async Task<IActionResult> ViewOrderList()
-        {
-            var orders = await _khachhangrepository.GetAllHopDongAsync();  // Assuming the repository method name
-            return View(orders);
-        }
+////        }
 
 
 
 
+////        public async Task<IActionResult> ViewList(string status = "all", bool premium = false)
+////        {
+////            IQueryable<KhachHang> query = _khachhangrepository.GetQuery();  // Get base query from the repository
 
-        [HttpPost]
-        public async Task<IActionResult> UpdateCustomerStatus(string IdKh, bool TtPremium, bool Active)
-        {
-            var customer = await _khachhangrepository.GetByIdAsync(IdKh);
-            if (customer == null)
-            {
-                return NotFound();
-            }
+////            // Apply status filters
+////            switch (status)
+////            {
+////                case "active":
+////                    query = query.Where(kh => kh.Active);  // Active customers
+////                    break;
+////                case "banned":
+////                    query = query.Where(kh => !kh.Active); // Banned customers
+////                    break;
+////            }
 
-            customer.TtPremium = TtPremium;
-            customer.Active = Active;
-            await _khachhangrepository.UpdateAsync(customer);
+////            // Apply premium filter if checked
+////            if (premium)
+////            {
+////                query = query.Where(kh => kh.TtPremium); // Premium status customers
+////            }
 
-            return RedirectToAction(nameof(Detail), new { id = IdKh });
-        }
+////            var list = await query.ToListAsync(); // Execute the query and get the list
+////            return View(list); // Pass the list to the view
+////        }
 
-        public async Task<IActionResult> Detail(string id)
-        {
-            var customer = await _khachhangrepository.GetByIdAsync(id);
-            if (customer == null)
-            {
-                return NotFound();
-            }
-
-            var orders = await _khachhangrepository.GetAllIdHDAsync(id); // Assuming this returns IEnumerable<HopDong>
-
-            var viewModel = new CustomerDetailsViewModel
-            {
-                Customer = customer,
-                Orders = orders
-            };
-
-            return View(viewModel);
-        }
+////        public async Task<IActionResult> ViewOrderList()
+////        {
+////            var orders = await _khachhangrepository.GetAllHopDongAsync();  // Assuming the repository method name
+////            return View(orders);
+////        }
 
 
 
-        public async Task<IActionResult> OrderDetail(string id)
-        {
-            var order = await _khachhangrepository.GetAllIdHDAsync(id);
-            if (order == null || !order.Any()) // Check for null or empty collection
-            {
-                return NotFound();
-            }
-            return View(order);
-        }
+
+
+////        [HttpPost]
+////        public async Task<IActionResult> UpdateCustomerStatus(string IdKh, bool TtPremium, bool Active)
+////        {
+////            var customer = await _khachhangrepository.GetByIdAsync(IdKh);
+////            if (customer == null)
+////            {
+////                return NotFound();
+////            }
+
+////            customer.TtPremium = TtPremium;
+////            customer.Active = Active;
+////            await _khachhangrepository.UpdateAsync(customer);
+
+////            return RedirectToAction(nameof(Detail), new { id = IdKh });
+////        }
+
+////        public async Task<IActionResult> Detail(string id)
+////        {
+////            var customer = await _khachhangrepository.GetByIdAsync(id);
+////            if (customer == null)
+////            {
+////                return NotFound();
+////            }
+
+////            var orders = await _khachhangrepository.GetAllIdHDAsync(id); // Assuming this returns IEnumerable<HopDong>
+
+////            var viewModel = new CustomerDetailsViewModel
+////            {
+////                Customer = customer,
+////                Orders = orders
+////            };
+
+////            return View(viewModel);
+////        }
+
+
+
+////        public async Task<IActionResult> OrderDetail(string id)
+////        {
+////            var order = await _khachhangrepository.GetAllIdHDAsync(id);
+////            if (order == null || !order.Any()) // Check for null or empty collection
+////            {
+////                return NotFound();
+////            }
+////            return View(order);
+////        }
         
-        public async Task<IActionResult> Update(string id)
-        {
-            var K = await _khachhangrepository.GetByIdAsync(id);
-            if (K == null)
-            {
-                return NotFound();
-            }
-            return View(K);
-        }
+////        public async Task<IActionResult> Update(string id)
+////        {
+////            var K = await _khachhangrepository.GetByIdAsync(id);
+////            if (K == null)
+////            {
+////                return NotFound();
+////            }
+////            return View(K);
+////        }
 
-        [HttpPost]
-        public async Task<IActionResult> Update(string id , KhachHang khachHang)
-        {
-            if (id != khachHang.IdKh)
-                {
-                    return NotFound();
-                }
-            else
-            {
-                var existingProduct = await _khachhangrepository.GetByIdAsync(id);
-                existingProduct.Active = khachHang.Active;
-                existingProduct.TtPremium = khachHang.TtPremium;
+////        [HttpPost]
+////        public async Task<IActionResult> Update(string id , KhachHang khachHang)
+////        {
+////            if (id != khachHang.IdKh)
+////                {
+////                    return NotFound();
+////                }
+////            else
+////            {
+////                var existingProduct = await _khachhangrepository.GetByIdAsync(id);
+////                existingProduct.Active = khachHang.Active;
+////                existingProduct.TtPremium = khachHang.TtPremium;
 
-                await _khachhangrepository.UpdateAsync(existingProduct);
+////                await _khachhangrepository.UpdateAsync(existingProduct);
 
-                return RedirectToAction(nameof(Index));
-            }
-        }
+////                return RedirectToAction(nameof(Index));
+////            }
+////        }
 
  
         
         
         
-    }
-}
+////    }
+////}

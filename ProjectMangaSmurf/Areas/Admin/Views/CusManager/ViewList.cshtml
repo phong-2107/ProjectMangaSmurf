@@ -71,14 +71,14 @@
                             <tr>
 
                            
-                                <td>@i.IdKh</td>
-                                <td>@i.TenKh</td>
-                                <td>@i.Sdt</td>
-                                <td>@i.Email</td>
-                                <td>@i.TtPremium</td>
-                                <td>@i.Active</td>
+                                <td>@i.IdUser</td>
+                                <td>@i.IdUserNavigation.FullName</td>
+                                <td>@i.IdUserNavigation.Phone</td>
+                                <td>@i.IdUserNavigation.Email</td>
+                                <td>@i.ActivePremium</td>
+                                <td>@i.IdUserNavigation.Active</td>
                                 <td>
-                                    <a asp-area="Admin" asp-controller="CusManager" asp-action="Detail" asp-route-id="@i.IdKh" class="me-3">
+                                    <a asp-area="Admin" asp-controller="CusManager" asp-action="Detail" asp-route-id="@i.IdUser" class="me-3">
                                         <img src="~/img/icons/eye.svg" alt="img">
                                     </a>
 

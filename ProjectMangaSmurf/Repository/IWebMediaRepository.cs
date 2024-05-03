@@ -2,8 +2,8 @@
 
 namespace ProjectMangaSmurf.Repository
 {
-    public interface IFooterRepository
+    public interface IWebMediaRepository
     {
-        Footer GetFirstAsync();
+        WebMediaConfig GetFirstAsync();
     }
 }

@@ -71,7 +71,7 @@
             <div class="action-page">
                 <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="Index">HOME PAGE </a>
                 <a asp-area="Admin" asp-controller="CusManager" asp-action="ViewList"> \ LIST OF COSTUMERS </a>
-                <a asp-area="Admin" asp-controller="CusManager" asp-action="Detail" asp-route-id="@customer.IdKh"> \ @customer.IdKh  -  @customer.TenKh</a>
+                <a asp-area="Admin" asp-controller="CusManager" asp-action="Detail" asp-route-id="@customer.IdUser"> \ @customer.IdUser  -  @customer.IdUserNavigation.FullName</a>
             </div>
             <h6>Detail Info of costumer </h6>
         </div>
@@ -83,13 +83,13 @@
                 <div class="card-body">
                     <div class="productdetails">
                         <ul class="product-bar">
-                            <li><h4>Tên Khách Hàng</h4><h6>@customer.TenKh</h6></li>
-                            <li><h4>Số Điện Thoại</h4><h6>@customer.Sdt</h6></li>
-                            <li><h4>Địa Chỉ Email</h4><h6>@customer.Email</h6></li>
-                            <li><h4>Premium ?</h4><h6>@customer.TtPremium</h6></li>
-                            <li><h4>Banned ?</h4><h6>@customer.Active</h6></li>
-                            <li><h4>Liên Kết FB</h4><h6>@customer.LienketFb</h6></li>
-                            <li><h4>Liên Kết G+</h4><h6>@customer.LienketGg</h6></li>
+                            <li><h4>Tên Khách Hàng</h4><h6>@customer.IdUserNavigation.FullName</h6></li>
+                            <li><h4>Số Điện Thoại</h4><h6>@customer.IdUserNavigation.Phone</h6></li>
+                            <li><h4>Địa Chỉ Email</h4><h6>@customer.GoogleAccount</h6></li>
+                            <li><h4>Premium ?</h4><h6>@customer.ActivePremium</h6></li>
+                            @* <li><h4>Banned ?</h4><h6>@customer.tr</h6></li> *@
+                            <li><h4>Liên Kết FB</h4><h6>@customer.FacebookAccount</h6></li>
+                            <li><h4>Liên Kết G+</h4><h6>@customer.GoogleAccount</h6></li>
                         </ul>
                     </div>
                 </div>
@@ -99,17 +99,17 @@
                 <div class="card">
                     <div class="card-body">
                         <form asp-action="UpdateCustomerStatus" asp-controller="CusManager" method="post">
-                            <input type="hidden" name="IdKh" value="@customer.IdKh" />
+                            <input type="hidden" name="IdKh" value="@customer.IdUser" />
                         <h5 class="form-section-title">Premium Status</h5>
                             <select class="form-control" name="TtPremium">
-                                <option value="true" selected="@customer.TtPremium">Yes</option>
-                                <option value="false" selected="@(customer.TtPremium ? false : true)">No</option>
+                                <option value="true" selected="@customer.ActivePremium">Yes</option>
+                                <option value="false" selected="@(customer.ActivePremium.GetValueOrDefault() ? false : true)">No</option>
                             </select>
 
                         <h5 class="form-section-title">Banned -  Account Active</h5>
                             <select class="form-control" name="Active">
-                                <option value="true" selected="@customer.Active">Yes</option>
-                                <option value="false" selected="@(customer.Active ? false : true)">No</option>
+                                <option value="true" selected="@customer.IdUserNavigation.Active">Yes</option>
+                                <option value="false" selected="@(customer.IdUserNavigation.Active.GetValueOrDefault() ? false : true)">No</option>
                             </select>
                             <button type="submit" class="btn btn-primary">Update Status</button>
                         </form>
@@ -121,7 +121,7 @@
     <div class="page-header">
         <div class="page-title">
             <div class="action-page">
-                <h3>Order detail of @customer.IdKh </h3>
+                <h3>Order detail of @customer.IdUser </h3>
             </div>
         </div>
     </div>
@@ -140,9 +140,9 @@
                     {
                         <tr>
                             <td><label class="checkboxs"><input type="checkbox" class="order-checkbox"><span class="checkmarks"></span></label></td>
-                            <td>@hopDong.IdHd</td>
-                            <td>@hopDong.Ngaylap.ToString("dd/MM/yyyy")</td>
-                            <td>@hopDong.GtThanhtoan</td>
+                            <td>@hopDong.IdPayment</td>
+                            <td>@hopDong.PayDate.GetValueOrDefault().ToString("dd/MM/yyyy")</td>
+                            <td>@hopDong.PayAmount</td>
                         </tr>
                     }
                 </tbody>

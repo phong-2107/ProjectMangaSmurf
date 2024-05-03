@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace ProjectMangaSmurf.Models;
 
-public class CtBoTruyen
+public partial class CtBoTruyen
 {
-    public string IdKh { get; set; } = null!;
+    public string IdUser { get; set; } = null!;
 
     public string IbBo { get; set; } = null!;
 
@@ -17,5 +17,5 @@ public class CtBoTruyen
 
     public virtual BoTruyen IbBoNavigation { get; set; } = null!;
 
-    public virtual KhachHang IdKhNavigation { get; set; } = null!;
+    public virtual KhachHang IdUserNavigation { get; set; } = null!;
 }

@@ -4,8 +4,8 @@ namespace ProjectMangaSmurf.Repository
 {
     public interface IHopdongRepository
     {
-        Task<IEnumerable<HopDong>> GetAllAsync();
-        Task AddAsync(HopDong hd);
+        Task<IEnumerable<Payment>> GetAllAsync();
+        Task AddAsync(Payment hd);
         string GenerateHD();
     }
 }

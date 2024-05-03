@@ -1,10 +1,15 @@
-﻿namespace ProjectMangaSmurf.Models
+﻿using System;
+using System.Collections.Generic;
+
+namespace ProjectMangaSmurf.Models;
+
+public partial class ContactMail
 {
-    public class ContactMail
-    {
-        public string Email { get; set; }
-        public string Name { get; set; }
-        public string Subject { get; set; }
-        public string Message { get; set; }
-    }
+    public string Email { get; set; } = null!;
+
+    public string Name { get; set; } = null!;
+
+    public string Subject { get; set; } = null!;
+
+    public string Message { get; set; } = null!;
 }

@@ -49,13 +49,13 @@
                 <form asp-action="Login" class="form-login" autocomplete="off" method="post">
                     <div class="content-login form-group" style="z-index: 100000;">
                         <div class="inputBox">
-                            <input name="Taikhoan" asp-for="Taikhoan" type="text" required autocomplete="nope">
-                            <span asp-validation-for="Taikhoan">Username</span>
+                            <input name="Taikhoan"  type="text" required autocomplete="nope">
+                            @* <span asp-validation-for="Taikhoan">Username</span> *@
                             <i></i>
                         </div>
                         <div class="inputBox">
-                            <input name="Matkhau" asp-for="Matkhau" type="password" required autocomplete="new-password">
-                                <span asp-validation-for="Matkhau">Password</span>
+                            <input name="Matkhau" type="password" required autocomplete="new-password">
+                                @* <span asp-validation-for="Matkhau">Password</span> *@
                                 <i></i>
                             @* <a type="button" id="toggle-password" onclick="togglePassword()">
                                 <i class="ri-eye-fill"></i>

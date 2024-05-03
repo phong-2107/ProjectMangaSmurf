@@ -120,9 +120,9 @@ namespace ProjectMangaSmurf.Repository
             return await Task.FromResult(randomElement);
         }
 
-        public async Task<Footer> GetFirstAsync()
+        public async Task<WebMediaConfig> GetFirstAsync()
         {
-            return await _context.Footers.FirstOrDefaultAsync();
+            return await _context.WebMediaConfigs.FirstOrDefaultAsync();
         }
 
 
@@ -183,7 +183,7 @@ namespace ProjectMangaSmurf.Repository
             if (string.IsNullOrEmpty(comicTypeId))
                 return 0;
 
-            var count = await _context.BoTruyens.CountAsync(b => b.listloai.Contains(comicTypeId));
+            var count = await _context.BoTruyens.CountAsync(b => b.Listloai.Contains(comicTypeId));
             return count; // This will return 0 if no matches are found
         }
 

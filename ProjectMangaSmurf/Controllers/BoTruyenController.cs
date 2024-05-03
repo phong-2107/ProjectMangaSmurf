@@ -112,7 +112,7 @@ namespace ProjectMangaSmurf.Controllers
             if (kh != null)
             {
                 var khtmp = await _khachhangrepository.GetByAccountAsync(kh);
-                var findct = _cTBoTruyenRepository.GetByIdFollowAsync(khtmp.IdKh, id);
+                var findct = _cTBoTruyenRepository.GetByIdFollowAsync(khtmp.IdUser, id);
                 if (await findct != null)
                 {
                     var ls = await findct;
@@ -159,11 +159,11 @@ namespace ProjectMangaSmurf.Controllers
                 CtHoatDong ct = new CtHoatDong();
                 ct.IdBo = id;
                 ct.SttChap = stt;
-                ct.IdKh = khtmp.IdKh;
+                ct.IdUser = khtmp.IdUser;
                 ct.TtDoc = true;
                 await _chapterrepository.AddAsyncCTHD(ct);
 
-                var ctBo = _cTBoTruyenRepository.GetByIdAsync(khtmp.IdKh, id);
+                var ctBo = _cTBoTruyenRepository.GetByIdAsync(khtmp.IdUser, id);
                 if(await ctBo != null)
                 {
                     var bo = await ctBo;
@@ -173,7 +173,7 @@ namespace ProjectMangaSmurf.Controllers
                 else
                 {
                     CtBoTruyen ctBoTruyen = new CtBoTruyen();
-                    ctBoTruyen.IdKh = khtmp.IdKh;
+                    ctBoTruyen.IdUser = khtmp.IdUser;
                     ctBoTruyen.IbBo = id;
                     ctBoTruyen.Theodoi = false;
                     ctBoTruyen.DanhGia = 0;
@@ -182,7 +182,7 @@ namespace ProjectMangaSmurf.Controllers
                     ViewBag.follow = false;
                 }
 
-                var findct = _cTBoTruyenRepository.GetByIdAsync(khtmp.IdKh, id);
+                var findct = _cTBoTruyenRepository.GetByIdAsync(khtmp.IdUser, id);
                 if (await findct != null)
                 {
                     var follow  = await findct;

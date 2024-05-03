@@ -59,13 +59,13 @@ namespace ProjectMangaSmurf.Controllers
 
         public async Task<ActionResult> PaymentSuccess()
         {
-            HopDong hd = new HopDong();
-            hd.IdHd = hopdongRepository.GenerateHD();
-            hd.Ngaylap = DateTime.Parse(HttpContext.Session.GetString("date"));
-            hd.IdKh = HttpContext.Session.GetString("IdKH");
-            hd.MaGiaoDich = int.Parse(HttpContext.Session.GetString("OrderId"));
-            hd.NoiDung = HttpContext.Session.GetString("Note");
-            hd.GtThanhtoan = 69000;
+            Payment hd = new Payment();
+            hd.IdPayment = hopdongRepository.GenerateHD();
+            hd.PayDate = DateTime.Parse(HttpContext.Session.GetString("date"));
+            hd.IdUser = HttpContext.Session.GetString("IdKH");
+            //hd. = int.Parse(HttpContext.Session.GetString("OrderId"));
+            //hd.NoiDung = HttpContext.Session.GetString("Note");
+            hd.PayAmount = 69000;
             await hopdongRepository.AddAsync(hd);
 
             var email = HttpContext.Session.GetString("Email");
@@ -73,10 +73,10 @@ namespace ProjectMangaSmurf.Controllers
             var messsage = HttpContext.Session.GetString("Message");
             await _emailRepository.SendEmailAsync(email, subject, messsage);
 
-            var kh = await _khachHangRepository.GetByIdAsync(hd.IdKh);
+            var kh = await _khachHangRepository.GetByIdAsync(hd.IdUser);
             if (kh != null)
             {
-                kh.TtPremium = true;
+                kh.ActivePremium = true;
                 await _khachHangRepository.UpdateAsync(kh);
             }
             return View("Success");

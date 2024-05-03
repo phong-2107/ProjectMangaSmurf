@@ -1,13 +1,4 @@
-﻿@using ProjectMangaSmurf
-@using Microsoft.AspNetCore.Http
-@using ProjectMangaSmurf.Repository
-@inject IFooterRepository FooterRepository
-
-@* @{
-    var footer = FooterRepository.GetFirstAsync();
-
-    if( footer != null)
-    { *@
+﻿
         <div class="footer__container containers grid row align-content-md-between">
             <div class="footer__content col-12 col-md-6">
                 <div>
@@ -79,5 +70,3 @@
                 &#169;  2024 MangaSmurf.  All Rights Reserved.
             </span>
         </div>
-@*     }
-} *@

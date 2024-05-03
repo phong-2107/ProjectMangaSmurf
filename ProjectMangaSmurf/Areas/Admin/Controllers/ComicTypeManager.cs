@@ -52,7 +52,7 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
 
             // Fetching all comic series that belong to this type
             var comicSeries = await _botruyen.GetAllAllAsync();
-            var relatedComics = comicSeries.Where(c => c.listloai.Contains(id)).ToList();
+            var relatedComics = comicSeries.Where(c => c.Listloai.Contains(id)).ToList();
 
             ViewBag.RelatedComics = relatedComics;
             ViewBag.RelatedSeriesCount = relatedComics.Count;

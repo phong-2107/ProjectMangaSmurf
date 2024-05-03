@@ -36,14 +36,14 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
             _hopdongRepository = hopdongRepository;
         }
 
-        public decimal SumMoney(IEnumerable<HopDong> list)
+        public decimal SumMoney(IEnumerable<Payment> list)
         {
             decimal money = new decimal();
             if (list != null)
             {
                 foreach (var i in list)
                 {
-                    money += i.GtThanhtoan;
+                    money += (decimal)i.PayAmount;
                 }
                 return money;
             }
@@ -273,7 +273,7 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
             existingProduct.TtPemium = boTruyen.TtPemium;
             existingProduct.TrangThai = boTruyen.TrangThai;
             existingProduct.Active = boTruyen.Active;
-            existingProduct.listloai = boTruyen.listloai; // Make sure this property is correctly bound and updated
+            existingProduct.Listloai = boTruyen.Listloai; // Make sure this property is correctly bound and updated
 
             await _botruyenrepository.UpdateAsync(existingProduct);
 

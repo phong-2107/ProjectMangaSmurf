@@ -1,34 +1,33 @@
-﻿using Microsoft.AspNetCore.Identity;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace ProjectMangaSmurf.Models;
 
-public class KhachHang 
+public partial class KhachHang
 {
-    public string IdKh { get; set; } = null!;
+    public string IdUser { get; set; } = null!;
 
-    public string? TenKh { get; set; }
+    public string? GoogleAccount { get; set; }
 
-    public string? Sdt { get; set; }
+    public string? FacebookAccount { get; set; }
 
-    public string? Email { get; set; }
+    public string? IdAvatar { get; set; }
 
-    public string? LienketFb { get; set; }
+    public int? TicketSalary { get; set; }
 
-    public string? LienketGg { get; set; }
+    public bool? ActivePremium { get; set; }
 
-    public string Taikhoan { get; set; }
-
-    public string Matkhau { get; set; } = null!;
-
-    public bool TtPremium { get; set; }
-
-    public bool Active { get; set; }
+    public byte? ActiveStats { get; set; }
 
     public virtual ICollection<CtBoTruyen> CtBoTruyens { get; set; } = new List<CtBoTruyen>();
 
     public virtual ICollection<CtHoatDong> CtHoatDongs { get; set; } = new List<CtHoatDong>();
 
-    public virtual ICollection<HopDong> HopDongs { get; set; } = new List<HopDong>();
+    public virtual ICollection<CustomerLogin> CustomerLogins { get; set; } = new List<CustomerLogin>();
+
+    public virtual Avatar? IdAvatarNavigation { get; set; }
+
+    public virtual User IdUserNavigation { get; set; } = null!;
+
+    public virtual Payment? Payment { get; set; }
 }

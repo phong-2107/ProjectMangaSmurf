@@ -237,8 +237,8 @@
                         khach = await khachhangrepository.GetByAccountAsync(kh);
                     }
 
-                    var idKh = khach?.IdKh;
-                    var isPremium = khach?.TtPremium ?? false;
+                    var idKh = khach?.IdUser;
+                    var isPremium = khach?.ActivePremium ?? false;
                     if (chapterList != null)
                     {
                         @foreach (var chap in chapterList)
