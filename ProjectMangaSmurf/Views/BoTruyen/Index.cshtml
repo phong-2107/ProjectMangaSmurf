@@ -129,7 +129,7 @@
                 <p class="section__des">Cập nhật Cập nhật nhanh và chất lượng nhất các chương truyện</p>
             </div>
             <div class="btn-More">
-                <a asp-area="" asp-controller="BoTruyen" asp-action="ListTruyenEarliest">Show More<i class="ri-arrow-right-s-fill"></i></a>
+                <a asp-area="" asp-controller="BoTruyen" asp-action="ListTruyenEarliest">Show More</a>
             </div>
         </div>
         <div class="container">
@@ -170,7 +170,53 @@
         </div>
     </div>
 </section>
-<section class="new-update Update__Containter containers mt-3 " id="update">
+<section class="new-update containers mt-3 mb-5" id="update">
+    <div class="update__container TruyenNew__Containter grids">
+        <div class="top__content">
+            <div class="title-infor">
+                <span class="section__subtitle">Loại Truyện Đề Cử</span>
+                <p class="section__des"></p>
+            </div>
+        </div>
+        <div class="container recommend__type">
+            <div class="row row-cols-2">
+                <a class="col">
+                    <div class="col-item">
+                        <img src="~/img/bg-4.jpg" />
+                        <h5 class="recommend-content">
+                            Manga
+                        </h5>
+                    </div>
+                </a>
+                <a class="col">
+                    <div class="col-item">
+                        <img src="~/img/bg-3.jpg" />
+                        <h5 class="recommend-content">
+                            Manwa
+                        </h5>
+                    </div>
+                </a>
+                <a class="col">
+                    <div class="col-item">
+                        <img src="~/img/bg-1.jpg" />
+                        <h5 class="recommend-content">
+                            Adventure
+                        </h5>
+                    </div>
+                </a>
+                <a class="col">
+                    <div class="col-item">
+                        <img src="~/img/bg-2.jpg" />
+                        <h5 class="recommend-content">
+                            Comedy
+                        </h5>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="new-update containers mt-3 " id="update">
     <div class=" update__container grids">
         <div class="top__content">
             <div class="title-infor">
@@ -178,12 +224,12 @@
                 <p class="section__des">Danh sách các truyện mới nhất cập nhật liên tục </p>
             </div>
             <div class="btn-More">
-                <a asp-area="" asp-controller="BoTruyen" asp-action="ListTruyen">Show More<i class="ri-arrow-right-s-fill"></i></a>
+                <a asp-area="" asp-controller="BoTruyen" asp-action="ListTruyen">Show More</a>
             </div>
         </div>
         <div class="container">
             <div class="row row-cols-6  justify-content-center">
-                @foreach (var botruyen in Model)
+                @foreach (var botruyen in Model.Take(7))
                 {
                     <div class="col-2 update-item">
                         <a asp-action="CTBoTruyen" asp-route-id="@botruyen.IdBo">
@@ -225,7 +271,6 @@
                                 @if (botruyen.TtPemium == true)
                                 {
                                     <div class="item-vip">
-                                        @* <i class="fa-solid fa-crown"></i> *@
                                         <img style="width:50px!important; height:20px!important; border-radius:0!important;" src="~/images/predark.png" />
                                     </div>
                                 }
@@ -235,6 +280,7 @@
                 }
             </div>
         </div>
+    </div>
 </section>
 <section class="new-update TopRank__container containers mt-3" id="update">
     <div class="update__container grids">
@@ -293,8 +339,7 @@
                         </div>
                         
                     </div>
-                }
-               
+                }           
             </div>
             
         </div>

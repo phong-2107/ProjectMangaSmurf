@@ -322,24 +322,24 @@
                                     <form asp-controller="Contact" asp-action="SendEmail" method='post' id='contact-form'>
                                         <input type='hidden' name='form-name' value='contactForm' />
                                         <div class="row">
-                                            <div class="col-md-12">
+                                            @* <div class="col-md-12">
                                                 <div class="form-group">
                                                     <input asp-for="Name" type="text" class="form-control" id="first-name" placeholder="Enter Your Name *" required="required">
                                                 </div>
-                                            </div>
+                                            </div> *@
                                             <div class="col-md-12">
                                                 <div class="form-group">
-                                                    <input asp-for="Email" type="email" class="form-control" id="email" placeholder="Enter Your Email *" required="required">
+                                                    <input name="email" type="email" class="form-control" id="email" placeholder="Enter Your Email *" required="required">
                                                 </div>
                                             </div>
                                             <div class="col-md-12">
                                                 <div class="form-group">
-                                                    <input asp-for="Subject" type="text" class="form-control" id="email" placeholder="Enter Your subject *" required="required">
+                                                    <input name="subject" type="text" class="form-control" id="email" placeholder="Enter Your subject *" required="required">
                                                 </div>
                                             </div>
                                             <div class="col-md-12">
                                                 <div class="form-group">
-                                                    <textarea asp-for="Message" rows="4" class="form-control" id="description" placeholder="Enter Your Message *" required="required"></textarea>
+                                                    <textarea name="message" rows="4" class="form-control" id="description" placeholder="Enter Your Message *" required="required"></textarea>
                                                 </div>
                                             </div>
                                             <div class="col-md-12">

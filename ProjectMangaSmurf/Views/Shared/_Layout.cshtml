@@ -325,6 +325,13 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     <script>
+
+        document.addEventListener('visibilitychange', function () {
+            if (document.visibilityState === 'hidden') {
+                console.log('Người dùng có thể đang chụp màn hình');
+            }
+        });
+
         $(document).ready(function () {
             $('.searchInput').on('input', function () {
                 var searchQuery = $(this).val();

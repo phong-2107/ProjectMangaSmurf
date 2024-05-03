@@ -19,7 +19,6 @@ namespace ProjectMangaSmurf.Repository
         Task<IEnumerable<LoaiTruyen>> GetAllLoaiTruyens();
         Task<IEnumerable<Chapter>> GetListChapter(string id);
         Task<List<BoTruyen>> GetComicsByAuthorId(string authorId);
-
         Task DeleteAllChaptersAndDetails(string idBo);
         string GenerateBoTruyenId();
         List<string> GetListLoaiAsync(string id);
@@ -33,7 +32,6 @@ namespace ProjectMangaSmurf.Repository
         string getNameTGById(string id);
         Task<int> GetAllView();
         Task<int> CountChapterById(string id);
-
         Task<int> CountByComicTypeId(string comicTypeId);
         Task<int> CountByAuthorId(string comicAuthId);
     }

@@ -84,7 +84,7 @@ builder.Services.AddScoped<IChapterRepository, EFChapterRepository>();
 builder.Services.AddScoped<IKhachHangRepository, EFKhachHangRepository>();
 builder.Services.AddScoped<IHopdongRepository, EFHopDongRepository>();
 builder.Services.AddScoped<IFooterRepository, EFFooterRepository>();
-builder.Services.AddScoped<IEmailRepository, EFEmailRepository>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 //======================= Payment =======================
 builder.Services.AddScoped<IVNPayRepository, EFVNPayRepository>();

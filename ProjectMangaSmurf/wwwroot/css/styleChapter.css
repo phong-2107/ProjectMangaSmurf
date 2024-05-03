@@ -1,6 +1,23 @@
-﻿.reading {
+﻿@import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap');
+
+.reading {
     margin-top: 3rem;
 }
+
+.protected-content {
+    position: relative;
+}
+
+    .protected-content::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.5); /* Sử dụng màu trắng bán trong suốt, có thể thay đổi theo yêu cầu */
+        pointer-events: none;
+    }
 
 img {
     user-select: none;

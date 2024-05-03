@@ -24,10 +24,13 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="8.0.4" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.2" />
+    <PackageReference Include="NETCore.MailKit" Version="2.1.0" />
     <PackageReference Include="VNPayPackage" Version="2.1.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Microsoft\AspNetCore\Identity\" />
+    <Folder Include="SendingEmails\" />
     <Folder Include="wwwroot\images\chapter\" />
     <Folder Include="wwwroot\images\truyen\" />
     <Folder Include="wwwroot\SmurfMangaData\" />

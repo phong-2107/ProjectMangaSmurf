@@ -6,8 +6,8 @@ namespace ProjectMangaSmurf.Controllers
 {
     public class ContactController : Controller
     {
-        private readonly IEmailRepository _emailRepository;
-        public ContactController(IEmailRepository emailRepository)
+        private readonly IEmailService _emailRepository;
+        public ContactController(IEmailService emailRepository)
         {
             _emailRepository = emailRepository;
         }
@@ -17,14 +17,14 @@ namespace ProjectMangaSmurf.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SendEmail(ContactMail model)
+        public async Task<IActionResult> SendEmail(string email, string subject, string message)
         {
             if (ModelState.IsValid)
             {
-                await _emailRepository.SendEmailAsync(model);
-                return RedirectToAction("Success");
+                await _emailRepository.SendEmailAsync(email, subject, message);
+                return RedirectToAction("Success", "Payment");
             }
-            return View("Index", model);
-        }
+			return RedirectToAction("Index");
+		}
     }
 }

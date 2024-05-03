@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using ProjectMangaSmurf.Data;
 using ProjectMangaSmurf.Models;
 using ProjectMangaSmurf.Repository;
@@ -13,11 +14,13 @@ namespace ProjectMangaSmurf.Controllers
         private readonly IVNPayRepository _vnPayservice;
         private readonly IHopdongRepository hopdongRepository;
         private readonly IKhachHangRepository _khachHangRepository;
-        public PaymentController(IKhachHangRepository khachHangRepository, IVNPayRepository vnPayservice, IHopdongRepository hopdong)
+        private readonly IEmailService _emailRepository;
+        public PaymentController(IKhachHangRepository khachHangRepository, IVNPayRepository vnPayservice, IHopdongRepository hopdong, IEmailService emailRepository)
         {
             _khachHangRepository = khachHangRepository;
             hopdongRepository = hopdong;
             _vnPayservice = vnPayservice;
+            _emailRepository = emailRepository;
         }
 
         public IActionResult Index()
@@ -65,6 +68,11 @@ namespace ProjectMangaSmurf.Controllers
             hd.GtThanhtoan = 69000;
             await hopdongRepository.AddAsync(hd);
 
+            var email = HttpContext.Session.GetString("Email");
+            var subject = HttpContext.Session.GetString("OrderId");
+            var messsage = HttpContext.Session.GetString("Message");
+            await _emailRepository.SendEmailAsync(email, subject, messsage);
+
             var kh = await _khachHangRepository.GetByIdAsync(hd.IdKh);
             if (kh != null)
             {
@@ -87,7 +95,7 @@ namespace ProjectMangaSmurf.Controllers
                 TempData["Message"] = $"Lỗi thanh toán VN Pay: {response.VnPayResponseCode}";
                 return RedirectToAction("PaymentFail");
             }
-
+            
             TempData["Message"] = $"Thanh toán VNPay thành công";
             return RedirectToAction("PaymentSuccess");
         }

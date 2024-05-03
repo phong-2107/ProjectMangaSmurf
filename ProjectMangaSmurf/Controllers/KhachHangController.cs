@@ -45,7 +45,12 @@ namespace ProjectMangaSmurf.Controllers
             }
         }
 
-        public IActionResult Login()
+        //public IActionResult Login()
+        //{
+        //    return View();
+        //}
+
+        public IActionResult login()
         {
             return View();
         }
@@ -89,7 +94,6 @@ namespace ProjectMangaSmurf.Controllers
             var result = await HttpContext.AuthenticateAsync(GoogleDefaults.AuthenticationScheme);
             if (result?.Principal != null)
             {
-                // Lấy thông tin từ claims
                 var claims = result.Principal.Identities.FirstOrDefault()?.Claims;
                 var emailClaim = claims?.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value;
                 var nameClaim = claims?.FirstOrDefault(x => x.Type == ClaimTypes.Name)?.Value;
@@ -164,6 +168,53 @@ namespace ProjectMangaSmurf.Controllers
             ModelState.AddModelError(string.Empty, "tai khoan kh hop le");
             return View();
         }
+
+        public IActionResult LoginPopup(string returnUrl)
+        {
+            ViewBag.ReturnUrl = returnUrl;
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> LoginPopup(string Taikhoan, string Matkhau, string returnUrl)
+        {
+            if (ModelState.IsValid)
+            {
+                var kh = await _khachhangrepository.GetByAccountAsync(Taikhoan);
+                if (kh != null)
+                {
+                    var check = PasswordHasher.VerifyPassword(Matkhau.Trim(), kh.Matkhau.Trim());
+                    if (check)
+                    {
+                        // Set session variables
+                        HttpContext.Session.SetString("TK", kh.Taikhoan);
+                        HttpContext.Session.SetString("IdKH", kh.IdKh);
+
+                        // Check if the returnUrl is not null and is a local URL to prevent Open Redirect vulnerabilities
+                        if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+                        {
+                            return Redirect(returnUrl);
+                        }
+
+                        // If no valid returnUrl, redirect to a default page
+                        return RedirectToAction("Index", "BoTruyen");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, "Mật khẩu không đúng");
+                        return View();
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "Tài khoản của bạn không đúng");
+                    return View();
+                }
+            }
+            ModelState.AddModelError(string.Empty, "Thông tin tài khoản không hợp lệ");
+            return View();
+        }
+
 
         public IActionResult Register()
         {

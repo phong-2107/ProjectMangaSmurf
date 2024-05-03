@@ -3,8 +3,8 @@
 /*=============== VARIABLES CSS ===============*/
 :root {
     /*========== Colors ==========*/
-    /*Color mode HSL(hue, saturation, lightness)*/
-    /*--first-color: #6a4040;
+    /* Color mode HSL(hue, saturation, lightness)
+    --first-color: #6a4040;
     --first-color-alt: hsl(19, 64%, 52%);
     --title-color: hsl(19, 16%, 10%);
     --text-color: hsl(19, 16%, 35%);
@@ -26,7 +26,7 @@
     --text-color: hsl(19, 16%, 65%);
     --text-color-light: hsl(19, 8%, 55%);
     --box-color: #181D1F;
-    --body-color: #263238;
+    --body-color: #141624;/* #263238;*/
     --body-color-dark: #1a2226;
     --body-main: #1a1e24;
     --btn-yellow: #CE29F9;
@@ -35,11 +35,7 @@
     --containers-color-alt: #9858F1;
     --containers-color-yellow: #B142F5;
     --btn-orange: #F47521;
-
-
-
     --header-height: 3rem;
-
     /*========== Font and typography ==========*/
     /*.5rem = 8px | 1rem = 16px ...*/
     --body-font: montserrat, Verdana, Segoe, sans-serif;
@@ -81,7 +77,7 @@ body.dark-theme {
     --text-color: hsl(19, 16%, 65%);
     --text-color-light: hsl(19, 8%, 55%);
     --box-color: #181D1F;
-    --body-color: #263238;
+    --body-color: #141624; /* #263238;*/ 
     --body-color-dark: #1a2226;
     --body-main: #1a1e24;
     --btn-yellow: #CE29F9;
@@ -859,7 +855,6 @@ img {
 }
 
 
-
 /*=============== HOME ===============*/
 .home {
     position: relative;
@@ -1056,16 +1051,15 @@ img {
 }
 
 .name-poster {
-    top:10px;
+    bottom: 0;
     left:10px;
-    
     margin:2rem;
 }
 
     .name-poster h3 {
         font-size: 2rem;
-        font-weight: 600;
-        color:var(--body-color-dark);
+        font-weight: 700;
+        color:#fff;
     }
 
     .name-poster i {
@@ -1143,6 +1137,52 @@ img {
     margin-top:.5rem;
     border-radius:3px;
 }
+
+.recommend__type {
+    width:100%;
+    grid-gap:1rem;
+}
+
+    .recommend__type .col {
+        position: relative;
+        height: 175px;
+        padding: .5rem;
+    }
+
+        .recommend__type .col .col-item {
+            position: relative;
+            height: 175px;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center center;
+            transition: transform 0.3s ease-in-out;
+            overflow:hidden;
+        }
+
+            .recommend__type .col .col-item .recommend-content {
+                position: absolute;
+                top: 0;
+                left: 0;
+                padding: .5rem 1rem;
+                background: rgba(0, 0, 0, .8);
+                color: #fff;
+            }
+
+            .recommend__type .col .col-item img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                transition: transform 0.5s ease-in-out;
+            }
+
+.recommend__type .col .col-item:hover .recommend-content {
+    background-color: var(--containers-color-alt);
+}
+        .recommend__type .col .col-item:hover img {
+            transform: scale(1.1);
+        }
 /*=============== FOOTER ===============*/
 .footer {
     position: relative;
@@ -1279,7 +1319,7 @@ img {
         max-width: 160px;
         vertical-align: middle;
         position: relative;
-        border-radius: 7px;
+        border-radius: 5px;
         box-shadow: #000 0 0 0;
         text-align: center;
         overflow: hidden;
@@ -1290,12 +1330,16 @@ img {
         margin-top: 10px;
     }
 
-.item-title > a {
-    font-size: var(--normal-font-size);
-    color: var(--title-color);
-    font-weight: var(--font-medium);
-    margin-bottom: 8px;
-}
+    .update-item:hover a,
+    .update-item:hover h6 {
+        color: var(--containers-color-alt);
+    }
+    .item-title > a {
+        font-size: var(--normal-font-size);
+        color: var(--title-color);
+        font-weight: var(--font-medium);
+        margin-bottom: 8px;
+    }
 
 .item-chapter {
     width: 100%;
