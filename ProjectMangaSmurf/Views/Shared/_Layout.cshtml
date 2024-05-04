@@ -3,7 +3,7 @@
 @using ProjectMangaSmurf.Repository
 @inject IHttpContextAccessor HttpContextAccessor
 @inject IboTruyenRepository boTruyenRepository
-
+@inject IKhachHangRepository khachhangrepository
 
 <!DOCTYPE html>
 <html lang="en">
@@ -79,24 +79,25 @@
                     <div class="nav__login">
                         @{
                             var kh = HttpContextAccessor.HttpContext.Session.GetString("TK");
-                                @if (kh!= null)
-                            {
-                                
-                                    <div class=" btn__login dropdown" style="margin-left:1rem; color:#fff;">
-                                        <style>
-                                            .dropdown-menu i {
-                                                margin-right: .5rem;
-                                            }
-                                        </style>
-                                        <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="color:#fff;">
-                                            @kh
-                                        </button>
-                                        <ul class="dropdown-menu dropdown-menu-end" style="max-width:120px; max-height:130px;">
-                                            <li><a asp-area="" asp-controller="KhachHang" asp-action="Account" class="dropdown-item text-start" style="padding:.5rem!important;"><i class="fa-solid fa-user"></i> Account</a></li>
-                                            <li><a asp-area="" asp-controller="KhachHang" asp-action="History" asp-route-id="@kh" class="dropdown-item text-start" style="padding:.5rem!important;" ><i class="fa-solid fa-clock-rotate-left"></i> Histories</a></li>
-                                            <li><a asp-area="" asp-controller="KhachHang" asp-action="Logout" class="dropdown-item text-start" style="padding:.5rem!important;"><i style="color: #FE0000;" class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
-                                        </ul>
-                                    </div>
+                            var khID = HttpContextAccessor.HttpContext.Session.GetString("IdKH");
+                            
+                            if (kh!= null){
+                                var imgUrl = HttpContextAccessor.HttpContext.Session.GetString("Img");
+                                <div class=" btn__login dropdown" style="color:#fff;">
+                                    <style>
+                                        .dropdown-menu i {
+                                            margin-right: .5rem;
+                                        }
+                                    </style>
+                                    <button class="btn dropdown-toggle " type="button" data-bs-toggle="dropdown" aria-expanded="false" style="color:#fff; font-weight:600;">
+                                        <img src="@imgUrl" /> @kh
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-end" style="max-width:120px; max-height:130px;">
+                                        <li><a asp-area="" asp-controller="KhachHang" asp-action="Account" class="dropdown-item text-start" style="padding:.5rem!important;"><i class="fa-solid fa-user"></i> Account</a></li>
+                                        <li><a asp-area="" asp-controller="KhachHang" asp-action="History" asp-route-id="@kh" class="dropdown-item text-start" style="padding:.5rem!important;"><i class="fa-solid fa-clock-rotate-left"></i> Histories</a></li>
+                                        <li><a asp-area="" asp-controller="KhachHang" asp-action="Logout" class="dropdown-item text-start" style="padding:.5rem!important;"><i style="color: #FE0000;" class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
+                                    </ul>
+                                </div>
                             }
                             else
                             {

@@ -12,8 +12,8 @@ using ProjectMangaSmurf.Data;
 namespace ProjectMangaSmurf.Migrations
 {
     [DbContext(typeof(ProjectDBContext))]
-    [Migration("20240423080522_UpdateFooter")]
-    partial class UpdateFooter
+    [Migration("20240504085729_UpdateRelationUser")]
+    partial class UpdateRelationUser
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -233,6 +233,27 @@ namespace ProjectMangaSmurf.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("ProjectMangaSmurf.Models.Avatar", b =>
+                {
+                    b.Property<string>("IdAvatar")
+                        .HasMaxLength(5)
+                        .IsUnicode(false)
+                        .HasColumnType("char(5)")
+                        .IsFixedLength();
+
+                    b.Property<bool?>("Active")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("AvatarContent")
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(max)");
+
+                    b.HasKey("IdAvatar")
+                        .HasName("PK__Avatar__58BB37B073CA3349");
+
+                    b.ToTable("Avatar", (string)null);
+                });
+
             modelBuilder.Entity("ProjectMangaSmurf.Models.BoTruyen", b =>
                 {
                     b.Property<string>("IdBo")
@@ -272,6 +293,10 @@ namespace ProjectMangaSmurf.Migrations
                         .HasColumnName("id_tg")
                         .IsFixedLength();
 
+                    b.Property<string>("Listloai")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("listloai");
+
                     b.Property<string>("Mota")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)")
@@ -292,8 +317,7 @@ namespace ProjectMangaSmurf.Migrations
                         .HasColumnName("tk_theodoi");
 
                     b.Property<int>("TongLuotXem")
-                        .HasColumnType("int")
-                        .HasColumnName("TongLuotXem");
+                        .HasColumnType("int");
 
                     b.Property<byte>("TrangThai")
                         .HasColumnType("tinyint")
@@ -303,12 +327,9 @@ namespace ProjectMangaSmurf.Migrations
                         .HasColumnType("bit")
                         .HasColumnName("tt_pemium");
 
-                    b.Property<string>("listloai")
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("IdBo");
 
-                    b.HasIndex("IdTg");
+                    b.HasIndex(new[] { "IdTg" }, "IX_BoTruyen_id_tg");
 
                     b.ToTable("BoTruyen", (string)null);
                 });
@@ -330,6 +351,10 @@ namespace ProjectMangaSmurf.Migrations
                         .HasColumnType("bit")
                         .HasColumnName("active");
 
+                    b.Property<string>("ChapterContent")
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(max)");
+
                     b.Property<string>("TenChap")
                         .IsRequired()
                         .HasMaxLength(30)
@@ -340,9 +365,15 @@ namespace ProjectMangaSmurf.Migrations
                         .HasColumnType("datetime")
                         .HasColumnName("thoi_gian");
 
+                    b.Property<byte?>("TicketCost")
+                        .HasColumnType("tinyint");
+
                     b.Property<int>("TkLuotxem")
                         .HasColumnType("int")
                         .HasColumnName("tk_luotxem");
+
+                    b.Property<byte?>("TrangThai")
+                        .HasColumnType("tinyint");
 
                     b.Property<bool>("TtPemium")
                         .HasColumnType("bit")
@@ -350,7 +381,7 @@ namespace ProjectMangaSmurf.Migrations
 
                     b.HasKey("SttChap", "IdBo");
 
-                    b.HasIndex("IdBo");
+                    b.HasIndex(new[] { "IdBo" }, "IX_Chapter_id_bo");
 
                     b.ToTable("Chapter", (string)null);
                 });
@@ -374,16 +405,15 @@ namespace ProjectMangaSmurf.Migrations
 
                     b.HasKey("Email");
 
-                    b.ToTable("ContactMail");
+                    b.ToTable("ContactMail", (string)null);
                 });
 
             modelBuilder.Entity("ProjectMangaSmurf.Models.CtBoTruyen", b =>
                 {
-                    b.Property<string>("IdKh")
+                    b.Property<string>("IdUser")
                         .HasMaxLength(10)
                         .IsUnicode(false)
                         .HasColumnType("char(10)")
-                        .HasColumnName("id_kh")
                         .IsFixedLength();
 
                     b.Property<string>("IbBo")
@@ -408,9 +438,9 @@ namespace ProjectMangaSmurf.Migrations
                         .HasColumnType("bit")
                         .HasColumnName("theodoi");
 
-                    b.HasKey("IdKh", "IbBo");
+                    b.HasKey("IdUser", "IbBo");
 
-                    b.HasIndex("IbBo");
+                    b.HasIndex(new[] { "IbBo" }, "IX_CT_BoTruyen_ib_bo");
 
                     b.ToTable("CT_BoTruyen", (string)null);
                 });
@@ -445,18 +475,17 @@ namespace ProjectMangaSmurf.Migrations
 
                     b.HasKey("SoTrang", "SttChap", "IdBo");
 
-                    b.HasIndex("SttChap", "IdBo");
+                    b.HasIndex(new[] { "SttChap", "IdBo" }, "IX_CT_Chapter_stt_chap_id_bo");
 
                     b.ToTable("CT_Chapter", (string)null);
                 });
 
             modelBuilder.Entity("ProjectMangaSmurf.Models.CtHoatDong", b =>
                 {
-                    b.Property<string>("IdKh")
+                    b.Property<string>("IdUser")
                         .HasMaxLength(10)
                         .IsUnicode(false)
                         .HasColumnType("char(10)")
-                        .HasColumnName("id_kh")
                         .IsFixedLength();
 
                     b.Property<int>("SttChap")
@@ -474,9 +503,9 @@ namespace ProjectMangaSmurf.Migrations
                         .HasColumnType("bit")
                         .HasColumnName("tt_doc");
 
-                    b.HasKey("IdKh", "SttChap", "IdBo");
+                    b.HasKey("IdUser", "SttChap", "IdBo");
 
-                    b.HasIndex("SttChap", "IdBo");
+                    b.HasIndex(new[] { "SttChap", "IdBo" }, "IX_CT_HoatDong_stt_chap_id_bo");
 
                     b.ToTable("CT_HoatDong", (string)null);
                 });
@@ -503,140 +532,72 @@ namespace ProjectMangaSmurf.Migrations
 
                     b.HasKey("IdLoai", "IdBo");
 
-                    b.HasIndex("IdBo");
+                    b.HasIndex(new[] { "IdBo" }, "IX_CT_LoaiTruyen_id_bo");
 
                     b.ToTable("CT_LoaiTruyen", (string)null);
                 });
 
-            modelBuilder.Entity("ProjectMangaSmurf.Models.Footer", b =>
+            modelBuilder.Entity("ProjectMangaSmurf.Models.CustomerLogin", b =>
                 {
-                    b.Property<string>("Dieukhoan")
-                        .HasColumnType("text")
-                        .HasColumnName("dieukhoan");
+                    b.Property<string>("LoginProvider")
+                        .HasMaxLength(225)
+                        .HasColumnType("nvarchar(225)");
 
-                    b.Property<string>("Giayphep")
-                        .HasMaxLength(100)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(100)")
-                        .HasColumnName("giayphep");
+                    b.Property<string>("ProviderKey")
+                        .HasMaxLength(225)
+                        .HasColumnType("nvarchar(225)");
 
-                    b.Property<string>("LinkFb")
-                        .HasMaxLength(255)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(255)")
-                        .HasColumnName("link_fb");
-
-                    b.Property<string>("LinkIns")
-                        .HasMaxLength(255)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(255)")
-                        .HasColumnName("link_ins");
-
-                    b.Property<string>("LinkX")
-                        .HasMaxLength(255)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(255)")
-                        .HasColumnName("link_x");
-
-                    b.Property<string>("Noidung")
-                        .HasColumnType("text")
-                        .HasColumnName("noidung");
-
-                    b.ToTable("Footer", (string)null);
-                });
-
-            modelBuilder.Entity("ProjectMangaSmurf.Models.HopDong", b =>
-                {
-                    b.Property<string>("IdHd")
-                        .HasMaxLength(12)
-                        .IsUnicode(false)
-                        .HasColumnType("char(12)")
-                        .HasColumnName("id_hd")
-                        .IsFixedLength();
-
-                    b.Property<decimal>("GtThanhtoan")
-                        .HasColumnType("decimal(6, 0)")
-                        .HasColumnName("gt_thanhtoan");
-
-                    b.Property<string>("IdKh")
-                        .IsRequired()
+                    b.Property<string>("IdUser")
                         .HasMaxLength(10)
                         .IsUnicode(false)
                         .HasColumnType("char(10)")
-                        .HasColumnName("id_kh")
                         .IsFixedLength();
 
-                    b.Property<DateTime>("Ngaylap")
-                        .HasColumnType("datetime")
-                        .HasColumnName("ngaylap");
+                    b.HasKey("LoginProvider", "ProviderKey")
+                        .HasName("PK__Customer__2B2C5B526B2A5304");
 
-                    b.HasKey("IdHd");
+                    b.HasIndex("IdUser");
 
-                    b.HasIndex("IdKh");
-
-                    b.ToTable("HopDong", (string)null);
+                    b.ToTable("Customer_Login", (string)null);
                 });
 
             modelBuilder.Entity("ProjectMangaSmurf.Models.KhachHang", b =>
                 {
-                    b.Property<string>("IdKh")
+                    b.Property<string>("IdUser")
                         .HasMaxLength(10)
                         .IsUnicode(false)
                         .HasColumnType("char(10)")
-                        .HasColumnName("id_kh")
                         .IsFixedLength();
 
-                    b.Property<bool>("Active")
+                    b.Property<bool?>("ActivePremium")
                         .HasColumnType("bit")
-                        .HasColumnName("active");
+                        .HasColumnName("Active_Premium");
 
-                    b.Property<string>("Email")
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)")
-                        .HasColumnName("email");
+                    b.Property<byte?>("ActiveStats")
+                        .HasColumnType("tinyint")
+                        .HasColumnName("Active_Stats");
 
-                    b.Property<string>("LienketFb")
-                        .HasMaxLength(100)
+                    b.Property<string>("FacebookAccount")
                         .IsUnicode(false)
-                        .HasColumnType("varchar(100)")
-                        .HasColumnName("lienket_fb");
+                        .HasColumnType("varchar(max)");
 
-                    b.Property<string>("LienketGg")
-                        .HasMaxLength(30)
+                    b.Property<string>("GoogleAccount")
                         .IsUnicode(false)
-                        .HasColumnType("varchar(30)")
-                        .HasColumnName("lienket_gg");
+                        .HasColumnType("varchar(max)");
 
-                    b.Property<string>("Matkhau")
-                        .IsRequired()
+                    b.Property<string>("IdAvatar")
+                        .HasMaxLength(5)
                         .IsUnicode(false)
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("matkhau");
-
-                    b.Property<string>("Sdt")
-                        .HasMaxLength(10)
-                        .IsUnicode(false)
-                        .HasColumnType("char(10)")
-                        .HasColumnName("sdt")
+                        .HasColumnType("char(5)")
                         .IsFixedLength();
 
-                    b.Property<string>("Taikhoan")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(20)")
-                        .HasColumnName("taikhoan");
+                    b.Property<int?>("TicketSalary")
+                        .HasColumnType("int");
 
-                    b.Property<string>("TenKh")
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)")
-                        .HasColumnName("ten_kh");
+                    b.HasKey("IdUser")
+                        .HasName("PK_KhachHang_1");
 
-                    b.Property<bool>("TtPremium")
-                        .HasColumnType("bit")
-                        .HasColumnName("tt_premium");
-
-                    b.HasKey("IdKh");
+                    b.HasIndex("IdAvatar");
 
                     b.ToTable("KhachHang", (string)null);
                 });
@@ -667,57 +628,194 @@ namespace ProjectMangaSmurf.Migrations
 
             modelBuilder.Entity("ProjectMangaSmurf.Models.NhanVien", b =>
                 {
-                    b.Property<string>("IdNv")
-                        .HasMaxLength(3)
+                    b.Property<string>("IdUser")
+                        .HasMaxLength(10)
                         .IsUnicode(false)
-                        .HasColumnType("char(3)")
-                        .HasColumnName("id_nv")
+                        .HasColumnType("char(10)")
                         .IsFixedLength();
 
-                    b.Property<bool>("Active")
+                    b.Property<bool?>("StaffRole")
                         .HasColumnType("bit")
-                        .HasColumnName("active");
+                        .HasColumnName("StaffRole");
 
-                    b.Property<bool>("LoaiNv")
-                        .HasColumnType("bit")
-                        .HasColumnName("loai_nv");
+                    b.HasKey("IdUser")
+                        .HasName("PK_NhanVien");
 
-                    b.Property<string>("Matkhau")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(20)")
-                        .HasColumnName("matkhau");
-
-                    b.Property<string>("Taikhoan")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(20)")
-                        .HasColumnName("taikhoan");
-
-                    b.Property<string>("Ten")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)")
-                        .HasColumnName("ten");
-
-                    b.HasKey("IdNv");
-
-                    b.ToTable("NhanVien", (string)null);
+                    b.ToTable("NhanViens");
                 });
 
-            modelBuilder.Entity("ProjectMangaSmurf.Models.Premium", b =>
+            modelBuilder.Entity("ProjectMangaSmurf.Models.Payment", b =>
                 {
+                    b.Property<string>("IdPayment")
+                        .HasMaxLength(10)
+                        .IsUnicode(false)
+                        .HasColumnType("char(10)")
+                        .IsFixedLength();
+
+                    b.Property<DateTimeOffset?>("ExpiresTime")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("IdPack")
+                        .HasMaxLength(4)
+                        .IsUnicode(false)
+                        .HasColumnType("char(4)")
+                        .IsFixedLength();
+
+                    b.Property<string>("IdUser")
+                        .HasMaxLength(10)
+                        .IsUnicode(false)
+                        .HasColumnType("char(10)")
+                        .IsFixedLength();
+
+                    b.Property<decimal?>("PayAmount")
+                        .HasColumnType("decimal(7, 2)");
+
+                    b.Property<DateTimeOffset?>("PayDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<byte?>("PayMethod")
+                        .HasColumnType("tinyint");
+
+                    b.Property<byte?>("PayStats")
+                        .HasColumnType("tinyint");
+
+                    b.HasKey("IdPayment")
+                        .HasName("PK__Payment__613289C0E7CD2C77");
+
+                    b.HasIndex("IdPack");
+
+                    b.ToTable("Payment", (string)null);
+                });
+
+            modelBuilder.Entity("ProjectMangaSmurf.Models.PermissionsList", b =>
+                {
+                    b.Property<byte>("IdPermissions")
+                        .HasColumnType("tinyint");
+
                     b.Property<bool?>("Active")
-                        .HasColumnType("bit")
-                        .HasColumnName("active");
+                        .HasColumnType("bit");
 
-                    b.Property<decimal?>("GiaThanh")
-                        .HasColumnType("decimal(6, 0)")
-                        .HasColumnName("gia_thanh");
+                    b.Property<string>("Description")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
-                    b.ToTable("Premium", (string)null);
+                    b.Property<byte?>("ParentPermissions")
+                        .HasColumnType("tinyint")
+                        .HasColumnName("Parent_Permissions");
+
+                    b.Property<string>("PermissionsName")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<byte?>("PermissionsStats")
+                        .HasColumnType("tinyint");
+
+                    b.HasKey("IdPermissions")
+                        .HasName("PK__Permissi__0671E6D9E28B434E");
+
+                    b.ToTable("PermissionsList", (string)null);
+                });
+
+            modelBuilder.Entity("ProjectMangaSmurf.Models.ServicePackConfig", b =>
+                {
+                    b.Property<string>("IdPack")
+                        .HasMaxLength(4)
+                        .IsUnicode(false)
+                        .HasColumnType("char(4)")
+                        .IsFixedLength();
+
+                    b.Property<DateTimeOffset?>("ActivateTimeService")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<bool?>("Active")
+                        .HasColumnType("bit");
+
+                    b.Property<decimal?>("Amount")
+                        .HasColumnType("decimal(7, 2)");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(60)
+                        .HasColumnType("nvarchar(60)");
+
+                    b.Property<decimal?>("Discount")
+                        .HasColumnType("decimal(7, 2)");
+
+                    b.Property<byte?>("PackActiveStats")
+                        .HasColumnType("tinyint");
+
+                    b.Property<string>("PackName")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("ParentPack")
+                        .HasMaxLength(4)
+                        .IsUnicode(false)
+                        .HasColumnType("char(4)")
+                        .HasColumnName("Parent_Pack")
+                        .IsFixedLength();
+
+                    b.Property<byte?>("TicketSalary")
+                        .HasColumnType("tinyint");
+
+                    b.HasKey("IdPack")
+                        .HasName("PK__Service___FC84C5ABF37A7BFC");
+
+                    b.ToTable("Service_Pack_Config", (string)null);
+                });
+
+            modelBuilder.Entity("ProjectMangaSmurf.Models.StaffActiveLog", b =>
+                {
+                    b.Property<string>("IdLog")
+                        .HasMaxLength(15)
+                        .IsUnicode(false)
+                        .HasColumnType("char(15)")
+                        .IsFixedLength();
+
+                    b.Property<string>("ChangeDescription")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<byte>("IdPermissions")
+                        .HasColumnType("tinyint");
+
+                    b.Property<string>("IdUser")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .IsUnicode(false)
+                        .HasColumnType("char(10)")
+                        .IsFixedLength();
+
+                    b.Property<DateTime?>("TimeChanged")
+                        .HasColumnType("datetime");
+
+                    b.HasKey("IdLog")
+                        .HasName("PK_Staff_Active_Logs_1");
+
+                    b.HasIndex("IdUser", "IdPermissions");
+
+                    b.ToTable("Staff_Active_Logs", (string)null);
+                });
+
+            modelBuilder.Entity("ProjectMangaSmurf.Models.StaffPermissionsDetail", b =>
+                {
+                    b.Property<string>("IdUser")
+                        .HasMaxLength(10)
+                        .IsUnicode(false)
+                        .HasColumnType("char(10)")
+                        .IsFixedLength();
+
+                    b.Property<byte>("IdPermissions")
+                        .HasColumnType("tinyint");
+
+                    b.Property<bool?>("Active")
+                        .HasColumnType("bit");
+
+                    b.HasKey("IdUser", "IdPermissions")
+                        .HasName("PK__Staff_Pe__37AE38558BE70804");
+
+                    b.HasIndex("IdPermissions");
+
+                    b.ToTable("Staff_Permissions_Detail", (string)null);
                 });
 
             modelBuilder.Entity("ProjectMangaSmurf.Models.TacGium", b =>
@@ -741,6 +839,77 @@ namespace ProjectMangaSmurf.Migrations
                     b.HasKey("IdTg");
 
                     b.ToTable("TacGia");
+                });
+
+            modelBuilder.Entity("ProjectMangaSmurf.Models.User", b =>
+                {
+                    b.Property<string>("IdUser")
+                        .HasMaxLength(10)
+                        .IsUnicode(false)
+                        .HasColumnType("char(10)")
+                        .IsFixedLength();
+
+                    b.Property<bool?>("Active")
+                        .HasColumnType("bit");
+
+                    b.Property<DateOnly?>("Birth")
+                        .HasColumnType("date");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(255)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("FullName")
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<byte?>("Gender")
+                        .HasColumnType("tinyint");
+
+                    b.Property<string>("Password")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Phone")
+                        .HasMaxLength(10)
+                        .IsUnicode(false)
+                        .HasColumnType("char(10)")
+                        .IsFixedLength();
+
+                    b.Property<DateTimeOffset?>("TimeCreated")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset?>("TimeUpdated")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("UserName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("IdUser")
+                        .HasName("PK__Users__B7C92638206D968B");
+
+                    b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("ProjectMangaSmurf.Models.WebMediaConfig", b =>
+                {
+                    b.Property<int>("IdConfig")
+                        .HasColumnType("int");
+
+                    b.Property<bool?>("Active")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("ConfigTitle")
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<string>("ConfigValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("IdConfig")
+                        .HasName("PK__WebMedia__79F21764D24494B8");
+
+                    b.ToTable("WebMedia_Config", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -824,15 +993,15 @@ namespace ProjectMangaSmurf.Migrations
                         .IsRequired()
                         .HasConstraintName("FK_CT_BoTruyen_BoTruyen");
 
-                    b.HasOne("ProjectMangaSmurf.Models.KhachHang", "IdKhNavigation")
+                    b.HasOne("ProjectMangaSmurf.Models.KhachHang", "IdUserNavigation")
                         .WithMany("CtBoTruyens")
-                        .HasForeignKey("IdKh")
+                        .HasForeignKey("IdUser")
                         .IsRequired()
                         .HasConstraintName("FK_CT_BoTruyen_KhachHang");
 
                     b.Navigation("IbBoNavigation");
 
-                    b.Navigation("IdKhNavigation");
+                    b.Navigation("IdUserNavigation");
                 });
 
             modelBuilder.Entity("ProjectMangaSmurf.Models.CtChapter", b =>
@@ -848,9 +1017,9 @@ namespace ProjectMangaSmurf.Migrations
 
             modelBuilder.Entity("ProjectMangaSmurf.Models.CtHoatDong", b =>
                 {
-                    b.HasOne("ProjectMangaSmurf.Models.KhachHang", "IdKhNavigation")
+                    b.HasOne("ProjectMangaSmurf.Models.KhachHang", "IdUserNavigation")
                         .WithMany("CtHoatDongs")
-                        .HasForeignKey("IdKh")
+                        .HasForeignKey("IdUser")
                         .IsRequired()
                         .HasConstraintName("FK_CT_HoatDong_KhachHang");
 
@@ -862,7 +1031,7 @@ namespace ProjectMangaSmurf.Migrations
 
                     b.Navigation("Chapter");
 
-                    b.Navigation("IdKhNavigation");
+                    b.Navigation("IdUserNavigation");
                 });
 
             modelBuilder.Entity("ProjectMangaSmurf.Models.CtLoaiTruyen", b =>
@@ -884,15 +1053,96 @@ namespace ProjectMangaSmurf.Migrations
                     b.Navigation("IdLoaiNavigation");
                 });
 
-            modelBuilder.Entity("ProjectMangaSmurf.Models.HopDong", b =>
+            modelBuilder.Entity("ProjectMangaSmurf.Models.CustomerLogin", b =>
                 {
-                    b.HasOne("ProjectMangaSmurf.Models.KhachHang", "IdKhNavigation")
-                        .WithMany("HopDongs")
-                        .HasForeignKey("IdKh")
-                        .IsRequired()
-                        .HasConstraintName("FK_HopDong_KhachHang");
+                    b.HasOne("ProjectMangaSmurf.Models.KhachHang", "IdUserNavigation")
+                        .WithMany("CustomerLogins")
+                        .HasForeignKey("IdUser")
+                        .HasConstraintName("FK_Customer_Login_KhachHang");
 
-                    b.Navigation("IdKhNavigation");
+                    b.Navigation("IdUserNavigation");
+                });
+
+            modelBuilder.Entity("ProjectMangaSmurf.Models.KhachHang", b =>
+                {
+                    b.HasOne("ProjectMangaSmurf.Models.Avatar", "IdAvatarNavigation")
+                        .WithMany("KhachHangs")
+                        .HasForeignKey("IdAvatar")
+                        .HasConstraintName("FK_KhachHang_Avatar");
+
+                    b.HasOne("ProjectMangaSmurf.Models.User", "IdUserNavigation")
+                        .WithOne("KhachHang")
+                        .HasForeignKey("ProjectMangaSmurf.Models.KhachHang", "IdUser")
+                        .IsRequired()
+                        .HasConstraintName("FK_User_KhachHang");
+
+                    b.Navigation("IdAvatarNavigation");
+
+                    b.Navigation("IdUserNavigation");
+                });
+
+            modelBuilder.Entity("ProjectMangaSmurf.Models.NhanVien", b =>
+                {
+                    b.HasOne("ProjectMangaSmurf.Models.User", "User")
+                        .WithOne("NhanVien")
+                        .HasForeignKey("ProjectMangaSmurf.Models.NhanVien", "IdUser")
+                        .IsRequired()
+                        .HasConstraintName("FK_User_NhanVien");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("ProjectMangaSmurf.Models.Payment", b =>
+                {
+                    b.HasOne("ProjectMangaSmurf.Models.ServicePackConfig", "IdPackNavigation")
+                        .WithMany("Payments")
+                        .HasForeignKey("IdPack")
+                        .HasConstraintName("FK_Payment_Service_Pack_Config");
+
+                    b.HasOne("ProjectMangaSmurf.Models.KhachHang", "IdPaymentNavigation")
+                        .WithOne("Payment")
+                        .HasForeignKey("ProjectMangaSmurf.Models.Payment", "IdPayment")
+                        .IsRequired()
+                        .HasConstraintName("FK_Payment_KhachHang");
+
+                    b.Navigation("IdPackNavigation");
+
+                    b.Navigation("IdPaymentNavigation");
+                });
+
+            modelBuilder.Entity("ProjectMangaSmurf.Models.StaffActiveLog", b =>
+                {
+                    b.HasOne("ProjectMangaSmurf.Models.StaffPermissionsDetail", "StaffPermissionsDetail")
+                        .WithMany("StaffActiveLogs")
+                        .HasForeignKey("IdUser", "IdPermissions")
+                        .IsRequired()
+                        .HasConstraintName("FK_Staff_Active_Logs_Staff_Permissions_Detail");
+
+                    b.Navigation("StaffPermissionsDetail");
+                });
+
+            modelBuilder.Entity("ProjectMangaSmurf.Models.StaffPermissionsDetail", b =>
+                {
+                    b.HasOne("ProjectMangaSmurf.Models.PermissionsList", "IdPermissionsNavigation")
+                        .WithMany("StaffPermissionsDetails")
+                        .HasForeignKey("IdPermissions")
+                        .IsRequired()
+                        .HasConstraintName("FK_Staff_Permissions_Detail_PermissionsList");
+
+                    b.HasOne("ProjectMangaSmurf.Models.NhanVien", "IdUserNavigation")
+                        .WithMany("StaffPermissionsDetails")
+                        .HasForeignKey("IdUser")
+                        .IsRequired()
+                        .HasConstraintName("FK_Staff_Permissions_Detail_NhanVien");
+
+                    b.Navigation("IdPermissionsNavigation");
+
+                    b.Navigation("IdUserNavigation");
+                });
+
+            modelBuilder.Entity("ProjectMangaSmurf.Models.Avatar", b =>
+                {
+                    b.Navigation("KhachHangs");
                 });
 
             modelBuilder.Entity("ProjectMangaSmurf.Models.BoTruyen", b =>
@@ -917,7 +1167,9 @@ namespace ProjectMangaSmurf.Migrations
 
                     b.Navigation("CtHoatDongs");
 
-                    b.Navigation("HopDongs");
+                    b.Navigation("CustomerLogins");
+
+                    b.Navigation("Payment");
                 });
 
             modelBuilder.Entity("ProjectMangaSmurf.Models.LoaiTruyen", b =>
@@ -925,9 +1177,38 @@ namespace ProjectMangaSmurf.Migrations
                     b.Navigation("CtLoaiTruyens");
                 });
 
+            modelBuilder.Entity("ProjectMangaSmurf.Models.NhanVien", b =>
+                {
+                    b.Navigation("StaffPermissionsDetails");
+                });
+
+            modelBuilder.Entity("ProjectMangaSmurf.Models.PermissionsList", b =>
+                {
+                    b.Navigation("StaffPermissionsDetails");
+                });
+
+            modelBuilder.Entity("ProjectMangaSmurf.Models.ServicePackConfig", b =>
+                {
+                    b.Navigation("Payments");
+                });
+
+            modelBuilder.Entity("ProjectMangaSmurf.Models.StaffPermissionsDetail", b =>
+                {
+                    b.Navigation("StaffActiveLogs");
+                });
+
             modelBuilder.Entity("ProjectMangaSmurf.Models.TacGium", b =>
                 {
                     b.Navigation("BoTruyens");
+                });
+
+            modelBuilder.Entity("ProjectMangaSmurf.Models.User", b =>
+                {
+                    b.Navigation("KhachHang")
+                        .IsRequired();
+
+                    b.Navigation("NhanVien")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

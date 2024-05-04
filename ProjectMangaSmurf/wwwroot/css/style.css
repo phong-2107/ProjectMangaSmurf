@@ -823,6 +823,13 @@ img {
     color: var(--title-color);
 }
 
+.btn__login button>img{
+    width:35px;
+    height:35px;
+    margin:0 .3rem;
+    border-radius:50%;
+}
+
 .btn__regis {
     background-color: var(--containers-color-alt);
     text-align: center;

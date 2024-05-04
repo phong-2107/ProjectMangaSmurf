@@ -324,6 +324,8 @@ namespace ProjectMangaSmurf.Data
                     .HasForeignKey<KhachHang>(d => d.IdUser)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_KhachHang_Users");
+
+
             });
 
             modelBuilder.Entity<LoaiTruyen>(entity =>
@@ -345,14 +347,30 @@ namespace ProjectMangaSmurf.Data
 
             modelBuilder.Entity<NhanVien>(entity =>
             {
-                entity.HasKey(e => e.IdUser).HasName("PK_NhanVien_1");
+                entity.HasKey(e => e.IdUser).HasName("PK_NhanVien");
 
-                entity.ToTable("NhanVien");
-
+                // Định nghĩa thuộc tính IdUser với các ràng buộc cụ thể
                 entity.Property(e => e.IdUser)
                     .HasMaxLength(10)
                     .IsUnicode(false)
-                    .IsFixedLength();
+                    .IsFixedLength()
+                    .IsRequired();  // Không cho phép null
+
+                // Định nghĩa thuộc tính StaffRole, cho phép null
+                entity.Property(e => e.StaffRole).HasColumnName("StaffRole");
+
+                // Cấu hình quan hệ một-một giữa NhanVien và User
+                entity.HasOne(d => d.User)  // NhanVien có một User
+                    .WithOne(p => p.NhanVien)  // User có một NhanVien
+                    .HasForeignKey<NhanVien>(d => d.IdUser)  // Khóa ngoại là IdUser
+                    .OnDelete(DeleteBehavior.ClientSetNull)  // Thiết lập hành vi khi xóa là ClientSetNull
+                    .HasConstraintName("FK_NhanVien_Users");  // Tên ràng buộc khóa ngoại
+
+                // Cấu hình cho navigation property StaffPermissionsDetails
+                entity.HasMany(e => e.StaffPermissionsDetails)
+                    .WithOne(d => d.IdUserNavigation)
+                    .HasForeignKey(d => d.IdUser)
+                    .HasConstraintName("FK_StaffPermissionsDetails_NhanVien");
             });
 
             modelBuilder.Entity<Payment>(entity =>
@@ -494,10 +512,17 @@ namespace ProjectMangaSmurf.Data
                     .IsUnicode(false)
                     .IsFixedLength();
 
-                entity.HasOne(d => d.IdUserNavigation).WithOne(p => p.User)
-                    .HasForeignKey<User>(d => d.IdUser)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Users_NhanVien");
+                entity.HasOne(u => u.NhanVien) // Mỗi User có thể có không hoặc một NhanVien
+                    .WithOne(nv => nv.User) // Mỗi NhanVien được liên kết chặt chẽ với một User
+                    .HasForeignKey<NhanVien>(nv => nv.IdUser) // NhanVien sử dụng IdUser như là khóa ngoại
+                    .OnDelete(DeleteBehavior.ClientSetNull) // Nếu User bị xóa, IdUser trong NhanVien sẽ được thiết lập là NULL
+                    .HasConstraintName("FK_User_NhanVien");
+
+                entity.HasOne(u => u.KhachHang) // Mỗi User có thể có không hoặc một KhachHang
+                    .WithOne(kh => kh.IdUserNavigation) // Mỗi KhachHang được liên kết chặt chẽ với một User
+                    .HasForeignKey<KhachHang>(kh => kh.IdUser) // KhachHang sử dụng IdUser như là khóa ngoại
+                    .OnDelete(DeleteBehavior.ClientSetNull) // Nếu User bị xóa, IdUser trong KhachHang sẽ được thiết lập là NULL
+                    .HasConstraintName("FK_User_KhachHang");
             });
 
             modelBuilder.Entity<WebMediaConfig>(entity =>

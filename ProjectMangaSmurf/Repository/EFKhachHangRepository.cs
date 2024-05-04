@@ -27,8 +27,6 @@ namespace ProjectMangaSmurf.Repository
             return _context.KhachHangs;
         }
 
-
-
         // Sửa lại 
         public async Task DeleteAsync(KhachHang id)
         {
@@ -44,7 +42,7 @@ namespace ProjectMangaSmurf.Repository
 
         public string GenerateCustomerId()
         {
-            string idPrefix = "KH";
+            string idPrefix = "ID";
             int idLength = 8;
             string maxId = _context.Users.Select(kh => kh.IdUser)
                                                .OrderByDescending(id => id)
@@ -97,7 +95,8 @@ namespace ProjectMangaSmurf.Repository
 
         public async Task<KhachHang> GetByAccountAsync(string id)
         {
-            return await _context.KhachHangs.FirstOrDefaultAsync(p => p.IdUserNavigation.UserName == id.Trim());
+            var user = _context.Users.FirstOrDefault(p => p.UserName == id.Trim());
+            return await _context.KhachHangs.FirstOrDefaultAsync(p => p.IdUser == user.IdUser);
         }
         public async Task UpdateAsync(KhachHang KhachHang)
         {

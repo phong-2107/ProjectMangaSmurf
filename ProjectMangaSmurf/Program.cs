@@ -83,6 +83,7 @@ builder.Services.AddScoped<ITacGiaRepository, EFTacGiaRepository>();
 builder.Services.AddScoped<IChapterRepository, EFChapterRepository>();
 builder.Services.AddScoped<IKhachHangRepository, EFKhachHangRepository>();
 builder.Services.AddScoped<IUserRepository, EFUserRepository>();
+builder.Services.AddScoped<IAvatarRepository, EFAvatarRepository>();
 builder.Services.AddScoped<IHopdongRepository, EFHopDongRepository>();
 builder.Services.AddScoped<IWebMediaRepository, EFWebMediaRepository>();
 builder.Services.AddScoped<IEmailService, EmailService>();

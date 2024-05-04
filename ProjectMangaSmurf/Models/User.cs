@@ -27,7 +27,7 @@ public partial class User
 
     public bool? Active { get; set; }
 
-    public virtual NhanVien IdUserNavigation { get; set; } = null!;
+    public virtual NhanVien NhanVien { get; set; } = null!;
 
-    public virtual KhachHang? KhachHang { get; set; }
+    public virtual KhachHang KhachHang { get; set; } = null!;
 }

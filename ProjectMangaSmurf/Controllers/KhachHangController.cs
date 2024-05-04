@@ -14,6 +14,7 @@ using System.Security.Claims;
 using System.Text;
 using System;
 using Microsoft.AspNetCore.Http;
+using ProjectMangaSmurf.Data;
 namespace ProjectMangaSmurf.Controllers
 {
     public class KhachHangController : Controller
@@ -23,13 +24,17 @@ namespace ProjectMangaSmurf.Controllers
         private readonly IChapterRepository _chapterrepository;
         private readonly ICTBoTruyenRepository _cTBoTruyenRepository;
         private readonly IUserRepository _userRepository;
-        public KhachHangController( IKhachHangRepository khachHangRepository, IboTruyenRepository boTruyenRepository, IChapterRepository chapterRepository, ICTBoTruyenRepository cTBoTruyenRepository, IUserRepository userRepository)
+        private readonly IAvatarRepository _avatarRepository;
+        private readonly ProjectDBContext _context;
+        public KhachHangController( IKhachHangRepository khachHangRepository, IboTruyenRepository boTruyenRepository, IChapterRepository chapterRepository, ICTBoTruyenRepository cTBoTruyenRepository, IUserRepository userRepository, IAvatarRepository avatarRepository, ProjectDBContext db)
         {
             _khachhangrepository = khachHangRepository;
             _botruyenrepository = boTruyenRepository;
             _chapterrepository = chapterRepository;
             _cTBoTruyenRepository = cTBoTruyenRepository;
             _userRepository = userRepository;
+            _avatarRepository = avatarRepository;
+            _context = db;
         }
 
         public bool checkpass(string pass, string passKh)
@@ -46,11 +51,6 @@ namespace ProjectMangaSmurf.Controllers
                 return false;
             }
         }
-
-        //public IActionResult Login()
-        //{
-        //    return View();
-        //}
 
         public IActionResult login()
         {
@@ -102,8 +102,9 @@ namespace ProjectMangaSmurf.Controllers
                 HttpContext.Session.SetString("Email", emailClaim);
                 HttpContext.Session.SetString("TK", nameClaim);
                 var find = await _khachhangrepository.GetByEmailAsync(HttpContext.Session.GetString("Email"));
-                if(find == null)
+                if (find == null)
                 {
+                    var avatar = await _avatarRepository.RandomAvatarAsync();
                     User user = new User();
                     user.IdUser = _khachhangrepository.GenerateCustomerId();
                     user.UserName = HttpContext.Session.GetString("TK");
@@ -112,21 +113,24 @@ namespace ProjectMangaSmurf.Controllers
                     user.TimeCreated = DateTime.Now;
                     user.TimeUpdated = DateTime.Now;
                     user.Active = true;
-                    await _userRepository.AddAsync(user);
 
                     KhachHang kh = new KhachHang();
                     kh.IdUser = user.IdUser;
                     kh.GoogleAccount = HttpContext.Session.GetString("Email");
                     kh.ActivePremium = false;
+                    kh.IdAvatar = avatar.IdAvatar;
                     kh.TicketSalary = 0;
                     kh.ActiveStats = 1;
 
-                    await _khachhangrepository.AddAsync(kh);
-					HttpContext.Session.SetString("IdKH", kh.IdUser);
+                    await _userRepository.AddAsyncKH(user, kh);
+                    HttpContext.Session.SetString("Img", avatar.AvatarContent);
+                    HttpContext.Session.SetString("IdKH", kh.IdUser);
                 }
                 else
                 {
-					HttpContext.Session.SetString("IdKH", find.IdUser);
+                    var avatar = await _avatarRepository.GetByIdAsync(find.IdAvatar);
+                    HttpContext.Session.SetString("Img", avatar.AvatarContent);
+                    HttpContext.Session.SetString("IdKH", find.IdUser);
 				}
                 return RedirectToAction("Index", "BoTruyen");
             }
@@ -152,16 +156,20 @@ namespace ProjectMangaSmurf.Controllers
         {
             if (ModelState.IsValid)
             {
+
+
                 var kh = await _khachhangrepository.GetByAccountAsync(Taikhoan);
                 if (kh != null)
                 {
-                    var check = PasswordHasher.VerifyPassword(Matkhau.Trim(), kh.IdUserNavigation.Password.Trim());
+                    var User = await _userRepository.GetByIdAsync(kh.IdUser);
+                    var check = PasswordHasher.VerifyPassword(Matkhau.Trim(), User.Password);
                     if (check)
                     {
+                        var avatar = await _avatarRepository.GetByIdAsync(kh.IdAvatar);
                         HttpContext.Session.SetString("TK", kh.IdUserNavigation.UserName);
+                        HttpContext.Session.SetString("Img", avatar.AvatarContent);
                         HttpContext.Session.SetString("IdKH", kh.IdUser);
                         return RedirectToAction("Index", "BoTruyen");
-                        
                     }
                     else
                     {
@@ -171,19 +179,19 @@ namespace ProjectMangaSmurf.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Tai Khoan của bạn không đúng");
+                    ModelState.AddModelError(string.Empty, "Tài Khoản của bạn chưa chính xác");
                     return View();
                 }
 
             }
-            ModelState.AddModelError(string.Empty, "tai khoan kh hop le");
+            ModelState.AddModelError(string.Empty, "Tài khoản không hợp lệ");
             return View();
         }
 
         public IActionResult LoginPopup(string returnUrl)
         {
             ViewBag.ReturnUrl = returnUrl;
-            return View();
+            return View(returnUrl);
         }
 
         [HttpPost]
@@ -235,40 +243,65 @@ namespace ProjectMangaSmurf.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(string Taikhoan,string Email, string matKhau)
         {
-            if (ModelState.IsValid)
+            // Kiểm tra ModelState
+            if (!ModelState.IsValid)
             {
-                var find = _khachhangrepository.GetByEmailAsync(Email);
-                if( await find != null)
+                return View();
+            }
+
+            var existingUser = await _khachhangrepository.GetByEmailAsync(Email);
+            if (existingUser != null)
+            {
+                ViewBag.Error = "Email này đã tồn tại";
+                return View();
+            }
+
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
                 {
-                    ViewBag.Error = "Email này đã tồn tại";
-                    return View();
-                }
-                else
-                {
-                    User user = new User();
-                    user.IdUser = _khachhangrepository.GenerateCustomerId();
-                    user.UserName = HttpContext.Session.GetString("TK");
-                    user.Password = PasswordHasher.HashPassword(matKhau);
-                    user.Email = HttpContext.Session.GetString("Email");
-                    user.TimeCreated = DateTime.Now;
-                    user.TimeUpdated = DateTime.Now;
-                    user.Active = true;
+                    // Tạo người dùng mới
+                    var avatar = await _avatarRepository.RandomAvatarAsync();
+                    User user = new User
+                    {
+                        IdUser = _khachhangrepository.GenerateCustomerId(),
+                        UserName = Taikhoan.Trim(),
+                        Password = PasswordHasher.HashPassword(matKhau),
+                        Email = Email.Trim(),
+                        TimeCreated = DateTime.Now,
+                        TimeUpdated = DateTime.Now,
+                        Active = true
+                    };
+
                     await _userRepository.AddAsync(user);
 
-                    KhachHang kh = new KhachHang();
-                    kh.IdUser = _khachhangrepository.GenerateCustomerId();
-                    kh.IdUser = user.IdUser;
-                    kh.GoogleAccount = HttpContext.Session.GetString("Email");
-                    kh.ActivePremium = false;
-                    kh.TicketSalary = 0;
-                    kh.ActiveStats = 1;
+                    // Tạo Khách Hàng mới
+                    KhachHang kh = new KhachHang
+                    {
+                        IdUser = user.IdUser,
+                        ActivePremium = false,
+                        IdAvatar = avatar.IdAvatar,
+                        TicketSalary = 0,
+                        ActiveStats = 1
+                    };
+
                     await _khachhangrepository.AddAsync(kh);
-                    HttpContext.Session.SetString("TK", kh.IdUserNavigation.UserName);
-                    HttpContext.Session.SetString("IdKH", kh.IdUser);
+                    transaction.Commit();
+                    HttpContext.Session.SetString("Img", kh.IdAvatar);
+                    HttpContext.Session.SetString("TK", user.UserName);
+                    HttpContext.Session.SetString("IdKH", user.IdUser);
+
+                    // Chuyển hướng đến trang Index của BoTruyen
                     return RedirectToAction("Index", "BoTruyen");
                 }
+                catch (Exception ex)
+                {
+                    // Xử lý lỗi và rollback transaction
+                    transaction.Rollback();
+                    ViewBag.Error = "Có lỗi xảy ra khi đăng ký: " + ex.Message;
+                    return View();
+                }
             }
-            return View();
         }
 
         public async Task<IActionResult> Following(string id)
@@ -391,7 +424,6 @@ namespace ProjectMangaSmurf.Controllers
             }
             return RedirectToAction("CtBoTruyen", "BoTruyen", new { id = id });
         }
-
 
         [HttpPost]
         public async Task<IActionResult> UpdateInfor(string Taikhoan, string TenKh, string Sdt, string Email)

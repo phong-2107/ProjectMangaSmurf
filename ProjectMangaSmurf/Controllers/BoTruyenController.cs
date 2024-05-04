@@ -3,6 +3,7 @@ using ProjectMangaSmurf.Repository;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Http;
+using ProjectMangaSmurf.Data;
 namespace ProjectMangaSmurf.Controllers
 {
     public class BoTruyenController : Controller
@@ -11,13 +12,17 @@ namespace ProjectMangaSmurf.Controllers
         private readonly ICTBoTruyenRepository _cTBoTruyenRepository;
         private readonly IChapterRepository _chapterrepository;
         private readonly IKhachHangRepository _khachhangrepository;
-        public BoTruyenController(IboTruyenRepository botruyenrepository, IChapterRepository chapterrepository, IKhachHangRepository khachHangRepository, ICTBoTruyenRepository cTBoTruyenRepository)
+        private readonly ProjectDBContext _context;
+        public BoTruyenController(ProjectDBContext db ,IboTruyenRepository botruyenrepository, IChapterRepository chapterrepository, IKhachHangRepository khachHangRepository, ICTBoTruyenRepository cTBoTruyenRepository)
         {
+            _context = db;
             _botruyenrepository = botruyenrepository;
             _chapterrepository = chapterrepository;
             _khachhangrepository = khachHangRepository;
             _cTBoTruyenRepository = cTBoTruyenRepository;
         }
+
+
         public async Task<IActionResult> Index()
         {
             var listBotruyen = await _botruyenrepository.GetAllAsync();
@@ -25,20 +30,11 @@ namespace ProjectMangaSmurf.Controllers
             ViewBag.LoaiTruyen = listLoaiTruyen;
             return View(listBotruyen);
         }
-
-
-        //public async Task<IActionResult> Index(string id)
-        //{
-        //    var listBotruyen = await _khachhangrepository.GetByIdAsync(id);
-        //    return View(listBotruyen);
-        //}
-
         public async Task<IActionResult> ListTruyen()
         {
             var listBotruyen = await _botruyenrepository.GetAllAsync();
             return View(listBotruyen);
         }
-
         public async Task<IActionResult> ListTruyenEarliest() 
         {
             var listBotruyen = await _botruyenrepository.GetAllAsyncByChapterEarliest();
@@ -92,7 +88,6 @@ namespace ProjectMangaSmurf.Controllers
             var listBotruyen = await _botruyenrepository.GetTrendingAsync();
             return View(listBotruyen);
         }
-
         public async Task<IActionResult> ListTopic(string id)
         {
             var listBotruyen = await _botruyenrepository.GetAllByTopic(id);
@@ -100,7 +95,6 @@ namespace ProjectMangaSmurf.Controllers
             ViewBag.Topic = loai.TenLoai;
             return View(listBotruyen);
         }
-
         public async Task<IActionResult> CTBoTruyen(string id)
         {
             var Botruyen = await _botruyenrepository.GetByIdAsync(id);
@@ -108,10 +102,10 @@ namespace ProjectMangaSmurf.Controllers
             {
                 return NotFound();
             }
-            var kh = HttpContext.Session.GetString("TK");
+            var kh = HttpContext.Session.GetString("IdKH");
             if (kh != null)
             {
-                var khtmp = await _khachhangrepository.GetByAccountAsync(kh);
+                var khtmp = await _khachhangrepository.GetByIdAsync(kh);
                 var findct = _cTBoTruyenRepository.GetByIdFollowAsync(khtmp.IdUser, id);
                 if (await findct != null)
                 {
@@ -123,7 +117,6 @@ namespace ProjectMangaSmurf.Controllers
                 {
                     ViewBag.follow = false;
                 }
-               
             }
             else
             {
@@ -134,75 +127,85 @@ namespace ProjectMangaSmurf.Controllers
         }
         public async Task<IActionResult> Chapter(string id, int stt)
         {
-            
-            var Chapter = await _chapterrepository.GetByIdAsync(id, stt);
-            if (Chapter == null)
+            using (var transaction = _context.Database.BeginTransaction())
             {
-                return NotFound();
-            }
-            else
-            {
-                Chapter.TkLuotxem = Chapter.TkLuotxem + 1;
-                await _chapterrepository.UpdateAsync(Chapter);
+                try
+                {
+                    var chapter = await _chapterrepository.GetByIdAsync(id, stt);
+                    if (chapter == null)
+                    {
+                        return NotFound();
+                    }
+                    chapter.TkLuotxem += 1;
+                    await _chapterrepository.UpdateAsync(chapter);
 
-                var bt = await _botruyenrepository.GetByIdAsync(id);
-                if(bt != null)
-                {
-                    bt.TongLuotXem = bt.TongLuotXem + 1;
-                    await _botruyenrepository.UpdateAsync(bt);
-                }
-            }
-            var kh = HttpContext.Session.GetString("TK");
-            if (kh != null)
-            {
-                var khtmp = await _khachhangrepository.GetByAccountAsync(kh);
-                CtHoatDong ct = new CtHoatDong();
-                ct.IdBo = id;
-                ct.SttChap = stt;
-                ct.IdUser = khtmp.IdUser;
-                ct.TtDoc = true;
-                await _chapterrepository.AddAsyncCTHD(ct);
+                    await UpdateBoTruyenViews(id);
 
-                var ctBo = _cTBoTruyenRepository.GetByIdAsync(khtmp.IdUser, id);
-                if(await ctBo != null)
-                {
-                    var bo = await ctBo;
-                    bo.LsMoi = stt.ToString();
-                    await _cTBoTruyenRepository.UpdateAsync(bo);
-                }
-                else
-                {
-                    CtBoTruyen ctBoTruyen = new CtBoTruyen();
-                    ctBoTruyen.IdUser = khtmp.IdUser;
-                    ctBoTruyen.IbBo = id;
-                    ctBoTruyen.Theodoi = false;
-                    ctBoTruyen.DanhGia = 0;
-                    ctBoTruyen.LsMoi = stt.ToString();
-                    await _cTBoTruyenRepository.AddAsync(ctBoTruyen);
-                    ViewBag.follow = false;
-                }
-
-                var findct = _cTBoTruyenRepository.GetByIdAsync(khtmp.IdUser, id);
-                if (await findct != null)
-                {
-                    var follow  = await findct;
-                    if(follow.Theodoi == false)
-                        ViewBag.follow = false;
+                    var userId = HttpContext.Session.GetString("IdKH");
+                    if (userId != null)
+                    {
+                        await HandleUserActivity(userId, id, stt);
+                    }
                     else
-                        ViewBag.follow = true;
+                    {
+                        ViewBag.follow = false;
+                    }
+
+                    await transaction.CommitAsync();
+                    return View(chapter);
                 }
-                else
+                catch (Exception ex)
                 {
-                    ViewBag.follow = false;
+                    await transaction.RollbackAsync();
+                    return StatusCode(500, "Internal server error");
                 }
             }
-            else
-            {
-                ViewBag.follow = false;
-            }
-            return View(Chapter);
         }
 
+        private async Task UpdateBoTruyenViews(string id)
+        {
+            var bt = await _botruyenrepository.GetByIdAsync(id);
+            if (bt != null)
+            {
+                bt.TongLuotXem += 1;
+                await _botruyenrepository.UpdateAsync(bt);
+            }
+        }
 
+        private async Task HandleUserActivity(string userId, string boId, int stt)
+        {
+            var user = await _khachhangrepository.GetByIdAsync(userId);
+            if (user == null) return;
+
+            var ctHoatDong = new CtHoatDong
+            {
+                IdBo = boId,
+                SttChap = stt,
+                IdUser = user.IdUser,
+                TtDoc = true
+            };
+            await _chapterrepository.AddAsyncCTHD(ctHoatDong);
+
+            var ctBo = await _cTBoTruyenRepository.GetByIdAsync(user.IdUser, boId);
+            if (ctBo != null)
+            {
+                ctBo.LsMoi = stt.ToString();
+                await _cTBoTruyenRepository.UpdateAsync(ctBo);
+            }
+            else
+            {
+                var ctBoTruyen = new CtBoTruyen
+                {
+                    IdUser = user.IdUser,
+                    IbBo = boId,
+                    Theodoi = false,
+                    DanhGia = 0,
+                    LsMoi = stt.ToString()
+                };
+                await _cTBoTruyenRepository.AddAsync(ctBoTruyen);
+            }
+
+            ViewBag.follow = ctBo?.Theodoi ?? false;
+        }
     }
 }
