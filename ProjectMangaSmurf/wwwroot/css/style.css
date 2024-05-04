@@ -582,6 +582,7 @@ img {
         background: var(--containers-color-alt);
         color: var(--title-color);
         font-weight: 700;
+        font-size:1.2rem;
         cursor: pointer;
     }
 

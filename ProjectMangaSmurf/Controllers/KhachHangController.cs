@@ -125,14 +125,15 @@ namespace ProjectMangaSmurf.Controllers
                     await _userRepository.AddAsyncKH(user, kh);
                     HttpContext.Session.SetString("Img", avatar.AvatarContent);
                     HttpContext.Session.SetString("IdKH", kh.IdUser);
+                    return RedirectToAction("Infor", "KhachHang");
                 }
                 else
                 {
                     var avatar = await _avatarRepository.GetByIdAsync(find.IdAvatar);
                     HttpContext.Session.SetString("Img", avatar.AvatarContent);
                     HttpContext.Session.SetString("IdKH", find.IdUser);
-				}
-                return RedirectToAction("Index", "BoTruyen");
+                    return RedirectToAction("Index", "BoTruyen");
+                }
             }
             else
             {
@@ -287,21 +288,89 @@ namespace ProjectMangaSmurf.Controllers
 
                     await _khachhangrepository.AddAsync(kh);
                     transaction.Commit();
-                    HttpContext.Session.SetString("Img", kh.IdAvatar);
+                    HttpContext.Session.SetString("Img", avatar.AvatarContent);
                     HttpContext.Session.SetString("TK", user.UserName);
                     HttpContext.Session.SetString("IdKH", user.IdUser);
 
-                    // Chuyển hướng đến trang Index của BoTruyen
+                    return RedirectToAction("infor", "KhachHang");
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    ViewBag.Error = "Có lỗi xảy ra khi đăng ký: " + ex.Message;
+                    return View();
+                }
+            }
+        }
+        public  async Task< IActionResult> Infor()
+        {
+            var IdKH = HttpContext.Session.GetString("IdKH");
+            var tk = HttpContext.Session.GetString("TK");
+            ViewBag.Username = tk;
+            var kh = await _khachhangrepository.GetByIdAsync(IdKH);
+            var ava = await _avatarRepository.GetByIdAsync(kh.IdAvatar);
+            ViewBag.Url = ava.AvatarContent;
+            var user = await _userRepository.GetByIdAsync(kh.IdUser);
+            ViewBag.FullName = user.FullName;
+
+            return View();
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> Infor(string Username, string FullName, int Gender, DateOnly date)
+        {
+            // Kiểm tra ModelState
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
+
+            var Us = await _userRepository.GetByIdAsync(HttpContext.Session.GetString("IdKH"));
+            if(Us == null)
+            {
+                return View();
+            }
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    Us.UserName = Username;
+                    Us.FullName = FullName;
+                    Us.Birth = date;
+                    Us.Gender = (byte)Gender;
+                    Us.TimeUpdated = DateTime.Now;
+                    await _userRepository.UpdateAsync(Us);
+                    transaction.Commit();
+                    HttpContext.Session.SetString("TK", Us.UserName);
                     return RedirectToAction("Index", "BoTruyen");
                 }
                 catch (Exception ex)
                 {
                     // Xử lý lỗi và rollback transaction
                     transaction.Rollback();
-                    ViewBag.Error = "Có lỗi xảy ra khi đăng ký: " + ex.Message;
+                    ViewBag.Error = "Có lỗi xảy ra khi thêm thông tin: " + ex.Message;
                     return View();
                 }
             }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateAvatar(string id)
+        {
+            if (ModelState.IsValid)
+            {
+                var kh = await _khachhangrepository.GetByAccountAsync(HttpContext.Session.GetString("TK"));
+                if(kh == null)
+                {
+                    return RedirectToAction("Infor", "KhachHang");
+                }
+
+                kh.IdAvatar = id;
+                await _khachhangrepository.UpdateAsync(kh);
+                return RedirectToAction("Infor", "KhachHang");
+            }
+            return RedirectToAction("Infor", "KhachHang");
         }
 
         public async Task<IActionResult> Following(string id)

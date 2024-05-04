@@ -62,7 +62,7 @@
                 </a>
                 <div class="nav__menu nav__menu-list" id="nav-menu">
                     <div class="search">
-                        <div class="icon"><i class="ri-search-2-line"></i></div>
+                        <div class="icon"><i class="fa-solid fa-magnifying-glass"></i></div>
                         <div class="input">
                             <input type="text" placeholder="Tìm Kiếm ..." id="search-truyen" class="searchInput">
                         </div>
@@ -73,9 +73,39 @@
                         </ul>
                     </div>
                     
-                    <div class="nav__buttons">
+                    <script>
+                        /*======================= ANIMATION SEARCH BAR ==========================*/
+                        const icon = document.querySelector(".icon");
+                        const search = document.querySelector(".search");
+                        const results = document.querySelector(".results");
+                        icon.onclick = () => {
+                            search.classList.toggle('active');
+                            results.classList.toggle('active');
+                        }
+                        const clear = document.querySelector(".clear");
+                        const valueTruyen = document.getElementById('search-truyen');
+                        clear.onclick = () => {
+                            if (valueTruyen.value == '') {
+                                search.classList.remove('active');
+
+                                if (valueTruyen.value === '') {
+                                    clearSearchResults();
+                                }
+                            }
+                            else {
+                                valueTruyen.value = '';
+                            }
+                        }
+
+
+                        function clearSearchResults() {
+                            $('#results').empty();
+                        }
+                    </script>
+
+                   @*  <div class="nav__buttons">
                         <i class="ri-moon-fill change-theme" id="theme-button"></i>
-                    </div>
+                    </div> *@
                     <div class="nav__login">
                         @{
                             var kh = HttpContextAccessor.HttpContext.Session.GetString("TK");
@@ -83,7 +113,7 @@
                             
                             if (kh!= null){
                                 var imgUrl = HttpContextAccessor.HttpContext.Session.GetString("Img");
-                                <div class=" btn__login dropdown" style="color:#fff;">
+                                <div class=" btn__login dropdown position-relative" style="color:#fff;">
                                     <style>
                                         .dropdown-menu i {
                                             margin-right: .5rem;
@@ -92,8 +122,9 @@
                                     <button class="btn dropdown-toggle " type="button" data-bs-toggle="dropdown" aria-expanded="false" style="color:#fff; font-weight:600;">
                                         <img src="@imgUrl" /> @kh
                                     </button>
-                                    <ul class="dropdown-menu dropdown-menu-end" style="max-width:120px; max-height:130px;">
-                                        <li><a asp-area="" asp-controller="KhachHang" asp-action="Account" class="dropdown-item text-start" style="padding:.5rem!important;"><i class="fa-solid fa-user"></i> Account</a></li>
+                                    <ul class="dropdown-menu dropdown-menu-end" style="width:100% !important; max-height:167px;">
+                                        <li><a asp-area="" asp-controller="KhachHang" asp-action="Infor" class="dropdown-item text-start" style="padding:.5rem!important;"><i class="fa-solid fa-user"></i>Account</a></li>
+                                        <li><a asp-area="" asp-controller="KhachHang" asp-action="Account" class="dropdown-item text-start" style="padding:.5rem!important;"><i class="fa-solid fa-sliders"></i> Settings</a></li>
                                         <li><a asp-area="" asp-controller="KhachHang" asp-action="History" asp-route-id="@kh" class="dropdown-item text-start" style="padding:.5rem!important;"><i class="fa-solid fa-clock-rotate-left"></i> Histories</a></li>
                                         <li><a asp-area="" asp-controller="KhachHang" asp-action="Logout" class="dropdown-item text-start" style="padding:.5rem!important;"><i style="color: #FE0000;" class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
                                     </ul>
@@ -293,33 +324,7 @@
             }
         }
 
-        /*======================= ANIMATION SEARCH BAR ==========================*/
-        const icon = document.querySelector(".icon");
-        const search = document.querySelector(".search");
-        const results = document.querySelector(".results");
-        icon.onclick = () => {
-            search.classList.toggle('active');
-            results.classList.toggle('active');
-        }
-        const clear = document.querySelector(".clear");
-        const valueTruyen = document.getElementById('search-truyen');
-        clear.onclick = () => {
-            if (valueTruyen.value == '') {
-                search.classList.remove('active');
-
-                if (valueTruyen.value === '') {
-                    clearSearchResults();
-                }
-            }
-            else {
-                valueTruyen.value = '';
-            }
-        }
-
-
-        function clearSearchResults() {
-            $('#results').empty();
-        }
+        
     </script>
 
     <script src="~/js/script.js"></script>
