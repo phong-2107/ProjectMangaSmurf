@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Views\Home\AboutUs.cshtml.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="BCrypt.Net-Core" Version="1.6.0" />
     <PackageReference Include="MailKit" Version="4.5.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.2.0" />
@@ -32,6 +36,7 @@
     <Folder Include="Microsoft\AspNetCore\Identity\" />
     <Folder Include="SendingEmails\" />
     <Folder Include="wwwroot\images\chapter\" />
+    <Folder Include="wwwroot\images\aboutUs\" />
     <Folder Include="wwwroot\SmurfMangaData\" />
   </ItemGroup>
 
