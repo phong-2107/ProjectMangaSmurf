@@ -4,37 +4,7 @@
 @inject IChapterRepository chapterRepository
 
 <div class="background"></div>
-<div class="main__top section">
-    <div class="top__container containers" style="overflow:hidden;">
-        <div class="top__content">
-            @* <div>
-                <span class="section__subtitle">Truyện Mới</span>
-                <p class="section__des">Cập nhật những bộ truyện mới nhất trong năm 2024</p>
-            </div> *@
-        </div>
-        <div class=" slick-list autoplay row col-6 w-100 d-flex justify-content-center">
-
-            @foreach (var botruyen in Model)
-            {
-                
-                <div class="col update-item" asp-action="CTBoTruyen" asp-route-id="botruyen.IdBo">
-                    <a asp-action="CTBoTruyen" asp-route-id="@botruyen.IdBo">
-                        <figure>
-                            @if (!string.IsNullOrEmpty(botruyen.AnhBia))
-                            {
-                                <img src="@botruyen.AnhBia" alt="truyen Image" />
-                            }
-                            <figcaption>
-                                <h6 class="item-title"><a href="#">@botruyen.TenBo</a></h6>
-                            </figcaption>
-                        </figure>
-                    </a>
-                </div>
-            }
-        </div>
-    </div>
-</div>
-<div class="main__bottom TruyenNew__Containter containers grid">
+<div class="main__bottom sections  TruyenNew__Containter containers grid">
     <section class="home" id="home">
         <div class="home__container w-100">
             <div id="carouselExampleAutoplaying" class="carousel slide home__carousel bg__carousel w-100" data-bs-ride="carousel">
@@ -61,7 +31,7 @@
                         <div class="carousel-item @(botruyen.Index == 0 ? "active" : "") w-100 main-Banner">
                             @if (!string.IsNullOrEmpty(botruyen.Value.AnhBanner))
                             {
-                                <img src="@botruyen.Value.AnhBanner" class="d-block w-100 rounded-3" alt="Anh banner" style="height: 450px!important; object-fit: cover;">
+                                <img src="@botruyen.Value.AnhBanner" class="d-block w-100 rounded-3" alt="Anh banner" style="height: 500px!important; object-fit: cover;">
                             }
                             @if (botruyen.Value.TtPemium)
                             {
@@ -108,19 +78,49 @@
 
                 @{
                     var random = await boTruyenRepository.RandomAsync();
-                    <div class="btn__regis" >
+                    <div class="btn__regis">
                         <a asp-action="CTBoTruyen" asp-route-id="@random.IdBo">Đọc ngẫu nhiên</a>
                     </div>
                     random = null;
                 }
             </div>
-
         </div>
         <div class="main__random bg-random">
-            <a asp-controller="Payment" asp-action="index" class="btn-pre"><i class="ri-vip-crown-line"></i>Tham gia</a>
+            <a asp-controller="Payment" asp-action="index" class="btn-pre"><i class="fa-solid fa-gem"></i>Tham Gia Ngay</a>
         </div>
     </div>
 </div>
+<div class="main__top">
+    <div class="top__container containers" style="overflow:hidden;">
+        <div class="top__content">
+            <div>
+                <span class="section__subtitle">Truyện Mới</span>
+                <p class="section__des">Cập nhật những bộ truyện mới nhất trong năm 2024</p>
+            </div>
+        </div>
+        <div class=" slick-list autoplay row col-6 w-100 d-flex justify-content-center">
+
+            @foreach (var botruyen in Model)
+            {
+
+                <div class="col update-item" asp-action="CTBoTruyen" asp-route-id="botruyen.IdBo">
+                    <a asp-action="CTBoTruyen" asp-route-id="@botruyen.IdBo">
+                        <figure>
+                            @if (!string.IsNullOrEmpty(botruyen.AnhBia))
+                            {
+                                <img src="@botruyen.AnhBia" alt="truyen Image" />
+                            }
+                            <figcaption>
+                                <h6 class="item-title"><a href="#">@botruyen.TenBo</a></h6>
+                            </figcaption>
+                        </figure>
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
 <section class="new-update containers mt-3" id="update">
     <div class="update__container TruyenNew__Containter grids">
         <div class="top__content">
@@ -135,7 +135,7 @@
         <div class="container">
             <div class="row row-cols-6 justify-content-center">
                 @{
-                    var listtruyenNew = Model.Take(14);
+                    var listtruyenNew = Model.Take(12);
                 }
                 @foreach (var botruyen in listtruyenNew)
                 {
@@ -229,7 +229,7 @@
         </div>
         <div class="container">
             <div class="row row-cols-6  justify-content-center">
-                @foreach (var botruyen in Model.Take(7))
+                @foreach (var botruyen in Model.Take(6))
                 {
                     <div class="col-2 update-item">
                         <a asp-action="CTBoTruyen" asp-route-id="@botruyen.IdBo">
@@ -298,13 +298,13 @@
                     <div class=" position-relative">
                         @if (!string.IsNullOrEmpty(item.AnhBanner))
                         {
-                            <img src="@item.AnhBanner" alt="truyen Image" class="img-poster"/>
+                            <img src="@item.AnhBanner" alt="truyen Image" class="img-poster" />
                             <div class="background-item rounded-3 w-100" style="z-index:0"></div>
                         }
-                        @if(item.TtPemium == true)
+                        @if (item.TtPemium == true)
                         {
                             <div class="position-absolute pre-poster">
-                                <img src="/images/PreDark.png" alt="Premium Image"/>
+                                <img src="/images/PreDark.png" alt="Premium Image" />
                             </div>
                         }
                         <div class="position-absolute name-poster">
@@ -332,16 +332,16 @@
                                     <i class="ri-star-fill"></i>
                                 }
                             }
-                            
+
                         </div>
                         <div class="position-absolute btn-poster">
                             <a asp-action="CTBoTruyen" asp-route-id="@item.IdBo" class="btn-poster-detail">Đọc ngay <i class="ri-arrow-right-s-fill"></i></a>
                         </div>
-                        
+
                     </div>
-                }           
+                }
             </div>
-            
+
         </div>
     </div>
 </section>
@@ -397,10 +397,10 @@
     // }
 
     $('.autoplay').slick({
-        slidesToShow: 7,
-        slidesToScroll: 2,
+        slidesToShow: 6,
+        slidesToScroll: 1,
         autoplay: true,
-        autoplaySpeed: 2500,
+        autoplaySpeed: 2000,
         responsive: [
             {
                 breakpoint: 450, // Breakpoint for devices with width <= 745px
@@ -412,7 +412,7 @@
             {
                 breakpoint: 576, // Breakpoint for devices with width <= 340px
                 settings: {
-                    slidesToShow: 3,
+                    slidesToShow: 2,
                     slidesToScroll: 1
                 }
             },
@@ -427,14 +427,14 @@
                 breakpoint: 1064, // Breakpoint for devices with width <= 340px
                 settings: {
                     slidesToShow: 4,
-                    slidesToScroll: 2
+                    slidesToScroll: 1
                 }
             },
             {
                 breakpoint: 1280, // Breakpoint for devices with width <= 340px
                 settings: {
                     slidesToShow: 5,
-                    slidesToScroll: 2
+                    slidesToScroll: 1
                 }
             }
         ]
