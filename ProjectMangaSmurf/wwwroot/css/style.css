@@ -12,6 +12,7 @@
     --body-color: #D1D5DB;
     --body-main: #E4E4E4;
     --body-item-color: #b2b4b8;
+    --body-item-color-dark: #27333a;
     --body-white: #ffffff;
     --box-color: #DDDCD4;
     --btn-yellow: #E38645;
@@ -31,6 +32,7 @@
     --body-main: #1a1e24;
     --btn-yellow: #CE29F9;
     --body-item-color: #314149;
+    --body-item-color-dark: #27333a;
     --containers-color: hsl(19, 10%, 10%);
     --containers-color-alt: #9858F1;
     --containers-color-yellow: #B142F5;
@@ -82,6 +84,7 @@ body.dark-theme {
     --body-main: #1a1e24;
     --btn-yellow: #CE29F9;
     --body-item-color: #314149;
+    --body-item-color-dark: #27333a;
     --containers-color: hsl(19, 10%, 10%);
     --containers-color-alt: #9858F1;
     --containers-color-yellow: #B142F5;
