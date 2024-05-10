@@ -57,17 +57,7 @@ namespace ProjectMangaSmurf.Controllers
             return View();
         }
 
-        public async Task<ActionResult> Account()
-        {
-
-            var kh = await _khachhangrepository.GetByAccountAsync(HttpContext.Session.GetString("TK"));
-            if (kh != null)
-            {
-                return View(kh);
-            }
-            return View();
-        }
-
+        
         public async Task LoginGoogle()
         {
             await HttpContext.ChallengeAsync(GoogleDefaults.AuthenticationScheme, new AuthenticationProperties()
@@ -305,6 +295,11 @@ namespace ProjectMangaSmurf.Controllers
                 }
             }
         }
+
+        
+
+
+
         public async Task<IActionResult> Infor()
         {
             var IdKH = HttpContext.Session.GetString("IdKH");
@@ -321,7 +316,6 @@ namespace ProjectMangaSmurf.Controllers
 
             return View();
         }
-
 
         [HttpPost]
         public async Task<IActionResult> Infor(string Username, string FullName, int Gender, DateOnly date)
@@ -509,15 +503,6 @@ namespace ProjectMangaSmurf.Controllers
             var khach = _khachhangrepository.GetByAccountAsync(idkh);
             if (await khach != null)
             {
-                //User user = new User();
-                //user.IdUser = _khachhangrepository.GenerateCustomerId();
-                //user.UserName = HttpContext.Session.GetString("TK");
-                //user.Email = HttpContext.Session.GetString("Email");
-                //user.TimeCreated = DateTime.Now;
-                //user.TimeUpdated = DateTime.Now;
-                //user.Active = true;
-                //await _userRepository.AddAsync(user);
-
                 var kh = await khach;
                 kh.GoogleAccount = Email;
 
@@ -530,42 +515,69 @@ namespace ProjectMangaSmurf.Controllers
             return RedirectToAction("Account", "KhachHang");
         }
 
+
+        public async Task<ActionResult> Account()
+        {
+
+            var kh = await _khachhangrepository.GetByIdAsync(HttpContext.Session.GetString("IdKH"));
+            var value = TempData["info"] as string;
+            ViewBag.info = value;
+            if (kh != null)
+            {
+                var user = await _userRepository.GetByIdAsync(kh.IdUser);
+                ViewBag.user = user;
+                return View(kh);
+            }
+            return View();
+        }
+
         [HttpPost]
-        public async Task<IActionResult> UpdatePass(string currentPassword, string newPassword, string confirmNewPassword)
+        public async Task<IActionResult> UpdatePass(string Email, string currentPassword, string newPassword, string confirmNewPassword)
         {
             var idkh = HttpContext.Session.GetString("TK");
             var khach = await _khachhangrepository.GetByAccountAsync(idkh);
             if (khach != null)
             {
-                if (khach.GoogleAccount == null)
+                var user = await _userRepository.GetByIdAsync(khach.IdUser);
+                if (Email == user.Email)
                 {
-                    var check = PasswordHasher.VerifyPassword(currentPassword.Trim(), khach.IdUserNavigation.Password.Trim());
-                    if (!check)
+                    if(khach.GoogleAccount != null)
                     {
-                        ModelState.AddModelError("", "Mật khẩu cũ không trùng khớp.");
-                        return View("Account");
+                        if (newPassword != confirmNewPassword)
+                        {
+                            TempData["info"] = "The new passwords do not match.";
+                            return RedirectToAction("Account");
+                        }
+                        khach.IdUserNavigation.Password = PasswordHasher.HashPassword(confirmNewPassword);
+                        await _khachhangrepository.UpdateAsync(khach);
+                        TempData["info"] = "Cập nhật mật khẩu thành công";
+                        return RedirectToAction("Account");
                     }
-                    if (newPassword != confirmNewPassword)
+                    else
                     {
-                        ModelState.AddModelError("", "The new passwords do not match.");
-                        return View("Account");
+                        var check = PasswordHasher.VerifyPassword(currentPassword.Trim(), user.Password);
+                        if (!check)
+                        {
+                            TempData["info"] = "Mật khẩu cũ không trùng khớp.";
+                            return RedirectToAction("Account");
+                        }
+                        if (newPassword != confirmNewPassword)
+                        {
+                            TempData["info"] = "The new passwords do not match.";
+                            return RedirectToAction("Account");
+                        }
+                        khach.IdUserNavigation.Password = PasswordHasher.HashPassword(confirmNewPassword);
+                        await _khachhangrepository.UpdateAsync(khach);
+                        TempData["info"] = "Cập nhật mật khẩu thành công";
+                        return RedirectToAction("Account");
                     }
                 }
                 else
                 {
-                    if (newPassword != confirmNewPassword)
-                    {
-                        ModelState.AddModelError("", "The new passwords do not match.");
-                        return View("Account");
-                    }
+                    TempData["info"] = "Email cuả bạn không trùng khớp";
+                    return RedirectToAction("Account");
                 }
-                khach.IdUserNavigation.Password = PasswordHasher.HashPassword(confirmNewPassword);
-                await _khachhangrepository.UpdateAsync(khach);
-
-                TempData["info"] = "Cập nhật thành công mật khẩu";
-                return RedirectToAction("Account");
             }
-
             return RedirectToAction("Account");
         }
 

@@ -50,12 +50,13 @@ builder.Services.AddSession(options =>
 });
 builder.Services.AddControllersWithViews();
 
-services.AddControllersWithViews()
-    .AddSessionStateTempDataProvider();
 
-services.AddControllersWithViews()
-    .AddCookieTempDataProvider(); 
+builder.Services.AddControllersWithViews()
+    .AddCookieTempDataProvider();
 
+
+builder.Services.AddControllersWithViews().AddSessionStateTempDataProvider();
+services.AddSession();
 
 
 var connectionString = builder.Configuration.GetConnectionString("ProjectDBContextConnection") ?? 
