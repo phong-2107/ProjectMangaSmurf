@@ -163,7 +163,8 @@ namespace ProjectMangaSmurf.Controllers
                         HttpContext.Session.SetString("TK", kh.IdUserNavigation.UserName);
                         HttpContext.Session.SetString("Img", avatar.AvatarContent);
                         HttpContext.Session.SetString("IdKH", kh.IdUser);
-                        return RedirectToAction("Index", "BoTruyen");
+                        //return RedirectToAction("Index", "BoTruyen");
+                        return Json(new { success = true });
                     }
                     else
                     {
@@ -343,7 +344,7 @@ namespace ProjectMangaSmurf.Controllers
                     await _userRepository.UpdateAsync(Us);
                     transaction.Commit();
                     HttpContext.Session.SetString("TK", Us.UserName);
-                    return RedirectToAction("Index", "BoTruyen");
+                    return Json(new { success = true });
                 }
                 catch (Exception ex)
                 {

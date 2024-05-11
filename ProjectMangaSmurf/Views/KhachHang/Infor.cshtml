@@ -310,7 +310,7 @@
         <div class="main__top containers">
             <div class="main__content w-100">
                 <h3 class="main__title" style="padding-bottom:2rem;">Account Information</h3>
-                <form asp-action="Infor" class="form-login" autocomplete="off" method="post">
+                <form class="form-login" id="formInfor" autocomplete="off" method="post">
                     <div class="content-login form-group position-relative" style="z-index: 100000;">
                         <div class="infor-img">
                             <img src="@ViewBag.Url" />
@@ -320,29 +320,29 @@
                         <div class="inputBox">
                             @if (ViewBag.Username != null)
                             {
-                                <input name="Username" type="text" value="@ViewBag.Username" required autocomplete="nope">
+                                <input name="Username" id="Username" type="text" value="@ViewBag.Username" required autocomplete="nope">
                             }
                             else
                             {
-                                <input name="Username" type="text" required autocomplete="nope">
+                                <input name="Username" id="Username" type="text" required autocomplete="nope">
                             }
                             <span>Username</span>
                             <i></i>
                         </div>
                         <div class="inputBox">
-                            <input name="FullName" type="text" required autocomplete="nope" value="@ViewBag.FullName">
+                            <input name="FullName" id="FullName" type="text" required autocomplete="nope" value="@ViewBag.FullName">
                             <span>Full Name</span>
                             <i></i>
                         </div>
                         <div class="inputBox">
-                            <input name="date" type="date" required value="@DateTime.Today.ToString("yyyy-MM-dd")">
+                            <input name="date" id="date" type="date" required value="@DateTime.Today.ToString("yyyy-MM-dd")">
                             <span>Năm sinh</span>
                             <i></i>
                         </div>
                         <div class="inputBox w-100 ">
                             <div class="inputBox-item">
                                 <h5>Giới tính</h5>
-                                <select name="Gender" class="select">
+                                <select name="Gender" id="Gender" class="select">
                                     <option value="1">Male</option>
                                     <option value="2">Female</option>
                                     <option value="0">Other</option>
@@ -380,6 +380,33 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.js"></script>
 
     <script>
+        $('#formInfor').on('submit', function (e) {
+            e.preventDefault();
+            $.ajax({
+                url: '/KhachHang/Infor',
+                type: 'POST',
+                data: {
+                    Username: $('#Username').val(),
+                    FullName: $('#FullName').val(),
+                    date: $('#date').val(),
+                    Gender: $('#Gender').val()
+
+                },
+                success: function (data) {
+                    if (data.success) {
+                        var redirectUrl = localStorage.getItem('redirectAfterLogin') || '/';
+                        window.location.href = redirectUrl;
+                        localStorage.removeItem('redirectAfterLogin');
+                    } else {
+                        alert('Login failed!');
+                    }
+                },
+                error: function () {
+                    alert('Error logging in!');
+                }
+            });
+        });
+
 
         $(document).ready(function () {
             $('#btn-avatar').click(function (event) {

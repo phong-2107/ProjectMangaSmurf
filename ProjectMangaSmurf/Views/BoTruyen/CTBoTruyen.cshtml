@@ -8,8 +8,10 @@
 @inject IHttpContextAccessor HttpContextAccessor
 
 <link href="~/css/styleCT.css" rel="stylesheet" />
-<link href="~/css/stylechapter.css" rel="stylesheet" />
+@* <link href="~/css/stylechapter.css" rel="stylesheet" /> *@
 <link href="~/css/stylerank.css" rel="stylesheet" />
+
+
 
 <div class=" main__top detail section">
     <div class=" detail__container containers">
@@ -57,7 +59,7 @@
                                                     url: updateUrl,
                                                     type: 'POST',
                                                     headers: {
-                                                        "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val() // Lấy token từ form hoặc meta tag
+                                                        "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val()
                                                     },
                                                     data: {
                                                         id: boId,
@@ -76,7 +78,25 @@
                                                     }
                                                 });
                                             } else {
-                                                alert('Bạn cần đăng nhập để đánh giá bộ truyện');
+                                                const swalWithBootstrapButtons = Swal.mixin({
+                                                    customClass: {
+                                                        confirmButton: "btn btn-success",
+                                                        cancelButton: "btn btn-danger mr-3"
+                                                    },
+                                                    buttonsStyling: false
+                                                });
+                                                swalWithBootstrapButtons.fire({
+                                                    text: "Bạn cần đăng nhập để đánh giá bộ truyện",
+                                                    icon: "warning",
+                                                    showCancelButton: true,
+                                                    confirmButtonText: "Login",
+                                                    cancelButtonText: "Cancel!",
+                                                    reverseButtons: true
+                                                }).then((result) => {
+                                                    if (result.isConfirmed) {
+                                                        window.location.href = '/KhachHang/login';
+                                                    }
+                                                });
                                             }
                                         });
                                     });
@@ -274,9 +294,9 @@
                 </div>
             </div>
 
-            <div class="detail__list containers">
+            <div class="detail__list ">
                 <div class="content-title">
-                    <i class="ri-file-text-line"></i> Danh sách Chương
+                    <i class="fa-solid fa-list"></i> Danh sách Chương
                 </div>
                 <div class="d-flex flex-column mb-3 w-100 mt-3">
                     @{
@@ -366,14 +386,110 @@
                                         });
                                     }
                                     else {
-                                        alert('Bạn cần đăng ký gói premium để đọc nội dung này!');
+                                        const swalWithBootstrapButtons = Swal.mixin({
+                                            customClass: {
+                                                confirmButton: "btn btn-success",
+                                                cancelButton: "btn btn-danger mr-3"
+                                            },
+                                            buttonsStyling: false
+                                        });
+                                        swalWithBootstrapButtons.fire({
+                                            text: "Bạn cần đăng ký gói premium để đọc nội dung này!",
+                                            icon: "warning",
+                                            showCancelButton: true,
+                                            confirmButtonText: "Login",
+                                            cancelButtonText: "Cancel!",
+                                            reverseButtons: true
+                                        }).then((result) => {
+                                            if (result.isConfirmed) {
+                                                window.location.href = '/Payment/Index';
+                                            }
+                                        });
                                     }
                                 } else {
-                                    alert('Bạn cần đăng nhập để đọc nội dung này!');
+                                    const swalWithBootstrapButtons = Swal.mixin({
+                                        customClass: {
+                                            confirmButton: "btn btn-success",
+                                            cancelButton: "btn btn-danger mr-3"
+                                        },
+                                        buttonsStyling: false
+                                    });
+                                    swalWithBootstrapButtons.fire({
+                                        text: "Bạn cần đăng nhập để đọc nội dung này!",
+                                        icon: "warning",
+                                        showCancelButton: true,
+                                        confirmButtonText: "Login",
+                                        cancelButtonText: "Cancel!",
+                                        reverseButtons: true
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            window.location.href = '/KhachHang/login';
+                                        }
+                                    });
                                 }
                             });
                         });
                     </script>
+                </div>
+                <div class="top__content">
+                    <div class="content-title">
+                        <i class="fa-solid fa-bookmark"></i> Truyện đề cử
+                    </div>
+                </div>
+                <div class="container">
+                    <div class="row row-cols-6  justify-content-center">
+                        @{
+                            // @foreach (var botruyen in Model.Take(6))
+                            // {
+                            //     <div class="col-2 update-item">
+                            //         <a asp-action="CTBoTruyen" asp-route-id="@botruyen.IdBo">
+                            //             <figure class="position-relative">
+                            //                 @{
+                            //                     var EarliestChap = chapterRepository.GetChapterEarliestByIdAsync(botruyen.IdBo);
+                            //                     if (EarliestChap != null)
+                            //                     {
+                            //                         var time = chapterRepository.CalculateTimeAgo(EarliestChap.ThoiGian);
+                            //                         if (!string.IsNullOrEmpty(botruyen.AnhBia))
+                            //                         {
+                            //                             <img src="@botruyen.AnhBia" alt="truyen Image" />
+                            //                         }
+                            //                         <figcaption>
+                            //                             <h6 class="item-title"><a href="#">@botruyen.TenBo</a></h6>
+
+                            //                             <a class="item-chapter" style="font-size: 13px;">
+                            //                                 <span class="chap" style="margin-right: 10px; ">chap @EarliestChap.SttChap</span>
+                            //                                 <span class="time">@time</span>
+                            //                             </a>
+                            //                         </figcaption>
+
+                            //                     }
+                            //                     else
+                            //                     {
+                            //                         if (!string.IsNullOrEmpty(botruyen.AnhBia))
+                            //                         {
+                            //                             <img src="@botruyen.AnhBia" alt="truyen Image" />
+                            //                         }
+                            //                         <figcaption>
+                            //                             <h6 class="item-title"><a href="#">@botruyen.TenBo</a></h6>
+                            //                             <a class="item-chapter" style="font-size: 13px;">
+                            //                                 <span class="chap" style="margin-right: 10px; ">chap ...</span>
+                            //                                 <span class="time">... giờ trước</span>
+                            //                             </a>
+                            //                         </figcaption>
+                            //                     }
+                            //                 }
+                            //                 @if (botruyen.TtPemium == true)
+                            //                 {
+                            //                     <div class="item-vip">
+                            //                         <img style="width:50px!important; height:20px!important; border-radius:0!important;" src="~/images/predark.png" />
+                            //                     </div>
+                            //                 }
+                            //             </figure>
+                            //         </a>
+                            //     </div>
+                            // }
+                        }
+                    </div>
                 </div>
             </div>
         </div>
@@ -430,7 +546,25 @@
                         }
                     });
                 } else {
-                    alert('Bạn cần đăng nhập để đánh giá bộ truyện');
+                    const swalWithBootstrapButtons = Swal.mixin({
+                        customClass: {
+                            confirmButton: "btn btn-success",
+                            cancelButton: "btn btn-danger mr-3"
+                        },
+                        buttonsStyling: false
+                    });
+                    swalWithBootstrapButtons.fire({
+                        text: "Bạn cần đăng nhập để đánh giá bộ truyện",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonText: "Login",
+                        cancelButtonText: "Cancel!",
+                        reverseButtons: true
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = '/KhachHang/login';
+                        }
+                    });
                 }
             });
         });

@@ -10,7 +10,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] Đăng nhập</title>
+    <title>@ViewData["Title"]</title>
 
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
@@ -46,20 +46,17 @@
         <div class="main__top  containers">
             <div class="main__content w-100">
                 <h3 class="main__title">LOGIN</h3>
-                <form asp-action="Login" class="form-login" autocomplete="off" method="post">
+                <form class="form-login" id="loginForm" autocomplete="off" method="post">
                     <div class="content-login form-group" style="z-index: 100000;">
                         <div class="inputBox">
-                            <input name="Taikhoan"  type="text" required autocomplete="nope">
+                            <input name="Taikhoan" type="text" id="TaiKhoan" required autocomplete="nope">
                             <span>Username</span>
                             <i></i>
                         </div>
                         <div class="inputBox">
-                            <input name="Matkhau" type="password" required autocomplete="new-password">
+                            <input name="Matkhau" type="password" id="password" required autocomplete="new-password">
                                 <span>Password</span>
                                 <i></i>
-                            @* <a type="button" id="toggle-password" onclick="togglePassword()">
-                                <i class="ri-eye-fill"></i>
-                            </a> *@
                         </div>
                         <a class="forgot">QUÊN MẬT KHẨU?</a>
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -70,7 +67,7 @@
                         <div class="other">
 
                             <div class="facebook"><a href="#"><i class="ri-facebook-fill"></i></a></div>
-                            <div class="google"><a asp-area="" asp-controller="KhachHang" asp-action="LoginGoogle"><i class="ri-google-fill"></i></a></div>
+                            <div class="google"><a  id="loginGoogle" asp-controller="KhachHang" asp-action="LoginGoogle"><i class="ri-google-fill"></i></a></div>
                         </div>
                         <div class="regis">
                             Bạn chưa có tài khoản?<a asp-area="" asp-controller="KhachHang" asp-action="Register">ĐĂNG KÝ</a>
@@ -92,6 +89,32 @@
     <script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.js"></script>
+
+    <script>
+        $('#loginForm').on('submit', function (e) {
+            e.preventDefault();
+            $.ajax({
+                url: '/KhachHang/Login',
+                type: 'POST',
+                data: {
+                    Taikhoan: $('#TaiKhoan').val(),
+                    Matkhau: $('#password').val()
+                },
+                success: function (data) {
+                    if (data.success) {
+                        var redirectUrl = localStorage.getItem('redirectAfterLogin') || '/';
+                        window.location.href = redirectUrl;
+                        localStorage.removeItem('redirectAfterLogin'); 
+                    } else {
+                        alert('Login failed!');
+                    }
+                },
+                error: function () {
+                    alert('Error logging in!');
+                }
+            });
+        });
+    </script>
 </body>
 </html>
 

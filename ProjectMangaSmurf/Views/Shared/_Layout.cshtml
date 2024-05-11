@@ -10,7 +10,7 @@
 <head>
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] MangaSmurf</title>
+    <title>MangaSmurf</title>
 
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     
@@ -31,17 +31,24 @@
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick-theme.css" />
 
 
+    <!-- LINK SWEETALERT -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script>
-        // Kiểm tra ngay lập tức theme hiện tại và áp dụng nó
         if (localStorage.getItem('selected-theme') === 'dark') {
             document.documentElement.classList.add('dark-theme');
         }
     </script>
-    @* <link href="~/css/stylelist.css" rel="stylesheet" /> *@
+
+
     <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
 </head>
 
@@ -103,9 +110,9 @@
                         }
                     </script>
 
-                   @*  <div class="nav__buttons">
-                        <i class="ri-moon-fill change-theme" id="theme-button"></i>
-                    </div> *@
+                    <div class="nav__buttons" style="display:none;">
+                        <i class="ri-sun-cloudy-fill change-theme" id="theme-button"></i>
+                    </div>
                     <div class="nav__login">
                         @{
                             var kh = HttpContextAccessor.HttpContext.Session.GetString("TK");
@@ -245,10 +252,7 @@
 
     
     <main role="main" class="pb-3">
-        
-        @* <div id="global-loader">
-            <div class="whirly-loader"></div>
-        </div> *@
+        <span class="loader"></span>
         @RenderBody()
         <a onclick="scrollToTop()" id="scrollToTopBtn" title="Go to top"><i class="ri-arrow-up-line"></i></i></a>
     </main>
@@ -282,8 +286,8 @@
         const getCurrentIcon = () => themeButton.classList.contains(iconTheme) ? 'ri-sun-cloudy-fill' : 'ri-moon-fill';
 
         if (selectedTheme) {
-            document.body.classList[selectedTheme === 'dark' ? 'add' : 'remove'](darkTheme)
-            themeButton.classList[selectedIcon === 'ri-moon-fill' ? 'add' : 'remove'](iconTheme)
+            document.body.classList[selectedTheme === 'dark' ? 'add' : 'add'](darkTheme)
+            themeButton.classList[selectedIcon === 'ri-moon-fill' ? 'remove' : 'remove'](iconTheme)
         }
         // themeButton.addEventListener('click', () => {
         //     document.body.classList.toggle(darkTheme);
@@ -381,6 +385,17 @@
 
             function clearSearchResults() {
                 $('#results').empty();
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const loginPagePath = '/KhachHang/Login';
+            const registerPagePath = '/KhachHang/Register';
+            const InforPagePath = '/KhachHang/Infor';
+            const currentPagePath = window.location.pathname; 
+
+            if (currentPagePath !== loginPagePath || currentPagePath !== registerPagePath || currentPagePath !== InforPagePath) {
+                localStorage.setItem('redirectAfterLogin', window.location.href);
             }
         });
     </script>

@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using ProjectMangaSmurf.Models;
@@ -98,6 +98,12 @@ builder.Services.AddScoped<IStaffRepository, EFStaffRepository>();
 //builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<MangaSmurfContext>().AddDefaultTokenProviders();
 
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddControllersWithViews();
+builder.Services.AddHttpClient("FlaskAPI", client =>
+{
+    client.BaseAddress = new Uri("http://localhost:5000/"); // Địa chỉ của Flask API
+});
 
 
 var app = builder.Build();
