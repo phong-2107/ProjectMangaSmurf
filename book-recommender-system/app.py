@@ -67,15 +67,9 @@ def goi_y_sach():
                 book_id = data['Book-Id']
                 try:
                     recommended_books = recommend(book_id)
-                    # print(recommended_books)
-                    recommended_books_json = [int(item[0]) for item in recommended_books]
-                    print(type(recommended_books_json))
-                    recommended_books_json = json.dumps(recommended_books_json, cls=NpEncoder)
-                    print("SAU khi: bien doi ", type(recommended_books_json))
-                    print("A: ", json.dumps(recommended_books_json))
                     if recommended_books is not None:
                         # Chuyển đổi recommended_books thành một đối tượng có thể chuyển đổi thành JSON
-                        # Chuyển đổi các giá trị số thành int
+                        # Chuyển đổi các giá trị số thành mảng int
                         recommended_books_json = [int(item[0]) for item in recommended_books]
                         # recommended_books_json = json.dumps(recommended_books_json, cls=NpEncoder)
 
@@ -123,7 +117,7 @@ def recommend(book_id):
     if book_id in pt.index:
         # index fetch
         index = np.where(pt.index == book_id)[0][0]
-        similar_items = sorted(list(enumerate(similarity_scores[index])), key=lambda x: x[1], reverse=True)[1:5]
+        similar_items = sorted(list(enumerate(similarity_scores[index])), key=lambda x: x[1], reverse=True)[1:6]
         
         data = []
         for i in similar_items:
