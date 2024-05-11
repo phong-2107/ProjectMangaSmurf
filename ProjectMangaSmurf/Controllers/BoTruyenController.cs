@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Http;
 using ProjectMangaSmurf.Data;
+using Newtonsoft.Json;
 namespace ProjectMangaSmurf.Controllers
 {
     public class BoTruyenController : Controller
@@ -13,15 +14,32 @@ namespace ProjectMangaSmurf.Controllers
         private readonly IChapterRepository _chapterrepository;
         private readonly IKhachHangRepository _khachhangrepository;
         private readonly ProjectDBContext _context;
-        public BoTruyenController(ProjectDBContext db ,IboTruyenRepository botruyenrepository, IChapterRepository chapterrepository, IKhachHangRepository khachHangRepository, ICTBoTruyenRepository cTBoTruyenRepository)
+
+        private readonly IHttpClientFactory _clientFactory;
+        public BoTruyenController(ProjectDBContext db ,IboTruyenRepository botruyenrepository, IChapterRepository chapterrepository, IKhachHangRepository khachHangRepository, ICTBoTruyenRepository cTBoTruyenRepository, IHttpClientFactory clientFactory)
         {
             _context = db;
             _botruyenrepository = botruyenrepository;
             _chapterrepository = chapterrepository;
             _khachhangrepository = khachHangRepository;
             _cTBoTruyenRepository = cTBoTruyenRepository;
+            _clientFactory = clientFactory;
         }
 
+
+        public async Task<IActionResult> Recommendations()
+        {
+            var client = _clientFactory.CreateClient("FlaskAPI");
+            var response = await client.GetAsync("/recommend_books"); // Đường dẫn API phù hợp
+            if (response.IsSuccessStatusCode)
+            {
+                var result = await response.Content.ReadAsStringAsync();
+                var recommendations = JsonConvert.DeserializeObject<List<BoTruyen>>(result);
+                return View(recommendations);
+            }
+
+            return View(new List<BookRecommendation>());
+        }
 
         public async Task<IActionResult> Index()
         {
