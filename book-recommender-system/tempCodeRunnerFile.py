@@ -1,0 +1,1 @@
+recommended_books_json = json.dumps(recommended_books_json, cls=NpEncoder)
