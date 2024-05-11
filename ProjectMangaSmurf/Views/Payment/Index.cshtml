@@ -1,11 +1,16 @@
-﻿mmmmmmm@model ProjectMangaSmurf.Models.KhachHang
-
+﻿@model ProjectMangaSmurf.Models.KhachHang
 @using Microsoft.AspNetCore.Http
 @inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
 @inject IHttpContextAccessor HttpContextAccessor
-
-
 @using Microsoft.AspNetCore.Mvc.Rendering
+
+<!-- LINK SWEETALERT -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+
 @{
     Layout = null;
 }
@@ -80,18 +85,34 @@
                     </div>
                     <a class="btn-pay btn-mega" id="btnCheckout" data-customerid="@HttpContextAccessor.HttpContext.Session.GetString("TK")">Buy now</a>
                     <script>
-                        document.addEventListener("DOMContentLoaded", function () {
-                            var link = document.getElementById('btnCheckout');
-                            link.addEventListener('click', function (e) {
-                                var customerId = this.getAttribute('data-customerid');
-                                if (customerId === null || customerId === '') {
+                        $(document).ready(function () {
+                            $('#btnCheckout').click(function (e) {
+                                var customerId = $(this).data('customerid');
+                                if (!customerId) {
                                     e.preventDefault();
-                                    var userResponse = confirm("Bạn cần đăng nhập để đăng kí gói premium");
-                                    if (userResponse) {
-                                        window.location.href = '@Url.Action("Login", "KhachHang")';
-                                    }
+
+                                    const swalWithBootstrapButtons = Swal.mixin({
+                                        customClass: {
+                                            confirmButton: "btn btn-success",
+                                            cancelButton: "btn btn-danger mr-3"
+                                        },
+                                        buttonsStyling: false
+                                    });
+                                    swalWithBootstrapButtons.fire({
+                                        text: "Bạn cần đăng nhập để đăng kí gói Thành Viên",
+                                        icon: "warning",
+                                        showCancelButton: true,
+                                        confirmButtonText: "Đăng nhập ngay",
+                                        cancelButtonText: "Cancel",
+                                        reverseButtons: true
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            window.location.href = '/KhachHang/login';
+                                        }
+                                    });
+
                                 } else {
-                                    window.location.href = '@Url.Action("Checkout", "Payment")';
+                                    window.location.href = '@Url.Action("Checkout", "Payment", new { id = "P004" })';
                                 }
                             });
                         });
@@ -101,7 +122,7 @@
                          src="https://static.crunchyroll.com/cr-acquisition/assets/img/landing/productsSection/mega-fan-art.png" alt="Crown." class="cr-product-card-image undefined">
                 </div>
 
-                <div class="content content-fan">
+                <div class="content content-fan" >
                     <h3>FAN</h3>
                     <h4>₫49,000/ 69 <i class="ri-coins-fill"></i></h4>
                     <div>
@@ -111,12 +132,45 @@
                             <li>đọc các đầu truyện trả phí với giá phải chăng</li>
                         </ul>
                     </div>
-                    <a class="btn-pay btn-fan" id="btnCheckout">Buy Now</a>
+                    <a class="btn-pay btn-fan" id="btnCheckoutFan" data-customerid="@HttpContextAccessor.HttpContext.Session.GetString("TK")">Buy Now</a>
+                    <script>
+                        $(document).ready(function () {
+                            $('#btnCheckoutFan').click(function (e) {
+                                var customerId = $(this).data('customerid');
+                                if (!customerId) {
+                                    e.preventDefault();
+
+                                    const swalWithBootstrapButtons = Swal.mixin({
+                                        customClass: {
+                                            confirmButton: "btn btn-success",
+                                            cancelButton: "btn btn-danger mr-3"
+                                        },
+                                        buttonsStyling: false
+                                    });
+                                    swalWithBootstrapButtons.fire({
+                                        text: "Bạn cần đăng nhập để đăng kí gói Thành Viên",
+                                        icon: "warning",
+                                        showCancelButton: true,
+                                        confirmButtonText: "Đăng nhập ngay",
+                                        cancelButtonText: "Cancel",
+                                        reverseButtons: true
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            window.location.href = '/KhachHang/login';
+                                        }
+                                    });
+
+                                } else {
+                                    window.location.href = '@Url.Action("Checkout", "Payment", new { id = "P005" })';
+                                }
+                            });
+                        });
+                    </script>
                 </div>
 
-                @* <div class="img-pre">
-                <img src="~/images/imgpremium.png"/>
-                </div> *@
+                <div class=" img-pre" style="right: -3.5rem; top: 20rem; max-width:250px;">
+                    <img src="~/img/log-in-yuzu.png" />
+                </div>
             </div>
         </div>
     </main>

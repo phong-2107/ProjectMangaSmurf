@@ -1,5 +1,5 @@
 ﻿@using Microsoft.AspNetCore.Mvc.Rendering
-
+@model ProjectMangaSmurf.Models.ServicePackConfig
 @using Microsoft.AspNetCore.Http
 @inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
 @inject IHttpContextAccessor HttpContextAccessor
@@ -59,9 +59,10 @@
                         var date = DateTime.Now.ToString("dd/MM/yyyy :HH:mm:ss");
                     }
                     <div class="content-login form-group" style="z-index: 100000; padding:.5rem 2rem; margin-bottom:1rem; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; gap:.5rem;">
-                            <h3 class="main__title">THANH TOÁN</h3>
+                            <h3 class="main__title" style="font-weight:700; color:var(--containers-color-alt);)">THANH TOÁN</h3>
+                            <h4 style="color:#000; font-weight:600;">@Model.PackName</h4>
                             <span>Code: @OrderId</span>
-                            <h4>Số tiền : 69.000 VND</h4>
+                            <h4>Số tiền : @Model.Amount VND</h4>
                     </div>
                     <div class="content-login form-group" style="z-index: 100000;">
                         <div class="inputBox " style="display:none;">

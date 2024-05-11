@@ -1,7 +1,7 @@
 from flask import Flask,render_template,request, jsonify
 import pickle
 import numpy as np
-from flask_cors import CORS
+# from flask_cors import CORS
 
 app = Flask(__name__)
 
@@ -70,7 +70,85 @@ def recommend():
 
     return render_template('recommend.html',data=data)
 
-    CORS(app)
+# API goi y sach
+@app.route('/goi-y-sach', methods=['POST'])
+def goi_y_sach():
+    # Kiểm tra xem request có phải là POST không
+    if request.method == 'POST':
+
+        if request.is_json:
+            data = request.get_json()
+            # print(data)
+            # Kiểm tra xem key 'book-id' có trong dữ liệu không
+            if 'Book-Id' in data:
+                book_id = data['Book-Id']
+                try:
+                    recommended_books = recommend(book_id)
+                    if recommended_books is not None:
+                        # Chuyển đổi recommended_books thành một đối tượng có thể chuyển đổi thành JSON
+                        # Chuyển đổi các giá trị số thành mảng int
+                        recommended_books_json = [int(item[0]) for item in recommended_books]
+                        # recommended_books_json = json.dumps(recommended_books_json, cls=NpEncoder)
+
+                        response = {
+                            "status": 200,
+                            "recommended_books_id": recommended_books_json
+                        }
+                        return jsonify(response), 200
+                    else:
+                        response = {
+                            "status": 400,
+                            "message": "Book ID not found or error occurred"
+                        }
+                        return jsonify(response), 400
+                except Exception as e:
+                    # Bắt ngoại lệ và in ra thông tin chi tiết về lỗi
+                    print("An error occurred:", str(e))
+                    response = {
+                        "status": 400,
+                        "message": "An error occurred"
+                    }
+                    return jsonify(response), 400
+            else:
+                response = {
+                    "status": 400,
+                    "message": "'Book-Id' key not found in request"
+                }
+                return jsonify(response), 400
+        else:
+            response = {
+                "status": 400,
+                "message": "Request must be in JSON format"
+            }
+            return jsonify(response), 400
+    else:
+        response = {
+            "status": 405,
+            "message": "Method Not Allowed"
+        }
+        return jsonify(response), 405
+
+def recommend(book_id):
+    book_id = int(book_id)
+    # Kiểm tra xem book_name có tồn tại trong pt.index không
+    if book_id in pt.index:
+        # index fetch
+        index = np.where(pt.index == book_id)[0][0]
+        similar_items = sorted(list(enumerate(similarity_scores[index])), key=lambda x: x[1], reverse=True)[1:6]
+        
+        data = []
+        for i in similar_items:
+            item = []
+            temp_df = books[books['Book-Id'] == pt.index[i[0]]]
+            item.extend(list(temp_df.drop_duplicates('Book-Title')['Book-Id'].values))
+            
+            data.append(item)
+        
+        return data
+    else:
+        print("Book not found in database")
+        return None
+
+
 if __name__ == '__main__':
-    app.run(debug=True, port=5001)
-    
+    app.run(debug=True)

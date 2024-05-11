@@ -3,8 +3,8 @@
 /*=============== VARIABLES CSS ===============*/
 :root {
     /*========== Colors ==========*/
-    /* Color mode HSL(hue, saturation, lightness)
-    --first-color: #6a4040;
+    /* Color mode HSL(hue, saturation, lightness)*/
+    /*--first-color: #6a4040;
     --first-color-alt: hsl(19, 64%, 52%);
     --title-color: hsl(19, 16%, 10%);
     --text-color: hsl(19, 16%, 35%);
@@ -18,8 +18,8 @@
     --btn-yellow: #E38645;
     --containers-color-alt: #BD9A43;
     --containers-color-yellow: #B58E3E;
-    --containers-color: hsl(20, 45%, 14%);*/
-
+    --containers-color: hsl(20, 45%, 14%);
+*/
     --body-white: #ffffff;
     --first-color: hsl(19, 100%, 97%);
     --first-color-alt: hsl(19, 100%, 97%);
@@ -27,7 +27,7 @@
     --text-color: hsl(19, 16%, 65%);
     --text-color-light: hsl(19, 8%, 55%);
     --box-color: #181D1F;
-    --body-color: /* #141624;*/ /* #263238;*/ #0E1111;
+    --body-color:  #141624;  #263238; #0E1111;
     --body-color-dark: #1a2226;
     --body-main: #1a1e24;
     --btn-yellow: #CE29F9;
@@ -171,6 +171,17 @@ img {
 }
 
 /* =================loading =====================*/
+#global-loader {
+    background: var(--body-color);
+    position: fixed;
+    z-index: 9999;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .loader {
     width: 48px;
     height: 48px;
@@ -191,7 +202,7 @@ img {
 
     .loader::after {
         transform: rotate3d(90, 90, 0, 180deg );
-        border-color: #FF3D00;
+        border-color: var(--containers-color-alt);
     }
 
 @keyframes rotate {
@@ -217,6 +228,7 @@ img {
         clip-path: polygon(50% 50%,0 0,100% 0,100% 100%,100% 100%,100% 100%)
     }
 }
+
 
 /*=============== THEME ===============*/
 .nav__buttons {
@@ -316,7 +328,7 @@ img {
     top: 0;
     left: 0;
     background-color: var(--body-color);
-    z-index: 10000;
+    z-index: 100000;
     transition: box-shadow .3s background .4s;
 }
 

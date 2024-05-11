@@ -397,10 +397,11 @@ namespace ProjectMangaSmurf.Data
                     .HasForeignKey(d => d.IdPack)
                     .HasConstraintName("FK_Payment_Service_Pack_Config");
 
-                entity.HasOne(d => d.IdPaymentNavigation).WithOne(p => p.Payment)
-                    .HasForeignKey<Payment>(d => d.IdPayment)
+                entity.HasOne(d => d.IdPaymentNavigation).WithMany(p => p.Payment)
+                    .HasForeignKey(d => d.IdPayment)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Payment_KhachHang");
+
             });
 
             modelBuilder.Entity<PermissionsList>(entity =>

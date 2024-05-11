@@ -252,7 +252,10 @@
 
     
     <main role="main" class="pb-3">
-        <span class="loader"></span>
+        
+        <div id="global-loader">
+            <span class="loader"></span>
+        </div>
         @RenderBody()
         <a onclick="scrollToTop()" id="scrollToTopBtn" title="Go to top"><i class="ri-arrow-up-line"></i></i></a>
     </main>
@@ -286,8 +289,8 @@
         const getCurrentIcon = () => themeButton.classList.contains(iconTheme) ? 'ri-sun-cloudy-fill' : 'ri-moon-fill';
 
         if (selectedTheme) {
-            document.body.classList[selectedTheme === 'dark' ? 'add' : 'add'](darkTheme)
-            themeButton.classList[selectedIcon === 'ri-moon-fill' ? 'remove' : 'remove'](iconTheme)
+            document.body.classList[selectedTheme === 'dark' ? 'add' : 'remove'](darkTheme)
+            themeButton.classList[selectedIcon === 'ri-moon-fill' ? 'remove' : 'add'](iconTheme)
         }
         // themeButton.addEventListener('click', () => {
         //     document.body.classList.toggle(darkTheme);
@@ -387,7 +390,6 @@
                 $('#results').empty();
             }
         });
-
         document.addEventListener('DOMContentLoaded', function () {
             const loginPagePath = '/KhachHang/Login';
             const registerPagePath = '/KhachHang/Register';
