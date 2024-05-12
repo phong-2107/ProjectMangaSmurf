@@ -16,7 +16,7 @@ namespace ProjectMangaSmurf.Controllers
         private readonly ProjectDBContext _context;
 
         private readonly IHttpClientFactory _clientFactory;
-        public BoTruyenController(ProjectDBContext db ,IboTruyenRepository botruyenrepository, IChapterRepository chapterrepository, IKhachHangRepository khachHangRepository, ICTBoTruyenRepository cTBoTruyenRepository, IHttpClientFactory clientFactory)
+        public BoTruyenController(ProjectDBContext db, IboTruyenRepository botruyenrepository, IChapterRepository chapterrepository, IKhachHangRepository khachHangRepository, ICTBoTruyenRepository cTBoTruyenRepository, IHttpClientFactory clientFactory)
         {
             _context = db;
             _botruyenrepository = botruyenrepository;
@@ -53,7 +53,7 @@ namespace ProjectMangaSmurf.Controllers
             var listBotruyen = await _botruyenrepository.GetAllAsync();
             return View(listBotruyen);
         }
-        public async Task<IActionResult> ListTruyenEarliest() 
+        public async Task<IActionResult> ListTruyenEarliest()
         {
             var listBotruyen = await _botruyenrepository.GetAllAsyncByChapterEarliest();
             return View(listBotruyen);
@@ -69,7 +69,7 @@ namespace ProjectMangaSmurf.Controllers
         public async Task<IActionResult> SearchBoTruyen(string query)
         {
             var results = await _botruyenrepository.SearchByNameAsync(query);
-            return Json(results.Select(x => new { id = x.IdBo , img = x.AnhBia, tenBo = x.TenBo, view = x.TongLuotXem}));
+            return Json(results.Select(x => new { id = x.IdBo, img = x.AnhBia, tenBo = x.TenBo, view = x.TongLuotXem }));
         }
         public async Task<IActionResult> Rankings(int id)
         {
@@ -84,11 +84,12 @@ namespace ProjectMangaSmurf.Controllers
                 var listFollow = await _botruyenrepository.GetAllAsyncByFollow();
                 return View(listFollow);
             }
-            if (id == 3){
+            if (id == 3)
+            {
                 var listRate = await _botruyenrepository.GetAllAsyncByRate();
                 return View(listRate);
             }
-            if(id == 4)
+            if (id == 4)
             {
                 var listToday = await _botruyenrepository.GetAllAsyncByDay();
                 return View(listToday);

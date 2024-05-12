@@ -21,7 +21,8 @@ namespace ProjectMangaSmurf.Repository
         Task<List<BoTruyen>> GetComicsByAuthorId(string authorId);
         Task DeleteAllChaptersAndDetails(string idBo);
         string GenerateBoTruyenId();
-        Task<List<string>> GetListLoaiAsync(string id);
+        List<string> GetListLoaiAsync(string id);
+        Task<List<string>> GetListLoaiQLAsync(string id);
         Task<BoTruyen> GetByIdAsync(string id);
         Task<BoTruyen> RandomAsync();
         Task<LoaiTruyen> GetLoaiByIdAsync(string id);
