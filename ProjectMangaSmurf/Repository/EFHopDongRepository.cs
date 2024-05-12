@@ -22,13 +22,13 @@ namespace ProjectMangaSmurf.Repository
         public string GenerateHD()
         {
             string idPrefix = "HD";
-            int idLength = 10;
+            int idLength = 8;
             string maxId = _context.Payments.Select(kh => kh.IdUser)
                                                .OrderByDescending(id => id)
                                                .FirstOrDefault();
             if (maxId == null)
             {
-                return idPrefix + "0000000001";
+                return idPrefix + "00000001";
             }
             else
             {
@@ -41,6 +41,16 @@ namespace ProjectMangaSmurf.Repository
         public async Task<IEnumerable<Payment>> GetAllAsync()
         {
             return await _context.Payments.ToListAsync();
+        }
+
+        public ServicePackConfig GetPackById(string id)
+        {
+            return _context.ServicePackConfigs.FirstOrDefault(p => p.IdPack == id);
+        }
+
+        public async Task<ServicePackConfig> GetPackByIdAsync(string id)
+        {
+            return await _context.ServicePackConfigs.FirstOrDefaultAsync(p => p.IdPack == id);
         }
     }
 }

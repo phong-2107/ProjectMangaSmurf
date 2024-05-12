@@ -1098,8 +1098,8 @@ namespace ProjectMangaSmurf.Migrations
                         .HasConstraintName("FK_Payment_Service_Pack_Config");
 
                     b.HasOne("ProjectMangaSmurf.Models.KhachHang", "IdPaymentNavigation")
-                        .WithOne("Payment")
-                        .HasForeignKey("ProjectMangaSmurf.Models.Payment", "IdPayment")
+                        .WithMany("Payment")
+                        .HasForeignKey("IdPayment")
                         .IsRequired()
                         .HasConstraintName("FK_Payment_KhachHang");
 

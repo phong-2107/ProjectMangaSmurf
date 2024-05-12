@@ -358,11 +358,7 @@ namespace ProjectMangaSmurf.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK__Payment__613289C0E7CD2C77", x => x.IdPayment);
-                    table.ForeignKey(
-                        name: "FK_Payment_KhachHang",
-                        column: x => x.IdPayment,
-                        principalTable: "KhachHang",
-                        principalColumn: "IdUser");
+                    
                     table.ForeignKey(
                         name: "FK_Payment_Service_Pack_Config",
                         column: x => x.IdPack,

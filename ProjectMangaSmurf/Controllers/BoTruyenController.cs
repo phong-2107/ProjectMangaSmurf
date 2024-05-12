@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Http;
 using ProjectMangaSmurf.Data;
+using Newtonsoft.Json;
 namespace ProjectMangaSmurf.Controllers
 {
     public class BoTruyenController : Controller
@@ -22,8 +23,23 @@ namespace ProjectMangaSmurf.Controllers
             _chapterrepository = chapterrepository;
             _khachhangrepository = khachHangRepository;
             _cTBoTruyenRepository = cTBoTruyenRepository;
+            _clientFactory = clientFactory;
         }
 
+
+        //public async Task<IActionResult> Recommendations()
+        //{
+        //    var client = _clientFactory.CreateClient("FlaskAPI");
+        //    var response = await client.GetAsync("/recommend_books"); // Đường dẫn API phù hợp
+        //    if (response.IsSuccessStatusCode)
+        //    {
+        //        var result = await response.Content.ReadAsStringAsync();
+        //        var recommendations = JsonConvert.DeserializeObject<List<BoTruyen>>(result);
+        //        return View(recommendations);
+        //    }
+
+        //    return View(new List<BookRecommendation>());
+        //}
 
         public async Task<IActionResult> Index()
         {
@@ -125,7 +141,8 @@ namespace ProjectMangaSmurf.Controllers
             {
                 ViewBag.follow = false;
             }
-
+            var list = await _botruyenrepository.GetAllAllAsync();
+            ViewBag.list = list;
             return View(Botruyen);
         }
         public async Task<IActionResult> Chapter(string id, int stt)

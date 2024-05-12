@@ -11,142 +11,6 @@
 <link href="~/css/styleCT.css" rel="stylesheet" />
 <link href="~/css/styleChapter.css" rel="stylesheet" />
 
-<style>
-   
-    header {
-        position: relative !important;
-    }
-
-    .show-btn{
-          background: #fff;
-          padding: 10px 20px;
-          font-size: 20px;
-          font-weight: 500;
-          color: #3498db;
-          cursor: pointer;
-          box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
-        }
-        .show-btn, .container_pop{
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-        }
-        input[type="checkbox"]{
-          display: none;
-        }
-        .container_pop{
-          display: none;
-          background: #fff;
-          width: 410px;
-          padding: 30px;
-          box-shadow: 0 0 8px rgba(0,0,0,0.1);
-          z-index: 100;
-        }
-        #show:checked ~ .container_pop{
-          display: block;
-        }
-        .container_pop .close-btn{
-          position: absolute;
-          right: 20px;
-          top: 15px;
-          font-size: 18px;
-          cursor: pointer;
-        }
-        .container_pop .close-btn:hover{
-          color: #3498db;
-        }
-        .container_pop .text{
-          font-size: 35px;
-          font-weight: 600;
-          text-align: center;
-        }
-        .container_pop form{
-          margin-top: -20px;
-        }
-        .container_pop form .data{
-          height: 45px;
-          width: 100%;
-          margin: 40px 0;
-        }
-        form .data label{
-          font-size: 18px;
-        }
-        form .data input{
-          height: 100%;
-          width: 100%;
-          padding-left: 10px;
-          font-size: 17px;
-          border: 1px solid silver;
-        }
-        form .data input:focus{
-          border-color: #3498db;
-          border-bottom-width: 2px;
-        }
-        form .forgot-pass{
-          margin-top: -8px;
-        }
-        form .forgot-pass a{
-          color: #3498db;
-          text-decoration: none;
-        }
-        form .forgot-pass a:hover{
-          text-decoration: underline;
-        }
-        form .btn{
-          margin: 30px 0;
-          height: 45px;
-          width: 100%;
-          position: relative;
-          overflow: hidden;
-        }
-        form .btn .inner{
-          height: 100%;
-          width: 300%;
-          position: absolute;
-          left: -100%;
-          z-index: -1;
-          background: -webkit-linear-gradient(right, #56d8e4, #9f01ea, #56d8e4, #9f01ea);
-          transition: all 0.4s;
-        }
-        form .btn:hover .inner{
-          left: 0;
-        }
-        form .btn button{
-          height: 100%;
-          width: 100%;
-          background: none;
-          border: none;
-          color: #fff;
-          font-size: 18px;
-          font-weight: 500;
-          text-transform: uppercase;
-          letter-spacing: 1px;
-          cursor: pointer;
-        }
-        form .signup-link{
-          text-align: center;
-        }
-        form .signup-link a{
-          color: #3498db;
-          text-decoration: none;
-        }
-        form .signup-link a:hover{
-          text-decoration: underline;
-        }
-
-        .overlay {
-          display: none;
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          background: rgba(0, 0, 0, 0.5); /* Màu nền mờ với độ trong suốt */
-          z-index: 50; /* Đảm bảo overlay nằm trên nền nhưng dưới form */
-      }
-</style>
-
 
 <div class="overlay" id="loginOverlay" style="display:none;"></div>
 <div class="container_pop" id="loginForm" style="display:none;">
@@ -215,7 +79,7 @@
             var sttchapMin = @Model.SttChap - 1;
             if (sttchapMin >= 1)
             {
-                <a class="btn-pre" asp-action="Chapter" asp-route-id="@Model.IdBo" asp-route-stt="@sttchapMin"><i class="ri-arrow-left-s-line"></i></a>
+                <a class="btn-prev" asp-action="Chapter" asp-route-id="@Model.IdBo" asp-route-stt="@sttchapMin"><i class="ri-arrow-left-s-line"></i></a>
             }
         }
         
@@ -257,52 +121,7 @@
                             }
                         }
                     }
-                    <script>
-
-                        $(document).ready(function () {
-                            $('#btn-follow').click(function (event) {
-                                event.preventDefault();
-                                var sessionTK = '@HttpContextAccessor.HttpContext.Session.GetString("TK")';
-                                if (!sessionTK) {
-                                    // Hiển thị form đăng nhập
-                                    $('#loginOverlay').show();
-                                    $('#loginForm').show();
-                                } else {
-                                    // AJAX call to follow chapter
-                                    $.ajax({
-                                        url: '@Url.Action("Follow", "KhachHang")',
-                                        type: 'POST',
-                                        data: {
-                                            __RequestVerificationToken: '@Html.AntiForgeryToken()',
-                                            id: '@Model.IdBo',
-                                            stt: '@Model.SttChap'
-                                        },
-                                        success: function (response) {
-                                            if (response.success) {
-                                                alert('Bạn đã follow thành công!');
-                                                location.reload();
-                                            } else {
-                                                alert('Lỗi khi follow, vui lòng thử lại');
-                                            }
-                                        },
-                                        error: function () {
-                                            alert('Không thể gửi yêu cầu. Vui lòng kiểm tra lại.');
-                                        }
-                                    });
-                                }
-                            });
-
-                            $('.overlay').click(function () {
-                                $(this).hide();
-                                $('#loginForm').hide();
-                            });
-
-                            $('.close-btn').click(function () {
-                                $('#loginOverlay').hide();
-                                $('#loginForm').hide();
-                            });
-                        });
-                    </script>
+                    
                 }
             </ul>
         </div>
@@ -415,30 +234,13 @@
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.js" integrity="sha512-HGOnQO9+SP1V92SrtZfjqxxtLmVzqZpjFFekvzZVWoiASSQgSr4cw9Kqd2+l8Llp4Gm0G8GIFJ4ddwZilcdb8A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="/js/script.js"></script>
-
-
-
 <script>
-    let lastScrollTop = 0;
-    const control = document.getElementById("control");
-    window.addEventListener("scroll", function () {
-        let currentScroll = window.pageYOffset || document.documentElement.scrollTop;
-
-        if (currentScroll > lastScrollTop) {
-            // Scroll down
-            control.classList.add("hidden");
-        } else {
-            // Scroll up
-            control.classList.remove("hidden");
-        }
-        lastScrollTop = currentScroll;
-    });
+    
 
 
-    document.addEventListener('contextmenu', function (e) {
-        e.preventDefault();
-    }, false);
+    // document.addEventListener('contextmenu', function (e) {
+    //     e.preventDefault();
+    // }, false);
 
     document.onkeydown = function (e) {
         if (e.ctrlKey && (e.shiftKey && (e.keyCode == 73 || e.keyCode == 74)) || e.keyCode == 83 || e.keyCode == 80) {
@@ -459,4 +261,63 @@
                 overlay.style.display = 'none';
             }, 500);
         });
+</script>
+
+<script>
+    $(document).ready(function () {
+        $('#btn-follow').click(function (event) {
+            event.preventDefault();
+            var sessionTK = '@HttpContextAccessor.HttpContext.Session.GetString("TK")';
+            if (!sessionTK) {
+                // Hiển thị form đăng nhập
+                $('#loginOverlay').show();
+                $('#loginForm').show();
+            } else {
+                // AJAX call to follow chapter
+                $.ajax({
+                    url: '@Url.Action("Follow", "KhachHang")',
+                    type: 'POST',
+                    data: {
+                        __RequestVerificationToken: '@Html.AntiForgeryToken()',
+                        id: '@Model.IdBo',
+                        stt: '@Model.SttChap'
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            alert('Bạn đã follow thành công!');
+                            location.reload();
+                        } else {
+                            alert('Lỗi khi follow, vui lòng thử lại');
+                        }
+                    },
+                    error: function () {
+                        alert('Không thể gửi yêu cầu. Vui lòng kiểm tra lại.');
+                    }
+                });
+            }
+        });
+
+        $('.overlay').click(function () {
+            $(this).hide();
+            $('#loginForm').hide();
+        });
+
+        $('.close-btn').click(function () {
+            $('#loginOverlay').hide();
+            $('#loginForm').hide();
+        });
+    });
+
+    let lastScrollTop = 0;
+    const control = document.getElementById("control");
+    window.addEventListener("scroll", function () {
+        let currentScroll = window.pageXOffset || document.documentElement.scrollTop;
+
+        if (currentScroll > lastScrollTop) {
+            control.classList.add("hidden");
+        } else {
+            control.classList.remove("hidden");
+        }
+        lastScrollTop = currentScroll;
+    });
 </script>

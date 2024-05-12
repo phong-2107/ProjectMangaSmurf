@@ -1,4 +1,4 @@
-
+﻿
 using Microsoft.EntityFrameworkCore;
 using ProjectMangaSmurf.Repository;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -27,7 +27,7 @@ builder.Services.AddAuthentication(options =>
 })
     .AddCookie(options =>
     {
-        options.LoginPath = "/Login";
+        options.LoginPath = "/KhachHang/Login";
         options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
     });
 
@@ -51,12 +51,13 @@ builder.Services.AddSession(options =>
     options.Cookie.Name = ".AspNetCore.Admin.Session";
 });
 
-services.AddControllersWithViews()
-    .AddSessionStateTempDataProvider();
 
 services.AddControllersWithViews()
-    .AddCookieTempDataProvider();
+    .AddCookieTempDataProvider(); 
 
+
+builder.Services.AddControllersWithViews().AddSessionStateTempDataProvider();
+services.AddSession();
 
 var connectionString = builder.Configuration.GetConnectionString("ProjectDBContextConnection") ?? 
     throw new InvalidOperationException("Connection string 'ProjectDBContextConnection' " +
@@ -96,6 +97,12 @@ builder.Services.AddScoped<IStaffRepository, EFStaffRepository>();
 //{
 //    options.Filters.AddService<RBACAuthorizeAttribute>();
 //});
+
+builder.Services.AddControllersWithViews();
+builder.Services.AddHttpClient("FlaskAPI", client =>
+{
+    client.BaseAddress = new Uri("http://localhost:5000/"); // Địa chỉ của Flask API
+});
 
 
 var app = builder.Build();

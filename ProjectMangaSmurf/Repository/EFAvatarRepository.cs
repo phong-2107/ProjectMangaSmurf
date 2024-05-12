@@ -12,6 +12,12 @@ namespace ProjectMangaSmurf.Repository
         {
             _context = context;
         }
+
+        public async Task<IEnumerable<Avatar>> GetAllAsync()
+        {
+            return await _context.Avatars.ToListAsync();
+        }
+
         public async Task<Avatar> GetByIdAsync(string id)
         {
             return await _context.Avatars.FirstOrDefaultAsync(p => p.IdAvatar == id.Trim());

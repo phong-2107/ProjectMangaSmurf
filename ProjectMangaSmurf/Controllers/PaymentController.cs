@@ -28,10 +28,10 @@ namespace ProjectMangaSmurf.Controllers
             return View();
         }
 
-        [HttpGet]
-        public IActionResult Checkout()
+        public IActionResult Checkout(string id)
         {
-            return View();
+            var pack = hopdongRepository.GetPackById(id);
+            return View(pack);
         }
 
 
@@ -63,9 +63,12 @@ namespace ProjectMangaSmurf.Controllers
             hd.IdPayment = hopdongRepository.GenerateHD();
             hd.PayDate = DateTime.Parse(HttpContext.Session.GetString("date"));
             hd.IdUser = HttpContext.Session.GetString("IdKH");
-            //hd. = int.Parse(HttpContext.Session.GetString("OrderId"));
-            //hd.NoiDung = HttpContext.Session.GetString("Note");
+            hd.IdPack = "P004";
             hd.PayAmount = 69000;
+            hd.PayMethod = 1;
+            hd.PayDate = DateTime.Now;
+            hd.PayStats = 1;
+            hd.ExpiresTime = DateTime.Today.AddMonths(2);
             await hopdongRepository.AddAsync(hd);
 
             var email = HttpContext.Session.GetString("Email");
