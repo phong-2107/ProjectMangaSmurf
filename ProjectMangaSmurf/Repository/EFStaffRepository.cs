@@ -33,6 +33,20 @@ namespace ProjectMangaSmurf.Repository
             // Filter NhanViens where UserRole indicates they are staff
             return await _context.Users.Where(nv => nv.UserRole == false).ToListAsync();
         }
+        public async Task<IEnumerable<NhanVien>> GetAllAsyncStaff()
+        {
+            return await _context.NhanViens.ToListAsync();
+        }
+
+        public async Task<User> GetAllStaffInfo(string id)
+        {
+            var staffList = await GetAllAsyncStaff();
+            var user = await _context.Users.FirstOrDefaultAsync(nv => nv.IdUser == id);
+            return user;
+        }
+
+
+
         public async Task<IEnumerable<PermissionsList>> GetAllRBACAsync()
         {
             return await _context.PermissionsLists.ToListAsync();

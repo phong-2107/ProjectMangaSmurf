@@ -5,6 +5,8 @@ namespace ProjectMangaSmurf.Repository
     public interface IStaffRepository
     {
         Task<IEnumerable<User>> GetAllAsync();  // List all staff members
+        Task<IEnumerable<NhanVien>> GetAllAsyncStaff();
+        Task<User> GetAllStaffInfo(string id);
         Task<NhanVien> GetByIdAsync(string id);     // Get a single staff member by Id
         Task<User> GetAccountByIdAsync(string username, string password);  // Authenticate a staff member
         Task AddAsync(NhanVien nv);                 // Add a new staff member

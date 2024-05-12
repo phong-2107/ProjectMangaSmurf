@@ -1,0 +1,110 @@
+﻿@model IEnumerable<ProjectMangaSmurf.Models.NhanVien>
+
+@using ProjectMangaSmurf.Repository
+@inject IStaffRespository kh
+
+<style>
+    .btn-custom {
+        background-color: rebeccapurple;
+        color: white;
+        transition: all 0.3s;
+    }
+
+    .btn-active {
+        background-color: magenta; /* Change color when active */
+    }
+
+</style>
+
+
+<div class="content">
+    <div class="page-header">
+        <div class="page-title">
+            <h3> <i class="fa-solid fa-circle-user"></i>  LIST OF STAFF-ADMINISTRATOR </h3>
+            <h6>       Manager - View - Authentication </h6>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <div class="table-top">
+                <div class="search-set">
+                    <div class="search-path">
+                    </div>
+
+                    <div class="search-input">
+                        <a class="btn btn-searchset">
+                            <img src="~/img/icons/search-white.svg" alt="img">
+                        </a>
+                    </div>
+                </div>
+                <div class="filters">
+                    <button class="btn btn-primary" onclick="applyFilter('all')">See All <i class="fa-solid fa-border-all"></i></button>
+                    <button class="btn btn-success" onclick="applyFilter('active')">Activating <i class="fa-solid fa-person-digging"></i></button>
+                    <button class="btn btn-danger" onclick="applyFilter('banned')">Banning  <i class="fa-solid fa-ban"></i></button>
+                </div>
+
+
+            </div>
+
+
+            <div class="table-responsive">
+                <table class="table  datanew">
+                    <thead>
+                        <tr>
+                            <th>IDA</th>
+                            <th>Full Name</th>
+                            <th>Phone Number</th>
+                            <th>Email</th>
+                            <th>Premium Stats</th>
+                            <th>Stats</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var i in Model)
+                        {
+                            <tr>
+                                <td>@i.IdUser</td>
+                                <td>@(i.IdUserNavigation?.FullName ?? "N/A")</td>
+                                <td>@(i.IdUserNavigation?.Phone ?? "N/A")</td>
+                                <td>@(i.IdUserNavigation?.Email ?? "N/A")</td>
+                                <td>@i.ActivePremium</td>
+                                <td>@(i.IdUserNavigation?.Active.ToString() ?? "N/A")</td>
+                                <td>
+                                    <a asp-area="Admin" asp-controller="CusManager" asp-action="Detail" asp-route-id="@i.IdUser" class="me-3">
+                                        <img src="~/img/icons/eye.svg" alt="img">
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var currentFilter = 'all';  // Default filter
+    var premiumOnly = false;    // Premium filter state
+
+    function applyFilter(filter) {
+        currentFilter = filter;
+        updateList();
+    }
+
+    function togglePremium() {
+        premiumOnly = !premiumOnly;  // Toggle premium state
+        document.getElementById('premium-btn').classList.toggle('btn-active'); // Toggle button class for visual feedback
+        updateList();
+    }
+
+    function updateList() {
+        // Build the URL with current filters
+        var url = '@Url.Action("ViewList", "CusManager", new { Area = "Admin" })' +
+            `?status=${currentFilter}&premium=${premiumOnly}`;
+        window.location.href = url; // Redirect to the updated URL
+    }
+</script>
+
+
+

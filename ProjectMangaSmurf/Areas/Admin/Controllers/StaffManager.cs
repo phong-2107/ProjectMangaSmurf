@@ -27,6 +27,11 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
             return View(permissionsList);
         }
 
+        public async Task<IActionResult> Index()
+        {
+            IEnumerable<NhanVien> staffList = await _staffRepository.GetAllAsyncStaff() ?? Enumerable.Empty<NhanVien>();
+            return View(staffList);
+        }
 
         public async Task<IActionResult> ViewList()
         {
