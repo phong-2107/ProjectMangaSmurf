@@ -1,0 +1,18 @@
+﻿@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+
+<ul class="nav user-menu" style="height:100%; justify-content:center">
+    <li class="nav-item">
+        @{
+            var username = HttpContextAccessor.HttpContext.Session.GetString("Username");
+            if (!string.IsNullOrEmpty(username))
+            {
+                <span>Hello, @username!</span>
+            }
+            else
+            {
+                <a asp-area="Admin" asp-controller="AdminLogin" asp-action="Login">Login</a>
+            }
+        }
+    </li>
+</ul>

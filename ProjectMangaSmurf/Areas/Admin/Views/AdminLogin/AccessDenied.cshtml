@@ -1,0 +1,39 @@
+﻿@{
+    Layout = null; // No layout to keep the page standalone
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Access Denied</title>
+    <style>
+        /* Styles to ensure the body is a flex container that centers its children both vertically and horizontally */
+        body {
+            display: flex;
+            justify-content: center; /* Center horizontally */
+            align-items: center; /* Center vertically */
+            height: 100vh; /* Full viewport height */
+            margin: 0;
+            background-color: #f4f4f4;
+            font-family: Arial, sans-serif;
+        }
+        /* Styling for the message box */
+        .access-denied {
+            padding: 20px;
+            border: 2px solid red;
+            background-color: white;
+            color: red;
+            font-size: 24px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="access-denied">
+        No permit to access this action. <br>
+        Please contact your Administrator / Supervisor.
+    </div>
+</body>
+</html>

@@ -88,6 +88,7 @@
                             <li><h4>Địa Chỉ Email</h4><h6>@customer.GoogleAccount</h6></li>
                             <li><h4>Premium ?</h4><h6>@customer.ActivePremium</h6></li>
                             @* <li><h4>Banned ?</h4><h6>@customer.tr</h6></li> *@
+                            <li><h4>Ticket</h4><h6>@customer.TicketSalary</h6></li>
                             <li><h4>Liên Kết FB</h4><h6>@customer.FacebookAccount</h6></li>
                             <li><h4>Liên Kết G+</h4><h6>@customer.GoogleAccount</h6></li>
                         </ul>
@@ -125,28 +126,54 @@
             </div>
         </div>
     </div>
-        <div class="table-responsive">
-            <table class="table datanew">
-                <thead>
+
+    <div class="table-responsive">
+        <table class="table datanew">
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Customer ID</th>
+                    <th>Payment Method</th>
+                    <th>Pack ID</th>
+                    <th>Date of Transaction</th>
+                    <th>Date of Expiry</th>
+                    <th>Amount</th>
+                    <th>Payment Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var hopDong in Model.Orders)
+                {
                     <tr>
-                        <th><label class="checkboxs"><input type="checkbox" id="select-all"><span class="checkmarks"></span></label></th>
-                        <th>Mã Order</th>
-                        <th>Ngày Giao Dịch</th>
-                        <th>Amount</th>
+                        <td>@hopDong.IdPayment</td>
+                        <td><a href="@Url.Action("Detail", "CusManager", new { id = hopDong.IdUser })">@hopDong.IdUser</a></td>
+                        <td>@hopDong.PayMethod</td>
+                        <td>@hopDong.IdPack</td>
+                        <td>@(hopDong.PayDate?.ToString("dd/MM/yyyy") ?? "N/A")</td>
+                        <td>@(hopDong.ExpiresTime?.ToString("dd/MM/yyyy") ?? "N/A")</td>
+                        <td>@hopDong.PayAmount</td> <!-- Adjusted for currency formatting -->
+                        <td>
+                            @switch (hopDong.PayStats)
+                            {
+                                case 0:
+                                    <span class="text-success">Success</span>
+                                    break;
+                                case 1:
+                                    <span class="text-danger">Failed</span>
+                                    break;
+                                case 2:
+                                    <span class="text-warning">Waiting</span>
+                                    break;
+                                default:
+                                    <span class="text-secondary">Unknown</span>
+                                    break;
+                            }
+                        </td>
                     </tr>
-                </thead>
-                <tbody>
-                    @foreach (var hopDong in Model.Orders)
-                    {
-                        <tr>
-                            <td><label class="checkboxs"><input type="checkbox" class="order-checkbox"><span class="checkmarks"></span></label></td>
-                            <td>@hopDong.IdPayment</td>
-                            <td>@hopDong.PayDate.GetValueOrDefault().ToString("dd/MM/yyyy")</td>
-                            <td>@hopDong.PayAmount</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+                }
+            </tbody>
+
+        </table>
         </div>
     </div>
 </div>

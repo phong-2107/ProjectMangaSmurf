@@ -11,7 +11,7 @@
         object-fit: contain; /* Image will be scaled to maintain its aspect ratio while fitting within the element’s content box */
         border-radius: 5px; /* Rounded corners */
     }
-
+        
     .image-upload {
         position: relative;
         width: 500px; /* Fixed width */
@@ -112,8 +112,8 @@
                 <div class="col-lg-3 col-sm-6 col-12">
                     <label asp-for="Dotuoi">Age Rating</label>
                     <select asp-for="Dotuoi" class="select">
-                        <option value ="0">[E] Everyone</option>
-                        <option value="3">[C] Child 3+</option>
+                        <option value="0">[E] Everyone</option>
+                        <option value="5">[C] Child 3+</option>
                         <option value="12">[T] Teenagers</option>
                         <option value="16">[R] Violent-Sexually</option>
                         <option value="18">[R18] Audutl only</option>
@@ -140,10 +140,10 @@
                 <div class="col-lg-3 col-sm-6 col-12">
                     <label asp-for="TrangThai">Publish </label>
                     <select asp-for="TrangThai" class="select">
-                        <option value="0">0-End/Finish</option>
-                        <option value="1">1-Updating</option>
-                        <option value="3">2-Coming Soon</option>
-                        <option value="3">3-Stopped Publish</option>
+                        <option value="0">0-Updating</option>
+                        <option value="1">1-Stopped Publish</option>
+                        <option value="3">2-End/Finish</option>
+                        <option value="3">3-Coming Soon</option>
                     </select>
                 </div>
 

@@ -1,10 +1,10 @@
 ﻿
 using ProjectMangaSmurf.Models;
-using ProjectMangaSmurf.Data;
 using Microsoft.EntityFrameworkCore;
+using ProjectMangaSmurf.Data;
 
 namespace ProjectMangaSmurf.Repository
-{ 
+{
     public class EFAuthorRepository : IAuthorRepository
     {
         private readonly ProjectDBContext _context;

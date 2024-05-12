@@ -25,9 +25,11 @@ public partial class User
 
     public DateTimeOffset? TimeUpdated { get; set; }
 
+    public bool? UserRole { get; set; }
+
     public bool? Active { get; set; }
 
-    public virtual NhanVien NhanVien { get; set; } = null!;
+    public virtual KhachHang? KhachHang { get; set; }
 
-    public virtual KhachHang KhachHang { get; set; } = null!;
+    public virtual NhanVien? NhanVien { get; set; }
 }

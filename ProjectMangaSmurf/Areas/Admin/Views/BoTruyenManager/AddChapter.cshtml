@@ -2,6 +2,7 @@
 @using Microsoft.AspNetCore.Mvc.Rendering
 @using ProjectMangaSmurf.Repository
 @inject IboTruyenRepository boTruyenRepository
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <style>
     .preview {
@@ -13,105 +14,80 @@
 <div class="content">
     <div class="page-header">
         <div class="page-title">
-            <h3>UPLOAD NEW CHAPTER</h3>
+            <h2>UPLOAD NEW CHAPTER</h2>
             <h3>Bộ Truyện @ViewBag.Id</h3>
         </div>
     </div>
     <div class="card">
         <div class="card-body">
             <form asp-action="AddChapter" method="post" enctype="multipart/form-data" class="row">
+                @Html.AntiForgeryToken()
+                <input asp-for="IdBo" type="hidden" value="@ViewBag.Id">
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
-                        <label asp-for="IdBo">Bộ truyện</label>
-                        <input asp-for="IdBo" type="text" value="@ViewBag.Id" readonly>
+                        <label asp-for="SttChap">Chapter Number</label>
+                        <input asp-for="SttChap" class="form-control" placeholder="1, 2, 3, ...">
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
-                        <label asp-for="SttChap">STT Chapter</label>
-                        <input asp-for="SttChap" type="text" placeholder="1, 2, 3, ...">
+                        <label asp-for="TenChap">Chapter Name</label>
+                        <input asp-for="TenChap" class="form-control" placeholder="Example ...">
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
-                        <label asp-for="TenChap">Tên Chapter</label>
-                        <input asp-for="TenChap" type="text" placeholder="Example ...">
+                        <label asp-for="ThoiGian">Upload Time</label>
+                        <input asp-for="ThoiGian" class="form-control" type="date">
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
-                        <label asp-for="ThoiGian">Thời gian</label>
-                        <input asp-for="ThoiGian" type="date">
+                        <label asp-for="TicketCost">Ticket Cost</label>
+                        <input asp-for="TicketCost" class="form-control" type="byte">
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-6 col-12">
-                    <label asp-for="TtPemium">Truyện Premium</label>
-                    <select asp-for="TtPemium" class="select">
-                        <option>true</option>
-                        <option>false</option>
+                    <div class="form-group">
+                        <label asp-for="TkLuotxem">Initial Views</label>
+                        <input asp-for="TkLuotxem" class="form-control" type="int">
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-6 col-12">
+                    <label asp-for="TtPemium">Premium Stats</label>
+                    <select asp-for="TtPemium" class="form-control">
+                        <option value="true">Yes</option>
+                        <option value="false">No</option>
                     </select>
-                </div>
-
-                <div class="col-lg-12">
-                    <div class="form-group">
-                        <input asp-for="TkLuotxem" type="text" value="0" hidden>
-                        <input asp-for="Active" type="text" value="true" hidden>
-
-                    </div>
                 </div>
 
                 <div class="col-lg-6">
                     <div class="form-group">
-                        <div class="image-upload  d-flex flex-column justify-content-center align-center">
-
-                            <input type="file" name="images" class="imgInput" data-target="preview1" multiple>
-                            <img class="preview" id="preview1" src="#" alt="your image" />
-                            <div class="image-uploads">
-                                <img src="~/img/icons/upload.svg" alt="img">
-                                <h4>Chọn List Ảnh Chappter</h4>
-                            </div>
-                        </div>
+                        <label>Upload Images for Chapter</label>
+                        <input type="file" name="images" class="form-control" multiple onchange="previewImages(this, 'preview1')">
                     </div>
                 </div>
-                <div asp-validation-summary="ModelOnly" class="col-lg-12 p-4 text-danger" style="font-size:20px; font-weight:600">
+                <div class="col-lg-6">
+                    <img class="preview" id="preview1" style="max-width: 100%; height: auto;" />
                 </div>
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <div class="col-lg-12">
-                    <button @* href="javascript:void(0);" *@ type="submit" class="btn btn-submit me-2">Submit</button>
-                    <button @* href="productlist.html" *@ class="btn btn-cancel">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="button" class="btn btn-secondary" onclick="window.location.href='@Url.Action("Index")'">Cancel</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
 <script>
-    function readURL(input, targetID) {
-        if (input.files && input.files[0]) {
+    function previewImages(input, targetID) {
+        var file = input.files[0];
+        if (file) {
             var reader = new FileReader();
-
             reader.onload = function (e) {
                 $('#' + targetID).attr('src', e.target.result);
             }
-            reader.readAsDataURL(input.files[0]);
-        }
-    }
-
-    $(document).ready(function () {
-        $(".imgInput").change(function () {
-            var targetID = $(this).data('target');
-            readURL(this, targetID);
-        });
-    });
-</script>
-
-
-<script>
-    var message = "@TempData["Message"]";
-    if (message) {
-        var confirmed = confirm(message);
-        if (confirmed) {
-
-        } else {
-            window.location.href = "/Admin";
+            reader.readAsDataURL(file);
         }
     }
 </script>

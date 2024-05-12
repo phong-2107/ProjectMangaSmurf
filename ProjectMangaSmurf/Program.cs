@@ -1,17 +1,11 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
+﻿
 using Microsoft.EntityFrameworkCore;
-using ProjectMangaSmurf.Models;
 using ProjectMangaSmurf.Repository;
-using System.Data;
-using ProjectMangaSmurf.Data;
-using ProjectMangaSmurf.Areas.Identity.Data;
-using System.Security.Claims;
-using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication;
-using System.Configuration;
-using Microsoft.Extensions.Options;
+using ProjectMangaSmurf.Areas.Common.Repository;
+using ProjectMangaSmurf.Data;
+using ProjectMangaSmurf.Areas.Common.Services;
+using Microsoft.AspNetCore.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
@@ -37,27 +31,33 @@ builder.Services.AddAuthentication(options =>
         options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
     });
 
-builder.Services.AddControllersWithViews();
 
+builder.Services.AddAuthentication("AdminAuthScheme")
+        .AddCookie("AdminAuthScheme", options =>
+        {
+            options.LoginPath = new PathString("/Admin/AdminLogin/Login");
+            options.AccessDeniedPath = new PathString("/Admin/AdminLogin/AccessDenied");
+            options.Cookie.Name = "AdminAuthCookie";
+        });
+
+builder.Services.AddControllersWithViews();
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddHttpContextAccessor();
-
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(30);
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
+    options.Cookie.Name = ".AspNetCore.Admin.Session";
 });
-builder.Services.AddControllersWithViews();
 
 
-builder.Services.AddControllersWithViews()
-    .AddCookieTempDataProvider();
+services.AddControllersWithViews()
+    .AddCookieTempDataProvider(); 
 
 
 builder.Services.AddControllersWithViews().AddSessionStateTempDataProvider();
 services.AddSession();
-
 
 var connectionString = builder.Configuration.GetConnectionString("ProjectDBContextConnection") ?? 
     throw new InvalidOperationException("Connection string 'ProjectDBContextConnection' " +
@@ -65,16 +65,12 @@ var connectionString = builder.Configuration.GetConnectionString("ProjectDBConte
 
 builder.Services.AddDbContext<ProjectDBContext>(options => options.UseSqlServer(connectionString));
 
-//builder.Services.AddDefaultIdentity<ApplicationUser>(options => 
-//options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<ProjectDBContext>();
 
-builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
-        .AddDefaultTokenProviders()
-        .AddDefaultUI()
-        .AddEntityFrameworkStores<ProjectDBContext>();
 builder.Services.AddRazorPages();
 
-builder.Services.AddScoped<UserManager<ApplicationUser>>();
+builder.Services.AddScoped<IUser,EFUser>();
+builder.Services.AddScoped<CustomAuthenticationService>();
+builder.Services.AddScoped<IStaffRepository,EFStaffRepository>();
 builder.Services.AddScoped<IComicTypeRepository, EFComicTypeRepository>();
 builder.Services.AddScoped<IAuthorRepository, EFAuthorRepository>();
 builder.Services.AddScoped<IboTruyenRepository, EFboTruyenRepository>();
@@ -95,9 +91,12 @@ builder.Services.AddScoped<IVNPayRepository, EFVNPayRepository>();
 //======================= Manager =======================
 builder.Services.AddScoped<IStaffRepository, EFStaffRepository>();
 
-//builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<MangaSmurfContext>().AddDefaultTokenProviders();
+//services.AddScoped<RBACAuthorizeAttribute>();
 
-builder.Services.AddControllersWithViews();
+//services.AddControllersWithViews(options =>
+//{
+//    options.Filters.AddService<RBACAuthorizeAttribute>();
+//});
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpClient("FlaskAPI", client =>
@@ -131,8 +130,9 @@ app.UseEndpoints(endpoints =>
         );
     endpoints.MapControllerRoute(
         name: "Admin",
-        pattern: "{area:exists}/{controller=BoTruyenManager}/{action=Index}/{id?}"
-    );
+        pattern: "{area:exists}/{controller=BoTruyenManager}/{action=Index}/{id?}")
+            .RequireAuthorization(new AuthorizeAttribute { AuthenticationSchemes = "AdminAuthScheme" });
+
     endpoints.MapControllerRoute(
     name: "default",
     pattern: "{controller=BoTruyen}/{action=Index}/{id?}");

@@ -44,6 +44,7 @@
                     <button class="btn btn-primary" onclick="applyFilter('all')">See All <i class="fa-solid fa-border-all"></i></button>
                     <button class="btn btn-success" onclick="applyFilter('active')">Activating <i class="fa-solid fa-person-digging"></i></button>
                     <button class="btn btn-danger" onclick="applyFilter('banned')">Banning  <i class="fa-solid fa-ban"></i></button>
+                   
                     <button class="btn btn-custom" onclick="togglePremium()" id="premium-btn">Premium Stats  <i class="fa-solid fa-hand-holding-dollar"></i></button>
                 </div>
 
@@ -54,14 +55,13 @@
             <div class="table-responsive">
                 <table class="table  datanew">
                     <thead>
-                        <tr>
-            
+                        <tr>          
                             <th>ID Costumer</th>
                             <th>Costumer Name</th>
                             <th>Phone Number</th>
                             <th>Email</th>
                             <th>Premium Stats</th>
-                            <th>Banned</th>
+                            <th>Stats</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -69,19 +69,16 @@
                         @foreach (var i in Model)
                         {
                             <tr>
-
-                           
                                 <td>@i.IdUser</td>
-                                <td>@i.IdUserNavigation.FullName</td>
-                                <td>@i.IdUserNavigation.Phone</td>
-                                <td>@i.IdUserNavigation.Email</td>
+                                <td>@(i.IdUserNavigation?.FullName ?? "N/A")</td>
+                                <td>@(i.IdUserNavigation?.Phone ?? "N/A")</td>
+                                <td>@(i.IdUserNavigation?.Email ?? "N/A")</td>
                                 <td>@i.ActivePremium</td>
-                                <td>@i.IdUserNavigation.Active</td>
+                                <td>@(i.IdUserNavigation?.Active.ToString() ?? "N/A")</td>
                                 <td>
                                     <a asp-area="Admin" asp-controller="CusManager" asp-action="Detail" asp-route-id="@i.IdUser" class="me-3">
                                         <img src="~/img/icons/eye.svg" alt="img">
                                     </a>
-
                                 </td>
                             </tr>
                         }

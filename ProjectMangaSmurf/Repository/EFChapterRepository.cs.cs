@@ -27,8 +27,10 @@ namespace ProjectMangaSmurf.Repository
             return await _context.Chapters
                 .Where(chapter => chapter.IdBo == comicId)
                 .OrderBy(chapter => chapter.SttChap) 
-                .ToListAsync();
+                .ToListAsync() ?? new List<Chapter>();
         }
+
+
         public async Task<CtChapter> GetCTChapterByIdAsync(string idBo, int sttChap, int soTrang)
         {
             return await _context.CtChapters.FirstOrDefaultAsync(c => c.IdBo == idBo && c.SttChap == sttChap && c.SoTrang == soTrang);

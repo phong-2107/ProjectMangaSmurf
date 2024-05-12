@@ -1,4 +1,5 @@
 ﻿<!DOCTYPE html>
+@inject IHttpContextAccessor HttpContextAccessor
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -24,9 +25,7 @@
           crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
-    @* <div id="global-loader">
-        <div class="whirly-loader"></div>
-    </div> *@
+]
     <div class="main-wrapper">
         <div class="header">
             <div class="header-left active">
@@ -46,27 +45,16 @@
                 </span>
             </a>
             <ul class="nav user-menu" style="height:100%; justify-content:center">
-                @* <li class="nav-item">
-                    <div class="top-nav-search">
-                        <a href="javascript:void(0);" class="responsive-search">
-                            <i class="fa fa-search"></i>
-                        </a>
-                        <form action="#">
-                            <div class="searchinputs">
-                                <input type="text" placeholder="Search Here ...">
-                                <div class="search-addon">
-                                    <span>
-                                        <img src="/img/icons/closes.svg" alt="img">
-                                    </span>
-                                </div>
-                            </div>
-                            <a class="btn" id="searchdiv">
-                                <img src="/img/icons/search.svg" alt="img">
-                            </a>
+                <li class="nav-item">
+                    @Html.Partial("_LoginPartial")
+                    @if (User.Identity.IsAuthenticated && HttpContextAccessor.HttpContext.Session.GetString("AdminSession") != null)
+                    {
+                        <form asp-controller="AdminLogin" asp-action="Logout" method="post">
+                            <button type="submit" class="btn btn-danger">Logout</button>
                         </form>
-                    </div>
-                </li> *@
-                <li class="nav-item"> <partial name="_LoginPartial" /></li>
+                    }
+
+                </li>
             </ul>
             <div class="dropdown mobile-user-menu">
                 <a href="javascript:void(0);" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
@@ -86,7 +74,7 @@
                         <li class="active">
                             <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="Index">
                                 <img src="/img/icons/dashboard.svg" alt="img">
-                                <span>Trang chủ</span>
+                                <span>DashBoard</span>
                             </a>
                         </li>
                         <li class="submenu" style="text-decoration:none;">
@@ -100,37 +88,31 @@
                                     <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="Add">Add New Comic</a>
                                 </li>
                                 <li>
-                                    <a asp-area="Admin" asp-controller="AuthorManager" asp-action="Add">Thêm mới tác giả</a>
+                                    <a asp-area="Admin" asp-controller="AuthorManager" asp-action="Add">Upload Author</a>
                                 </li>
                                 <li>
-                                    <a asp-area="Admin" asp-controller="ComicTypeManager" asp-action="Add">Thêm mới loại truyện</a>
+                                    <a asp-area="Admin" asp-controller="ComicTypeManager" asp-action="Add">Upload Comic Type</a>
                                 </li>
-                                @if (User.IsInRole("Admin"))
-                                {
                                     <li>
-                                        <a asp-area="Identity" asp-page="/Account/Register">Thêm Nhân Viên</a>
-                                    </li>
-                                }
+                                    <a asp-area="Admin" asp-controller="StaffManager" asp-action="Add">Upload User-Staff</a>
+                                </li>
                                 <li>
-                                    <a asp-area="Admin" asp-controller="ComicTypeManager" asp-action="Add">Thêm Loại truyện</a>
+                                    <a asp-area="Admin" asp-controller="ServiceManager" asp-action="Add">Upload Service</a>
+                                </li>
+                                <li>
+                                    <a asp-area="Admin" asp-controller="AdsManager" asp-action="Add">Upload Ads</a>
                                 </li>
                             </ul>
                         </li>
                         <li class="submenu" style="text-decoration:none;">
                             <a>
                                 <img src="/img/icons/time.svg" alt="img">
-                                <span> Manage Service</span>
+                                <span> Manage Service Data</span>
                                 <span class="menu-arrow"></span>
                             </a>
                             <ul>
                                 <li>
                                     <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="ViewList">Manage Comics List</a>
-                                </li>
-                                <li>
-                                    <a asp-area="Admin" asp-controller="CusManager" asp-action="ViewList">Manage Customers List</a>
-                                </li>
-                                <li>
-                                    <a asp-area="Admin" asp-controller="StaffManager" asp-action="ViewList">Quản lý Nhân viên</a>
                                 </li>
                                 <li>
                                     <a asp-area="Admin" asp-controller="AuthorManager" asp-action="Index">Manage Author List</a>
@@ -139,13 +121,39 @@
                                     <a asp-area="Admin" asp-controller="ComicTypeManager" asp-action="Index">Manage Comic-Types List</a>
                                 </li>
                                 <li>
-                                    <a asp-area="Admin" asp-controller="CusManager" asp-action="ViewOrderList">Manage Payment-Order List</a>
+                                    <a asp-area="Admin" asp-controller="ServiceManager" asp-action="Index">Manage Service Pack</a>
                                 </li>
+
+                                        <li>
+                                            <a asp-area="Admin" asp-controller="CusManager" asp-action="ViewList">Manage Customers List</a>
+                                        </li>
+                                        <li>
+                                            <a asp-area="Admin" asp-controller="CusManager" asp-action="ViewOrderList">Manage Payment-Order List</a>
+                                        </li>
+                                        <li>
+                                            <a asp-area="Admin" asp-controller="StaffManager" asp-action="Index">Manage Staffs List</a>
+                                        </li>
                                 <li>
-                                    <a asp-area="Admin" asp-controller="WebManager" asp-action="Edit">Config Website</a>
+                                    <a asp-area="Admin" asp-controller="AdsManager" asp-action="Index">Manage Ads & Parner Data</a>
                                 </li>
+
                             </ul>
                         </li>
+                        <li class="submenu" style="text-decoration:none;">
+                            <a>
+                                <img src="/img/icons/settings.svg" alt="img">
+                                <span> Manage Config</span>
+                                <span class="menu-arrow"></span>
+                            </a>
+                            <ul>
+                                <li>
+                                    <a asp-area="Admin" asp-controller="StaffManager" asp-action="RBAC">Role-Base Config List</a>
+                                </li>
+                                <li>
+                                    <a asp-area="Admin" asp-controller="WebManager" asp-action="Edit">Webiste Config List </a>
+                                </li>
+                            <ul>
+                         </li>
                     </ul>
                 </div>
             </div>

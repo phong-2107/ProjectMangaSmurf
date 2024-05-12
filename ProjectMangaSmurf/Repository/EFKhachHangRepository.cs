@@ -24,8 +24,9 @@ namespace ProjectMangaSmurf.Repository
         }
         public IQueryable<KhachHang> GetQuery()
         {
-            return _context.KhachHangs;
+            return _context.KhachHangs.Include(kh => kh.IdUserNavigation);
         }
+
 
         // Sửa lại 
         public async Task DeleteAsync(KhachHang id)
@@ -90,7 +91,9 @@ namespace ProjectMangaSmurf.Repository
 
         public async Task<KhachHang> GetByIdAsync(string id)
         {
-            return await _context.KhachHangs.FirstOrDefaultAsync(p => p.IdUser == id.Trim());
+            return await _context.KhachHangs
+               .Include(kh => kh.IdUserNavigation)  
+               .FirstOrDefaultAsync(kh => kh.IdUser == id); ;
         }
 
         public async Task<KhachHang> GetByAccountAsync(string id)

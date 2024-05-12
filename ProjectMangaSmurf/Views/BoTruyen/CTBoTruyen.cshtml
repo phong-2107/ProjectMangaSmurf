@@ -154,7 +154,7 @@
                     <div class="type-detail">
                         @{
                             var listtop = boTruyenRepository.GetListLoaiAsync(Model.IdBo);
-                            foreach (var i in listtop)
+                            @foreach (var i in ViewBag.ListLoai)
                             {
                                     <a asp-area="" asp-controller="BoTruyen" asp-action="ListTopic" asp-route-id="@i" class="item-type">@i</a>
                             }
@@ -258,6 +258,7 @@
                                     }
                                     </a>
                             }
+
                         }
                     </div>
                 </div>

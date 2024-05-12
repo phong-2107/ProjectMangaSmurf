@@ -30,7 +30,6 @@
                         </a>
                     </div>
                 </div>
-                
             </div>
 
 
@@ -38,28 +37,50 @@
                 <table class="table datanew">
                     <thead>
                         <tr>
-
                             <th>Order ID</th>
                             <th>Customer ID</th>
+                            <th>Payment Method</th>
+                            <th>Pack ID</th>
                             <th>Date of Transaction</th>
+                            <th>Date of Expiry</th>
                             <th>Amount</th>
+                            <th>Payment Status</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach (var hopDong in Model)
                         {
                             <tr>
-
                                 <td>@hopDong.IdPayment</td>
                                 <td><a href="@Url.Action("Detail", "CusManager", new { id = hopDong.IdUser })">@hopDong.IdUser</a></td>
-                                <td>@hopDong.PayDate.GetValueOrDefault().ToString("dd/MM/yyyy")</td>
-                                <td>@hopDong.PayAmount</td>
+                                <td>@hopDong.PayMethod</td>
+                                <td>@hopDong.IdPack</td>
+                                <td>@(hopDong.PayDate?.ToString("dd/MM/yyyy") ?? "N/A")</td>
+                                <td>@(hopDong.ExpiresTime?.ToString("dd/MM/yyyy") ?? "N/A")</td>
+                                <td>@hopDong.PayAmount</td> <!-- Adjusted for currency formatting -->
+                                <td>
+                                    @switch (hopDong.PayStats)
+                                    {
+                                        case 0:
+                                            <span class="text-success">Success</span>
+                                            break;
+                                        case 1:
+                                            <span class="text-danger">Failed</span>
+                                            break;
+                                        case 2:
+                                            <span class="text-warning">Waiting</span>
+                                            break;
+                                        default:
+                                            <span class="text-secondary">Unknown</span>
+                                            break;
+                                    }
+                                </td>
                             </tr>
                         }
                     </tbody>
+
                 </table>
             </div>
-
         </div>
     </div>
 </div>
