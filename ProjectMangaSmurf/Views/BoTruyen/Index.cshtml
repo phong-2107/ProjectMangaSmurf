@@ -235,10 +235,10 @@
                         <a asp-action="CTBoTruyen" asp-route-id="@botruyen.IdBo">
                             <figure class="position-relative">
                                 @{
-                                    var EarliestChap = chapterRepository.GetChapterEarliestByIdAsync(botruyen.IdBo);
-                                    if (EarliestChap != null)
+                                    var Earliest =  chapterRepository.GetChapterEarliestByIdAsync(botruyen.IdBo);
+                                    if (Earliest != null)
                                     {
-                                        var time = chapterRepository.CalculateTimeAgo(EarliestChap.ThoiGian);
+                                        var time = chapterRepository.CalculateTimeAgo(Earliest.ThoiGian);
                                         if (!string.IsNullOrEmpty(botruyen.AnhBia))
                                         {
                                             <img src="@botruyen.AnhBia" alt="truyen Image" />
@@ -247,7 +247,7 @@
                                             <h6 class="item-title"><a href="#">@botruyen.TenBo</a></h6>
 
                                             <a class="item-chapter" style="font-size: 13px;">
-                                                <span class="chap" style="margin-right: 10px; ">chap @EarliestChap.SttChap</span>
+                                                <span class="chap" style="margin-right: 10px; ">chap @Earliest.SttChap</span>
                                                 <span class="time">@time</span>
                                             </a>
                                         </figcaption>

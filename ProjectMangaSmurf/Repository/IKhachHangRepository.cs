@@ -18,6 +18,7 @@ namespace ProjectMangaSmurf.Repository
         Task AddAsync(KhachHang KhachHang);
         Task UpdateAsync(KhachHang KhachHang);
         Task DeleteAsync(KhachHang id);
+        Task<IEnumerable<Payment>> GetAllPaymentAsync();
         IQueryable<KhachHang> GetQuery(); 
         string GenerateCustomerId();
     }

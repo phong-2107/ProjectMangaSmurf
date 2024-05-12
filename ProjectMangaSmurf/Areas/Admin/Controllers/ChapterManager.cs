@@ -8,7 +8,7 @@ using ProjectMangaSmurf.Repository;
 namespace ProjectMangaSmurf.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Roles = SD.Role_Admin + "," + SD.Role_Staff)]
+    [Authorize(AuthenticationSchemes = "AdminAuthScheme")]
     public class ChapterManager : Controller
     {
         private readonly IboTruyenRepository _botruyenrepository;
@@ -56,8 +56,8 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
             }
             var cmmb = await _chapterrepository.GetAllCTByIdAsync(id, stt);
             var lmao = await _botruyenrepository.GetAllAllAsync();
-            ViewBag.RelatedPage = cmmb ?? new List<ProjectMangaSmurf.Models.CtChapter>();
-            ViewBag.RelatedPag = lmao ?? new List<ProjectMangaSmurf.Models.BoTruyen>();
+            ViewBag.RelatedPage = cmmb ?? new List<CtChapter>();
+            ViewBag.RelatedPag = lmao ?? new List<BoTruyen>();
             return View(chapter);
         }
 
@@ -260,7 +260,7 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
             {
                 await _chapterrepository.ReplaceImageAsync(idBo, sttChap, soTrang, newImage);
             }
-            return RedirectToAction("Detail", new { idBo = idBo, sttChap = sttChap });
+            return RedirectToAction("Detail", new { idBo, sttChap });
         }
 
         [HttpPost]

@@ -1,17 +1,27 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProjectMangaSmurf.Repository;
-using ProjectMangaSmurf;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ProjectMangaSmurf.Models;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.EntityFrameworkCore;
 using Org.BouncyCastle.Crypto.Macs;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
+using Microsoft.AspNetCore.Http;
+using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
+
+// Define aliases to resolve ambiguity
+using ChapterModel = ProjectMangaSmurf.Models.Chapter;
+using PdfChapter = iTextSharp.text.Chapter;
+
 
 namespace ProjectMangaSmurf.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Roles = SD.Role_Admin + "," + SD.Role_Staff)]
+    [Authorize(AuthenticationSchemes = "AdminAuthScheme")]
     public class BoTruyenManager : Controller
     {
         private readonly IboTruyenRepository _botruyenrepository;
@@ -21,7 +31,7 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
         private readonly ITacGiaRepository _tacGiaRepository;
         private readonly IAuthorRepository _authRepository;
         private readonly IHopdongRepository _hopdongRepository;
-        public BoTruyenManager( IboTruyenRepository botruyenrepository,
+        public BoTruyenManager(IboTruyenRepository botruyenrepository,
                                 IChapterRepository chapterrepository,
                                 IKhachHangRepository khachHangRepository,
                                 ILoaiTruyenRepository loaiTruyenRepository,
@@ -50,7 +60,7 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
             else
                 return 0;
         }
-
+        //[RBACAuthorize(PermissionId =1)]
         public async Task<IActionResult> Index()
         {
             var listBotruyen = await _botruyenrepository.GetAllAsync();
@@ -84,7 +94,7 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
             }
 
             var relatedComics = await _chapterrepository.GetChaptersByComicId(id);
-            ViewBag.RelatedChapter = relatedComics ?? new List<ProjectMangaSmurf.Models.Chapter>();
+            ViewBag.RelatedChapter = relatedComics; // Direct assignment without null check
             ViewBag.RelatedSeriesCount = relatedComics.Count;
 
             return View(product);
@@ -100,7 +110,7 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
 
             boTruyen.Active = !boTruyen.Active;
             await _botruyenrepository.UpdateAsync(boTruyen);
-            return RedirectToAction(nameof(Detail), new { id = id });
+            return RedirectToAction(nameof(Detail), new { id });
         }
 
         [HttpPost]
@@ -125,7 +135,7 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
             }
 
             TempData["Message"] = "Comic and all related chapters' premium status updated successfully!";
-            return RedirectToAction(nameof(Detail), new { id = id });
+            return RedirectToAction(nameof(Detail), new { id });
         }
 
 
@@ -208,7 +218,7 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
             await _botruyenrepository.AddAsync(boTruyen);
 
             // Assume success if no exceptions thrown
-            return Json(new { success = true, message = "Comic added successfully!", redirectUrl = Url.Action("Index") });
+            return Json(new { success = true, message = "Comic added successfully!", redirectUrl = Url.Action("ViewList") });
         }
 
         private async Task<string> SaveFile(IFormFile file)
@@ -280,68 +290,94 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
             return Json(new { success = true, message = "Update successful!" });
         }
 
-        public bool RangBuocChapter(Chapter bt)
-        {
+        //public bool RangBuocChapter(Chapter bt)
+        //{
 
-            if (bt.TenChap == null)
-            {
-                ModelState.AddModelError(string.Empty, "Ban Chưa nhâp ten chap");
-                return false;
-            }
-            if (bt.ThoiGian == null)
-            {
-                ModelState.AddModelError(string.Empty, "Ban Chưa nhâp thoi gian");
-                return false;
-            }
-            return true;
-        }
+        //    if (bt.TenChap == null)
+        //    {
+        //        ModelState.AddModelError(string.Empty, "Ban Chưa nhâp ten chap");
+        //        return false;
+        //    }
+        //    if (bt.ThoiGian == null)
+        //    {
+        //        ModelState.AddModelError(string.Empty, "Ban Chưa nhâp thoi gian");
+        //        return false;
+        //    }
+        //    return true;
+        //}
 
-        public async Task<IActionResult> AddChapter(string id , int stt )
+        public async Task<IActionResult> AddChapter(string id, int stt)
         {
             ViewBag.Id = id;
             ViewBag.Stt = stt;
             var relatedComics = await _chapterrepository.GetChaptersByComicId(id);
-            ViewBag.RelatedChapter = relatedComics ?? new List<ProjectMangaSmurf.Models.Chapter>();
+            ViewBag.RelatedChapter = relatedComics;
             return View();
 
         }
-
         [HttpPost]
-        public async Task<IActionResult> AddChapter(Chapter chapter, List<IFormFile> images)
+        public async Task<IActionResult> AddChapter(ChapterModel chapter, List<IFormFile> images)
         {
             if (!ModelState.IsValid)
             {
-                // If the model state is invalid, directly return to the view with the current model to show validation errors.
                 return View(chapter);
             }
 
-            var rangbuoc = RangBuocChapter(chapter);
-            if (!rangbuoc)
+            // If images are uploaded, create a PDF and set the PDF path in ChapterContent
+            if (images.Any())
             {
-                // If business rules validation fails, return to the view with the current model.
-                return View(chapter);
+                string pdfPath = await CreatePDFAndSaveImages(chapter.IdBo, chapter.SttChap, images);
+                chapter.ChapterContent = pdfPath; // Store the relative path to the PDF
             }
 
-            // Proceed with adding the chapter if all validations pass.
             await _chapterrepository.AddAsync(chapter);
+            TempData["Message"] = "New chapter added successfully with PDF!";
+            return RedirectToAction("Detail", new { id = chapter.IdBo });
+        }
 
-            int i = 1;
-            foreach (var image in images)
+        private async Task<string> CreatePDFAndSaveImages(string idBo, int sttChap, List<IFormFile> images)
+        {
+            string directoryPath = Path.Combine("wwwroot", "pdf");
+            Directory.CreateDirectory(directoryPath);  // Ensure the directory exists
+
+            string pdfFileName = $"{idBo}_{sttChap}.pdf";
+            string pdfPath = Path.Combine(directoryPath, pdfFileName);
+
+            using (Document document = new Document(PageSize.A4))
+            using (FileStream stream = new FileStream(pdfPath, FileMode.Create))
             {
-                CtChapter CTChap = new CtChapter
+                PdfWriter.GetInstance(document, stream);
+                document.Open();
+
+                foreach (var image in images)
                 {
-                    SoTrang = i++,
-                    IdBo = chapter.IdBo,
-                    SttChap = chapter.SttChap,
-                    AnhTrang = await SaveImageChapter(image),
-                    Active = true
-                };
-                await _chapterrepository.AddAsyncCT(CTChap);
+                    var imagePath = await SaveImage(image, directoryPath);  // Save image temporarily if needed
+                    iTextSharp.text.Image pdfImage = iTextSharp.text.Image.GetInstance(imagePath);
+                    pdfImage.ScaleToFit(document.PageSize.Width, document.PageSize.Height);
+                    pdfImage.Alignment = Image.ALIGN_CENTER | Image.ALIGN_MIDDLE;
+                    document.NewPage();
+                    document.Add(pdfImage);
+                }
+
+                document.Close();
             }
 
-            TempData["Message"] = "New chapter added successfully, do you want to continue?";
-            return RedirectToAction("AddChapter", new { id = chapter.IdBo });
+            return pdfPath.Substring(pdfPath.IndexOf("wwwroot") + "wwwroot".Length).Replace('\\', '/');
         }
+
+        private async Task<string> SaveImage(IFormFile image, string directoryPath)
+        {
+            string filePath = Path.Combine(directoryPath, Guid.NewGuid().ToString() + Path.GetExtension(image.FileName));
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await image.CopyToAsync(stream);
+            }
+            return filePath;
+        }
+
+
+
+
         [HttpPost]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
@@ -368,14 +404,6 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
             }
             return "/images/truyen/" + image.FileName;
         }
-        private async Task<string> SaveImageChapter(IFormFile image)
-        {
-            var savePath = Path.Combine("wwwroot/images/chapter", image.FileName);
-            using (var fileStream = new FileStream(savePath, FileMode.Create))
-            {
-                await image.CopyToAsync(fileStream);
-            }
-            return "/images/chapter/" + image.FileName;
-        }
+       
     }
 }

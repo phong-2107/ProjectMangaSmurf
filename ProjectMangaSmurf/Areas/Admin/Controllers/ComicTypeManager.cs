@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 namespace ProjectMangaSmurf.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Roles = SD.Role_Admin + "," + SD.Role_Staff)]
+    [Authorize(AuthenticationSchemes = "AdminAuthScheme")]
     public class ComicTypeManager : Controller
     {
         private readonly IComicTypeRepository _comicTypeRepository;
@@ -17,7 +17,7 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
         public ComicTypeManager(IComicTypeRepository comicTypeRepository, IboTruyenRepository botruyen)
         {
             _comicTypeRepository = comicTypeRepository;
-            _botruyen = botruyen;  
+            _botruyen = botruyen;
         }
 
         [HttpPost]
@@ -114,5 +114,5 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
         }
     }
 
-  
+
 }

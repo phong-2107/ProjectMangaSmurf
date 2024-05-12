@@ -1,13 +1,12 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using ProjectMangaSmurf.Areas.Identity.Data;
 using ProjectMangaSmurf.Models;
 using System.Reflection.Emit;
 
 namespace ProjectMangaSmurf.Data
 {
-    public class ProjectDBContext : IdentityDbContext<ApplicationUser>
+    public class ProjectDBContext : DbContext
     {
         public ProjectDBContext(DbContextOptions<ProjectDBContext> options)
             : base(options)
@@ -53,8 +52,6 @@ namespace ProjectMangaSmurf.Data
 
         public virtual DbSet<WebMediaConfig> WebMediaConfigs { get; set; }
 
-
-        public DbSet<ApplicationUser> applicationUsers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -360,7 +357,7 @@ namespace ProjectMangaSmurf.Data
                 entity.Property(e => e.StaffRole).HasColumnName("StaffRole");
 
                 // Cấu hình quan hệ một-một giữa NhanVien và User
-                entity.HasOne(d => d.User)  // NhanVien có một User
+                entity.HasOne(d => d.IdUserNavigation)  // NhanVien có một User
                     .WithOne(p => p.NhanVien)  // User có một NhanVien
                     .HasForeignKey<NhanVien>(d => d.IdUser)  // Khóa ngoại là IdUser
                     .OnDelete(DeleteBehavior.ClientSetNull)  // Thiết lập hành vi khi xóa là ClientSetNull
@@ -513,7 +510,7 @@ namespace ProjectMangaSmurf.Data
                     .IsFixedLength();
 
                 entity.HasOne(u => u.NhanVien) // Mỗi User có thể có không hoặc một NhanVien
-                    .WithOne(nv => nv.User) // Mỗi NhanVien được liên kết chặt chẽ với một User
+                    .WithOne(nv => nv.IdUserNavigation) // Mỗi NhanVien được liên kết chặt chẽ với một User
                     .HasForeignKey<NhanVien>(nv => nv.IdUser) // NhanVien sử dụng IdUser như là khóa ngoại
                     .OnDelete(DeleteBehavior.ClientSetNull) // Nếu User bị xóa, IdUser trong NhanVien sẽ được thiết lập là NULL
                     .HasConstraintName("FK_User_NhanVien");

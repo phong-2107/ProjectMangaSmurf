@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProjectMangaSmurf.Data;
 
+
 #nullable disable
 
 namespace ProjectMangaSmurf.Migrations

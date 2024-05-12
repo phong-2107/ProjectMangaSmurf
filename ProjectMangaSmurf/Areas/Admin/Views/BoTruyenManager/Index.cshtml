@@ -225,9 +225,7 @@
                             <th>ID</th>
                             <th>Tên Truyện</th>
                             <th>Image</th>
-                            <th>Thể loại</th>
-                            <th>Chapter</th>
-                            <th>Ngày cập nhật</th>
+
                         </tr>
                     </thead>
                     <tbody>
@@ -235,9 +233,7 @@
                             foreach (var bo in ViewBag.ListEarliest)
                             {
                                 var list = boTruyenRepository.GetListLoaiAsync(bo.IdBo);
-                                var EarliestChap = chapterRepository.GetChapterEarliestByIdAsync(bo.IdBo);
-                                var time = EarliestChap != null ? chapterRepository.CalculateTimeAgo(EarliestChap.ThoiGian) : "... giờ trước";
-                                var chapText = EarliestChap != null ? $"chap {EarliestChap.SttChap}" : "chap ...";
+
                                 string loaitruyen = string.Join(", ", list);
                                 <tr>
                                     <td>@bo.IdBo</td>
@@ -249,9 +245,6 @@
                                             <img src="@bo.AnhBia" alt="product">
                                         </a>
                                     </td>
-                                    <td>@loaitruyen</td>
-                                    <td>@chapText</td>
-                                    <td>@time</td>
                                 </tr>
                             }
                         }

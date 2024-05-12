@@ -7,12 +7,12 @@ using ProjectMangaSmurf.Repository;
 namespace ProjectMangaSmurf.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Roles = SD.Role_Admin + "," + SD.Role_Staff)]
+    [Authorize(AuthenticationSchemes = "AdminAuthScheme")]
     public class AuthorManager : Controller
     {
         private readonly IAuthorRepository _authorRepository;
         private readonly IboTruyenRepository _botruyen;
-        public AuthorManager(IAuthorRepository authorRepository , IboTruyenRepository botruyen)
+        public AuthorManager(IAuthorRepository authorRepository, IboTruyenRepository botruyen)
         {
             _authorRepository = authorRepository;
             _botruyen = botruyen;
@@ -59,7 +59,7 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
             // Optionally add a success message or similar feedback
             TempData["Message"] = "Author and related comics' active status updated successfully!";
 
-            return RedirectToAction(nameof(Detail), new { id = id });
+            return RedirectToAction(nameof(Detail), new { id });
         }
 
 
@@ -86,7 +86,7 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
             }
 
             var relatedComics = await _botruyen.GetComicsByAuthorId(id);
-            ViewBag.RelatedComics = relatedComics ?? new List<ProjectMangaSmurf.Models.BoTruyen>(); // Ensure this is never null
+            ViewBag.RelatedComics = relatedComics ?? new List<BoTruyen>(); // Ensure this is never null
             ViewBag.RelatedSeriesCount = relatedComics.Count;
 
             return View(author);
@@ -165,8 +165,6 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
             }
 
         }
-
-
         private bool AuthorExists(string id)
         {
             return _authorRepository.GetAuthorById(id) != null;
