@@ -5,6 +5,8 @@ using ProjectMangaSmurf.Models;
 using System.Threading.Tasks;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.EntityFrameworkCore;
+using ProjectMangaSmurf.Models.ViewModels;
 
 namespace ProjectMangaSmurf.Areas.Admin.Controllers
 {
@@ -29,16 +31,11 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
 
         public async Task<IActionResult> Index()
         {
-            IEnumerable<NhanVien> staffList = await _staffRepository.GetAllAsyncStaff() ?? Enumerable.Empty<NhanVien>();
-            return View(staffList);
-        }
+            IQueryable<NhanVien> query = _staffRepository.GetQuery();  // Get base query from the repository
 
-        public async Task<IActionResult> ViewList()
-        {
-            var list = await _staffRepository.GetAllAsync(); // Assumes GetAllAsync only returns active staff
-            return View(list);
+            var list = await query.ToListAsync(); // Execute the query and get the list
+            return View(list); // Pass the list to the view
         }
-
         public async Task<IActionResult> Detail(string id)
         {
             var staff = await _staffRepository.GetByIdAsync(id);
@@ -46,8 +43,15 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            return View(staff);
+
+            var viewModel = new StaffDetailsViewModel
+            {
+                Staff = staff
+            };
+
+            return View(viewModel);
         }
+
 
         public async Task<IActionResult> Update(string id)
         {
