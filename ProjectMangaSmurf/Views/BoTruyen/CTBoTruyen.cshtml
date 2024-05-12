@@ -433,61 +433,68 @@
                 </div>
                 <div class="top__content">
                     <div class="content-title">
-                        <i class="fa-solid fa-bookmark"></i> Truyện đề cử
+                        <i class="fa-solid fa-bookmark"></i> Có thể bạn cũng thích
                     </div>
                 </div>
                 <div class="container">
                     <div class="row row-cols-6  justify-content-center">
                         @{
-                            // @foreach (var botruyen in Model.Take(6))
-                            // {
-                            //     <div class="col-2 update-item">
-                            //         <a asp-action="CTBoTruyen" asp-route-id="@botruyen.IdBo">
-                            //             <figure class="position-relative">
-                            //                 @{
-                            //                     var EarliestChap = chapterRepository.GetChapterEarliestByIdAsync(botruyen.IdBo);
-                            //                     if (EarliestChap != null)
-                            //                     {
-                            //                         var time = chapterRepository.CalculateTimeAgo(EarliestChap.ThoiGian);
-                            //                         if (!string.IsNullOrEmpty(botruyen.AnhBia))
-                            //                         {
-                            //                             <img src="@botruyen.AnhBia" alt="truyen Image" />
-                            //                         }
-                            //                         <figcaption>
-                            //                             <h6 class="item-title"><a href="#">@botruyen.TenBo</a></h6>
+                            var listt = ViewBag.list;
+                            int st = 0;
+                            @foreach (var botruyen in listt)
+                            {
+                                if (st < 10)
+                                {
+                                    <div class="col-2 update-item">
+                                        <a asp-action="CTBoTruyen" asp-route-id="@botruyen.IdBo">
+                                            <figure class="position-relative">
+                                                @{
+                                                    var Earliest = chapterRepository.GetChapterEarliestByIdAsync(botruyen.IdBo);
+                                                    if (Earliest != null)
+                                                    {
+                                                        var time = chapterRepository.CalculateTimeAgo(Earliest.ThoiGian);
+                                                        if (!string.IsNullOrEmpty(botruyen.AnhBia))
+                                                        {
+                                                            <img src="@botruyen.AnhBia" alt="truyen Image" />
+                                                        }
+                                                        <figcaption>
+                                                            <h6 class="item-title"><a href="#">@botruyen.TenBo</a></h6>
 
-                            //                             <a class="item-chapter" style="font-size: 13px;">
-                            //                                 <span class="chap" style="margin-right: 10px; ">chap @EarliestChap.SttChap</span>
-                            //                                 <span class="time">@time</span>
-                            //                             </a>
-                            //                         </figcaption>
+                                                            <a class="item-chapter" style="font-size: 13px;">
+                                                                <span class="chap" style="margin-right: 10px; ">chap @Earliest.SttChap</span>
+                                                                <span class="time">@time</span>
+                                                            </a>
+                                                        </figcaption>
 
-                            //                     }
-                            //                     else
-                            //                     {
-                            //                         if (!string.IsNullOrEmpty(botruyen.AnhBia))
-                            //                         {
-                            //                             <img src="@botruyen.AnhBia" alt="truyen Image" />
-                            //                         }
-                            //                         <figcaption>
-                            //                             <h6 class="item-title"><a href="#">@botruyen.TenBo</a></h6>
-                            //                             <a class="item-chapter" style="font-size: 13px;">
-                            //                                 <span class="chap" style="margin-right: 10px; ">chap ...</span>
-                            //                                 <span class="time">... giờ trước</span>
-                            //                             </a>
-                            //                         </figcaption>
-                            //                     }
-                            //                 }
-                            //                 @if (botruyen.TtPemium == true)
-                            //                 {
-                            //                     <div class="item-vip">
-                            //                         <img style="width:50px!important; height:20px!important; border-radius:0!important;" src="~/images/predark.png" />
-                            //                     </div>
-                            //                 }
-                            //             </figure>
-                            //         </a>
-                            //     </div>
-                            // }
+                                                    }
+                                                    else
+                                                    {
+                                                        if (!string.IsNullOrEmpty(botruyen.AnhBia))
+                                                        {
+                                                            <img src="@botruyen.AnhBia" alt="truyen Image" />
+                                                        }
+                                                        <figcaption>
+                                                            <h6 class="item-title"><a href="#">@botruyen.TenBo</a></h6>
+                                                            <a class="item-chapter" style="font-size: 13px;">
+                                                                <span class="chap" style="margin-right: 10px; ">chap ...</span>
+                                                                <span class="time">... giờ trước</span>
+                                                            </a>
+                                                        </figcaption>
+                                                    }
+                                                }
+                                                @if (botruyen.TtPemium == true)
+                                                {
+                                                    <div class="item-vip">
+                                                        <img style="width:50px!important; height:20px!important; border-radius:0!important;" src="~/images/predark.png" />
+                                                    </div>
+                                                }
+                                            </figure>
+                                        </a>
+                                    </div>
+                                    st++;
+                                }
+                                
+                            }
                         }
                     </div>
                 </div>
