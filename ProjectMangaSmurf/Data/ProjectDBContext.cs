@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using ProjectMangaSmurf.Models;
 using System.Reflection.Emit;
@@ -540,5 +541,3 @@ namespace ProjectMangaSmurf.Data
         //partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
     }
 }
-
-

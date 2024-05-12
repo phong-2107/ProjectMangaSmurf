@@ -125,7 +125,7 @@ namespace ProjectMangaSmurf.Repository
         }
 
 
-        public async Task<List<string>> GetListLoaiAsync(string id)
+        public async Task<List<string>> GetListLoaiQLAsync(string id)
         {
             // Asynchronously execute the query and materialize results
             var list = await _context.CtLoaiTruyens
@@ -138,6 +138,21 @@ namespace ProjectMangaSmurf.Repository
                 var loai = await _context.LoaiTruyens.FirstOrDefaultAsync(p => p.IdLoai == item.IdLoai);
                 if (loai != null)
                 {
+                    listLoai.Add(loai.TenLoai);
+                }
+            }
+            return listLoai;
+        }
+
+        public List<string> GetListLoaiAsync(string id)
+        {
+            var list = _context.CtLoaiTruyens.Where(p => p.IdBo == id.Trim()).ToList();
+            List<string> listLoai = new List<string>();
+            if (list.Count > 0)
+            {
+                foreach (var item in list)
+                {
+                    var loai = _context.LoaiTruyens.FirstOrDefault(p => p.IdLoai == item.IdLoai);
                     listLoai.Add(loai.TenLoai);
                 }
             }
