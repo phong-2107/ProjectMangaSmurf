@@ -11,5 +11,7 @@ namespace ProjectMangaSmurf.Repository
         Task DeleteAsync(User id);
 
         Task<User> GetByIdAsync(string id);
+
+        Task<User> GetByEmailAsync(string email);
     }
 }

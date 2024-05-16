@@ -34,7 +34,7 @@
                         var botruyen = await boTruyenRepository.GetByIdAsync(ct.IbBo);
                         if (botruyen != null)
                         {
-                            <div class="item col-2 update-item">
+                            <div class="item col-2 update-item" style="width:200px;">
                                 <a asp-controller="BoTruyen" asp-action="CTBoTruyen" asp-route-id="@ct.IbBo">
                                     <figure class="position-relative">
                                         @{

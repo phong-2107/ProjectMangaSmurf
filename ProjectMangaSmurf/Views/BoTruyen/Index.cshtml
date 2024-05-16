@@ -1,7 +1,14 @@
 ﻿@model IEnumerable<ProjectMangaSmurf.Models.BoTruyen>
 @using ProjectMangaSmurf.Repository
+@using Microsoft.AspNetCore.Http
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
+@inject IHttpContextAccessor HttpContextAccessor
 @inject IboTruyenRepository boTruyenRepository
 @inject IChapterRepository chapterRepository
+
+
+
+
 
 <div class="background"></div>
 <div class="main__bottom sections  TruyenNew__Containter containers grid">
@@ -78,15 +85,37 @@
 
                 @{
                     var random = await boTruyenRepository.RandomAsync();
-                    <div class="btn__regis">
-                        <a asp-action="CTBoTruyen" asp-route-id="@random.IdBo">Đọc ngẫu nhiên</a>
-                    </div>
+                            <div class="btn__regis">
+                                <a asp-action="CTBoTruyen" asp-route-id="@random.IdBo">Đọc ngẫu nhiên</a>
+                            </div>
                     random = null;
                 }
             </div>
         </div>
         <div class="main__random bg-random">
-            <a asp-controller="Payment" asp-action="index" class="btn-pre"><i class="fa-solid fa-gem"></i>Try Now</a>
+            <a id="btnPay" class="btn-pre"  data-customerid="@HttpContextAccessor.HttpContext.Session.GetString("TK")"><i class="fa-solid fa-gem"></i>Try Now</a>
+            <script>
+                $(document).ready(function () {
+                    $('#btnPay').click(function (e) {
+                        var customerId = $(this).data('customerid');
+                        if (customerId) {
+                            var pay = @Html.Raw(Json.Serialize(ViewBag.Pay));
+                            // if (pay != null) {
+                            //     Swal.fire({
+                            //         title: "Wanting!",
+                            //         text: "Bạn đã đăng ký một gói premium trước đó !",
+                            //         icon: "warning"
+                            //     });
+                            // } else {
+                            //    
+                            // }\
+                            window.location.href = '@Url.Action("Index", "Payment")';
+                        } else {
+                            window.location.href = '@Url.Action("Index", "Payment")';
+                        }
+                    });
+                });
+            </script>
         </div>
     </div>
 </div>
@@ -241,31 +270,31 @@
                                         var time = chapterRepository.CalculateTimeAgo(Earliest.ThoiGian);
                                         if (!string.IsNullOrEmpty(botruyen.AnhBia))
                                         {
-                                            <img src="@botruyen.AnhBia" alt="truyen Image" />
+                                                    <img src="@botruyen.AnhBia" alt="truyen Image" />
                                         }
-                                        <figcaption>
-                                            <h6 class="item-title"><a href="#">@botruyen.TenBo</a></h6>
+                                                <figcaption>
+                                                    <h6 class="item-title"><a href="#">@botruyen.TenBo</a></h6>
 
-                                            <a class="item-chapter" style="font-size: 13px;">
-                                                <span class="chap" style="margin-right: 10px; ">chap @Earliest.SttChap</span>
-                                                <span class="time">@time</span>
-                                            </a>
-                                        </figcaption>
+                                                    <a class="item-chapter" style="font-size: 13px;">
+                                                        <span class="chap" style="margin-right: 10px; ">chap @Earliest.SttChap</span>
+                                                        <span class="time">@time</span>
+                                                    </a>
+                                                </figcaption>
 
                                     }
                                     else
                                     {
                                         if (!string.IsNullOrEmpty(botruyen.AnhBia))
                                         {
-                                            <img src="@botruyen.AnhBia" alt="truyen Image" />
+                                                    <img src="@botruyen.AnhBia" alt="truyen Image" />
                                         }
-                                        <figcaption>
-                                            <h6 class="item-title"><a href="#">@botruyen.TenBo</a></h6>
-                                            <a class="item-chapter" style="font-size: 13px;">
-                                                <span class="chap" style="margin-right: 10px; ">chap ...</span>
-                                                <span class="time">... giờ trước</span>
-                                            </a>
-                                        </figcaption>
+                                                <figcaption>
+                                                    <h6 class="item-title"><a href="#">@botruyen.TenBo</a></h6>
+                                                    <a class="item-chapter" style="font-size: 13px;">
+                                                        <span class="chap" style="margin-right: 10px; ">chap ...</span>
+                                                        <span class="time">... giờ trước</span>
+                                                    </a>
+                                                </figcaption>
                                     }
                                 }
                                 @if (botruyen.TtPemium == true)
@@ -295,50 +324,50 @@
                 @{
                     var listRank = boTruyenRepository.GetAllAsyncByDay();
                     var item = Model.ElementAt(0);
-                    <div class=" position-relative">
-                        @if (!string.IsNullOrEmpty(item.AnhBanner))
+                            <div class=" position-relative">
+                                @if (!string.IsNullOrEmpty(item.AnhBanner))
                         {
-                            <img src="@item.AnhBanner" alt="truyen Image" class="img-poster" />
-                            <div class="background-item rounded-3 w-100" style="z-index:0"></div>
+                                    <img src="@item.AnhBanner" alt="truyen Image" class="img-poster" />
+                                    <div class="background-item rounded-3 w-100" style="z-index:0"></div>
                         }
-                        @if (item.TtPemium == true)
+                                @if (item.TtPemium == true)
                         {
-                            <div class="position-absolute pre-poster">
-                                <img src="/images/PreDark.png" alt="Premium Image" />
-                            </div>
+                                    <div class="position-absolute pre-poster">
+                                        <img src="/images/PreDark.png" alt="Premium Image" />
+                                    </div>
                         }
-                        <div class="position-absolute name-poster">
-                            <h3>@item.TenBo</h3>
-                            @{
+                                <div class="position-absolute name-poster">
+                                    <h3>@item.TenBo</h3>
+                                    @{
                                 int valueF = Convert.ToInt32(item.TkDanhgia);
                                 if (valueF > 0)
                                 {
                                     var tmp = 5 - valueF;
                                     for (int a = 0; a < valueF; a++)
                                     {
-                                        <i class="ri-star-fill" style="color: #FAB818;"></i>
+                                                        <i class="ri-star-fill" style="color: #FAB818;"></i>
                                     }
                                     for (int b = 0; b < tmp; b++)
                                     {
-                                        <i class="ri-star-fill"></i>
+                                                        <i class="ri-star-fill"></i>
                                     }
                                 }
                                 else
                                 {
-                                    <i class="ri-star-fill"></i>
-                                    <i class="ri-star-fill"></i>
-                                    <i class="ri-star-fill"></i>
-                                    <i class="ri-star-fill"></i>
-                                    <i class="ri-star-fill"></i>
+                                                    <i class="ri-star-fill"></i>
+                                                    <i class="ri-star-fill"></i>
+                                                    <i class="ri-star-fill"></i>
+                                                    <i class="ri-star-fill"></i>
+                                                    <i class="ri-star-fill"></i>
                                 }
-                            }
+                                    }
 
-                        </div>
-                        <div class="position-absolute btn-poster">
-                            <a asp-action="CTBoTruyen" asp-route-id="@item.IdBo" class="btn-poster-detail">Đọc ngay <i class="ri-arrow-right-s-fill"></i></a>
-                        </div>
+                                </div>
+                                <div class="position-absolute btn-poster">
+                                    <a asp-action="CTBoTruyen" asp-route-id="@item.IdBo" class="btn-poster-detail">Đọc ngay <i class="ri-arrow-right-s-fill"></i></a>
+                                </div>
 
-                    </div>
+                            </div>
                 }
             </div>
 
@@ -358,9 +387,9 @@
                 @{
                     foreach (var loai in ViewBag.LoaiTruyen)
                     {
-                        <a asp-area="" asp-controller="BoTruyen" asp-action="ListTopic" asp-route-id="@loai.TenLoai" class="col-auto item-loai">
-                            @loai.TenLoai
-                        </a>
+                                <a asp-area="" asp-controller="BoTruyen" asp-action="ListTopic" asp-route-id="@loai.TenLoai" class="col-auto item-loai">
+                                    @loai.TenLoai
+                                </a>
                     }
                 }
             </div>
@@ -439,4 +468,7 @@
             }
         ]
     });
+
+
 </script>
+

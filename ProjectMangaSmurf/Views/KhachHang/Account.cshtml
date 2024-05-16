@@ -50,6 +50,7 @@
                     <a class="list-group-item list-group-item-action active" data-bs-toggle="list" href="#account-general"><i class="ri-information-line"></i> Thông Tin</a>
                     <a class="list-group-item list-group-item-action" data-bs-toggle="list" href="#account-change-password"><i class="fas fa-lock"></i> Mật khẩu & Bảo mật</a>
                     <a class="list-group-item list-group-item-action" data-bs-toggle="list" href="#account-connections"><i class="fas fa-plug"></i> Kết nối</a>
+                    <a class="list-group-item list-group-item-action" data-bs-toggle="list" href="#account-invoice"><i class="fa-solid fa-receipt"></i> Thanh toán & Hóa đơn</a>
                 </div>
             </div>
             <div class="col-md-9">
@@ -174,6 +175,43 @@
                                     <button type="button" class="btn btn-primary">Connect to <strong>Facebook</strong><i class="fab fa-facebook-f"></i></button>
                                 </div>
                             </form>
+                        </div>
+
+                        <div class="tab-pane fade" id="account-invoice">
+                            @{
+                                var listPays = ViewBag.pays as List<Payment>;
+                                if (listPays.Count > 0) { 
+                                    <table class="table table-bordered table-striped">
+                                        <thead class="thead-dark">
+                                            <tr>
+                                                <th >ID Invoice</th>
+                                                <th>Giá trị</th>
+                                                <th>Ngày thanh toán</th>
+                                                <th>Ngày hết hạn</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var pay in listPays)
+                                            {
+                                                <tr>
+                                                    <td>@pay.IdPayment </td>
+                                                    <td>@pay.PayAmount VND</td>
+                                                    <td>@(pay.PayDate.HasValue ? pay.PayDate.Value.ToString("dd/MM/yyyy - HH:mm:ss") : "N/A")</td>
+                                                    <td>@(pay.ExpiresTime.HasValue ? pay.ExpiresTime.Value.ToString("dd/MM/yyyy - HH:mm:ss") : "N/A")</td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                }
+                                else
+                                {
+                                    <div class="section-bottom container w-100" style="height:50vh;">
+                                        <img src="/images/yuzu.png" alt="cat Image" />
+                                        <span>Opps!!! <br />Có vẻ như bạn chưa có giao dịch nào <br />Đi đến trang đăng ký ngay!!</span>
+                                        <a asp-area="" asp-controller="Payment" asp-action="Index">Xem ngay</a>
+                                    </div>
+                                }
+                            }
                         </div>
                     </div>
                 </div>

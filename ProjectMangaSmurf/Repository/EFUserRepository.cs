@@ -38,6 +38,11 @@ namespace ProjectMangaSmurf.Repository
             throw new NotImplementedException();
         }
 
+        public async Task<User> GetByEmailAsync(string email)
+        {
+            return await _context.Users.FirstOrDefaultAsync(p => p.Email == email);
+        }
+
         public async Task<User> GetByIdAsync(string id)
         {
             return await _context.Users.FirstOrDefaultAsync(p => p.IdUser == id);

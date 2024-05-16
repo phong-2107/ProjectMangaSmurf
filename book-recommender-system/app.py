@@ -11,32 +11,6 @@ pt = pickle.load(open('pt.pkl','rb'))
 books = pickle.load(open('books.pkl','rb'))
 similarity_scores = pickle.load(open('similarity_scores.pkl','rb'))
 
-@app.route('/api/recommend_books', methods=['POST'])
-def recommends():
-    user_input = request.form.get('user_input')
-    indices = np.where(pt.index == user_input)[0]
-
-    if indices.size > 0:
-        index = indices[0]
-        similar_items = sorted(list(enumerate(similarity_scores[index])), key=lambda x: x[1], reverse=True)[1:5]
-
-        data = []
-        for i in similar_items:
-            book_id = pt.index[i[0]]
-            book_data = books[books['Book-Id'] == book_id].iloc[0]
-            data.append({
-                'title': book_data['Book-Title'],
-                'author': book_data['Book-Author'],
-                'image_url': book_data.get('Image-URL-M', 'default.jpg'),
-                'votes': book_data['num_ratings'],
-                'rating': book_data['avg_rating']
-            })
-    else:
-        data = {'error': 'No matching entries found'}
-
-    return jsonify(data)
-
-
 @app.route('/')
 def index():
     return render_template('index.html',
@@ -73,52 +47,50 @@ def recommend():
 # API goi y sach
 @app.route('/goi-y-sach', methods=['POST'])
 def goi_y_sach():
-    if request.method == 'POST':
-        if request.is_json:
-            data = request.get_json()
-            # Sử dụng key chính xác từ JSON
-            book_id = data.get('Book-Id')
-            if book_id:
-                try:
-                    recommended_books = recommend(int(book_id))
-                    if recommended_books:
-                        recommended_books_json = [int(item[0]) for item in recommended_books]
-                        return jsonify({
-                            "status": 200,
-                            "recommended_books_id": recommended_books_json
-                        }), 200
-                    else:
-                        return jsonify({
-                            "status": 400,
-                            "message": "Book ID not found"
-                        }), 400
-                except Exception as e:
+    print("Request received")
+    if request.is_json:
+        data = request.get_json()
+        print(f"Data Received: {data}")
+        book_id = data.get('Book-Id')
+        if book_id:
+            try:
+                print(f"Book ID: {book_id}")
+                recommended_books = recommend(int(book_id))
+                print(f"Recommended Books: {recommended_books}")
+                if recommended_books:
+                    recommended_books_json = [int(item[0]) for item in recommended_books]
+                    return jsonify({
+                        "status": 200,
+                        "recommended_books_id": recommended_books_json
+                    }), 200
+                else:
                     return jsonify({
                         "status": 400,
-                        "message": f"An error occurred: {str(e)}"
+                        "message": "Book ID not found"
                     }), 400
-            else:
+            except Exception as e:
+                print(f"Error: {str(e)}")
                 return jsonify({
                     "status": 400,
-                    "message": "'Book-Id' key not found in request"
+                    "message": f"An error occurred: {str(e)}"
                 }), 400
         else:
             return jsonify({
                 "status": 400,
-                "message": "Request must be in JSON format"
+                "message": "'Book-Id' key not found in request"
             }), 400
     else:
         return jsonify({
-            "status": 405,
-            "message": "Method Not Allowed"
-        }), 405
+            "status": 400,
+            "message": "Request must be in JSON format"
+        }), 400
 def recommend(book_id):
     book_id = int(book_id)
     # Kiểm tra xem book_name có tồn tại trong pt.index không
     if book_id in pt.index:
         # index fetch
         index = np.where(pt.index == book_id)[0][0]
-        similar_items = sorted(list(enumerate(similarity_scores[index])), key=lambda x: x[1], reverse=True)[1:6]
+        similar_items = sorted(list(enumerate(similarity_scores[index])), key=lambda x: x[1], reverse=True)[1:13]
         
         data = []
         for i in similar_items:
@@ -132,7 +104,5 @@ def recommend(book_id):
     else:
         print("Book not found in database")
         return None
-
-
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000)

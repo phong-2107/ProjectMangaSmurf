@@ -7,9 +7,14 @@
 @inject IKhachHangRepository khachhangrepository
 @model ProjectMangaSmurf.Models.Chapter
 
-
 <link href="~/css/styleCT.css" rel="stylesheet" />
 <link href="~/css/styleChapter.css" rel="stylesheet" />
+
+<style>
+    #global-loader{
+        display:none!important;
+    }
+</style>
 
 
 <div class="overlay" id="loginOverlay" style="display:none;"></div>
@@ -190,7 +195,17 @@
                                 },
                                 success: function (response) {
                                     if (response.success) {
-                                        alert('Lỗi Khi Follow, Vui lòng thử lại');
+                                        Swal.fire({
+                                            position: "top-end",
+                                            icon: "success",
+                                            title: "Đánh giá thành công bộ truyện",
+                                            showConfirmButton: false,
+                                            timer: 1500,
+                                            customClass: {
+                                                popup: 'swal-top-margin' 
+                                            }
+                                        });
+                                        location.reload();
                                     } else {
                                         location.reload();
                                     }
@@ -287,7 +302,17 @@
                             alert('Bạn đã follow thành công!');
                             location.reload();
                         } else {
-                            alert('Lỗi khi follow, vui lòng thử lại');
+                            Swal.fire({
+                                position: "top-end",
+                                icon: "success",
+                                title: "Follow thành công bộ truyện",
+                                showConfirmButton: false,
+                                timer: 2500,
+                                customClass: {
+                                    popup: 'swal-top-margin'
+                                }
+                            });
+                            location.reload();
                         }
                     },
                     error: function () {

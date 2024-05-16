@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using ProjectMangaSmurf.Data;
 using ProjectMangaSmurf.Models;
 using ProjectMangaSmurf.Repository;
+using System.Diagnostics;
 
 
 namespace ProjectMangaSmurf.Controllers
@@ -15,12 +17,14 @@ namespace ProjectMangaSmurf.Controllers
         private readonly IHopdongRepository hopdongRepository;
         private readonly IKhachHangRepository _khachHangRepository;
         private readonly IEmailService _emailRepository;
-        public PaymentController(IKhachHangRepository khachHangRepository, IVNPayRepository vnPayservice, IHopdongRepository hopdong, IEmailService emailRepository)
+        private readonly ProjectDBContext _context;
+        public PaymentController(IKhachHangRepository khachHangRepository, IVNPayRepository vnPayservice, IHopdongRepository hopdong, IEmailService emailRepository, ProjectDBContext context)
         {
             _khachHangRepository = khachHangRepository;
             hopdongRepository = hopdong;
             _vnPayservice = vnPayservice;
             _emailRepository = emailRepository;
+            _context = context;
         }
 
         public IActionResult Index()
@@ -51,38 +55,79 @@ namespace ProjectMangaSmurf.Controllers
                 HttpContext.Session.SetString("date", vnPayModel.CreatedDate.ToString());
                 HttpContext.Session.SetString("Name", vnPayModel.FullName.ToString());
                 HttpContext.Session.SetString("Note", vnPayModel.Description.ToString());
+                HttpContext.Session.SetString("Phone", phone);
                 return Redirect(_vnPayservice.CreatePaymentUrl(HttpContext, vnPayModel));
             }
             return View();
         }
 
+        public string ReplacePlaceholders(string template, Dictionary<string, string> placeholders)
+        {
+            foreach (var placeholder in placeholders)
+            {
+                template = template.Replace($"{{{placeholder.Key}}}", placeholder.Value);
+            }
+            return template;
+        }
+
 
         public async Task<ActionResult> PaymentSuccess()
         {
-            Payment hd = new Payment();
-            hd.IdPayment = hopdongRepository.GenerateHD();
-            hd.PayDate = DateTime.Parse(HttpContext.Session.GetString("date"));
-            hd.IdUser = HttpContext.Session.GetString("IdKH");
-            hd.IdPack = "P004";
-            hd.PayAmount = 69000;
-            hd.PayMethod = 1;
-            hd.PayDate = DateTime.Now;
-            hd.PayStats = 1;
-            hd.ExpiresTime = DateTime.Today.AddMonths(2);
-            await hopdongRepository.AddAsync(hd);
-
-            var email = HttpContext.Session.GetString("Email");
-            var subject = HttpContext.Session.GetString("OrderId");
-            var messsage = HttpContext.Session.GetString("Message");
-            await _emailRepository.SendEmailAsync(email, subject, messsage);
-
-            var kh = await _khachHangRepository.GetByIdAsync(hd.IdUser);
-            if (kh != null)
+            using (var transaction = _context.Database.BeginTransaction())
             {
-                kh.ActivePremium = true;
-                await _khachHangRepository.UpdateAsync(kh);
+                try
+                {
+                    Payment hd = new Payment
+                    {
+                        IdPayment = hopdongRepository.GenerateHD(),
+                        PayDate = DateTime.Parse(HttpContext.Session.GetString("date")),
+                        IdUser = HttpContext.Session.GetString("IdKH"),
+                        IdPack = "P004",
+                        PayAmount = 69000,
+                        PayMethod = 1,
+                        ExpiresTime = DateTime.Today.AddMonths(2)
+                    };
+
+                    await hopdongRepository.AddAsync(hd);
+
+                    var email = HttpContext.Session.GetString("Email");
+                    var subject = "Thanh toán hóa đơn " + HttpContext.Session.GetString("Message");
+                    var message = HttpContext.Session.GetString("OrderId");
+
+                    string templatePath = "SendMail.html";
+                    string emailTemplate = await _emailRepository.ReadTemplateAsync(templatePath);
+
+                    var date = HttpContext.Session.GetString("date");
+
+                    var placeholders = new Dictionary<string, string>
+                    {
+                        { "orderId", hd.IdPayment },
+                        { "orderValue", hd.PayAmount.ToString() },
+                        { "cus", HttpContext.Session.GetString("TK") },
+                        { "date", date},
+                        { "phone", HttpContext.Session.GetString("Phone") },
+                    };
+
+                    string emailBody = ReplacePlaceholders(emailTemplate, placeholders);
+
+                    await _emailRepository.SendEmailTemplateAsync(email, subject, message, emailBody);
+
+                    var kh = await _khachHangRepository.GetByIdAsync(hd.IdUser);
+                    if (kh != null)
+                    {
+                        kh.ActivePremium = true;
+                        await _khachHangRepository.UpdateAsync(kh);
+                    }
+                    transaction.Commit();
+
+                    return View("Success");
+                }
+                catch (Exception ex)
+                {
+                    ////transaction.Rollback();
+                    return View("Error", new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+                }
             }
-            return View("Success");
         }
         public IActionResult PaymentFail()
         {

@@ -31,7 +31,7 @@ public partial class BoTruyen
 
     public bool Active { get; set; }
 
-    public string? Listloai { get; set; }
+    public List<string>? Listloai { get; set; }
 
     public virtual ICollection<Chapter> Chapters { get; set; } = new List<Chapter>();
 

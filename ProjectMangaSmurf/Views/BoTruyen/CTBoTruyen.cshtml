@@ -254,9 +254,9 @@
                                     <a class="btn__action" style="pointer-events: none; background-color: #8f8f8f">
                                         Đọc tiếp chap
                                         @if (ViewBag.next != null && ViewBag.next != -1)
-                                    {
+                                        {
                                             @ViewBag.next
-                                    }
+                                        }
                                     </a>
                             }
                         }
@@ -274,7 +274,7 @@
 
                 <div class="content-More">
                     <div class="content-title">
-                        <i class="ri-file-text-line"></i> Thông tin thêm
+                        <i class="fa-solid fa-circle-info"></i> Thông tin thêm
                     </div>
                     <div class="content">
                         <div class="chapter">
@@ -297,7 +297,7 @@
 
             <div class="detail__list ">
                 <div class="content-title">
-                    <i class="fa-solid fa-list"></i> Danh sách Chương
+                    <i class="fa-solid fa-list"></i> DANH SÁCH CHƯƠNG TRUYỆN
                 </div>
                 <div class="d-flex flex-column mb-3 w-100 mt-3">
                     @{
@@ -432,56 +432,30 @@
                         });
                     </script>
                 </div>
-                <div class="top__content">
-                    <div class="content-title">
-                        <i class="fa-solid fa-bookmark"></i> Có thể bạn cũng thích
-                    </div>
-                </div>
+                 
                 <div class="container">
-                    <div class="row row-cols-6  justify-content-center">
-                        @{
-                            var listt = ViewBag.list;
-                            int st = 0;
-                            @foreach (var botruyen in listt)
-                            {
-                                if (st < 10)
+                    @{
+                        var listt = ViewBag.list;
+                        if (listt != null)
+                        {
+                            <div class="content-title">
+                                <i class="fa-solid fa-bookmark"></i> CÓ THỂ BẠN QUAN TÂM
+                            </div>
+                            <div class="row row-cols-6  justify-content-center gap-2">
+
+                                @foreach (var botruyen in listt)
                                 {
-                                    <div class="col-2 update-item">
+                                    <div class="col-2 update-item" style="width: 190px;">
                                         <a asp-action="CTBoTruyen" asp-route-id="@botruyen.IdBo">
                                             <figure class="position-relative">
                                                 @{
-                                                    var Earliest = chapterRepository.GetChapterEarliestByIdAsync(botruyen.IdBo);
-                                                    if (Earliest != null)
+                                                    if (!string.IsNullOrEmpty(botruyen.AnhBia))
                                                     {
-                                                        var time = chapterRepository.CalculateTimeAgo(Earliest.ThoiGian);
-                                                        if (!string.IsNullOrEmpty(botruyen.AnhBia))
-                                                        {
-                                                            <img src="@botruyen.AnhBia" alt="truyen Image" />
-                                                        }
-                                                        <figcaption>
-                                                            <h6 class="item-title"><a href="#">@botruyen.TenBo</a></h6>
-
-                                                            <a class="item-chapter" style="font-size: 13px;">
-                                                                <span class="chap" style="margin-right: 10px; ">chap @Earliest.SttChap</span>
-                                                                <span class="time">@time</span>
-                                                            </a>
-                                                        </figcaption>
-
+                                                        <img src="@botruyen.AnhBia" alt="truyen Image" />
                                                     }
-                                                    else
-                                                    {
-                                                        if (!string.IsNullOrEmpty(botruyen.AnhBia))
-                                                        {
-                                                            <img src="@botruyen.AnhBia" alt="truyen Image" />
-                                                        }
-                                                        <figcaption>
-                                                            <h6 class="item-title"><a href="#">@botruyen.TenBo</a></h6>
-                                                            <a class="item-chapter" style="font-size: 13px;">
-                                                                <span class="chap" style="margin-right: 10px; ">chap ...</span>
-                                                                <span class="time">... giờ trước</span>
-                                                            </a>
-                                                        </figcaption>
-                                                    }
+                                                    <figcaption>
+                                                        <h6 class="item-title"><a href="#">@botruyen.TenBo</a></h6>
+                                                    </figcaption>
                                                 }
                                                 @if (botruyen.TtPemium == true)
                                                 {
@@ -492,12 +466,10 @@
                                             </figure>
                                         </a>
                                     </div>
-                                    st++;
                                 }
-                                
-                            }
+                            </div>
                         }
-                    </div>
+                    }
                 </div>
             </div>
         </div>

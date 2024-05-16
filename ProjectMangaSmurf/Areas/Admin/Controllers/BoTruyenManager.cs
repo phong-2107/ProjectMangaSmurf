@@ -215,7 +215,18 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
             boTruyen.TrangThai = 1;
             boTruyen.TkTheodoi = 0;
             boTruyen.TongLuotXem = 0;
+
             await _botruyenrepository.AddAsync(boTruyen);
+
+            foreach (var i in boTruyen.Listloai)
+            {
+                CtLoaiTruyen ct = new CtLoaiTruyen();
+                ct.IdLoai = i.ToString();
+                ct.IdBo = boTruyen.IdBo;
+                ct.Active = true;
+                await _loaiTruyenRepository.AddAsyncCTLoai(ct);
+            }
+
 
             // Assume success if no exceptions thrown
             return Json(new { success = true, message = "Comic added successfully!", redirectUrl = Url.Action("ViewList") });

@@ -37,22 +37,6 @@
             <div class="row justify-content-center">
                 @foreach (var botruyen in Model)
                 {
-                    @* <div class="item col-2 update-item">
-                        <figure>
-                            @if (!string.IsNullOrEmpty(botruyen.AnhBanner))
-                            {
-                                <img src="@botruyen.AnhBanner" alt="truyen Image" />
-                            }
-                            <figcaption>
-                                <h6 class="item-title"><a href="#">@botruyen.TenBo</a></h6>
-
-                                <a href="#" class="item-chapter" style="font-size: 13px;">
-                                    <span class="chap" style="margin-right: 10px; ">chap ...</span>
-                                    <span class="time">... giờ trước</span>
-                                </a>
-                            </figcaption>
-                        </figure>
-                    </div> *@
                     <div class="item col-2 update-item">
                         <a asp-action="CTBoTruyen" asp-route-id="@botruyen.IdBo">
                             <figure>

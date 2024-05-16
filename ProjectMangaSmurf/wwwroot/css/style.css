@@ -27,7 +27,7 @@
     --text-color: hsl(19, 16%, 65%);
     --text-color-light: hsl(19, 8%, 55%);
     --box-color: #181D1F;
-    --body-color:  #141624;  #263238; #0E1111;
+    --body-color:  /*#141624;  #263238;*/ #0E1111;
     --body-color-dark: #1a2226;
     --body-main: #1a1e24;
     --btn-yellow: #CE29F9;
@@ -37,6 +37,8 @@
     --containers-color-alt: #9858F1;
     --containers-color-yellow: #B142F5;
     --btn-orange: #F47521;
+
+
     --header-height: 3rem;
     /*========== Font and typography ==========*/
     /*.5rem = 8px | 1rem = 16px ...*/
@@ -70,6 +72,13 @@
         --smaller-font-size: 12px;
     }
 }
+
+@media print {
+    html, body {
+        display: none; /* hide whole page */
+    }
+}
+
 /*========== Variables Dark theme ==========*/
 body.dark-theme {
     --body-white: #ffffff;
@@ -170,8 +179,15 @@ img {
     margin-right: 1rem;
 }
 
+.swal-top-margin {
+    margin-top: 7rem;
+}
+
+.swal2-container {
+    z-index: 999999 !important;
+
 /* =================loading =====================*/
-#global-loader {
+#global-loader{
     background: var(--body-color);
     position: fixed;
     z-index: 9999;
@@ -1201,6 +1217,7 @@ img {
     align-items: center;
 }
 
+
     .update-item img {
         width: 210px !important;
         height: 270px !important;
@@ -1211,6 +1228,10 @@ img {
         box-shadow: #000 0 0 0;
         text-align: center;
         overflow: hidden;
+    }
+
+    .update-item:hover img{
+        border:2px solid var(--containers-color-alt);
     }
 
     .update-item figcaption {

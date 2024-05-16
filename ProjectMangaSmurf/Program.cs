@@ -39,23 +39,37 @@ builder.Services.AddAuthentication("AdminAuthScheme")
             options.AccessDeniedPath = new PathString("/Admin/AdminLogin/AccessDenied");
             options.Cookie.Name = "AdminAuthCookie";
         });
-
 builder.Services.AddControllersWithViews();
+
+
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddHttpContextAccessor();
+
+//builder.Services.AddSession(options =>
+//{
+//    options.IdleTimeout = TimeSpan.FromMinutes(30);
+//    options.Cookie.HttpOnly = true;
+//    options.Cookie.IsEssential = true;
+//    options.Cookie.Name = ".AspNetCore.Admin.Session";
+//});
+
+builder.Services.AddDistributedMemoryCache(); 
 builder.Services.AddSession(options =>
 {
-    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.IdleTimeout = TimeSpan.FromDays(1);
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
-    options.Cookie.Name = ".AspNetCore.Admin.Session";
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+    options.Cookie.SameSite = SameSiteMode.None;
+
+    // Để làm cho cookie trở thành Persistent Cookie:
+    options.Cookie.MaxAge = TimeSpan.FromDays(1);
 });
 
+services.AddControllersWithViews();
 
 services.AddControllersWithViews()
     .AddCookieTempDataProvider(); 
-
-
 builder.Services.AddControllersWithViews().AddSessionStateTempDataProvider();
 services.AddSession();
 
@@ -91,6 +105,10 @@ builder.Services.AddScoped<IVNPayRepository, EFVNPayRepository>();
 //======================= Manager =======================
 builder.Services.AddScoped<IStaffRepository, EFStaffRepository>();
 
+//======================= Recommendation Book =======================
+builder.Services.AddScoped<IBookRecommendationRepository, EFBookRecommendationRepository>();
+
+
 //services.AddScoped<RBACAuthorizeAttribute>();
 
 //services.AddControllersWithViews(options =>
@@ -98,16 +116,18 @@ builder.Services.AddScoped<IStaffRepository, EFStaffRepository>();
 //    options.Filters.AddService<RBACAuthorizeAttribute>();
 //});
 
+
+builder.Services.AddHttpClient();
+builder.Services.AddControllersWithViews();
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpClient("FlaskAPI", client =>
 {
-    client.BaseAddress = new Uri("http://localhost:5000/"); // Địa chỉ của Flask API
+    client.BaseAddress = new Uri("http://localhost:5000"); 
 });
 
 
 var app = builder.Build();
 
-app.UseSession();
 
 app.UseRouting();
 // Configure the HTTP request pipeline.
@@ -122,6 +142,9 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapRazorPages();
+
+app.UseSession();
+
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllerRoute(

@@ -7,25 +7,7 @@
 <div class=" main__top section">
     <div class=" list__container containers list">
         <div class="top__content">
-            <!--{
-                IEnumerable<BoTruyen> list = Model;
-                List<BoTruyen> BotruyenList = list.ToList();
-                if(BotruyenList != null)
-                {
-                    var str = BotruyenList.First().IdLoai;
-                    var loai = await boTruyenRepository.GetLoaiByIdAsync(str);
-                    if (loai != null)
-                    {
-                        <span class="section__subtitle">DANH SÁCH TRUYỆN loai.TenLoai</span>
-                    }
-                }
-                else
-                {
-                    <script>
-                        alert("Hien Tai Chưa có loại truyện này !!");
-                    </script>
-                }
-            }-->
+            
             <span class="section__subtitle">DANH SÁCH TRUYỆN @ViewBag.Topic</span>
 
             <div class="controls">
@@ -58,14 +40,15 @@
                     var list = Model.ToList();
                     if(list.Count > 0)
                     {
-                            @foreach (var botruyen in Model)
+                        @foreach (var botruyen in Model)
                         {
-                                <div class="item col-2 update-item">
+                            <div class="item col-2 update-item">
+                                <a asp-action="CTBoTruyen" asp-route-id="@botruyen.IdBo">
                                     <figure>
                                         @if (!string.IsNullOrEmpty(botruyen.AnhBia))
-                                    {
-                                        <img src="@botruyen.AnhBia" alt="truyen Image" />
-                                    }
+                                        {
+                                            <img src="@botruyen.AnhBia" alt="truyen Image" />
+                                        }
                                         <figcaption>
                                             <h6 class="item-title"><a href="#">@botruyen.TenBo</a></h6>
 
@@ -75,7 +58,8 @@
                                             </a>
                                         </figcaption>
                                     </figure>
-                                </div>
+                                </a>
+                            </div>
                         }
                     }
                     else

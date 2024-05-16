@@ -52,5 +52,10 @@ namespace ProjectMangaSmurf.Repository
         {
             return await _context.ServicePackConfigs.FirstOrDefaultAsync(p => p.IdPack == id);
         }
+
+        public async Task<IEnumerable<Payment>> GetPaymentByIdAsync(string id)
+        {
+            return await _context.Payments.Where(p => p.IdUser == id).ToListAsync();
+        }
     }
 }

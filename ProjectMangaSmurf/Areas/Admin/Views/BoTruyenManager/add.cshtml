@@ -90,7 +90,7 @@
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label asp-for="Listloai">Types of this Comic</label>
-                        <select asp-for="Listloai" asp-items="@ViewBag.types" multiple="multiple" class="select" name="listloai">
+                        <select asp-for="Listloai" asp-items="@ViewBag.types" multiple class="select" name="listloai">
                             @foreach (var type in ViewBag.types)
                             {
                                 <option value="@type.Value">@type.Text</option>

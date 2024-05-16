@@ -25,8 +25,18 @@ namespace ProjectMangaSmurf.Controllers
         private readonly ICTBoTruyenRepository _cTBoTruyenRepository;
         private readonly IUserRepository _userRepository;
         private readonly IAvatarRepository _avatarRepository;
+        private readonly IHopdongRepository _hopdongRepository;
+        private readonly IEmailService _emailRepository;
         private readonly ProjectDBContext _context;
-        public KhachHangController(IKhachHangRepository khachHangRepository, IboTruyenRepository boTruyenRepository, IChapterRepository chapterRepository, ICTBoTruyenRepository cTBoTruyenRepository, IUserRepository userRepository, IAvatarRepository avatarRepository, ProjectDBContext db)
+        public KhachHangController(IKhachHangRepository khachHangRepository, 
+                                IboTruyenRepository boTruyenRepository, 
+                                IChapterRepository chapterRepository, 
+                                ICTBoTruyenRepository cTBoTruyenRepository, 
+                                IUserRepository userRepository, 
+                                IAvatarRepository avatarRepository, 
+                                IHopdongRepository hopdongRepository,
+                                IEmailService emailService,
+                                ProjectDBContext db)
         {
             _khachhangrepository = khachHangRepository;
             _botruyenrepository = boTruyenRepository;
@@ -34,6 +44,8 @@ namespace ProjectMangaSmurf.Controllers
             _cTBoTruyenRepository = cTBoTruyenRepository;
             _userRepository = userRepository;
             _avatarRepository = avatarRepository;
+            _hopdongRepository = hopdongRepository;
+            _emailRepository = emailService;
             _context = db;
         }
 
@@ -141,7 +153,11 @@ namespace ProjectMangaSmurf.Controllers
             HttpContext.Session.Remove("TK");
             HttpContext.Session.Remove("IdKH");
             HttpContext.Session.Remove("Img");
+            HttpContext.Session.Remove("date");
+            HttpContext.Session.Remove("OrderId");
+            HttpContext.Session.Remove("Message");
             HttpContext.Session.Remove("Email");
+            HttpContext.Session.Remove("Phone");
             return RedirectToAction("Index", "BoTruyen");
         }
 
@@ -182,6 +198,8 @@ namespace ProjectMangaSmurf.Controllers
             ModelState.AddModelError(string.Empty, "Tài khoản không hợp lệ");
             return View();
         }
+
+
 
         public IActionResult LoginPopup(string returnUrl)
         {
@@ -227,6 +245,113 @@ namespace ProjectMangaSmurf.Controllers
             }
             ModelState.AddModelError(string.Empty, "Thông tin tài khoản không hợp lệ");
             return View();
+        }
+
+        public string ReplacePlaceholders(string template, Dictionary<string, string> placeholders)
+        {
+            foreach (var placeholder in placeholders)
+            {
+                template = template.Replace($"{{{placeholder.Key}}}", placeholder.Value);
+            }
+            return template;
+        }
+
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> ForgotPassword(string Email, string Code)
+        {
+            if (ModelState.IsValid)
+            {
+                var kh = await _userRepository.GetByEmailAsync(Email);
+                if (kh != null)
+                {
+                    if(Code != "0")
+                    {
+                        if(Code == HttpContext.Session.GetString("CODE"))
+                        {
+                            HttpContext.Session.Remove("CODE");
+                            return Json(new { success = true });
+                        }
+                        else
+                        {
+                            return Json(new { success = false, message = "Mã Không chính xác" });
+                        }
+                    }
+                    else
+                    {
+                        Random random = new Random();
+                        var ran = random.Next(100000, 1000000);
+
+                        var email = Email;
+                        var subject = "Reset Password Mangasmurf";
+                        var message = "Khôi phục mật khẩu ";
+
+                        string templatePath = "ForgotPassword.html";
+                        string emailTemplate = await _emailRepository.ReadTemplateAsync(templatePath);
+
+                        var placeholders = new Dictionary<string, string>
+                    {
+                        { "CODE", ran.ToString()},
+                    };
+
+                        string emailBody = ReplacePlaceholders(emailTemplate, placeholders);
+                        await _emailRepository.SendEmailTemplateAsync(email, subject, message, emailBody);
+
+                        HttpContext.Session.SetString("CODE", ran.ToString());
+                        HttpContext.Session.SetString("MailRecovery", Email);
+                        return Json(new { success = false, message = "CODE đã được gửi đến Email của bạn" });
+                    }
+                }
+                else
+                {
+                    return Json(new { success = false, message = "Email chưa liên kết với tài khoản" });
+                }
+
+            }
+
+            return Json(new { success = false, message = "Email không hợp lệ" });
+        }
+
+        public IActionResult PasswordRecovery()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> PasswordRecovery(string newpass, string repass)
+        {
+            if (ModelState.IsValid)
+            {
+                var Email = HttpContext.Session.GetString("MailRecovery");
+                var kh = await _userRepository.GetByEmailAsync(Email);
+                if (kh != null)
+                {
+                    if (repass == newpass)
+                    {
+                        kh.Password = PasswordHasher.HashPassword(newpass);
+                        await _userRepository.UpdateAsync(kh);
+
+                        HttpContext.Session.Remove("MailRecovery");
+                        return Json(new { success = true });
+                    }
+                    else
+                    {
+                        return Json(new { success = false, message = "Mật khẩu không trùng khớp" });
+                    }
+                }
+                else
+                {
+                    return Json(new { success = false, message = "Thông tin lỗi" });
+                }
+
+            }
+
+            return Json(new { success = false, message = "có lỗi trong quá trình nhập" });
         }
 
 
@@ -296,10 +421,6 @@ namespace ProjectMangaSmurf.Controllers
                 }
             }
         }
-
-        
-
-
 
         public async Task<IActionResult> Infor()
         {
@@ -519,14 +640,17 @@ namespace ProjectMangaSmurf.Controllers
 
         public async Task<ActionResult> Account()
         {
-
             var kh = await _khachhangrepository.GetByIdAsync(HttpContext.Session.GetString("IdKH"));
             var value = TempData["info"] as string;
             ViewBag.info = value;
             if (kh != null)
             {
                 var user = await _userRepository.GetByIdAsync(kh.IdUser);
+
                 ViewBag.user = user;
+
+                var listPay = await _hopdongRepository.GetPaymentByIdAsync(kh.IdUser);
+                ViewBag.pays = listPay;
                 return View(kh);
             }
             return View();

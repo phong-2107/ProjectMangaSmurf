@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Http;
 using ProjectMangaSmurf.Data;
 using Newtonsoft.Json;
+using System.Text.RegularExpressions;
+using System.Net;
 namespace ProjectMangaSmurf.Controllers
 {
     public class BoTruyenController : Controller
@@ -13,39 +15,46 @@ namespace ProjectMangaSmurf.Controllers
         private readonly ICTBoTruyenRepository _cTBoTruyenRepository;
         private readonly IChapterRepository _chapterrepository;
         private readonly IKhachHangRepository _khachhangrepository;
+        private readonly IHopdongRepository _hopdongRepository;
+        private readonly IBookRecommendationRepository _recommendationRepository;
         private readonly ProjectDBContext _context;
 
-        private readonly IHttpClientFactory _clientFactory;
-        public BoTruyenController(ProjectDBContext db, IboTruyenRepository botruyenrepository, IChapterRepository chapterrepository, IKhachHangRepository khachHangRepository, ICTBoTruyenRepository cTBoTruyenRepository, IHttpClientFactory clientFactory)
+
+        public BoTruyenController(  ProjectDBContext db,
+                                    IboTruyenRepository botruyenrepository, 
+                                    IChapterRepository chapterrepository, 
+                                    IKhachHangRepository khachHangRepository, 
+                                    ICTBoTruyenRepository cTBoTruyenRepository, 
+                                    IHopdongRepository hopdongRepository,
+                                    IHttpClientFactory clientFactory, 
+                                    IBookRecommendationRepository recommendationRepository)
         {
             _context = db;
             _botruyenrepository = botruyenrepository;
             _chapterrepository = chapterrepository;
             _khachhangrepository = khachHangRepository;
             _cTBoTruyenRepository = cTBoTruyenRepository;
-            _clientFactory = clientFactory;
+            _hopdongRepository = hopdongRepository;
+            _recommendationRepository = recommendationRepository;
         }
-
-
-        //public async Task<IActionResult> Recommendations()
-        //{
-        //    var client = _clientFactory.CreateClient("FlaskAPI");
-        //    var response = await client.GetAsync("/recommend_books"); // Đường dẫn API phù hợp
-        //    if (response.IsSuccessStatusCode)
-        //    {
-        //        var result = await response.Content.ReadAsStringAsync();
-        //        var recommendations = JsonConvert.DeserializeObject<List<BoTruyen>>(result);
-        //        return View(recommendations);
-        //    }
-
-        //    return View(new List<BookRecommendation>());
-        //}
 
         public async Task<IActionResult> Index()
         {
             var listBotruyen = await _botruyenrepository.GetAllAsync();
             var listLoaiTruyen = await _botruyenrepository.GetAllLoaiTruyens();
             ViewBag.LoaiTruyen = listLoaiTruyen;
+
+            var userId = HttpContext.Session.GetString("IdKH");
+            if (userId != null)
+            {
+                ViewBag.kh = await _khachhangrepository.GetByIdAsync(userId);
+                ViewBag.pay = await _hopdongRepository.GetPaymentByIdAsync(userId);
+            }
+            else
+            {
+                ViewBag.kh = null;
+            }
+
             return View(listBotruyen);
         }
         public async Task<IActionResult> ListTruyen()
@@ -114,6 +123,22 @@ namespace ProjectMangaSmurf.Controllers
             ViewBag.Topic = loai.TenLoai;
             return View(listBotruyen);
         }
+
+        public static int ExtractNumberFromId(string id)
+        {
+            var match = Regex.Match(id, "^BT([0-9]+)$");
+            if (match.Success)
+            {
+                return int.Parse(match.Groups[1].Value);
+            }
+            throw new ArgumentException("ID không hợp lệ");
+        }
+
+        private string CreateIdFromNumber(int number)
+        {
+            return "BT" + number.ToString("D8");
+        }
+
         public async Task<IActionResult> CTBoTruyen(string id)
         {
             var Botruyen = await _botruyenrepository.GetByIdAsync(id);
@@ -136,13 +161,44 @@ namespace ProjectMangaSmurf.Controllers
                 {
                     ViewBag.follow = false;
                 }
+                var bookId = ExtractNumberFromId(id);
+                var recommendations = await _recommendationRepository.GetRecommendationsAsync(bookId);
+
+                List<BoTruyen> list = new List<BoTruyen>();
+
+                foreach (var r in recommendations)
+                {
+                    var idBo = CreateIdFromNumber(r);
+                    BoTruyen bt = await _botruyenrepository.GetByIdAsync(idBo);
+                    if (bt != null)
+                    {
+                        list.Add(bt);
+                    }
+                }
+
+                ViewBag.list = list;
             }
             else
             {
                 ViewBag.follow = false;
+                //var bookId = ExtractNumberFromId(id);
+                //var recommendations = await _recommendationRepository.GetRecommendationsAsync(bookId);
+
+                //List<BoTruyen> list = new List<BoTruyen>();
+
+                //foreach (var r in recommendations)
+                //{
+                //    var idBo = CreateIdFromNumber(r);
+                //    BoTruyen bt = await _botruyenrepository.GetByIdAsync(idBo);
+                //    if (bt != null)
+                //    {
+                //        list.Add(bt);
+                //    }
+                //}
+
+                //ViewBag.list = list;
             }
-            var list = await _botruyenrepository.GetAllAllAsync();
-            ViewBag.list = list;
+            
             return View(Botruyen);
         }
         public async Task<IActionResult> Chapter(string id, int stt)

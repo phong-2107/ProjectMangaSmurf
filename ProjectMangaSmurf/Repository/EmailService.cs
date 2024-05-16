@@ -48,6 +48,37 @@ namespace ProjectMangaSmurf.Repository
             await client.DisconnectAsync(true);
         }
 
+        public async Task SendEmailTemplateAsync(string toEmail, string subject, string body, string template)
+        {
+            var email = "mangasmurf@outlook.com";
+            var password = "Phong2107@";
 
+            var message = new MimeMessage();
+            message.From.Add(MailboxAddress.Parse(email)); // Cập nhật ở đây
+            message.To.Add(MailboxAddress.Parse(toEmail));
+            message.Subject = subject;
+
+            var builder = new BodyBuilder
+            {
+                TextBody = body,
+                HtmlBody = template
+
+            };
+
+            message.Body = builder.ToMessageBody();
+
+            using var client = new SmtpClient();
+            await client.ConnectAsync("smtp-mail.outlook.com", 587, SecureSocketOptions.StartTls);
+            await client.AuthenticateAsync(email, password);
+            await client.SendAsync(message);
+            await client.DisconnectAsync(true);
+        }
+
+        public async Task<string> ReadTemplateAsync(string templateName)
+        {
+            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "templates", templateName);
+            using var reader = new StreamReader(path);
+            return await reader.ReadToEndAsync();
+        }
     }
 }
