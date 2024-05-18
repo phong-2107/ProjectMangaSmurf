@@ -1,4 +1,4 @@
-﻿@import "../../../../css2";
+﻿﻿@import "../../../../css2";
 
 .css-equal-content,
 .css-equal-heights {
@@ -3537,7 +3537,7 @@ div.dataTables_wrapper div.dataTables_info {
     }
 
         .header .header-left .logo img {
-            width: 140px;
+            width: 120px;
         }
 
 @media (max-width: 991px) {
@@ -3581,7 +3581,7 @@ div.dataTables_wrapper div.dataTables_info {
         }
 
             .header #toggle_btn .bar-icon span {
-                background-color: #fff;
+                background-color: #000;
                 display: block;
                 float: left;
                 height: 2px;

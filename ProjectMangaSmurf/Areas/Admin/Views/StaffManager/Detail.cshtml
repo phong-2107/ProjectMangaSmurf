@@ -1,0 +1,175 @@
+﻿@model ProjectMangaSmurf.Models.ViewModels.StaffDetailsViewModel
+@{
+    var customer = Model.Staff;
+    var activeSelected = customer?.IdUserNavigation?.Active == true ? "selected " : "";
+    var inactiveSelected = customer?.IdUserNavigation?.Active == false ? "selected " : "";
+    var hashedPassword = customer?.IdUserNavigation?.Password;
+    var allPermissions = ViewBag.AllPermissions as List<ProjectMangaSmurf.Models.PermissionsList>;
+}
+
+<style>
+    .action-page {
+        display: flex;
+        flex-direction: row;
+        gap: .5rem;
+    }
+
+    .action-page a {
+        font-size: 20px;
+        font-weight: 600;
+        letter-spacing: .7px;
+        color: #212b36;
+    }
+
+    .action-page a:hover {
+        color: #FE820E;
+    }
+
+    .form-section-title {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 10px;
+        color: #333;
+        margin-top: 20px;
+    }
+
+    .productdetails li {
+        margin-bottom: 15px;
+    }
+
+    .card-body form {
+        margin-top: 20px;
+    }
+
+    .card {
+        margin-bottom: 20px;
+    }
+
+    .form-control + .form-section-title {
+        margin-top: 3px;
+    }
+
+    .form-section-title + .form-control {
+        margin-top: 3px;
+    }
+
+    .form-control + .btn {
+        margin-top: 7px; /* Khoảng cách từ các dropdown đến nút submit */
+    }
+
+    /* Đặt khoảng cách giữa các select controls */
+    .form-control {
+        margin-bottom: 3px; /* Thêm khoảng cách giữa các controls */
+    }
+</style>
+
+<div class="content">
+    <div class="page-header">
+        <div class="page-title">
+            <div class="action-page">
+                <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="Index">HOME PAGE</a>
+                <a asp-area="Admin" asp-controller="StaffManager" asp-action="Index"> \ LIST OF STAFF</a>
+                <a asp-area="Admin" asp-controller="StaffManager" asp-action="Detail" asp-route-id="@customer.IdUser"> \ @customer.IdUser  -  @(customer.IdUserNavigation?.FullName ?? "N/A")</a>
+            </div>
+            <h6>Detail Info of Staff Member</h6>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8 col-sm-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="productdetails">
+                        <ul class="product-bar">
+                            <li><h4>Staff Name</h4><h6>@(customer.IdUserNavigation?.FullName ?? "N/A")</h6></li>
+                            <li><h4>Phone Number</h4><h6>@(customer.IdUserNavigation?.Phone ?? "N/A")</h6></li>
+                            <li><h4>Email</h4><h6>@(customer.IdUserNavigation?.Email ?? "N/A")</h6></li>
+                            <li><h4>User Name</h4><h6>@(customer.IdUserNavigation?.UserName ?? "N/A")</h6></li>
+                            <li><h4>Plain Password</h4><h6>@Model.PlainPassword</h6></li>
+                            <li><h4>Hashed Password</h4><h6>@hashedPassword</h6></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-sm-12">
+            <div class="card">
+                <div class="card-body">
+                    <form asp-action="UpdateStaffStatus" asp-controller="StaffManager" method="post">
+                        <input type="hidden" name="IdUser" value="@customer.IdUser" />
+                        <h5 class="form-section-title">Account Status</h5>
+                        <select class="form-control" name="Active">
+                            <option value="true"> @activeSelected Active</option>
+                            <option value="false"> @inactiveSelected Inactive</option>
+                        </select>
+                        <button type="submit" class="btn btn-primary">Update Status</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="table-responsive">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4 class="mb-0 related-comic-series"><i class="fa-solid fa-tag"></i> All Permissions of @customer.IdUserNavigation.UserName</h4>
+        </div>
+        <table class="table datanew">
+            <thead>
+                <tr>
+                    <th>Main Config</th>
+                    <th>ID Permission</th>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Active</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in ViewBag.Pn as List<ProjectMangaSmurf.Models.StaffPermissionsDetail>)
+                {
+                    var parentPermission = allPermissions.FirstOrDefault(p => p.IdPermissions == item.IdPermissionsNavigation.ParentPermissions);
+                    var pn = parentPermission?.PermissionsName ?? "N/A";
+                    <tr data-status="@((item.Active ?? false) ? "active" : "banned")">
+                        <td>@pn</td>
+                        <td>@item.IdPermissions</td>
+                        <td>@item.IdPermissionsNavigation.PermissionsName</td>
+                        <td>@item.IdPermissionsNavigation.Description</td>
+                        <td>@((item.Active ?? false) ? "Already Show" : "Hided")</td>
+                        <td>
+                            <a asp-area="Admin" asp-controller="ChapterManager" asp-action="ActiveOfPermission" asp-route-id="@item.IdPermissions" class="me-3">
+                                <img src="~/img/icons/edit.svg" alt="Edit">
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#statusForm').submit(function (event) {
+                event.preventDefault();
+                var form = $(this);
+                $.ajax({
+                    type: form.attr('method'),
+                    url: form.attr('action'),
+                    data: form.serialize(),
+                    success: function (response) {
+                        alert('Status updated successfully');
+                        // Update UI or redirect
+                    },
+                    error: function () {
+                        alert('Failed to update status');
+                    }
+                });
+            });
+
+            $('#select-all').click(function () {
+                $('.order-checkbox').prop('checked', this.checked);
+            });
+        });
+    </script>
+}

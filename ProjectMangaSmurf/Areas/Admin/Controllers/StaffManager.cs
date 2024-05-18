@@ -5,6 +5,14 @@ using ProjectMangaSmurf.Models;
 using System.Threading.Tasks;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.EntityFrameworkCore;
+using ProjectMangaSmurf.Models.ViewModels;
+using ProjectMangaSmurf.Data;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using ProjectMangaSmurf.Areas.Common.Repository;
+using System.Linq;
+using System.Collections.Generic;
+using System;
 
 namespace ProjectMangaSmurf.Areas.Admin.Controllers
 {
@@ -14,11 +22,12 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
     {
         private readonly IStaffRepository _staffRepository;
         private readonly IUserRepository _userRepository;
-
-        public StaffManager(IStaffRepository staffRepository, IUserRepository userRepository)
+        private readonly ProjectDBContext _context;
+        public StaffManager(IStaffRepository staffRepository, IUserRepository userRepository, ProjectDBContext db)
         {
             _staffRepository = staffRepository;
             _userRepository = userRepository;
+            _context = db;
         }
 
         public async Task<IActionResult> RBAC()
@@ -29,25 +38,57 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
 
         public async Task<IActionResult> Index()
         {
-            IEnumerable<NhanVien> staffList = await _staffRepository.GetAllAsyncStaff() ?? Enumerable.Empty<NhanVien>();
-            return View(staffList);
+            IQueryable<NhanVien> query = _staffRepository.GetQuery(); 
+
+            var list = await query.ToListAsync(); 
+            return View(list); 
         }
 
-        public async Task<IActionResult> ViewList()
+        public async Task<IActionResult> SelfDetail(string id)
         {
-            var list = await _staffRepository.GetAllAsync(); // Assumes GetAllAsync only returns active staff
-            return View(list);
-        }
-
-        public async Task<IActionResult> Detail(string id)
-        {
-            var staff = await _staffRepository.GetByIdAsync(id);
+            var staff = await _staffRepository.GetByIdSAsync(id);
             if (staff == null)
             {
                 return NotFound();
             }
-            return View(staff);
+
+            var staffPermissions = await _staffRepository.GetPermissionsByUserIdAsync(id);
+            var allPermissions = await _staffRepository.GetAllRBACAsync();
+
+            ViewBag.Pn = staffPermissions;
+            ViewBag.AllPermissions = allPermissions;
+
+            var viewModel = new StaffDetailsViewModel
+            {
+                Staff = staff
+            };
+
+            return View(viewModel);
         }
+        public async Task<IActionResult> Detail(string id)
+        {
+            var staff = await _staffRepository.GetByIdSAsync(id);
+            if (staff == null)
+            {
+                return NotFound();
+            }
+
+            var staffPermissions = await _staffRepository.GetPermissionsByUserIdAsync(id);
+            var allPermissions = await _staffRepository.GetAllRBACAsync();
+
+            ViewBag.Pn = staffPermissions;
+            ViewBag.AllPermissions = allPermissions;
+
+            var viewModel = new StaffDetailsViewModel
+            {
+                Staff = staff
+            };
+
+            return View(viewModel);
+        }
+
+
+
 
         public async Task<IActionResult> Update(string id)
         {
@@ -58,7 +99,8 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
             }
             return View(staff);
         }
-        // Example usage in setting permission statuses
+
+        [HttpPost]
         private async Task UpdatePermissionStatus(byte id, byte status)
         {
             var permission = await _staffRepository.GetPermissionByIdAsync(id);
@@ -69,7 +111,18 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
             }
         }
 
-        // Controller actions to set specific statuses
+        [HttpPost]
+        private async Task UpdateStaffStatus(string userId, bool status)
+        {
+            var user = await _staffRepository.GetStatsByIdAsync(userId);
+            if (user != null)
+            {
+                user.Active = status;
+                await _staffRepository.UpdateStatsAsync(user);
+            }
+            RedirectToAction("Detail");
+        }
+
         [HttpPost]
         public async Task<IActionResult> SetActive(int id)
         {
@@ -98,18 +151,165 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
             return RedirectToAction("RBAC");
         }
 
+        public IActionResult Register()
+        {
+            return View();
+        }
 
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        ////public async Task<IActionResult> Update(string id, NhanVien staffUpdate)
-        ////{
-        ////    if (id != staffUpdate.IdUser)
-        ////    {
-        ////        return NotFound();
-        ////    }
+        [HttpPost]
+        public async Task<IActionResult> Register(string Taikhoan, string Email, string matKhau)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
 
-        ////    await _staffRepository.UpdateAsync(staffUpdate);
-        ////    return RedirectToAction(nameof(Detail), new { id = staffUpdate.IdUser });
-        ////}
+            var existingUser = await _staffRepository.GetByEmailAsync(Email);
+            if (existingUser != null)
+            {
+                ViewBag.Error = "This email already exists"; 
+                return View();
+            }
+
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    User user = new User
+                    {
+                        IdUser = _staffRepository.GenerateStaffId(),
+                        UserName = Taikhoan.Trim(),
+                        Password = PasswordHasher.HashPassword(matKhau),
+                        Email = Email.Trim(),
+                        TimeCreated = DateTime.Now,
+                        TimeUpdated = DateTime.Now,
+                        UserRole = false,
+                        Active = true
+                    };
+
+                    await _userRepository.AddAsync(user);
+                    NhanVien nhanVien = new NhanVien
+                    {
+                        IdUser = user.IdUser,
+                        StaffRole = true,
+                    };
+
+                    await _staffRepository.AddAsync(nhanVien);
+
+                    // Check if the user is an admin
+                    if (nhanVien.StaffRole == true)
+                    {
+                        // Assign all permissions (1-73) to the admin user
+                        for (byte i = 1; i <= 73; i++)
+                        {
+                            var staffPermissionDetail = new StaffPermissionsDetail
+                            {
+                                IdUser = user.IdUser,
+                                IdPermissions = i,
+                                Active = true
+                            };
+                            await _staffRepository.AddPermissionAsync(staffPermissionDetail);
+                        }
+                    }
+
+                    transaction.Commit();
+
+                    // Redirect to RegisterRBAC with the IdUser of the newly created user
+                    return RedirectToAction("UpdateAndRBAC", "StaffManager", new { id = user.IdUser });
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    ViewBag.Error = "Error: " + ex.Message;
+                    return View();
+                }
+            }
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> UpdateAndRBAC(string id)
+        {
+            var staff = await _staffRepository.GetByIdAsync(id);
+            if (staff == null)
+            {
+                return NotFound("Staff not found.");
+            }
+
+            var user = await _userRepository.GetByIdAsync(staff.IdUser);
+            if (user == null)
+            {
+                return NotFound("User not found.");
+            }
+
+            var permissionsList = await _staffRepository.GetAllRBACAsync() ?? new List<PermissionsList>();
+            var existingPermissions = await _staffRepository.GetPermissionsByUserIdAsync(user.IdUser) ?? new List<StaffPermissionsDetail>();
+
+            ViewBag.IdUser = user.IdUser;
+            ViewBag.Username = user.UserName;
+            ViewBag.FullName = user.FullName;
+            ViewBag.BirthDate = user.Birth;
+            ViewBag.Gender = user.Gender;
+            ViewBag.StaffRole = staff.StaffRole;
+            ViewBag.AvailablePermissions = permissionsList;
+            ViewBag.SelectedPermissions = existingPermissions.Where(p => p.Active ?? false).Select(p => p.IdPermissions).ToList();
+
+            return View();
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateAndRBAC(string IdUser, string Username, string FullName, DateOnly? BirthDate, byte? Gender, bool StaffRole, List<byte> SelectedPermissions)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
+
+            var user = await _userRepository.GetByIdAsync(IdUser);
+            if (user == null)
+            {
+                return NotFound("User not found.");
+            }
+
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    // Update user details
+                    user.UserName = Username.Trim();
+                    user.FullName = FullName.Trim();
+                    user.Birth = BirthDate;
+                    user.Gender = Gender ?? default(byte);
+                    user.TimeUpdated = DateTime.Now;
+
+                    await _userRepository.UpdateAsync(user);
+
+                    // Update staff role
+                    var staff = await _staffRepository.GetByIdAsync(IdUser);
+                    staff.StaffRole = StaffRole;
+                    await _staffRepository.UpdateAsync(staff, user);
+
+                    // Update permissions
+                    var existingPermissions = await _staffRepository.GetPermissionsByUserIdAsync(user.IdUser);
+
+                    foreach (var permission in existingPermissions)
+                    {
+                        permission.Active = SelectedPermissions.Contains(permission.IdPermissions);
+                        await _staffRepository.UpdatePermissionDetailAsync(permission);
+                    }
+
+                    await _context.SaveChangesAsync();
+                    transaction.Commit();
+                    return RedirectToAction("Index", "StaffManager");
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    ModelState.AddModelError("", "An error occurred: " + ex.Message);
+                    return View();
+                }
+            }
+        }
     }
 }

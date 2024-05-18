@@ -23,5 +23,5 @@ public partial class Payment
 
     public virtual ServicePackConfig? IdPackNavigation { get; set; }
 
-    public virtual KhachHang IdPaymentNavigation { get; set; } = null!;
+    public virtual KhachHang? IdUserNavigation { get; set; }
 }

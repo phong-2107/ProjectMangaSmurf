@@ -28,6 +28,12 @@ namespace ProjectMangaSmurf.Repository
             _context.Update(permission);
             await _context.SaveChangesAsync();
         }
+
+        public async Task UpdatePermissionDetailAsync(StaffPermissionsDetail permission )
+        {
+            _context.Update(permission);
+            await _context.SaveChangesAsync();
+        }
         public async Task<IEnumerable<User>> GetAllAsync()
         {
             // Filter NhanViens where UserRole indicates they are staff
@@ -45,8 +51,17 @@ namespace ProjectMangaSmurf.Repository
             return user;
         }
 
+        public async Task<IEnumerable<StaffPermissionsDetail>> GetPermissionsByUserIdAsync(string userId)
+        {
+            return await _context.StaffPermissionsDetails
+                .Where(x => x.IdUser == userId)
+                .ToListAsync();
+        }
 
-
+        public async Task<NhanVien> GetByEmailAsync(string id)
+        {
+            return await _context.NhanViens.FirstOrDefaultAsync(p => p.IdUserNavigation.Email == id.Trim());
+        }
         public async Task<IEnumerable<PermissionsList>> GetAllRBACAsync()
         {
             return await _context.PermissionsLists.ToListAsync();
@@ -56,6 +71,14 @@ namespace ProjectMangaSmurf.Repository
         {
             return await _context.NhanViens.FirstOrDefaultAsync(nv => nv.IdUser == id);
         }
+
+        public async Task<NhanVien> GetByIdSAsync(string id)
+        {
+            return await _context.NhanViens
+                .Include(nv => nv.IdUserNavigation)
+                .FirstOrDefaultAsync(nv => nv.IdUser == id);
+        }
+
         public async Task<User> GetAccountByIdAsync(string username, string password)
         {
             // Include UserRole check to ensure correct role
@@ -66,7 +89,14 @@ namespace ProjectMangaSmurf.Repository
         }
         public async Task<NhanVien> GetByAccountAsyncStaff(string id)
         {
-            var user = _context.Users.FirstOrDefault(p => p.UserName == id.Trim());
+            var user = await _context.Users
+                .FirstOrDefaultAsync(p => p.UserName == id.Trim() || p.Email == id.Trim());
+
+            if (user == null)
+            {
+                return null;
+            }
+
             return await _context.NhanViens.FirstOrDefaultAsync(p => p.IdUser == user.IdUser);
         }
         public async Task AddAsync(NhanVien nv)
@@ -102,7 +132,7 @@ namespace ProjectMangaSmurf.Repository
         {
             try
             {
-                string idPrefix = "SA";
+                string idPrefix = "ID";
                 int idLength = 8;
                 var maxId = _context.Users.Select(nv => nv.IdUser)
                                               .Where(id => id.StartsWith(idPrefix))
@@ -128,5 +158,31 @@ namespace ProjectMangaSmurf.Repository
                 throw;
             }
         }
+
+        public async Task RemovePermissionAsync(StaffPermissionsDetail permission)
+        {
+            _context.StaffPermissionsDetails.Remove(permission);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task AddPermissionAsync(StaffPermissionsDetail permissionDetail)
+        {
+            _context.StaffPermissionsDetails.Add(permissionDetail);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<User> GetStatsByIdAsync(string userId) // Correct return type
+        {
+            return await _context.Users.FirstOrDefaultAsync(x => x.IdUser == userId);
+        }
+
+        public async Task UpdateStatsAsync(User permission)
+        {
+            _context.Users.Update(permission);
+            await _context.SaveChangesAsync();
+        }
     }
+   
 }
+
+

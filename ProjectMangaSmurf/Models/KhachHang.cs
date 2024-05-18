@@ -29,7 +29,5 @@ public partial class KhachHang
 
     public virtual User IdUserNavigation { get; set; } = null!;
 
-    //public virtual Payment? Payment { get; set; }
-
-    public virtual ICollection<Payment> Payment { get; set; } = new List<Payment>();
+    public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
 }

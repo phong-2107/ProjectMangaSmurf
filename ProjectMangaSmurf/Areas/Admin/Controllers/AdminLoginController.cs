@@ -44,44 +44,74 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = await _staffRepository.GetByAccountAsyncStaff(Taikhoan);
-                if (user != null && user.StaffRole == true) // Checking if user is an Admin
+                var nhanVien = await _staffRepository.GetByAccountAsyncStaff(Taikhoan);
+                if (nhanVien == null)
                 {
-                    var User = await _userRepository.GetByIdAsync(user.IdUser);
-                    var claims = new List<Claim>
-                    {
-                        
-                        new Claim(ClaimTypes.Name, User.UserName),
-                        new Claim(ClaimTypes.Role, "true")
-                    };
-
-                    var claimsIdentity = new ClaimsIdentity(claims, "AdminAuthScheme");
-                    var authProperties = new AuthenticationProperties
-                    {
-                        IsPersistent = true 
-                    };
-
-                    await HttpContext.SignInAsync("AdminAuthScheme", new ClaimsPrincipal(claimsIdentity), authProperties);
-
-                    HttpContext.Session.SetString("AdminSession", User.UserName);  // Set a session variable specific to admins
-
-                    return RedirectToAction("Index", "BoTruyenManager");
-                }
-                else
-                {
-                    ModelState.AddModelError("", "Invalid username or password or not authorized as admin");
+                    ModelState.AddModelError("", "Invalid username or email or password");
                     return View();
                 }
+
+                if (nhanVien.StaffRole != true)
+                {
+                    ModelState.AddModelError("", "Not authorized as admin");
+                    return View();
+                }
+
+                var user = nhanVien.IdUserNavigation;
+                if (user == null)
+                {
+                    ModelState.AddModelError("", "User not found");
+                    return View();
+                }
+
+                // Kiểm tra mật khẩu
+                if (user.Password == null || !CheckPassword(Matkhau.Trim(), user.Password))
+                {
+                    ModelState.AddModelError("", "Invalid password");
+                    return View();
+                }
+
+                // Lấy danh sách quyền hạn của người dùng
+                var userPermissions = await _context.StaffPermissionsDetails
+                    .Where(p => p.IdUser == user.IdUser && p.Active == true)
+                    .Select(p => p.IdPermissions)
+                    .ToListAsync();
+
+                // Chuyển danh sách quyền hạn thành chuỗi và lưu trữ trong session
+                var permissions = string.Join(",", userPermissions);
+                HttpContext.Session.SetString("UserPermissions", permissions);
+
+                var claims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.Name, user.UserName ?? "UnknownUser"),
+                    new Claim(ClaimTypes.Role, "Admin"),
+                    new Claim(ClaimTypes.NameIdentifier, user.IdUser) // Thêm Claim để lưu trữ IdUser
+                };
+
+                var claimsIdentity = new ClaimsIdentity(claims, "AdminAuthScheme");
+                var authProperties = new AuthenticationProperties
+                {
+                    IsPersistent = true
+                };
+
+                await HttpContext.SignInAsync("AdminAuthScheme", new ClaimsPrincipal(claimsIdentity), authProperties);
+
+                HttpContext.Session.SetString("AdminSession", user.UserName ?? "UnknownUser");
+                HttpContext.Session.SetString("AdminSessionId", user.IdUser ?? "UnknownUserID");
+
+                return RedirectToAction("Index", "BoTruyenManager");
             }
 
+            ModelState.AddModelError("", "Invalid login attempt");
             return View();
         }
 
         [HttpPost]
         public async Task<IActionResult> Logout()
         {
-            await HttpContext.SignOutAsync("AdminAuthScheme");  // Clears the authentication cookie
-            HttpContext.Session.Remove("AdminSession");         // Clears the specific admin session variable
+            await HttpContext.SignOutAsync("AdminAuthScheme");
+            HttpContext.Session.Remove("AdminSession");
+            HttpContext.Session.Remove("UserPermissions"); // Xóa quyền hạn khỏi session khi đăng xuất
             return RedirectToAction("Login", "AdminLogin");
         }
 
