@@ -25,23 +25,21 @@ builder.Services.AddAuthentication(options =>
     options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
 })
-    .AddCookie(options =>
-    {
-        options.LoginPath = "/KhachHang/Login";
-        options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
-    });
+.AddCookie(options =>
+{
+    options.LoginPath = "/KhachHang/Login";
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+})
+.AddCookie("AdminAuthScheme", options =>
+{
+    options.LoginPath = new PathString("/Admin/AdminLogin/Login");
+    options.AccessDeniedPath = new PathString("/Admin/AdminLogin/AccessDenied");
+    options.Cookie.Name = "AdminAuthCookie";
+});
 
 
-builder.Services.AddAuthentication("AdminAuthScheme")
-        .AddCookie("AdminAuthScheme", options =>
-        {
-            options.LoginPath = new PathString("/Admin/AdminLogin/Login");
-            options.AccessDeniedPath = new PathString("/Admin/AdminLogin/AccessDenied");
-            options.Cookie.Name = "AdminAuthCookie";
-        });
+
 builder.Services.AddControllersWithViews();
-
-
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddHttpContextAccessor();
 
@@ -53,7 +51,7 @@ builder.Services.AddHttpContextAccessor();
 //    options.Cookie.Name = ".AspNetCore.Admin.Session";
 //});
 
-builder.Services.AddDistributedMemoryCache(); 
+builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromDays(1);
@@ -61,10 +59,17 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
     options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
     options.Cookie.SameSite = SameSiteMode.None;
-
-    // Để làm cho cookie trở thành Persistent Cookie:
-    options.Cookie.MaxAge = TimeSpan.FromDays(1);
+    options.Cookie.Name = ".AspNetCore.Admin.Session";  
 });
+
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+    options.Cookie.Name = ".AspNetCore.Main.Session";  
+});
+
 
 services.AddControllersWithViews();
 
@@ -130,34 +135,31 @@ var app = builder.Build();
 
 
 app.UseRouting();
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
+    app.UseHsts();
 }
+
+app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseCookiePolicy();
 
-app.UseAuthentication();
-app.UseAuthorization();
-
-app.MapRazorPages();
 
 app.UseSession();
+app.UseAuthentication();
+app.UseAuthorization();
+app.MapRazorPages();
 
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllerRoute(
         name: "areas",
         pattern: "{area:exists}/{controller=BoTruyenManager}/{action=Index}/{id?}"
-        );
-    endpoints.MapControllerRoute(
-        name: "Admin",
-        pattern: "{area:exists}/{controller=BoTruyenManager}/{action=Index}/{id?}")
-            .RequireAuthorization(new AuthorizeAttribute { AuthenticationSchemes = "AdminAuthScheme" });
+    ).RequireAuthorization(new AuthorizeAttribute { AuthenticationSchemes = "AdminAuthScheme" });
 
     endpoints.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=BoTruyen}/{action=Index}/{id?}");
+        name: "default",
+        pattern: "{controller=BoTruyen}/{action=Index}/{id?}");
 });
 app.Run();

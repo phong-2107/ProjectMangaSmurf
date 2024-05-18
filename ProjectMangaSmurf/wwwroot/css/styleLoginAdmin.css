@@ -1,0 +1,459 @@
+﻿.header {
+    padding: 1rem;
+    display: flex;
+    justify-content: center;
+    background-color: #ae8249;
+    border-radius: 0;
+}
+
+.nav__logo img {
+    width: 150px;
+}
+
+.nav__logo2 img {
+    width: 3000px;
+}
+
+.main {
+    background-color: #fff; /* Đổi màu nền thành trắng */
+    position: relative;
+    height: 100vh;
+}
+
+.main__top {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.main__title {
+    font-size: var(--h1-font-size);
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: #000; /* Đổi màu chữ thành đen */
+}
+
+.main__content {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Tắt background color cho autofill */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    transition: background-color 5000s ease-in-out 0s;
+    -webkit-text-fill-color: #000 !important; /* Đổi màu chữ thành đen */
+    font-size: 1rem !important;
+    letter-spacing: 0.05em !important;
+}
+
+/* Hoặc đặt background color cố định cho autofill */
+input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 30px none inset !important;
+    -webkit-text-fill-color: #000 !important; /* Đổi màu chữ thành đen */
+    font-size: 1rem !important;
+    letter-spacing: 0.05em !important;
+}
+
+/* Đối với Firefox */
+input:-moz-autofill {
+    background: none !important;
+    -webkit-text-fill-color: #000 !important; /* Đổi màu chữ thành đen */
+    font-size: 1rem !important;
+    letter-spacing: 0.05em !important;
+}
+
+/* Đối với Microsoft Edge */
+input:-ms-autofill {
+    background: none !important;
+    -webkit-text-fill-color: #000 !important; /* Đổi màu chữ thành đen */
+    font-size: 1rem !important;
+    letter-spacing: 0.05em !important;
+}
+
+.cx-decoration {
+    z-index: 1;
+    position: absolute;
+    inset-block: 0;
+    inset-inline: 0;
+}
+
+.cx-decoration__lines {
+    --lines-top-shift: -3.75rem;
+    position: absolute;
+    max-height: 100%;
+    z-index: -1;
+    fill: #ae8249;
+    opacity: .3;
+}
+
+.form-login {
+    position: relative;
+}
+
+    .form-login .content-login {
+        position: relative;
+        background-color: #f1f1f1; /* Đổi màu nền thành xám nhạt */
+        padding: 2rem 3rem;
+        border-radius: 5px;
+        z-index: 100;
+    }
+
+.content-login .forgot {
+    color: #8f8f8f;
+    font-size: var(--smaller-font-size);
+    margin: .3rem .5rem;
+    letter-spacing: 0;
+    font-weight: 500;
+}
+
+    .content-login .forgot:hover {
+        color: #000; /* Đổi màu chữ thành đen */
+    }
+
+.content-login .regis {
+    margin-top: 2rem;
+    font-weight: 500;
+    font-size: var(--nomal-font-size);
+    color: #8f8f8f;
+}
+
+    .content-login .regis a {
+        margin-left: .3rem;
+        font-weight: 600;
+        color: #ae8249;
+        cursor: pointer;
+    }
+
+        .content-login .regis a:hover {
+            transform: translateY(-2px);
+            color: #ae8249;
+        }
+
+.infor-img {
+    width: 100%;
+    position: absolute;
+    top: -3rem;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: .5rem 0;
+    z-index: 1000;
+}
+
+    .infor-img img {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+    }
+
+    .infor-img a {
+        position: absolute;
+        bottom: -1rem;
+        padding: .3rem .6rem;
+        font-size: 1.2rem;
+        color: #fff;
+        border-radius: 50%;
+        background-color: rgba(0,0,0,.8);
+    }
+
+        .infor-img a:hover {
+            color: #9858F1;
+            background-color: rgba(0,0,0,1);
+        }
+
+.inputBox-item {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+}
+
+    .inputBox-item h5 {
+        font-weight: 600;
+        font-size: 1rem;
+        color: #ae8249;
+        padding: .5rem;
+    }
+
+    .inputBox-item i {
+        background-color: #ae8249 !important;
+    }
+
+.select {
+    padding: .5rem;
+    width: 100%;
+    font-size: 1rem;
+    font-weight: 500;
+    background-color: #141519;
+    color: #fff;
+    border: none;
+}
+
+.form-login .img {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    z-index: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.img-login {
+    position: absolute;
+    height: 550px;
+    left: -385px;
+    top: -250px;
+
+}
+
+
+.img-regis {
+    position: absolute;
+    height: 550px;
+    left: -170px;
+    top: 0;
+}
+
+.img-login-cat {
+    position: absolute;
+    height: 150px;
+    bottom: -100px;
+    right: -150px;
+}
+
+input:-internal-autofill-selected {
+    appearance: menulist-button;
+    background-image: none !important;
+    background-color: none !important;
+    color: #000 !important; /* Đổi màu chữ thành đen */
+}
+
+.inputBox {
+    position: relative;
+    width: 400px;
+    margin-top: 35px;
+}
+
+    .inputBox:first-child {
+        margin-top: 10px;
+    }
+
+    .inputBox input {
+        position: relative;
+        width: 100%;
+        padding: 20px 10px 10px;
+        background: transparent;
+        border: none;
+        outline: none;
+        color: #000; /* Đổi màu chữ thành đen */
+        font-size: 1rem;
+        letter-spacing: 0.05em;
+        z-index: 10;
+    }
+
+.login, .other, .regis, .content-login > h6 {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin: 1rem 0;
+}
+
+    .login a {
+        color: #ae8249 !important;
+        font-weight: 500;
+        font-size: 1rem;
+        padding: .5rem 1rem;
+        border: 2px solid #ae8249;
+        margin: 10px .5rem 0 1rem;
+    }
+
+.other {
+}
+
+    .other div {
+        padding: .45rem .8rem;
+        margin: 0 .5rem;
+        border-radius: 50%;
+    }
+
+    .other a {
+        color: #fff;
+    }
+
+    .other .facebook {
+        background-color: #3572CB;
+    }
+
+    .other .google {
+        background-color: #F0442C;
+    }
+
+    .other i {
+        font-size: 1.2rem;
+        font-weight: 600;
+    }
+
+input[type="submit"] {
+    font-size: 1rem;
+    border: none;
+    outline: none;
+    color: #fff;
+    background: #ae8249;
+    padding: .5rem 1rem;
+    margin-top: 10px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+    input[type="submit"]:hover {
+        background-color: #d87c43;
+    }
+
+    input[type="submit"]:active {
+        background: linear-gradient(90deg, #d87c43, #d87c43);
+        opacity: 0.8;
+    }
+
+.inputBox span {
+    position: absolute;
+    left: 0;
+    padding: 20px 10px 10px;
+    font-size: 1rem;
+    color: #000; /* Đổi màu chữ thành đen */
+    font-weight: 600;
+    pointer-events: none;
+    letter-spacing: 0.05em;
+    transition: 0.5s;
+}
+
+.inputBox input:valid ~ span,
+.inputBox input:focus ~ span {
+    font-weight: 400;
+    color: #ae82491;
+    transform: translateX(-10px) translateY(-30px);
+    font-size: 0.75em;
+}
+
+.inputBox i {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 2px;
+    background: #8f8f8f;
+    border-radius: 4px;
+    transition: 0.5s;
+    pointer-events: none;
+    z-index: 9;
+}
+
+.inputBox input:valid ~ i,
+.inputBox input:focus ~ i {
+    background: #ae8249;
+}
+
+.option {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 1rem;
+}
+
+    .option a {
+        color: var(--title-color);
+        font-weight: 500;
+        font-size: 1rem;
+        margin: 0 .5rem;
+        cursor: pointer;
+    }
+
+        .option a:hover {
+            font-weight: 600;
+        }
+
+/* =================================== REGISTER ======================================== */
+.passSecurity {
+    height: 4px;
+    margin-top: 1rem;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+    .passSecurity span {
+        font-size: var(--small-font-size);
+    }
+
+.strengthList {
+    display: flex;
+    flex-direction: row;
+    gap: .5rem;
+    transition: width 0.3s ease;
+}
+
+.password-strength {
+    height: 4px;
+    width: 16px;
+    background-color: #8f8f8f;
+    transition: width 0.3s ease;
+}
+
+.weak {
+    background-color: red;
+}
+
+.moderate {
+    background-color: orange;
+}
+
+.strong {
+    background-color: green;
+}
+
+#securityText {
+    color: #8f8f8f;
+}
+
+@media (min-width: 35.5em) {
+    .cx-decoration__top-left-lines {
+        display: block;
+        max-width: 24.25rem;
+        inset-block-start: 0;
+        inset-inline-start: 0;
+        /* transform: translateY(var(--lines-top-shift)); */
+    }
+
+    .cx-decoration__top-right-lines {
+        display: block;
+        max-width: 28.5625rem;
+        inset-block-start: 0;
+        inset-inline-end: 0;
+        transform: translateY(var(--lines-top-shift));
+    }
+
+    .cx-decoration__bottom-left-lines {
+        display: block;
+        max-width: 12.8125rem;
+        inset-block-end: 0;
+        inset-inline-start: 0;
+    }
+
+    .cx-decoration__bottom-right-lines {
+        display: block;
+        max-width: 50.875rem;
+        inset-block-end: 0;
+        inset-inline-end: 0;
+    }
+}

@@ -18,5 +18,18 @@ namespace ProjectMangaSmurf.Repository
         Task<PermissionsList> GetPermissionByIdAsync(byte id);
         Task UpdatePermissionAsync(PermissionsList permission);
         Task<IEnumerable<PermissionsList>> GetAllRBACAsync();
+
+        Task<NhanVien> GetByEmailAsync(string id);
+        Task<IEnumerable<StaffPermissionsDetail>> GetPermissionsByUserIdAsync(string userId);
+
+        Task RemovePermissionAsync(StaffPermissionsDetail permission);
+
+        Task AddPermissionAsync(StaffPermissionsDetail permissionDetail);
+
+        Task UpdatePermissionDetailAsync(StaffPermissionsDetail permission);
+
+        Task<User> GetStatsByIdAsync(String id);
+        Task UpdateStatsAsync(User permission);
+        Task<NhanVien> GetByIdSAsync(string id);
     }
 }

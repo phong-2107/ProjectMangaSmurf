@@ -1,0 +1,333 @@
+﻿@{
+    Layout = null;
+    ViewData["Title"] = "Staff Information and Permissions";
+}
+@inject IHttpContextAccessor HttpContextAccessor
+
+<style>
+    body {
+        font-family: 'Roboto', sans-serif;
+    }
+
+    .permissions-list .form-check-input {
+        appearance: none;
+        height: 1.25em;
+        width: 1.25em;
+        background-color: #1b2850; /* Dark blue background */
+        color: #ffffff; /* White text */
+        border: 2px solid #ffffff; /* White border */
+        border-radius: 0.25em;
+        cursor: pointer;
+        font-family: 'Roboto', sans-serif; /* Roboto font */
+    }
+
+        .permissions-list .form-check-input:checked {
+            background-color: #ffffff; /* White background when checked */
+            color: #1b2850; /* Dark blue text */
+        }
+
+    .permissions-container {
+        padding: 15px;
+        border-radius: 30px;
+        margin-top: 20px; /* Adds some space above the permissions section */
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+    }
+
+        .permissions-container h4 {
+            color: #AE8249; /* Brown text for 'Assign Permissions' */
+            font-family: 'Roboto', sans-serif; /* Roboto font */
+            text-align: center; /* Center the title */
+        }
+
+    .permissions-matrix {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        grid-gap: 20px;
+    }
+
+        .permissions-matrix > div {
+            background-color: #AE8249; /* Brown background for each group */
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+        .permissions-matrix h5 {
+            color: #ffffff; /* White text for titles */
+        }
+
+        .permissions-matrix .form-check {
+            margin-bottom: 10px; /* Space between each item */
+        }
+
+    .form-group {
+        background-color: #AE8249; /* Brown background */
+        padding: 10px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+    }
+
+    label {
+        color: #ffffff; /* White text */
+        display: block; /* Ensures the label is on a new line */
+        margin-bottom: 5px;
+    }
+
+    input[type='text'], input[type='date'], select {
+        width: 100%;
+        border-radius: 10px;
+        border: 1px solid #fff; /* White border */
+        padding: 10px;
+        color: #ffffff; /* White text */
+        background-color: #AE8249; /* Brown background */
+        font-family: 'Roboto', sans-serif; /* Roboto font */
+    }
+
+        input[type='text']::placeholder, input[type='date']::placeholder { /* Adjust placeholder color */
+            color: #ffffff;
+        }
+
+        input[type='date']::-webkit-calendar-picker-indicator {
+            filter: invert(1); /* Make calendar icon white */
+        }
+
+    .btn {
+        border: 2px solid #6f42c1; /* Purple border */
+        background-color: transparent;
+        color: #6f42c1;
+        padding: 10px 20px;
+        border-radius: 10px;
+        margin-right: 10px;
+        font-family: 'Roboto', sans-serif; /* Roboto font */
+    }
+
+    .btn-primary {
+        background-color: transparent;
+        color: #6f42c1; /* Purple text */
+        border: 2px solid #6f42c1; /* Purple border */
+    }
+
+        .btn-primary:hover {
+            background-color: #6f42c1; /* Purple background */
+            color: #ffffff; /* White text */
+        }
+
+    .btn-secondary {
+        background-color: #6f42c1; /* Purple background */
+        color: #ffffff; /* White text */
+        border: 2px solid #6f42c1; /* Purple border */
+    }
+
+        .btn-secondary:hover {
+            background-color: transparent;
+            color: #6f42c1; /* Purple text */
+        }
+
+    .centered-title {
+        text-align: center; /* Center the title */
+        margin-bottom: 20px; /* Space below the title */
+    }
+
+    .logo-image {
+        display: block;
+        max-width: 900px;
+        max-height: 150px;
+        margin: 20px auto;
+        padding: 20px;
+        border-radius: 15px;
+    }
+
+    @@media (max-width: 768px) {
+        .permissions-matrix {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @@media (min-width: 769px) and (max-width: 1200px) {
+        .permissions-matrix {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+</style>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/styleLoginAdmin.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <header class="header" id="header">
+        <a asp-area="Admin" asp-controller="StaffManager" asp-action="Index" class="nav__logo">
+            <img class="nav__logo-img" src="/images/logo3.png" alt="website logo">
+        </a>
+    </header>
+    <main class="main">
+        <div class="container mt-4">
+            <img src="/images/logo5.png" alt="website logo" class="logo-image">
+            <form asp-controller="StaffManager" asp-action="RegisterRBAC" method="post" id="formInfor" class="form-horizontal" autocomplete="off">
+                <div class="row">
+                    <!-- User Information Section -->
+                    <div class="col-md-6 form-group">
+                        <div class="form-group">
+                            <label for="IdUser">User ID</label>
+                            <input name="IdUser" id="IdUser" type="text" class="form-control" value="@ViewBag.IdUser" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="Username">Username</label>
+                            <input name="Username" id="Username" type="text" class="form-control" value="@ViewBag.Username" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="FullName">Full Name</label>
+                            <input name="FullName" id="FullName" type="text" class="form-control" required value="@ViewBag.FullName">
+                        </div>
+                        <div class="form-group">
+                            <label for="date">Birth Date</label>
+                            <input name="date" id="date" type="date" class="form-control" required value="@ViewBag.BirthDate?.ToDateTime(TimeOnly.MinValue).ToString("yyyy-MM-dd")">
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md-6 form-group">
+                                <label for="Gender">Gender</label>
+                                <select name="Gender" id="Gender" class="form-control">
+                                    <option value="1">Male</option>
+                                    <option value="2">Female</option>
+                                    <option value="0">Other</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label for="StaffRole">Role</label>
+                                <select name="StaffRole" id="StaffRole" class="form-control">
+                                    <option value="0">Staff</option>
+                                    <option value="1">Admin</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-secondary">
+                                <i class="fas fa-save"></i> Save All Changes
+                            </button>
+                            <a href="@Url.Action("Index", "StaffManager", new { Area = "Admin" })" class="btn btn-primary">
+                                <i class="fas fa-times"></i> Cancel
+                            </a>
+                        </div>
+                    </div>
+                    <!-- Permissions Section -->
+                    <div class="col-md-6 permissions-container">
+                        <div class="permissions-matrix">
+                            @foreach (var parentPermission in ViewBag.AvailablePermissions ?? Enumerable.Empty<PermissionsList>())
+                            {
+                                @if (parentPermission.ParentPermissions == parentPermission.IdPermissions)
+                                {
+                                    <div>
+                                        <h5>@parentPermission.PermissionsName Permissions</h5>
+                                        <div class="form-check">
+                                            <input class="form-check-input parent-checkbox" type="checkbox" name="SelectedPermissions" value="@parentPermission.IdPermissions" id="perm_@parentPermission.IdPermissions" data-id="@parentPermission.IdPermissions" @(ViewBag.SelectedPermissions.Contains(parentPermission.IdPermissions) ? "checked" : "")>
+                                            <label class="form-check-label" for="perm_@parentPermission.IdPermissions">@parentPermission.PermissionsName</label>
+                                        </div>
+                                        @foreach (var childPermission in ViewBag.AvailablePermissions ?? Enumerable.Empty<PermissionsList>())
+                                        {
+                                            @if (childPermission.ParentPermissions == parentPermission.IdPermissions && childPermission.ParentPermissions != childPermission.IdPermissions)
+                                            {
+                                                <div class="form-check ml-3">
+                                                    <input class="form-check-input child-checkbox" type="checkbox" name="SelectedPermissions" value="@childPermission.IdPermissions" id="perm_@childPermission.IdPermissions" data-parent-id="@childPermission.ParentPermissions" @(ViewBag.SelectedPermissions.Contains(childPermission.IdPermissions) ? "checked" : "")>
+                                                    <label class="form-check-label" for="perm_@childPermission.IdPermissions">@childPermission.PermissionsName</label>
+                                                </div>
+                                            }
+                                        }
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <script>
+        $(document).ready(function () {
+            // When a parent checkbox is changed
+            $('.parent-checkbox').change(function () {
+                var parentId = $(this).data('id');
+                $('.child-checkbox[data-parent-id="' + parentId + '"]').prop('checked', $(this).is(':checked'));
+
+                // Update the Active status in the database
+                updatePermissionStatus(parentId, $(this).is(':checked'));
+            });
+
+            // When a child checkbox is changed
+            $('.child-checkbox').change(function () {
+                var parentId = $(this).data('parent-id');
+                var allChecked = $('.child-checkbox[data-parent-id="' + parentId + '"]:not(:checked)').length === 0;
+                $('.parent-checkbox[data-id="' + parentId + '"]').prop('checked', allChecked);
+
+                // Update the Active status in the database
+                updatePermissionStatus($(this).val(), $(this).is(':checked'));
+            });
+
+            // Initial state check
+            $('.parent-checkbox').each(function () {
+                var parentId = $(this).data('id');
+                var allChecked = $('.child-checkbox[data-parent-id="' + parentId + '"]:not(:checked)').length === 0;
+                $(this).prop('checked', allChecked);
+            });
+
+            // When the role is changed
+            $('#StaffRole').change(function () {
+                if ($(this).val() == "1") { // Admin
+                    $('.parent-checkbox, .child-checkbox').prop('checked', true);
+                    updateAllPermissionsStatus(true);
+                } else { // Staff
+                    $('.parent-checkbox, .child-checkbox').prop('checked', false);
+                    updateAllPermissionsStatus(false);
+                }
+            });
+
+            // If any child checkbox is unchecked, uncheck the role if it's Admin
+            $('.child-checkbox').change(function () {
+                if (!$(this).is(':checked')) {
+                    $('#StaffRole').val('0'); // Set role to Staff
+                }
+            });
+
+            // Function to update the Active status in the database
+            function updatePermissionStatus(permissionId, isActive) {
+                $.ajax({
+                    url: '@Url.Action("UpdatePermissionStatus", "StaffManager")',
+                    type: 'POST',
+                    data: { permissionId: permissionId, isActive: isActive },
+                    success: function (response) {
+                        console.log('Permission status updated successfully');
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error updating permission status:', error);
+                    }
+                });
+            }
+
+            // Function to update all permissions status for Admin role
+            function updateAllPermissionsStatus(isActive) {
+                $.ajax({
+                    url: '@Url.Action("UpdateAllPermissionsStatus", "StaffManager")',
+                    type: 'POST',
+                    data: { isActive: isActive },
+                    success: function (response) {
+                        console.log('All permissions status updated successfully');
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error updating all permissions status:', error);
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

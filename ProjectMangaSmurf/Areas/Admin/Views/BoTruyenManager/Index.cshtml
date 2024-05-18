@@ -16,7 +16,7 @@
                     <h5>
                         VND <span class="counters" data-count="@ViewBag.Money">@ViewBag.Money</span>
                     </h5>
-                    <h6>Lợị nhuận</h6>
+                    <h6>Profit</h6>
                 </div>
             </div>
         </div>
@@ -31,7 +31,7 @@
                     <h5>
                         <span class="counters" data-count="@ViewBag.cus">@ViewBag.cus</span>
                     </h5>
-                    <h6>Khách hàng</h6>
+                    <h6>Customers</h6>
                 </div>
             </div>
         </div>
@@ -44,9 +44,9 @@
                 </div>
                 <div class="dash-widgetcontent">
                     <h5>
-                        <span class="counters" data-count="@ViewBag.Bo">@ViewBag.Bo</span> bộ
+                        <span class="counters" data-count="@ViewBag.Bo">@ViewBag.Bo</span> series
                     </h5>
-                    <h6>Bộ truyện đã đăng tải</h6>
+                    <h6>Uploaded Series</h6>
                 </div>
             </div>
         </div>
@@ -59,9 +59,9 @@
                 </div>
                 <div class="dash-widgetcontent">
                     <h5>
-                        <span class="counters" data-count="@ViewBag.View">@ViewBag.View</span> view
+                        <span class="counters" data-count="@ViewBag.View">@ViewBag.View</span> views
                     </h5>
-                    <h6>Tổng lượt truy cập </h6>
+                    <h6>Total Visits</h6>
                 </div>
             </div>
         </div>
@@ -71,8 +71,7 @@
         <div class="col-lg-8 col-sm-12 col-12 d-flex">
             <div class="card flex-fill">
                 <div class="card-header pb-0 d-flex justify-content-between align-items-center">
-                    <h5 class="card-title mb-0">Thao tác nhanh</h5>
-
+                    <h5 class="card-title mb-0">Quick Actions</h5>
                 </div>
                 <div class="card-body">
                     <div class="row h-100">
@@ -83,7 +82,7 @@
                                     <i class="fa-solid fa-clipboard-user"></i>
                                 </div>
                                 <div class="dash-counts">
-                                    <a asp-area="Admin" asp-controller="StaffManager" asp-action="ViewList">Quản lý nhân viên</a>
+                                    <a asp-area="Admin" asp-controller="StaffManager" asp-action="ViewList">Manage Staff</a>
                                 </div>
                             </div>
                         </div>
@@ -93,7 +92,7 @@
                                     <i class="fa-solid fa-display"></i>
                                 </div>
                                 <div class="dash-counts">
-                                    <h5>Quản lý hiển thị</h5>
+                                    <h5>Manage Display</h5>
                                 </div>
                             </div>
                         </div>
@@ -103,7 +102,7 @@
                                     <i class="fa-solid fa-phone-volume"></i>
                                 </div>
                                 <div class="dash-counts">
-                                    <h5>Quản lý liên hệ</h5>
+                                    <h5>Manage Contacts</h5>
                                 </div>
                             </div>
                         </div>
@@ -113,7 +112,7 @@
                                     <i class="fa-solid fa-sliders"></i>
                                 </div>
                                 <div class="dash-counts">
-                                    <h5>Cài đặt hệ thống</h5>
+                                    <h5>System Settings</h5>
                                 </div>
                             </div>
                         </div>
@@ -123,7 +122,7 @@
                                     <i class="fa-solid fa-link"></i>
                                 </div>
                                 <div class="dash-counts">
-                                    <h5>Custom footer</h5>
+                                    <h5>Custom Footer</h5>
                                 </div>
                             </div>
                         </div>
@@ -133,7 +132,7 @@
                                     <i class="fa-regular fa-square-plus"></i>
                                 </div>
                                 <div class="dash-counts">
-                                    <h5>Thêm truyện mới</h5>
+                                    <h5>Add New Series</h5>
                                 </div>
                             </div>
                         </div>
@@ -143,7 +142,7 @@
                                     <i class="fa-regular fa-pen-to-square"></i>
                                 </div>
                                 <div class="dash-counts">
-                                    <h5>Thư viện bài viết</h5>
+                                    <h5>Article Library</h5>
                                 </div>
                             </div>
                         </div>
@@ -153,7 +152,7 @@
                                     <i class="fa-solid fa-user-plus"></i>
                                 </div>
                                 <div class="dash-counts">
-                                    <h5>Khách hàng</h5>
+                                    <h5>Customers</h5>
                                 </div>
                             </div>
                         </div>
@@ -164,7 +163,7 @@
         <div class="col-lg-4 col-sm-12 col-12 d-flex">
             <div class="card flex-fill">
                 <div class="card-header pb-0 d-flex justify-content-between align-items-center">
-                    <h4 class="card-title mb-0">Bộ truyện tiêu biểu</h4>
+                    <h4 class="card-title mb-0">Featured Series</h4>
                     <div class="dropdown">
                         <a href="javascript:void(0);" data-bs-toggle="dropdown" aria-expanded="false" class="dropset">
                             <i class="fa fa-ellipsis-v"></i>
@@ -181,12 +180,12 @@
                 </div>
                 <div class="card-body">
                     <div class="table-responsive dataview">
-                        <table class="table datatable ">
+                        <table class="table datatable">
                             <thead>
                                 <tr>
                                     <th>Id</th>
-                                    <th>Tên Truyện</th>
-                                    <th>Chapter</th>
+                                    <th>Series Name</th>
+                                    <th>Chapters</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -194,7 +193,7 @@
                                     int i = 1;
                                     foreach (var b in ViewBag.listPopular)
                                     {
-                                        var chap = boTruyenRepository.CountChapterById(b.IdBo);
+                                        var chap = await boTruyenRepository.CountChapterById(b.IdBo);
                                         <tr>
                                             <td>@i</td>
                                             <td class="productimgname">
@@ -217,23 +216,21 @@
     </div>
     <div class="card mb-0">
         <div class="card-body">
-            <h4 class="card-title">Bộ truyện mới nhất</h4>
+            <h4 class="card-title">Latest Series</h4>
             <div class="table-responsive dataview">
-                <table class="table datatable ">
+                <table class="table datatable">
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Tên Truyện</th>
+                            <th>Series Name</th>
                             <th>Image</th>
-
                         </tr>
                     </thead>
                     <tbody>
                         @{
                             foreach (var bo in ViewBag.ListEarliest)
                             {
-                                var list = boTruyenRepository.GetListLoaiAsync(bo.IdBo);
-
+                                var list = await boTruyenRepository.GetListLoaiCAsync(bo.IdBo);
                                 string loaitruyen = string.Join(", ", list);
                                 <tr>
                                     <td>@bo.IdBo</td>
@@ -241,7 +238,7 @@
                                         <a href="javascript:void(0);">@bo.TenBo</a>
                                     </td>
                                     <td class="productimgname">
-                                        <a class="product-img" >
+                                        <a class="product-img">
                                             <img src="@bo.AnhBia" alt="product">
                                         </a>
                                     </td>
@@ -254,4 +251,3 @@
         </div>
     </div>
 </div>
-

@@ -10,5 +10,6 @@ public partial class NhanVien
     public bool? StaffRole { get; set; }
 
     public virtual User IdUserNavigation { get; set; } = null!;
+
     public virtual ICollection<StaffPermissionsDetail> StaffPermissionsDetails { get; set; } = new List<StaffPermissionsDetail>();
 }
