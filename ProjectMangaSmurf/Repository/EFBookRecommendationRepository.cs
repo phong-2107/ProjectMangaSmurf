@@ -11,7 +11,7 @@ namespace ProjectMangaSmurf.Repository
         public EFBookRecommendationRepository(HttpClient httpClient)
         {
             _httpClient = httpClient;
-            _httpClient.BaseAddress = new Uri("http://localhost:5000/"); // Change this to the Flask app's URL if hosted
+            _httpClient.BaseAddress = new Uri("https://book-recommend-0bef41d8b128.herokuapp.com/"); // Change this to the Flask app's URL if hosted
         }
 
 

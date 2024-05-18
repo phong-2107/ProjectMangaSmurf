@@ -335,19 +335,40 @@
                             <i></i>
                         </div>
                         <div class="inputBox">
-                            <input name="date" id="date" type="date" required value="@DateTime.Today.ToString("yyyy-MM-dd")">
-                            <span>Năm sinh</span>
-                            <i></i>
+                            @if(ViewBag.date != null)
+                            {
+                                <input name="date" id="date" type="date" required value="@ViewBag.date.ToString("yyyy-MM-dd")">
+                                <span>Năm sinh</span>
+                                <i></i>
+                            }
+                            else
+                            {
+                                <input name="date" id="date" type="date" required value="@DateTime.Today.ToString("yyyy-MM-dd")">
+                                <span>Năm sinh</span>
+                                <i></i>
+                            }
                         </div>
                         <div class="inputBox w-100 ">
                             <div class="inputBox-item">
                                 <h5>Giới tính</h5>
-                                <select name="Gender" id="Gender" class="select">
-                                    <option value="1">Male</option>
-                                    <option value="2">Female</option>
-                                    <option value="0">Other</option>
-                                </select>
-                                <i></i>
+                                @if (ViewBag.sex != null)
+                                {
+                                    <select name="Gender" id="Gender" class="select">
+                                        <!option value="1" @(ViewBag.sex == 1 ? "selected='selected'" : "")>Male</!option>
+                                        <!option value="2" @(ViewBag.sex == 2 ? "selected='selected'" : "")>Female</!option>
+                                        <!option value="0" @(ViewBag.sex == 0 ? "selected='selected'" : "")>Other</!option>
+                                    </select>
+                                    <i></i>
+                                }
+                                else
+                                {
+                                    <select name="Gender" id="Gender" class="select">
+                                        <option value="1">Male</option>
+                                        <option value="2">Female</option>
+                                        <option value="0">Other</option>
+                                    </select>
+                                    <i></i>
+                                }
                             </div>
                         </div>
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -447,4 +468,3 @@
     </script>
 </body>
 </html>
-

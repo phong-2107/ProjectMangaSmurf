@@ -34,7 +34,8 @@ namespace ProjectMangaSmurf.Controllers
 
         public IActionResult Checkout(string id)
         {
-            var pack = hopdongRepository.GetPackById(id);
+            var pack =  hopdongRepository.GetPackById(id);
+            HttpContext.Session.SetString("pack", id);
             return View(pack);
         }
 
@@ -77,13 +78,16 @@ namespace ProjectMangaSmurf.Controllers
             {
                 try
                 {
+                    var tmp = hopdongRepository.GetPackById(HttpContext.Session.GetString("pack"));
+                    var pack = tmp as ServicePackConfig;
+
                     Payment hd = new Payment
                     {
                         IdPayment = hopdongRepository.GenerateHD(),
                         PayDate = DateTime.Parse(HttpContext.Session.GetString("date")),
                         IdUser = HttpContext.Session.GetString("IdKH"),
-                        IdPack = "P004",
-                        PayAmount = 69000,
+                        IdPack = pack.IdPack,
+                        PayAmount = pack.Amount,
                         PayMethod = 1,
                         ExpiresTime = DateTime.Today.AddMonths(2)
                     };
@@ -116,6 +120,7 @@ namespace ProjectMangaSmurf.Controllers
                     if (kh != null)
                     {
                         kh.ActivePremium = true;
+                        kh.TicketSalary = kh.TicketSalary + pack.TicketSalary;
                         await _khachHangRepository.UpdateAsync(kh);
                     }
                     transaction.Commit();

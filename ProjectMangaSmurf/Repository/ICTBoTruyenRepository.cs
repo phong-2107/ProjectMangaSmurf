@@ -10,6 +10,8 @@ namespace ProjectMangaSmurf.Repository
         Task<CtBoTruyen> GetByIdAsync(string idkh, string idbo);
         Task<CtBoTruyen> GetByIdFollowAsync(string idkh, string idbo);
         Task<IEnumerable<CtBoTruyen>> GetAllAsyncByID(string id);
+        Task<IEnumerable<CtBoTruyen>> GetAllAsyncByBoTruyen(string id);
+        Task<double> CountAllAsyncByBoTruyen(string id);
         Task<IEnumerable<CtBoTruyen>> GetAllAsyncFollowByID(string id);
         Task<IEnumerable<CtBoTruyen>> GetAllAsyncHistoryByID(string id);
     }

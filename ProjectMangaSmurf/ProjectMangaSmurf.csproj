@@ -40,7 +40,6 @@
     <Folder Include="Areas\User\Views\" />
     <Folder Include="Microsoft\AspNetCore\Identity\" />
     <Folder Include="SendingEmails\" />
-    <Folder Include="wwwroot\images\chapter\" />
     <Folder Include="wwwroot\images\aboutUs\" />
     <Folder Include="wwwroot\SmurfMangaData\" />
   </ItemGroup>

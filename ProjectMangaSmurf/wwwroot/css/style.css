@@ -183,9 +183,10 @@ img {
     margin-top: 7rem;
 }
 
+
 .swal2-container {
     z-index: 999999 !important;
-
+}
 /* =================loading =====================*/
 #global-loader{
     background: var(--body-color);
@@ -676,17 +677,18 @@ img {
     border-radius: 50%;
 }
 
-.btn__regis {
+
+    .btn__regis {
     background-color: var(--containers-color-alt);
     text-align: center;
     font-size: var(--body-font);
     border-radius: 5px;
     justify-content: center;
-    font-weight: var(--font-medium);
+    font-weight: var(--font-semi-bold);
     margin: 0 auto;
-    padding: .7rem 1.25rem;
+    padding: .5rem 1rem;
     cursor: pointer;
-    width: 100%;
+    width: 80%;
 }
 
 .nav__login .btn__regis {
@@ -827,7 +829,7 @@ img {
     align-items: center;
     background-image: linear-gradient(144deg,#AF40FF, #5B42F3 50%,#00DDEB);
     border: 0;
-    border-radius: 8px;
+    border-radius: 5px;
     box-shadow: rgba(151, 65, 252, 0.2) 0 15px 30px -5px;
     box-sizing: border-box;
     color: #FFFFFF;

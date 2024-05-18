@@ -432,7 +432,8 @@ namespace ProjectMangaSmurf.Controllers
             ViewBag.Url = ava.AvatarContent;
             var user = await _userRepository.GetByIdAsync(kh.IdUser);
             ViewBag.FullName = user.FullName;
-
+            //ViewBag.date = user.Birth;
+            ViewBag.sex = user.Gender;
             var listAvatar = await _avatarRepository.GetAllAsync();
             ViewBag.Avatars = listAvatar;
 
@@ -607,15 +608,36 @@ namespace ProjectMangaSmurf.Controllers
             {
                 var idkh = HttpContext.Session.GetString("IdKH");
                 var kh = await _khachhangrepository.GetByIdAsync(idkh);
-                var botruyen = _cTBoTruyenRepository.GetByIdAsync(kh.IdUser, id);
-                if (await botruyen != null)
+                var botruyen = await _cTBoTruyenRepository.GetByIdAsync(kh.IdUser, id);
+                if ( botruyen != null)
                 {
-                    var bt = await botruyen;
+                    var bt = botruyen;
                     bt.DanhGia = (byte)int.Parse(rate);
                     await _cTBoTruyenRepository.UpdateAsync(bt);
+
+                    var truyen = await _botruyenrepository.GetByIdAsync(id);
+                    var rating = await _cTBoTruyenRepository.CountAllAsyncByBoTruyen(id);
+                    truyen.TkDanhgia = rating;
+                    await _botruyenrepository.UpdateAsync(truyen);
                 }
+                else
+                {
+                    CtBoTruyen ct = new CtBoTruyen();
+                    ct.IdUser = idkh;
+                    ct.IbBo = id;
+                    ct.Theodoi = false;
+                    ct.DanhGia = (byte)int.Parse(rate);
+                    ct.LsMoi = "0";
+                    await _cTBoTruyenRepository.AddAsync(ct);
+
+                    var truyen = await _botruyenrepository.GetByIdAsync(id);
+                    var rating = await _cTBoTruyenRepository.CountAllAsyncByBoTruyen(id);
+                    truyen.TkDanhgia = rating;
+                    await _botruyenrepository.UpdateAsync(truyen);
+                }
+                return Json(new { success = true, message = "Đánh giá thành công" });
             }
-            return RedirectToAction("CtBoTruyen", "BoTruyen", new { id = id });
+            return Json(new { success = false, message = "Thông tin lỗi" });
         }
 
         [HttpPost]

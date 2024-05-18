@@ -141,65 +141,82 @@ namespace ProjectMangaSmurf.Controllers
 
         public async Task<IActionResult> CTBoTruyen(string id)
         {
-            var Botruyen = await _botruyenrepository.GetByIdAsync(id);
-            if (Botruyen == null)
+            using (var transaction = _context.Database.BeginTransaction())
             {
-                return NotFound();
-            }
-            var kh = HttpContext.Session.GetString("IdKH");
-            if (kh != null)
-            {
-                var khtmp = await _khachhangrepository.GetByIdAsync(kh);
-                var findct = _cTBoTruyenRepository.GetByIdFollowAsync(khtmp.IdUser, id);
-                if (await findct != null)
+                try
                 {
-                    var ls = await findct;
-                    ViewBag.follow = true;
-                    ViewBag.next = ls.LsMoi;
-                }
-                else
-                {
-                    ViewBag.follow = false;
-                }
-                var bookId = ExtractNumberFromId(id);
-                var recommendations = await _recommendationRepository.GetRecommendationsAsync(bookId);
-
-                List<BoTruyen> list = new List<BoTruyen>();
-
-                foreach (var r in recommendations)
-                {
-                    var idBo = CreateIdFromNumber(r);
-                    BoTruyen bt = await _botruyenrepository.GetByIdAsync(idBo);
-                    if (bt != null)
+                    var Botruyen = await _botruyenrepository.GetByIdAsync(id);
+                    if (Botruyen == null)
                     {
-                        list.Add(bt);
+                        return NotFound();
                     }
+
+                    var kh = HttpContext.Session.GetString("IdKH");
+                    if (kh != null)
+                    {
+                        var khtmp = await _khachhangrepository.GetByIdAsync(kh);
+                        var findct = _cTBoTruyenRepository.GetByIdFollowAsync(khtmp.IdUser, id);
+                        if (await findct != null)
+                        {
+                            var ls = await findct;
+                            ViewBag.follow = true;
+                            ViewBag.next = ls.LsMoi;
+                        }
+                        else
+                        {
+                            ViewBag.follow = false;
+                        }
+                        var bookId = ExtractNumberFromId(id);
+                        var recommendations = await _recommendationRepository.GetRecommendationsAsync(bookId);
+
+                        List<BoTruyen> list = new List<BoTruyen>();
+
+                        foreach (var r in recommendations)
+                        {
+                            var idBo = CreateIdFromNumber(r);
+                            BoTruyen bt = await _botruyenrepository.GetByIdAsync(idBo);
+                            if (bt != null)
+                            {
+                                list.Add(bt);
+                            }
+                        }
+
+                        var rating = await _cTBoTruyenRepository.GetByIdAsync(kh, id);
+                        if(rating!= null)
+                        {
+                            ViewBag.rating = rating.DanhGia;
+                        }
+                        else
+                        {
+                            ViewBag.rating = "0";
+                        }
+
+                        ViewBag.list = list;
+                        ViewBag.premium = khtmp.ActivePremium;
+                        if (khtmp.TicketSalary != 0)
+                        {
+                            ViewBag.cost = khtmp.TicketSalary;
+                        }
+
+
+                    }
+                    else
+                    {
+                        ViewBag.follow = false;
+                        ViewBag.rating = "0";
+                    }
+
+                    await _context.SaveChangesAsync();
+                    transaction.Commit(); // Commit transaction if all operations are successful
+
+                    return View(Botruyen);
                 }
-
-                ViewBag.list = list;
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    return View("Error"); 
+                }
             }
-            else
-            {
-                ViewBag.follow = false;
-                //var bookId = ExtractNumberFromId(id);
-                //var recommendations = await _recommendationRepository.GetRecommendationsAsync(bookId);
-
-                //List<BoTruyen> list = new List<BoTruyen>();
-
-                //foreach (var r in recommendations)
-                //{
-                //    var idBo = CreateIdFromNumber(r);
-                //    BoTruyen bt = await _botruyenrepository.GetByIdAsync(idBo);
-                //    if (bt != null)
-                //    {
-                //        list.Add(bt);
-                //    }
-                //}
-
-                //ViewBag.list = list;
-            }
-            
-            return View(Botruyen);
         }
         public async Task<IActionResult> Chapter(string id, int stt)
         {
@@ -220,6 +237,7 @@ namespace ProjectMangaSmurf.Controllers
                     var userId = HttpContext.Session.GetString("IdKH");
                     if (userId != null)
                     {
+
                         await HandleUserActivity(userId, id, stt);
                     }
                     else
@@ -279,6 +297,13 @@ namespace ProjectMangaSmurf.Controllers
                     LsMoi = stt.ToString()
                 };
                 await _cTBoTruyenRepository.AddAsync(ctBoTruyen);
+            }
+
+            var findChap = await _chapterrepository.GetByIdAsync(boId, stt);
+            if (findChap != null)
+            {
+                user.TicketSalary = user.TicketSalary - findChap.TicketCost;
+                await _khachhangrepository.UpdateAsync(user);
             }
 
             ViewBag.follow = ctBo?.Theodoi ?? false;

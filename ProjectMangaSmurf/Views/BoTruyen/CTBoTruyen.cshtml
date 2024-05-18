@@ -28,82 +28,43 @@
                             <div class="pre">
                                 <img src="/images/PreLight.png" alt="goi premium">
                             </div>
-                            @{
-                                var tg = boTruyenRepository.getNameTGById(Model.IdTg);
-                            }
-                            <p class="item-author">Tác Giả: @tg</p>
                             <h3 class="item-title">@Model.TenBo</h3>
 
                             <div class="rating">
-                                <i class="ri-star-fill" data-index="1"></i>
-                                <i class="ri-star-fill" data-index="2"></i>
-                                <i class="ri-star-fill" data-index="3"></i>
-                                <i class="ri-star-fill" data-index="4"></i>
-                                <i class="ri-star-fill" data-index="5"></i>
+                            @{
+                                var valueF = ViewBag.rating;
+                                    if (ViewBag.rating.ToString() != "0")
+                                {
+                                    var tmp = 5 - valueF;
+                                    for (int a = 0; a < valueF; a++)
+                                    {
+                                            <i class="ri-star-fill" data-index="@a" style="color: #FAB818;"></i>
+                                    }
+                                    for (int b = 0; b < tmp; b++)
+                                    {
+                                            <i class="ri-star-fill" data-index="@b"></i>
+                                    }
+                                        <hr />
+                                        <span class="rating-review">Average Rating: @Model.TkDanhgia (@Model.TongLuotXem View)</span>
+                                        <hr />
+                                }
+                                else
+                                {
+                                        <i class="ri-star-fill" data-index="1"></i>
+                                        <i class="ri-star-fill" data-index="2"></i>
+                                        <i class="ri-star-fill" data-index="3"></i>
+                                        <i class="ri-star-fill" data-index="4"></i>
+                                        <i class="ri-star-fill" data-index="5"></i>
+                                        <hr />
+                                        <span class="rating-review">Average Rating: @Model.TkDanhgia (@Model.TongLuotXem View)</span>
+                                        <hr />
+                                }
+                            }
                             </div>
-                            <script>
-                                document.addEventListener("DOMContentLoaded", function () {
-                                    const stars = document.querySelectorAll(".rating i");
-                                    const sessionTK = '@HttpContextAccessor.HttpContext?.Session.GetString("TK")';
-                                    const boId = "@Model.IdBo";
-                                    const updateUrl = '@Url.Action("UpdateRating", "KhachHang")';
+                        </div>
 
-                                    stars.forEach((star) => {
-                                        star.addEventListener("click", () => {
-                                            const rating = parseInt(star.getAttribute("data-index"), 10);
-                                            stars.forEach((s, idx) => {
-                                                s.classList.toggle("active", idx < rating);
-                                            });
+                            
 
-                                            if (sessionTK !== null && sessionTK !== '') {
-                                                $.ajax({
-                                                    url: updateUrl,
-                                                    type: 'POST',
-                                                    headers: {
-                                                        "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val()
-                                                    },
-                                                    data: {
-                                                        id: boId,
-                                                        rate: rating.toString()
-                                                    },
-                                                    success: function (response) {
-                                                        if (response.success) {
-                                                            alert('Đánh giá thành công. Cảm ơn bạn đã góp ý!');
-                                                        } else {
-                                                            alert('Lỗi khi đánh giá, vui lòng thử lại');
-                                                        }
-                                                        location.reload(); // Tải lại trang ở cả hai trường hợp
-                                                    },
-                                                    error: function () {
-                                                        alert('Không thể gửi yêu cầu. Vui lòng kiểm tra lại.');
-                                                    }
-                                                });
-                                            } else {
-                                                const swalWithBootstrapButtons = Swal.mixin({
-                                                    customClass: {
-                                                        confirmButton: "btn btn-success",
-                                                        cancelButton: "btn btn-danger mr-3"
-                                                    },
-                                                    buttonsStyling: false
-                                                });
-                                                swalWithBootstrapButtons.fire({
-                                                    text: "Bạn cần đăng nhập để đánh giá bộ truyện",
-                                                    icon: "warning",
-                                                    showCancelButton: true,
-                                                    confirmButtonText: "Login",
-                                                    cancelButtonText: "Cancel!",
-                                                    reverseButtons: true
-                                                }).then((result) => {
-                                                    if (result.isConfirmed) {
-                                                        window.location.href = '/KhachHang/login';
-                                                    }
-                                                });
-                                            }
-                                        });
-                                    });
-                                });
-                            </script>
-                           
                         </div>
                     </div>
                     <div class="background-item"></div>
@@ -247,7 +208,12 @@
                             var stt = chapterRepository.GetEarliestByIdAsync(Model.IdBo);
                             if (stt > 0)
                             {
+                                if (ViewBag.premium != false && ViewBag.cost != null)
+                                {
+                                    <a class="btn__action" style="pointer-events: none; background-color: #8f8f8f">ĐỌC TIẾP CHAP <span class="chapter">@stt</span></a>
+                                }else{
                                     <a class="btn__action" asp-action="Chapter" asp-route-id="@Model.IdBo" asp-route-stt="@stt">ĐỌC TIẾP CHAP <span class="chapter">@stt</span></a>
+                                }
                             }
                             else
                             {
@@ -277,6 +243,13 @@
                         <i class="fa-solid fa-circle-info"></i> Thông tin thêm
                     </div>
                     <div class="content">
+                        <div class="chapter">
+                            <i class="fa-solid fa-user-pen"></i>
+                            @{
+                                var tg = boTruyenRepository.getNameTGById(Model.IdTg);
+                            }
+                            Tác giả:  <span class="count">@tg</span>
+                        </div>
                         <div class="chapter">
                             <i class="ri-send-plane-fill"></i>
                             <span class="count">@Model.Chapters.ToList().Count</span> Chương đã đăng
@@ -398,7 +371,7 @@
                                             text: "Bạn cần đăng ký gói premium để đọc nội dung này!",
                                             icon: "warning",
                                             showCancelButton: true,
-                                            confirmButtonText: "Login",
+                                            confirmButtonText: "Đăng ký",
                                             cancelButtonText: "Cancel!",
                                             reverseButtons: true
                                         }).then((result) => {
@@ -515,11 +488,23 @@
                         },
                         success: function (response) {
                             if (response.success) {
-                                alert('Đánh giá thành công. Cảm ơn bạn đã góp ý!');
+                                Swal.fire({
+                                    position: 'top-end',
+                                    icon: 'success',
+                                    title: 'Đánh giá thành công. Cảm ơn bạn đã góp ý!',
+                                    showConfirmButton: false,
+                                    timer: 2000,
+                                    customClass: {
+                                        popup: 'swal-top-margin'
+                                    }
+                                })
+                                // .then((result) => {
+                                //     window.location.reload();
+                                // });
                             } else {
                                 alert('Lỗi khi đánh giá, vui lòng thử lại');
+                            // location.reload();
                             }
-                            location.reload(); // Tải lại trang ở cả hai trường hợp
                         },
                         error: function () {
                             alert('Không thể gửi yêu cầu. Vui lòng kiểm tra lại.');

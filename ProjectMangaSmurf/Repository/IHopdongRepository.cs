@@ -14,7 +14,5 @@ namespace ProjectMangaSmurf.Repository
 
         ServicePackConfig GetPackById(String id);
 
-
-
     }
 }

@@ -18,12 +18,34 @@ namespace ProjectMangaSmurf.Repository
             await _context.SaveChangesAsync();
         }
 
+        public async Task<double> CountAllAsyncByBoTruyen(string id)
+        {
+
+            var reviews = _context.CtBoTruyens
+                          .Where(p => p.IbBo == id && p.DanhGia != 0);
+
+            if (await reviews.AnyAsync())
+            {
+                double totalRating = await reviews.SumAsync(c => (double)c.DanhGia);
+                int count = await reviews.CountAsync();
+
+                return totalRating / count;
+            }
+
+            return 0.0;
+        }
+
         public async Task DeleteAsync(string id)
         {
             var botruyen = await _context.BoTruyens.FindAsync(id);
             botruyen.Active = false;
             _context.BoTruyens.Update(botruyen);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<CtBoTruyen>> GetAllAsyncByBoTruyen(string id)
+        {
+            return await _context.CtBoTruyens.Where(p => p.IbBo == id).ToListAsync();
         }
 
         public async Task<IEnumerable<CtBoTruyen>> GetAllAsyncByID(string id)
