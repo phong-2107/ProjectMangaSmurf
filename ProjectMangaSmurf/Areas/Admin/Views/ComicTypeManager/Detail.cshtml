@@ -43,6 +43,7 @@
         padding: 10px 15px;
     }
 
+
 </style>
 
 
@@ -51,8 +52,8 @@
     <div class="page-header">
         <div class="page-title">
             <div class="action-page">
-                <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="Index">HOME PAGE </a>
-                <a asp-area="Admin" asp-controller="ComicTypeManager" asp-action="Index"> \LIST OF TYPES </a>
+                <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="Index"><i class="fa-solid fa-house-laptop"></i>               HOME PAGE </a>
+                <a asp-area="Admin" asp-controller="ComicTypeManager" asp-action="Index"> \ LIST OF TYPES </a>
                 <a asp-area="Admin" asp-controller="ComicTypeManager" asp-action="Detail" asp-route-id="@Model.IdLoai"> \ @Model.TenLoai</a>
             </div>
             <h6>Detail info of comic type</h6>
@@ -121,7 +122,7 @@
     </div>
     <div class="table-responsive">
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h4 class="mb-0 related-comic-series"><i class="fa-solid fa-tag"></i> Related Comic Series</h4>
+            <h4 class="mb-0 related-comic-series"><i class="fa-solid fa-tag"></i> Related Comic Series Of @Model.IdLoai</h4>
 
         </div>
         <table class="table datanew">

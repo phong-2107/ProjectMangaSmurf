@@ -193,8 +193,8 @@
     <div class="page-header">
         <div class="page-title">
             <div class="action-page">
-                <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="Index">Trang Chủ </a>
-                <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="ViewList"> \ List Truyện </a>
+                <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="Index"><i class="fa-solid fa-house-laptop"></i>                HOME PAGE</a>
+                <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="ViewList"> \ LIST OF COMIC </a>
                 <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="Detail" asp-route-id="@Model.IdBo"> \ COMIC : @Model.IdBo</a>
                 <a asp-area="Admin" asp-controller="ChapterManager" asp-action="Detail" asp-route-id="@Model.IdBo" asp-route-stt="@Model.SttChap"> \ Chapter @Model.SttChap</a>
             </div>
@@ -256,12 +256,9 @@
     <div class="table-responsive">
         <div class="content">
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <h4 class="mb-0 related-comic-series"><i class="fa-solid fa-tag"></i> Preview for chapter @Model.SttChap</h4>
-
+                <h4 class="mb-0 related-comic-series"><i class="fa-solid fa-tag"></i> Preview pages for chapter @Model.SttChap</h4>
             </div>
         </div>
-
-
         <div class="image-grid">
             @foreach (var item in ViewBag.RelatedPage as List<ProjectMangaSmurf.Models.CtChapter>)
             {

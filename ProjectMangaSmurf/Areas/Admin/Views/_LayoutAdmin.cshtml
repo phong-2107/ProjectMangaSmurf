@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] ManagSmurf Admin</title>
+    <title>@ViewData["Title"] ManagSmurf Data Manager</title>
 
     <link rel="icon" type="image/png" href="~/images/icon logo.png">
 
@@ -41,7 +41,7 @@
             .nav.user-menu span {
                 margin-right: 1rem;
                 font-size: 1rem;
-                font-weight: 500;
+                font-weight: 600;
             }
 
         .btn-custom-logout {
@@ -51,7 +51,8 @@
             font-size: 1rem;
             font-weight: 500;
             color: #fff;
-            padding: 0.375rem 0.75rem;
+            offset-position : center ; 
+            padding: 0.275rem 0.65rem;
             border-radius: 0.25rem;
         }
 
@@ -85,9 +86,9 @@
                     {
                         var userId = HttpContextAccessor.HttpContext.Session.GetString("AdminSessionId");
                         var user = HttpContextAccessor.HttpContext.Session.GetString("AdminSession");
-                        <a asp-area="Admin" asp-controller="StaffManager" asp-action="SelfDetail" asp-route-id="@userId"> <span>@user</span></a>
+                        <a asp-area="Admin" asp-controller="StaffManager" asp-action="SelfDetail" asp-route-id="@userId"> <span><i class="fa-solid fa-face-smile"></i>    HALLO! MOD - @user</span></a>
                         <form asp-controller="AdminLogin" asp-action="Logout" method="post" style="display:inline;">
-                            <button type="submit" class="btn btn-custom-logout">Logout</button>
+                            <button type="submit" class="btn btn-custom-logout"><i class="fa-solid fa-right-from-bracket"> </i> </button>
                         </form>
                     }
                 </li>
@@ -113,6 +114,7 @@
                                 <span>DashBoard</span>
                             </a>
                         </li>
+
                         <li class="submenu" style="text-decoration:none;">
                             <a>
                                 <img src="/img/icons/product.svg" alt="img">
@@ -121,22 +123,16 @@
                             </a>
                             <ul>
                                 <li>
-                                    <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="Add">Add New Comic</a>
+                                    <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="Add"><i class="fa-solid fa-layer-group"></i>             Upload Comic</a>
                                 </li>
                                 <li>
-                                    <a asp-area="Admin" asp-controller="AuthorManager" asp-action="Add">Upload Author</a>
+                                    <a asp-area="Admin" asp-controller="AuthorManager" asp-action="Add"> <i class="fa-solid fa-layer-group"></i>             Upload Author</a>
                                 </li>
                                 <li>
-                                    <a asp-area="Admin" asp-controller="ComicTypeManager" asp-action="Add">Upload Comic Type</a>
+                                    <a asp-area="Admin" asp-controller="ComicTypeManager" asp-action="Add"><i class="fa-solid fa-layer-group"></i>             Upload Comic Type</a>
                                 </li>
                                 <li>
-                                    <a asp-area="Admin" asp-controller="StaffManager" asp-action="Register">Upload User-Staff</a>
-                                </li>
-                                <li>
-                                    <a asp-area="Admin" asp-controller="ServiceManager" asp-action="Add">Upload Service</a>
-                                </li>
-                                <li>
-                                    <a asp-area="Admin" asp-controller="AdsManager" asp-action="Add">Upload Ads</a>
+                                    <a asp-area="Admin" asp-controller="StaffManager" asp-action="Register"><i class="fa-solid fa-person-breastfeeding"></i>             Create User-Staff</a>
                                 </li>
                             </ul>
                         </li>
@@ -148,29 +144,26 @@
                             </a>
                             <ul>
                                 <li>
-                                    <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="ViewList">Manage Comics List</a>
+                                    <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="ViewList"><i class="fa-solid fa-list"></i>             Comics List</a>
                                 </li>
                                 <li>
-                                    <a asp-area="Admin" asp-controller="AuthorManager" asp-action="Index">Manage Author List</a>
+                                    <a asp-area="Admin" asp-controller="AuthorManager" asp-action="Index"><i class="fa-solid fa-list"></i>             Author List</a>
                                 </li>
                                 <li>
-                                    <a asp-area="Admin" asp-controller="ComicTypeManager" asp-action="Index">Manage Comic-Types List</a>
+                                    <a asp-area="Admin" asp-controller="ComicTypeManager" asp-action="Index"><i class="fa-solid fa-list"></i>             Comic-Types List</a>
                                 </li>
                                 <li>
-                                    <a asp-area="Admin" asp-controller="ServiceManager" asp-action="Index">Manage Service Pack</a>
+                                    <a asp-area="Admin" asp-controller="ServiceManager" asp-action="Index"><i class="fa-solid fa-list"></i>             Service Pack</a>
                                 </li>
 
                                 <li>
-                                    <a asp-area="Admin" asp-controller="CusManager" asp-action="ViewList">Manage Customers List</a>
+                                    <a asp-area="Admin" asp-controller="CusManager" asp-action="ViewList"><i class="fa-solid fa-list"></i>             Customers List</a>
                                 </li>
                                 <li>
-                                    <a asp-area="Admin" asp-controller="CusManager" asp-action="ViewOrderList">Manage Payment-Order List</a>
+                                    <a asp-area="Admin" asp-controller="CusManager" asp-action="ViewOrderList"><i class="fa-solid fa-list"></i>             Payment-Order List</a>
                                 </li>
                                 <li>
-                                    <a asp-area="Admin" asp-controller="StaffManager" asp-action="Index">Manage Staffs List</a>
-                                </li>
-                                <li>
-                                    <a asp-area="Admin" asp-controller="AdsManager" asp-action="Index">Manage Ads & Parner Data</a>
+                                    <a asp-area="Admin" asp-controller="StaffManager" asp-action="Index"><i class="fa-solid fa-list"></i>             Staffs List</a>
                                 </li>
 
                             </ul>
@@ -183,10 +176,16 @@
                             </a>
                             <ul>
                                 <li>
-                                    <a asp-area="Admin" asp-controller="StaffManager" asp-action="RBAC">Role-Base Config List</a>
+                                    <a asp-area="Admin" asp-controller="StaffManager" asp-action="RBAC"><i class="fa-solid fa-id-card-clip"></i>             Role-Base Config List</a>
                                 </li>
                                 <li>
-                                    <a asp-area="Admin" asp-controller="WebManager" asp-action="Edit">Webiste Config List </a>
+                                    <a asp-area="Admin" asp-controller="WebManager" asp-action="Edit"><i class="fa-solid fa-laptop-code"></i>             Webiste Config List </a>
+                                </li>
+                                <li>
+                                    <a asp-area="Admin" asp-controller="ServiceManager" asp-action="Setting"><i class="fa-solid fa-coins"></i>             Service Config</a>
+                                </li>
+                                <li>
+                                    <a asp-area="Admin" asp-controller="WebManager" asp-action="AboutManagerSite"><i class="fa-solid fa-code-branch"></i>            About Manager Site</a>
                                 </li>
                                 <ul>
                         </li>

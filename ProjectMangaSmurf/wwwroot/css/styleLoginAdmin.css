@@ -2,7 +2,7 @@
     padding: 1rem;
     display: flex;
     justify-content: center;
-    background-color: #ae8249;
+    background-color: #6589f7;
     border-radius: 0;
 }
 
@@ -88,7 +88,7 @@ input:-ms-autofill {
     position: absolute;
     max-height: 100%;
     z-index: -1;
-    fill: #ae8249;
+    fill: #6589f7;
     opacity: .3;
 }
 
@@ -126,13 +126,13 @@ input:-ms-autofill {
     .content-login .regis a {
         margin-left: .3rem;
         font-weight: 600;
-        color: #ae8249;
+        color: #6589f7;
         cursor: pointer;
     }
 
         .content-login .regis a:hover {
             transform: translateY(-2px);
-            color: #ae8249;
+            color: #6589f7;
         }
 
 .infor-img {
@@ -179,12 +179,12 @@ input:-ms-autofill {
     .inputBox-item h5 {
         font-weight: 600;
         font-size: 1rem;
-        color: #ae8249;
+        color: #6589f7;
         padding: .5rem;
     }
 
     .inputBox-item i {
-        background-color: #ae8249 !important;
+        background-color: #6589f7 !important;
     }
 
 .select {
@@ -268,11 +268,11 @@ input:-internal-autofill-selected {
 }
 
     .login a {
-        color: #ae8249 !important;
+        color: #6589f7 !important;
         font-weight: 500;
         font-size: 1rem;
         padding: .5rem 1rem;
-        border: 2px solid #ae8249;
+        border: 2px solid #6589f7;
         margin: 10px .5rem 0 1rem;
     }
 
@@ -307,7 +307,7 @@ input[type="submit"] {
     border: none;
     outline: none;
     color: #fff;
-    background: #ae8249;
+    background: #6589f7;
     padding: .5rem 1rem;
     margin-top: 10px;
     font-weight: 500;
@@ -338,7 +338,7 @@ input[type="submit"] {
 .inputBox input:valid ~ span,
 .inputBox input:focus ~ span {
     font-weight: 400;
-    color: #ae82491;
+    color: #6589f71;
     transform: translateX(-10px) translateY(-30px);
     font-size: 0.75em;
 }
@@ -358,7 +358,7 @@ input[type="submit"] {
 
 .inputBox input:valid ~ i,
 .inputBox input:focus ~ i {
-    background: #ae8249;
+    background: #6589f7;
 }
 
 .option {

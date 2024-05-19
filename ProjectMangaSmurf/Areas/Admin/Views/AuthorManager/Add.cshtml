@@ -8,12 +8,35 @@
         max-width: 50%;
         max-height: 50%;
     }
+
+    form, .notice {
+        display: inline-block;
+        vertical-align: top;
+        margin-right: 10px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        margin-left: 20px; /* Ensure left margin for all forms and notice */
+    }
+
+    .notice {
+        color: #D8000C;
+        background-color: #FFD2D2;
+        padding: 8px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        border: 1px solid #D8000C;
+    }
 </style>
 
 <div class="content">
     <div class="page-header">
         <div class="page-title">
-            <h3>Upload new Author </h3>
+            <h2>Upload new Author        <i class="fa-regular fa-square-plus"></i>   </h2>
+            <h6>Place the Comic Author Informations</h6>
+        </div>
+        <div class="notice">
+            "Notice: If an author is successfully uploaded, you will be redirected to the View List."
         </div>
     </div>
     <div class="card">

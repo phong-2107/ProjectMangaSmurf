@@ -62,8 +62,7 @@
                             <th>Total Rating</th>
                             <th>Views</th>
                             <th>Types</th>
-                            @* <th>Ảnh bìa</th>
-                            <th>Ảnh banner<th> *@
+
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -78,17 +77,21 @@
                                 <td>@i.IdBo</td>
                                 <td>@i.TenBo</td>
                                 <td>@i.Dotuoi</td>
-                                
                                 <td>@tg</td>
                                 <td>@i.TkDanhgia</td>
                                 <td>@i.TongLuotXem</td>
                                 <td>@listloai</td>
+
                                 <td>
                                     <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="Detail" asp-route-id="@i.IdBo" class="me-3">
                                         <img src="~/img/icons/eye.svg" alt="img">
                                     </a>
                                     <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="Update" asp-route-id="@i.IdBo" class="me-3 ">
                                         <img src="~/img/icons/edit.svg" alt="img">
+                                    </a>
+                                    <a asp-area="" asp-controller="BoTruyen" asp-action="CTBoTruyen" asp-route-id="@i.IdBo" class="me-3">
+                                        <img src="~/img/icons/dashboard.svg" alt="img">
+
                                     </a>
                                     <a class="delete-product me-3" data-product-id="@i.IdBo" href="javascript:void(0);">
                                         <img src="~/img/icons/delete.svg" alt="img">
