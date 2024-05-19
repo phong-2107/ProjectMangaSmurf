@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 using ProjectMangaSmurf.Data;
 using ProjectMangaSmurf.Helper;
 using ProjectMangaSmurf.Models;
+using SQLitePCL;
 
 namespace ProjectMangaSmurf.Repository
 {
@@ -306,5 +307,22 @@ namespace ProjectMangaSmurf.Repository
             await _context.SaveChangesAsync();
         }
 
+
+        public async Task<int> GetMaxSttChapAsync(string idBo)
+        {
+            // Kiểm tra xem có chương nào trong bộ truyện này không
+            var hasChapters = await _context.Chapters.AnyAsync(ch => ch.IdBo == idBo);
+            if (!hasChapters)
+            {
+                // Không có chương nào, có thể trả về 0 hoặc một giá trị phù hợp
+                return 0;
+            }
+
+            // Truy vấn để lấy SttChap lớn nhất
+            int maxSttChap = await _context.Chapters
+                .Where(ch => ch.IdBo == idBo)
+                .MaxAsync(ch => ch.SttChap);
+            return maxSttChap;
+        }
     }
 }

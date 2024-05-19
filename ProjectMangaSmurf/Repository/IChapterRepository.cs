@@ -35,5 +35,6 @@ namespace ProjectMangaSmurf.Repository
         // In IChapterRepository interface
         Task DeleteCtHoatDongAsync(CtHoatDong ctHoatDong);
 
+        Task<int> GetMaxSttChapAsync(string idBo);
     }
 }

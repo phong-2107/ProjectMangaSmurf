@@ -86,7 +86,7 @@
                     {
                         var userId = HttpContextAccessor.HttpContext.Session.GetString("AdminSessionId");
                         var user = HttpContextAccessor.HttpContext.Session.GetString("AdminSession");
-                        <a asp-area="Admin" asp-controller="StaffManager" asp-action="SelfDetail" asp-route-id="@userId"> <span><i class="fa-solid fa-face-smile"></i>    HALLO! MOD - @user</span></a>
+                        <a asp-area="Admin" asp-controller="StaffManager" asp-action="SelfDetail" asp-route-id="@userId"> <span><i class="fa-solid fa-face-smile"></i> Hi @user</span></a>
                         <form asp-controller="AdminLogin" asp-action="Logout" method="post" style="display:inline;">
                             <button type="submit" class="btn btn-custom-logout"><i class="fa-solid fa-right-from-bracket"> </i> </button>
                         </form>

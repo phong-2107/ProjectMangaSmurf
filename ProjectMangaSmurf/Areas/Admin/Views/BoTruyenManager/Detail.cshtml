@@ -155,10 +155,7 @@
                                         <button type="submit" class="btn-update"><i class="fa-sharp fa-solid fa-arrows-up-to-line"></i>  Go to Update</button>
                                     </form>
 
-                                    <form asp-action="AddChapter" asp-controller="BoTruyenManager" asp-route-id="@Model.IdBo" method="post">
-                                        
-                                        <button type="submit" class="btn-update"><i class="fa-solid fa-plus"></i>  Upload new Chapter</button>
-                                    </form>
+                                        <a asp-action="AddChapter" asp-controller="BoTruyenManager" asp-route-id="@Model.IdBo" type="submit" class="btn-update"><i class="fa-solid fa-plus"></i>  Upload new Chapter</a>
                                 </div>
 
 

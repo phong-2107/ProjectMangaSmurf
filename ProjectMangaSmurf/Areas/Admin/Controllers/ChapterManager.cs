@@ -37,7 +37,6 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
 
         public async Task<IActionResult> Add()
         {
-
             return View();
         }
 
