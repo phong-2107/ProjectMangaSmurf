@@ -14,6 +14,7 @@ using System.Linq;
 using System;
 using ProjectMangaSmurf.Data;
 using ChapterModel = ProjectMangaSmurf.Models.Chapter;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace ProjectMangaSmurf.Areas.Admin.Controllers
 {
@@ -191,11 +192,10 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
             ViewBag.TGs = new SelectList(Tgs, "IdTg", "TenTg");
             return View();
         }
-
         [HttpPost]
         public async Task<IActionResult> Add(BoTruyen boTruyen, IFormFile AnhBanner, IFormFile AnhBia)
         {
-            using (var transaction = await _context.Database.BeginTransactionAsync())
+            using (IDbContextTransaction transaction = await _context.Database.BeginTransactionAsync())
             {
                 try
                 {
@@ -220,28 +220,20 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
                     boTruyen.TrangThai = 1;
                     boTruyen.TkTheodoi = 0;
                     boTruyen.TongLuotXem = 0;
-
                     await _botruyenrepository.AddAsync(boTruyen);
 
-                    foreach (var i in boTruyen.Listloai)
-                    {
-                        CtLoaiTruyen ct = new CtLoaiTruyen();
-                        ct.IdLoai = i.ToString();
-                        ct.IdBo = boTruyen.IdBo;
-                        ct.Active = true;
-                        await _loaiTruyenRepository.AddAsyncCTLoai(ct);
-                    }
-
                     await transaction.CommitAsync();
+
                     return Json(new { success = true, message = "Comic added successfully!", redirectUrl = Url.Action("ViewList") });
                 }
                 catch (Exception ex)
                 {
                     await transaction.RollbackAsync();
-                    return Json(new { success = false, message = "Error: " + ex.Message });
+                    return Json(new { success = false, message = $"An error occurred: {ex.Message}" });
                 }
             }
         }
+       
 
         [HttpPost]
         public async Task<IActionResult> AddChapter(ChapterModel chapter, List<IFormFile> images)

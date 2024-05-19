@@ -58,6 +58,13 @@
     .form-control {
         margin-bottom: 3px; /* Thêm khoảng cách giữa các controls */
     }
+
+    .related-comic-series {
+        background-color: #1b2850;
+        color: white;
+        border-radius: 15px;
+        padding: 10px 15px;
+    }
 </style>
 
 
@@ -69,7 +76,7 @@
     <div class="page-header">
         <div class="page-title">
             <div class="action-page">
-                <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="Index">HOME PAGE </a>
+                <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="Index"><i class="fa-solid fa-house-laptop"></i>                     HOME PAGE </a>
                 <a asp-area="Admin" asp-controller="CusManager" asp-action="ViewList"> \ LIST OF COSTUMERS </a>
                 <a asp-area="Admin" asp-controller="CusManager" asp-action="Detail" asp-route-id="@customer.IdUser"> \ @customer.IdUser  -  @customer.IdUserNavigation.FullName</a>
             </div>
@@ -119,15 +126,10 @@
                 </div>
             </div>
         </div>
-    <div class="page-header">
-        <div class="page-title">
-            <div class="action-page">
-                <h3>Order detail of @customer.IdUser </h3>
-            </div>
-        </div>
-    </div>
-
     <div class="table-responsive">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4 class="mb-0 related-comic-series"><i class="fa-regular fa-credit-card"></i>          Detail Transaction List Of @customer.IdUser</h4>
+        </div>
         <table class="table datanew">
             <thead>
                 <tr>

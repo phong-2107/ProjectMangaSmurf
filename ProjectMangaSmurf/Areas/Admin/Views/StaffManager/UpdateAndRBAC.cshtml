@@ -3,7 +3,6 @@
     ViewData["Title"] = "Staff Information and Permissions";
 }
 @inject IHttpContextAccessor HttpContextAccessor
-
 <style>
     body {
         font-family: 'Roboto', sans-serif;
@@ -13,18 +12,29 @@
         appearance: none;
         height: 1.25em;
         width: 1.25em;
-        background-color: #1b2850; /* Dark blue background */
-        color: #ffffff; /* White text */
-        border: 2px solid #ffffff; /* White border */
-        border-radius: 0.25em;
+        background-color: #ffffff; /* White background */
+        color: #000000; /* Black text */
+        border: 2px solid #000000; /* Black border */
+        border-radius: 50%; /* Circular shape */
         cursor: pointer;
         font-family: 'Roboto', sans-serif; /* Roboto font */
+        position: relative;
     }
 
-        .permissions-list .form-check-input:checked {
-            background-color: #ffffff; /* White background when checked */
-            color: #1b2850; /* Dark blue text */
-        }
+    .permissions-list .form-check-input:checked {
+        background-color: #000000; /* Black background when checked */
+        border-color: #000000; /* Keep border color black */
+    }
+
+    .permissions-list .form-check-input:checked::after {
+        content: '✔'; /* Checkmark symbol */
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: #ffffff; /* White color for checkmark */
+        font-size: 0.75em;
+    }
 
     .permissions-container {
         padding: 15px;
@@ -35,11 +45,11 @@
         justify-content: flex-start;
     }
 
-        .permissions-container h4 {
-            color: #AE8249; /* Brown text for 'Assign Permissions' */
-            font-family: 'Roboto', sans-serif; /* Roboto font */
-            text-align: center; /* Center the title */
-        }
+    .permissions-container h4 {
+        color: #6589f7; /* Brown text for 'Assign Permissions' */
+        font-family: 'Roboto', sans-serif; /* Roboto font */
+        text-align: center; /* Center the title */
+    }
 
     .permissions-matrix {
         display: grid;
@@ -47,22 +57,22 @@
         grid-gap: 20px;
     }
 
-        .permissions-matrix > div {
-            background-color: #AE8249; /* Brown background for each group */
-            padding: 10px;
-            border-radius: 10px;
-        }
+    .permissions-matrix > div {
+        background-color: #6589f7; /* Brown background for each group */
+        padding: 10px;
+        border-radius: 10px;
+    }
 
-        .permissions-matrix h5 {
-            color: #ffffff; /* White text for titles */
-        }
+    .permissions-matrix h5 {
+        color: #ffffff; /* White text for titles */
+    }
 
-        .permissions-matrix .form-check {
-            margin-bottom: 10px; /* Space between each item */
-        }
+    .permissions-matrix .form-check {
+        margin-bottom: 10px; /* Space between each item */
+    }
 
     .form-group {
-        background-color: #AE8249; /* Brown background */
+        background-color: #6589f7; /* Brown background */
         padding: 10px;
         border-radius: 10px;
         margin-bottom: 20px;
@@ -80,17 +90,17 @@
         border: 1px solid #fff; /* White border */
         padding: 10px;
         color: #ffffff; /* White text */
-        background-color: #AE8249; /* Brown background */
+        background-color: #6589f7; /* Brown background */
         font-family: 'Roboto', sans-serif; /* Roboto font */
     }
 
-        input[type='text']::placeholder, input[type='date']::placeholder { /* Adjust placeholder color */
-            color: #ffffff;
-        }
+    input[type='text']::placeholder, input[type='date']::placeholder { /* Adjust placeholder color */
+        color: #ffffff;
+    }
 
-        input[type='date']::-webkit-calendar-picker-indicator {
-            filter: invert(1); /* Make calendar icon white */
-        }
+    input[type='date']::-webkit-calendar-picker-indicator {
+        filter: invert(1); /* Make calendar icon white */
+    }
 
     .btn {
         border: 2px solid #6f42c1; /* Purple border */
@@ -108,10 +118,10 @@
         border: 2px solid #6f42c1; /* Purple border */
     }
 
-        .btn-primary:hover {
-            background-color: #6f42c1; /* Purple background */
-            color: #ffffff; /* White text */
-        }
+    .btn-primary:hover {
+        background-color: #6f42c1; /* Purple background */
+        color: #ffffff; /* White text */
+    }
 
     .btn-secondary {
         background-color: #6f42c1; /* Purple background */
@@ -119,10 +129,10 @@
         border: 2px solid #6f42c1; /* Purple border */
     }
 
-        .btn-secondary:hover {
-            background-color: transparent;
-            color: #6f42c1; /* Purple text */
-        }
+    .btn-secondary:hover {
+        background-color: transparent;
+        color: #6f42c1; /* Purple text */
+    }
 
     .centered-title {
         text-align: center; /* Center the title */
@@ -131,8 +141,8 @@
 
     .logo-image {
         display: block;
-        max-width: 900px;
-        max-height: 150px;
+        max-width: 350px;
+        max-height: 130px;
         margin: 20px auto;
         padding: 20px;
         border-radius: 15px;
@@ -149,68 +159,261 @@
             grid-template-columns: repeat(2, 1fr);
         }
     }
+
+    .nav.user-menu {
+        display: flex;
+        align-items: center;
+        font-family: 'Roboto', sans-serif;
+    }
+
+    .nav.user-menu span {
+        margin-right: 1rem;
+        font-size: 1rem;
+        font-weight: 600;
+    }
+
+    .btn-custom-logout {
+        background-color: #1B2850;
+        border: none;
+        font-family: 'Roboto', sans-serif;
+        font-size: 1rem;
+        font-weight: 500;
+        color: #fff;
+        padding: 0.275rem 0.65rem;
+        border-radius: 0.25rem;
+    }
+
+    .btn-custom-logout:hover {
+        background-color: #a07837;
+    }
+
+    .header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px;
+    }
+
+
+    .nav__logo {
+        display: block;
+    }
+    .user-menu-container {
+        display: flex;
+        align-items: center;
+        margin-left: auto;
+    }
+
+    .center-content {
+        text-align: center;
+        margin: 0 auto;
+        background-color: #1B2850; /* Dark blue background */
+        color: #ffffff; /* Brown text */
+        border-radius: 5px;
+        padding: 4px; /* Add some padding for better appearance */
+        padding-left: 5px;
+        padding-right: 5px;
+        display: inline-block;
+        margin-bottom: 3px; /* Add some margin at the bottom */
+        position: relative;
+    }
+
+    /* Parent checkbox style */
+    .permissions-matrix .form-check-input.parent-checkbox {
+        background-color: #1B2850; /* Dark blue background */
+        color: #ffffff; /* White text */
+        border-radius: 11px;
+        border: 2px solid #ffffff; /* White border */
+        position: relative;
+        width: 1em;
+        height: 1em;
+        margin-left: -22px;
+        margin-right: 4px
+    }
+
+    .permissions-matrix .form-check-input.parent-checkbox:checked {
+        background-color: #1B2850; /* Dark blue background when checked */
+        border-color: #ffffff; /* Keep border color white */
+    }
+
+    .permissions-matrix .form-check-input.parent-checkbox:checked::after {
+
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: #ffffff; /* White color for checkmark */
+        font-size: 0.65em;
+    }
+
+    /* General checkbox style */
+    .permissions-matrix .form-check-input {
+        appearance: none;
+        border-radius: 50%; /* Circular shape */
+        background-color: #ffffff; /* White background */
+        color: #1B2850; /* Dark blue text */
+        border: 2px solid #1B2850; /* Dark blue border */
+        width: 1.25em;
+        height: 1.25em;
+        cursor: pointer;
+        position: relative;
+    }
+
+    .permissions-matrix .form-check-input:checked {
+        background-color: #1B2850; /* Dark blue background */
+        border-color: #1B2850; /* Keep border color dark blue */
+    }
+
+    .permissions-matrix .form-check-input:checked::after {
+
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: #ffffff; /* White color for checkmark */
+        font-size: 0.75em;
+    }
+
+    /* Style for parent permission label */
+    .permissions-matrix .form-check-label.parent-label {
+        background-color: #1B2850; /* Dark blue background */
+        color: #ffffff; /* Brown text */
+        border-radius: 5px;
+        padding: 4px; /* Add some padding for better appearance */
+        padding-left: 12px;
+        padding-right: 12px;
+        display: inline-block;
+        margin-bottom: 3px; /* Add some margin at the bottom */
+        position: relative;
+    }
+
+    .permissions-matrix .form-check-label.parent-label .parent-checkbox {
+        position: absolute;
+        left: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    form, .notice {
+        display: inline-block;
+        vertical-align: top;
+        margin-right: 10px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        margin-left: 20px; /* Ensure left margin for all forms and notice */
+    }
+
+    .notice {
+        color: #D8000C;
+        background-color: #FFD2D2;
+        padding: 8px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        border: 1px solid #D8000C;
+    }
+
+    .form-row .form-group {
+        flex: 1;
+        margin-right: 10px;
+    }
+
+    .form-row .form-group:last-child {
+        margin-right: 0;
+    }
+
+    .form-buttons {
+        text-align: right;
+    }
 </style>
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"]</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/styleLoginAdmin.css" asp-append-version="true" />
+    <link rel="icon" type="image/png" href="~/images/icon logo.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" />
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </head>
+
 <body>
+
     <header class="header" id="header">
         <a asp-area="Admin" asp-controller="StaffManager" asp-action="Index" class="nav__logo">
             <img class="nav__logo-img" src="/images/logo3.png" alt="website logo">
         </a>
+        <div class="user-menu-container">
+            <ul class="nav user-menu">
+                <li class="nav-item">
+                    @if (HttpContextAccessor.HttpContext.Session.GetString("AdminSession") != null)
+                    {
+                        var userId = HttpContextAccessor.HttpContext.Session.GetString("AdminSessionId");
+                        var user = HttpContextAccessor.HttpContext.Session.GetString("AdminSession");
+                        <a asp-area="Admin" asp-controller="StaffManager" asp-action="SelfDetail" asp-route-id="@userId">
+                            <span>MOD [@user] - User Config Site</span>
+                        </a>
+                    }
+                </li>
+            </ul>
+        </div>
     </header>
+
     <main class="main">
         <div class="container mt-4">
-            <img src="/images/logo5.png" alt="website logo" class="logo-image">
-            <form asp-controller="StaffManager" asp-action="RegisterRBAC" method="post" id="formInfor" class="form-horizontal" autocomplete="off">
+            <form asp-controller="StaffManager" asp-action="UpdateAndRBAC" method="post" id="formInfor" class="form-horizontal" autocomplete="off">
                 <div class="row">
                     <!-- User Information Section -->
                     <div class="col-md-6 form-group">
-                        <div class="form-group">
-                            <label for="IdUser">User ID</label>
-                            <input name="IdUser" id="IdUser" type="text" class="form-control" value="@ViewBag.IdUser" readonly>
+                        <div class="form-group center-content">
+                            <label for="IdUser">
+                                <h3 class="Id">
+                                    <i class="fa-regular fa-id-badge"></i> UID : @ViewBag.IdUser
+                                </h3>
+                            </label>
+                            <div class="notice">
+                                "Notice: If Update Infomation and RBA are successfully , you'll' be redirected to User[ @ViewBag.IdUser ]'s Detail site "
+                            </div>
                         </div>
+
                         <div class="form-group">
-                            <label for="Username">Username</label>
+                            <label for="Username"><i class="fa-solid fa-user-tag"></i> Username</label>
                             <input name="Username" id="Username" type="text" class="form-control" value="@ViewBag.Username" required>
                         </div>
                         <div class="form-group">
-                            <label for="FullName">Full Name</label>
+                            <label for="FullName"><i class="fa-solid fa-user-tag"></i> Full Name</label>
                             <input name="FullName" id="FullName" type="text" class="form-control" required value="@ViewBag.FullName">
                         </div>
                         <div class="form-group">
-                            <label for="date">Birth Date</label>
+                            <label for="date"><i class="fa-solid fa-cake-candles"></i> Birth Date</label>
                             <input name="date" id="date" type="date" class="form-control" required value="@ViewBag.BirthDate?.ToDateTime(TimeOnly.MinValue).ToString("yyyy-MM-dd")">
                         </div>
-                        <div class="form-row">
-                            <div class="col-md-6 form-group">
+                          <div class="col-md-6 form-group">
                                 <label for="Gender">Gender</label>
                                 <select name="Gender" id="Gender" class="form-control">
-                                    <option value="1">Male</option>
-                                    <option value="2">Female</option>
-                                    <option value="0">Other</option>
+                                    <!option value="0" @(ViewBag.Gender == null ? "selected" : "")>Other</!option>
+                                    <!option value="1" @(ViewBag.Gender == 1 ? "selected" : "")>Male</!option>
+                                    <!option value="2" @(ViewBag.Gender == 2 ? "selected" : "")>Female</!option>
                                 </select>
                             </div>
                             <div class="col-md-6 form-group">
                                 <label for="StaffRole">Role</label>
                                 <select name="StaffRole" id="StaffRole" class="form-control">
-                                    <option value="0">Staff</option>
-                                    <option value="1">Admin</option>
+                                    <!option value="true" @(ViewBag.StaffRole == false ? "selected" : "")>Staff</!option>
+                                    <!option value="false" @(ViewBag.StaffRole == true ? "selected" : "")>Admin</!option>
                                 </select>
                             </div>
-                        </div>
-                        <div class="form-group">
+
+                        <div class="form-group form-buttons">
+                            <div class="notice"><i class="fa-solid fa-circle-exclamation"></i>       Notice: Remember to assign the correct permissions to this staff member.
+                            </div>
+
                             <button type="submit" class="btn btn-secondary">
                                 <i class="fas fa-save"></i> Save All Changes
                             </button>
@@ -230,7 +433,7 @@
                                         <h5>@parentPermission.PermissionsName Permissions</h5>
                                         <div class="form-check">
                                             <input class="form-check-input parent-checkbox" type="checkbox" name="SelectedPermissions" value="@parentPermission.IdPermissions" id="perm_@parentPermission.IdPermissions" data-id="@parentPermission.IdPermissions" @(ViewBag.SelectedPermissions.Contains(parentPermission.IdPermissions) ? "checked" : "")>
-                                            <label class="form-check-label" for="perm_@parentPermission.IdPermissions">@parentPermission.PermissionsName</label>
+                                            <label class="form-check-label parent-label" for="perm_@parentPermission.IdPermissions"><i class="fa-solid fa-compass"></i> - @parentPermission.PermissionsName</label>
                                         </div>
                                         @foreach (var childPermission in ViewBag.AvailablePermissions ?? Enumerable.Empty<PermissionsList>())
                                         {
@@ -330,4 +533,5 @@
         });
     </script>
 </body>
+
 </html>
