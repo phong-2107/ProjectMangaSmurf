@@ -101,7 +101,7 @@ builder.Services.AddScoped<IEmailService, EmailService>();
 
 //======================= Payment =======================
 builder.Services.AddScoped<IVNPayRepository, EFVNPayRepository>();
-
+builder.Services.AddScoped<IPayPalService, PayPalService>();
 //======================= Manager =======================
 builder.Services.AddScoped<IStaffRepository, EFStaffRepository>();
 

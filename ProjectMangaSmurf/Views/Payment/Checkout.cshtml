@@ -5,7 +5,6 @@
 @inject IHttpContextAccessor HttpContextAccessor
 @{
     Layout = null;
-    ViewData["Title"] = "Checkout";
     
 }
 
@@ -14,7 +13,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"]</title>
+    <title>Checkout</title>
 
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
@@ -53,7 +52,7 @@
         <div class="main__top  containers">
             <div class="main__content w-100">
                 
-                <form asp-action="Checkout" class="form-login" autocomplete="off" method="post">
+                <form asp-action="Checkout" class="form-login" autocomplete="off" method="post" id="paymentForm">
                     @{
                         var OrderId = new Random().Next(1000, 100000);
                         var date = DateTime.Now.ToString("dd/MM/yyyy :HH:mm:ss");
@@ -76,7 +75,8 @@
                         </div>
                         <div class="inputBox">
                             <h5>Date</h5>
-                            <input type="text" required autocomplete="nope" value="@date" readonly>                            <i></i>
+                            <input type="text" required autocomplete="nope" value="@date" readonly>
+                            <i></i>
                         </div>
                         <div class="inputBox">
                             <input name="Name" type="text" required autocomplete="nope" value="@HttpContextAccessor.HttpContext.Session.GetString("TK")">
@@ -88,9 +88,11 @@
                             <span>Phone Number</span>
                             <i></i>
                         </div>
+                        <input type="hidden" id="paymentMethod" name="PaymentMethod" value="" />
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                        <div class="login">
-                            <input type="submit" value="Thanh toán">
+                        <div class="login" style="display:flex; flex-direction:row; gap:1rem; ">
+                            <input style="color:#fff; font-weight:600;" type="submit" value="Thanh toán VNPay">
+                            <input style="color:#fff; font-weight:600;" type="hidden" value="Thanh toán Paypal">
                         </div>
                     </div>
                 </form>
@@ -104,6 +106,17 @@
     <script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('input[type="submit"]').click(function () {
+                var paymentValue = $(this).val(); 
+                $('#paymentMethod').val(paymentValue);
+
+                $('#paymentForm').submit();
+            });
+        });
+    </script>
 </body>
 </html>
 

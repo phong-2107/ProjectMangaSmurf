@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
+using PayPalCheckoutSdk.Orders;
 using ProjectMangaSmurf.Data;
 using ProjectMangaSmurf.Models;
 using ProjectMangaSmurf.Repository;
@@ -18,12 +19,14 @@ namespace ProjectMangaSmurf.Controllers
         private readonly IKhachHangRepository _khachHangRepository;
         private readonly IEmailService _emailRepository;
         private readonly ProjectDBContext _context;
-        public PaymentController(IKhachHangRepository khachHangRepository, IVNPayRepository vnPayservice, IHopdongRepository hopdong, IEmailService emailRepository, ProjectDBContext context)
+        private readonly IPayPalService _payPalService;
+        public PaymentController(IKhachHangRepository khachHangRepository, IVNPayRepository vnPayservice,IPayPalService payPalService,  IHopdongRepository hopdong, IEmailService emailRepository, ProjectDBContext context)
         {
             _khachHangRepository = khachHangRepository;
             hopdongRepository = hopdong;
             _vnPayservice = vnPayservice;
             _emailRepository = emailRepository;
+            _payPalService = payPalService;
             _context = context;
         }
 
@@ -41,25 +44,47 @@ namespace ProjectMangaSmurf.Controllers
 
 
         [HttpPost]
-        public IActionResult Checkout(double Money, string Name, string phone, int OrderId)
+        public IActionResult Checkout(double Money, string Name, string phone, int OrderId, string PaymentMethod)
         {
             if (ModelState.IsValid)
             {
-                var vnPayModel = new VnPaymentRequestModel();
-                vnPayModel.Amount = Money;
-                vnPayModel.CreatedDate = DateTime.Now;
-                vnPayModel.Description = $"{Name} {phone}";
-                vnPayModel.FullName = Name;
-                vnPayModel.OrderId = OrderId; 
+                if (PaymentMethod == "Thanh toán VNPay")
+                {
+                    var vnPayModel = new VnPaymentRequestModel();
+                    vnPayModel.Amount = Money;
+                    vnPayModel.CreatedDate = DateTime.Now;
+                    vnPayModel.Description = $"{Name} {phone}";
+                    vnPayModel.FullName = Name;
+                    vnPayModel.OrderId = OrderId;
 
-                HttpContext.Session.SetString("OrderId", vnPayModel.OrderId.ToString());
-                HttpContext.Session.SetString("date", vnPayModel.CreatedDate.ToString());
-                HttpContext.Session.SetString("Name", vnPayModel.FullName.ToString());
-                HttpContext.Session.SetString("Note", vnPayModel.Description.ToString());
-                HttpContext.Session.SetString("Phone", phone);
-                return Redirect(_vnPayservice.CreatePaymentUrl(HttpContext, vnPayModel));
+                    HttpContext.Session.SetString("OrderId", vnPayModel.OrderId.ToString());
+                    HttpContext.Session.SetString("date", vnPayModel.CreatedDate.ToString());
+                    HttpContext.Session.SetString("Name", vnPayModel.FullName.ToString());
+                    HttpContext.Session.SetString("Note", vnPayModel.Description.ToString());
+                    HttpContext.Session.SetString("Phone", phone);
+                    return Redirect(_vnPayservice.CreatePaymentUrl(HttpContext, vnPayModel));
+                }
+                else if(PaymentMethod == "Thanh toán Paypal")
+                {
+                    return RedirectToAction("ProcessPayPalPayment", new { Money, Name, phone, OrderId });
+                }
             }
             return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ProcessPayPalPayment(double Money, string Name, string Phone, int OrderId)
+        {
+            try
+            {
+                var order = await _payPalService.CreatePayPalOrder(Money, Name, Phone, OrderId);
+                return Redirect(order.Links.FirstOrDefault(l => l.Rel.Equals("approve")).Href);
+            }
+            catch (Exception e)
+            {
+                ViewBag.ErrorMessage = "Unable to process payment with PayPal: " + e.Message;
+                return View("Checkout");
+            }
         }
 
         public string ReplacePlaceholders(string template, Dictionary<string, string> placeholders)
@@ -151,6 +176,24 @@ namespace ProjectMangaSmurf.Controllers
             
             TempData["Message"] = $"Thanh toán VNPay thành công";
             return RedirectToAction("PaymentSuccess");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreatePayment(decimal amount)
+        {
+            var approvalUrl = await _payPalService.CreateOrderAsync(amount, "USD");
+            return Redirect(approvalUrl);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ExecutePayment(string orderId)
+        {
+            var order = await _payPalService.CaptureOrderAsync(orderId);
+            if (order.Status == "COMPLETED")
+            {
+                return View("Success");
+            }
+            return View("PaymentFail");
         }
     }
 }
