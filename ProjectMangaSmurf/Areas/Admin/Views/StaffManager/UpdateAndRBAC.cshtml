@@ -391,6 +391,10 @@
                             <input name="FullName" id="FullName" type="text" class="form-control" required value="@ViewBag.FullName">
                         </div>
                         <div class="form-group">
+                            <label for="FullName"><i class="fa-solid fa-square-phone"></i> Phone </label>
+                            <input name="FullName" id="FullName" type="text" class="form-control" required value="@ViewBag.Phone">
+                        </div>
+                        <div class="form-group">
                             <label for="date"><i class="fa-solid fa-cake-candles"></i> Birth Date</label>
                             <input name="date" id="date" type="date" class="form-control" required value="@ViewBag.BirthDate?.ToDateTime(TimeOnly.MinValue).ToString("yyyy-MM-dd")">
                         </div>
@@ -409,7 +413,13 @@
                                     <!option value="false" @(ViewBag.StaffRole == true ? "selected" : "")>Admin</!option>
                                 </select>
                             </div>
-
+                            <div class="col-md-6 form-group">
+                                <label for="StaffRole">Active</label>
+                                <select name="StaffRole" id="StaffRole" class="form-control">
+                                    <!option value="true" @(ViewBag.Active == false ? "selected" : "")>Banned</!option>
+                                    <!option value="false" @(ViewBag.Active == true ? "selected" : "")>Activate</!option>
+                                </select>
+                            </div>
                         <div class="form-group form-buttons">
                             <div class="notice"><i class="fa-solid fa-circle-exclamation"></i>       Notice: Remember to assign the correct permissions to this staff member.
                             </div>

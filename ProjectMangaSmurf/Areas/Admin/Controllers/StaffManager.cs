@@ -251,6 +251,8 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
             ViewBag.BirthDate = user.Birth;
             ViewBag.Gender = user.Gender;
             ViewBag.StaffRole = staff.StaffRole;
+            ViewBag.Active = user.Active;
+            ViewBag.Phone = user.Phone;
             ViewBag.AvailablePermissions = permissionsList;
             ViewBag.SelectedPermissions = existingPermissions.Where(p => p.Active ?? false).Select(p => p.IdPermissions).ToList();
 
