@@ -196,7 +196,7 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
 
                     await _staffRepository.AddAsync(nhanVien);
 
-                    // Check if the user is an admin
+                    //// Check if the user is an admin
                     if (nhanVien.StaffRole == true)
                     {
                         // Assign all permissions (1-73) to the admin user
@@ -298,6 +298,10 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
                         permission.Active = SelectedPermissions.Contains(permission.IdPermissions);
                         await _staffRepository.UpdatePermissionDetailAsync(permission);
                     }
+
+                    // Add Update Active Logs
+
+
 
                     await _context.SaveChangesAsync();
                     transaction.Commit();
