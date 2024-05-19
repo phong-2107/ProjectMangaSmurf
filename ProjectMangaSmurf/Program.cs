@@ -90,6 +90,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddScoped<IUser,EFUser>();
 builder.Services.AddScoped<CustomAuthenticationService>();
 builder.Services.AddScoped<IStaffRepository,EFStaffRepository>();
+builder.Services.AddScoped<IService, EFService>();
 builder.Services.AddScoped<IComicTypeRepository, EFComicTypeRepository>();
 builder.Services.AddScoped<IAuthorRepository, EFAuthorRepository>();
 builder.Services.AddScoped<IboTruyenRepository, EFboTruyenRepository>();

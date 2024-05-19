@@ -14,13 +14,21 @@
         background-color: magenta; /* Change color when active */
     }
 
+    .alert-info {
+        color: #004085; /* Màu chữ xanh */
+        background-color: #cce5ff; /* Nền màu xanh nhạt */
+        border: 1px solid #b8daff; /* Viền màu xanh */
+        padding: 10px;
+        margin: 10px 0;
+        border-radius: 5px; /* Bo góc cho khối thông báo */
+    }
 </style>
 
 
 <div class="content">
     <div class="page-header">
         <div class="page-title">
-            <h3> <i class="fa-solid fa-circle-user"></i>  LIST OF COSTUMER </h3>
+            <h2> <i class="fa-solid fa-circle-user"></i>  LIST OF COSTUMER </h2>
             <h6>       Manager - View </h6>
         </div>
         
@@ -39,6 +47,9 @@
                             <img src="~/img/icons/search-white.svg" alt="img">
                         </a>
                     </div>
+                </div>
+                <div class="alert-info">
+                    Customer's information is very important !
                 </div>
                 <div class="filters">
                     <button class="btn btn-primary" onclick="applyFilter('all')">See All <i class="fa-solid fa-border-all"></i></button>
@@ -66,7 +77,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var i in Model)
+                        @foreach (var i in Model )
                         {
                             <tr>
                                 <td>@i.IdUser</td>
@@ -88,28 +99,7 @@
         </div>
     </div>
 </div>
-<script>
-    var currentFilter = 'all';  // Default filter
-    var premiumOnly = false;    // Premium filter state
 
-    function applyFilter(filter) {
-        currentFilter = filter;
-        updateList();
-    }
-
-    function togglePremium() {
-        premiumOnly = !premiumOnly;  // Toggle premium state
-        document.getElementById('premium-btn').classList.toggle('btn-active'); // Toggle button class for visual feedback
-        updateList();
-    }
-
-    function updateList() {
-        // Build the URL with current filters
-        var url = '@Url.Action("ViewList", "CusManager", new { Area = "Admin" })' +
-            `?status=${currentFilter}&premium=${premiumOnly}`;
-        window.location.href = url; // Redirect to the updated URL
-    }
-</script>
 
 
 

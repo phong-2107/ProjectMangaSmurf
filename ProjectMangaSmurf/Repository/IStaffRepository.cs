@@ -31,5 +31,8 @@ namespace ProjectMangaSmurf.Repository
         Task<User> GetStatsByIdAsync(String id);
         Task UpdateStatsAsync(User permission);
         Task<NhanVien> GetByIdSAsync(string id);
+        IQueryable<NhanVien> GetQueryV();
+        Task UpdatePermissionDetail2Async(StaffPermissionsDetail permissionDetail);
+        Task<StaffPermissionsDetail> GetPermissionDetailByIdAsync(string idUser, byte idPermissions);
     }
 }

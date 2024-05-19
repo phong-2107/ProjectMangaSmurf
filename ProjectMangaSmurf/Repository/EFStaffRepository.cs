@@ -34,6 +34,11 @@ namespace ProjectMangaSmurf.Repository
             _context.Update(permission);
             await _context.SaveChangesAsync();
         }
+        public async Task UpdatePermissionDetail2Async(StaffPermissionsDetail permissionDetail)
+        {
+            _context.StaffPermissionsDetails.Update(permissionDetail);
+            await _context.SaveChangesAsync();
+        }
         public async Task<IEnumerable<User>> GetAllAsync()
         {
             // Filter NhanViens where UserRole indicates they are staff
@@ -128,6 +133,10 @@ namespace ProjectMangaSmurf.Repository
             return _context.NhanViens;
         }
 
+        public IQueryable<NhanVien> GetQueryV()
+        {
+            return _context.NhanViens.Include(kh => kh.IdUserNavigation);
+        }
         public string GenerateStaffId()
         {
             try
@@ -181,6 +190,13 @@ namespace ProjectMangaSmurf.Repository
             _context.Users.Update(permission);
             await _context.SaveChangesAsync();
         }
+
+        public async Task<StaffPermissionsDetail> GetPermissionDetailByIdAsync(string idUser, byte idPermissions)
+        {
+            return await _context.StaffPermissionsDetails
+                .FirstOrDefaultAsync(p => p.IdUser == idUser && p.IdPermissions == idPermissions);
+        }
+
     }
    
 }

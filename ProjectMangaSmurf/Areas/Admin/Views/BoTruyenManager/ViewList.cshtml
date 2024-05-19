@@ -19,7 +19,6 @@
     .search-set + .filters {
         margin-top: 10px;
     }
-
     .alert-info {
         color: #004085; /* Màu chữ xanh */
         background-color: #cce5ff; /* Nền màu xanh nhạt */
@@ -32,7 +31,7 @@
 <div class="content">
     <div class="page-header">
         <div class="page-title">
-            <h3><i class="fa-brands fa-readme"></i> LIST OF COMICS</h3>
+            <h2><i class="fa-brands fa-readme"></i> LIST OF COMICS</h2>
             <h6>Manage - View </h6>
         </div>
         <div class="page-btn">
@@ -72,7 +71,7 @@
                             <th>Total Rating</th>
                             <th>Views</th>
                             <th>Types</th>
-
+                            <th>Active</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -91,7 +90,20 @@
                                 <td>@i.TkDanhgia</td>
                                 <td>@i.TongLuotXem</td>
                                 <td>@listloai</td>
-
+                                <td>
+                                    @switch (i.Active)
+                                    {
+                                        case true:
+                                            <span class="text-success">Active</span>
+                                            break;
+                                        case false:
+                                            <span class="text-danger">Inactive</span>
+                                            break;
+                                        default:
+                                            <span class="text-secondary">Errol</span>
+                                            break;
+                                    }
+                                </td>
                                 <td>
                                     <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="Detail" asp-route-id="@i.IdBo" class="me-3">
                                         <img src="~/img/icons/eye.svg" alt="img">
@@ -101,7 +113,6 @@
                                     </a>
                                     <a asp-area="" asp-controller="BoTruyen" asp-action="CTBoTruyen" asp-route-id="@i.IdBo" class="me-3">
                                         <img src="~/img/icons/dashboard.svg" alt="img">
-
                                     </a>
                                     <a class="delete-product me-3" data-product-id="@i.IdBo" href="javascript:void(0);">
                                         <img src="~/img/icons/delete.svg" alt="img">
@@ -156,4 +167,25 @@
     </div>
 </div>
 
+<script>
+    var currentFilter = 'all';  // Default filter
+    var premiumOnly = false;    // Premium filter state
 
+    function applyFilter(filter) {
+        currentFilter = filter;
+        updateList();
+    }
+
+    function togglePremium() {
+        premiumOnly = !premiumOnly;  // Toggle premium state
+        document.getElementById('premium-btn').classList.toggle('btn-active'); // Toggle button class for visual feedback
+        updateList();
+    }
+
+    function updateList() {
+        // Build the URL with current filters
+        var url = '@Url.Action("ViewList", "CusManager", new { Area = "Admin" })' +
+            `?status=${currentFilter}&premium=${premiumOnly}`;
+        window.location.href = url; // Redirect to the updated URL
+    }
+</script>

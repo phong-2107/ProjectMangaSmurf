@@ -1,0 +1,116 @@
+﻿@model IEnumerable<ProjectMangaSmurf.Models.ServicePackConfig>
+
+@using ProjectMangaSmurf.Repository
+@inject IService kh
+
+<style>
+    .btn-custom {
+        background-color: rebeccapurple;
+        color: white;
+        transition: all 0.3s;
+    }
+
+    .btn-active {
+        background-color: magenta; /* Change color when active */
+    }
+
+    .alert-info {
+        color: #004085; /* Màu chữ xanh */
+        background-color: #cce5ff; /* Nền màu xanh nhạt */
+        border: 1px solid #b8daff; /* Viền màu xanh */
+        padding: 10px;
+        margin: 10px 0;
+        border-radius: 5px; /* Bo góc cho khối thông báo */
+    }
+
+    .table-container {
+        margin-bottom: 30px; /* Space between tables */
+    }
+
+    .table-title {
+        background-color: #1B2850; /* Background color for titles */
+        color: white; /* Text color for titles */
+        padding: 10px;
+        border-radius: 5px; /* Rounded corners for titles */
+        margin-bottom: 10px;
+    }
+</style>
+
+<div class="content">
+    <div class="page-header">
+        <div class="page-title">
+            <h2><i class="fa-solid fa-circle-user"></i> LIST OF SERVICE PACK CONFIG </h2>
+            <h6>Manager - View - Authentication</h6>
+        </div>
+        <div class="page-btn">
+            <a asp-area="Admin" asp-controller="StaffManager" asp-action="Register" class="btn btn-added">
+                <img src="~/img/icons/plus.svg" alt="img" class="me-1"> Add New Role-User
+            </a>
+        </div>
+    </div>
+
+    @foreach (var parentId in new[] { "P001", "P002", "P003" })
+    {
+        var parentName = Model.FirstOrDefault(p => p.ParentPack == parentId)?.PackName ?? $"Parent {parentId}";
+        <div class="table-container">
+            <div class="table-title">@parentName</div>
+            <div class="table-responsive">
+                <table class="table datanew">
+                    <thead>
+                        <tr>
+                            <th>ID Pack</th>
+                            <th>Pack Name</th>
+                            <th>Ticket Salary</th>
+                            <th>Activate Time</th>
+                            <th>Amount</th>
+                            <th>Discount</th>
+                            <th>Description</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Where(p => p.ParentPack == parentId))
+                        {
+                            <tr>
+                                <td>@item.IdPack</td>
+                                <td>@item.PackName</td>
+                                <td>@item.TicketSalary</td>
+                                <td>@item.ActivateTimeService</td>
+                                <td>@item.Amount</td>
+                                <td>@item.Discount</td>
+                                <td>@item.Description</td>
+                                <td>
+                                    @if (item.Active == true)
+                                    {
+                                        <span class="text-success">Active</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-danger">Inactive</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+</div>
+
+<script>
+    var currentFilter = 'all';  // Default filter
+    var Banned = false;    // Premium filter state
+
+    function applyFilter(filter) {
+        currentFilter = filter;
+        updateList();
+    }
+
+    function updateList() {
+        // Build the URL with current filters
+        var url = '@Url.Action("Index", "ServiceManager", new { Area = "Admin" })' +
+            `?status=${currentFilter}&premium=${premiumOnly}`;
+        window.location.href = url;
+    }
+</script>

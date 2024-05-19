@@ -38,7 +38,7 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
 
         public async Task<IActionResult> Index()
         {
-            IQueryable<NhanVien> query = _staffRepository.GetQuery(); 
+            IQueryable<NhanVien> query = _staffRepository.GetQueryV(); 
 
             var list = await query.ToListAsync(); 
             return View(list); 
@@ -88,6 +88,20 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
         }
 
 
+        [HttpPost]
+        public async Task<IActionResult> TogglePermissionStatus(string idUser, byte idPermissions)
+        {
+            var permission = await _staffRepository.GetPermissionDetailByIdAsync(idUser, idPermissions);
+            if (permission == null)
+            {
+                return NotFound("Permission not found.");
+            }
+
+            permission.Active = !(permission.Active ?? false);
+            await _staffRepository.UpdatePermissionDetailAsync(permission);
+
+            return RedirectToAction("Detail", new { id = idUser });
+        }
 
 
         public async Task<IActionResult> Update(string id)
@@ -112,16 +126,19 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        private async Task UpdateStaffStatus(string userId, bool status)
+        public async Task<IActionResult> UpdateStaffStatus(string IdUser, bool Active)
         {
-            var user = await _staffRepository.GetStatsByIdAsync(userId);
-            if (user != null)
+            var user = await _userRepository.GetByIdAsync(IdUser);
+            if (user == null)
             {
-                user.Active = status;
-                await _staffRepository.UpdateStatsAsync(user);
+                return NotFound("User not found.");
             }
-            RedirectToAction("Detail");
+
+            user.Active = Active;
+            await _userRepository.UpdateAsync(user);
+            return RedirectToAction("Detail", new { id = IdUser });
         }
+
 
         [HttpPost]
         public async Task<IActionResult> SetActive(int id)

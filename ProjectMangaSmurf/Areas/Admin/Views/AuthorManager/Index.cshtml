@@ -19,14 +19,23 @@
     .search-set + .filters {
         margin-top: 10px;
     }
+
+    .alert-info {
+        color: #004085; /* Màu chữ xanh */
+        background-color: #cce5ff; /* Nền màu xanh nhạt */
+        border: 1px solid #b8daff; /* Viền màu xanh */
+        padding: 10px;
+        margin: 10px 0;
+        border-radius: 5px; /* Bo góc cho khối thông báo */
+    }
 </style>
 
 <div class="content">
     <div class="page-header d-flex justify-content-between align-items-center">
         <div class="page-title">
 
-            <h4><i class="fa-brands fa-watchman-monitoring"></i> LIST OF AUTHORS /h4>
-            <h6>Manage Author</h6>
+            <h2><i class="fa-brands fa-watchman-monitoring"></i> LIST OF AUTHORS </h2>
+            <h6>Manage Author - Infographic</h6>
         </div>
         <div class="page-btn">
             <a asp-area="Admin" asp-controller="AuthorManager" asp-action="Add" class="btn btn-added">
@@ -51,9 +60,11 @@
                         <a href="@Url.Action("Index", "AuthorManager", new { area = "Admin", isActive = (bool?)null })" class="btn btn-primary">See All <i class="fa-solid fa-border-all"></i></a>
                         <a href="@Url.Action("Index", "AuthorManager", new { area = "Admin", isActive = true })" class="btn btn-success">Activating <i class="fa-solid fa-person-digging"></i></a>
                         <a href="@Url.Action("Index", "AuthorManager", new { area = "Admin", isActive = false })" class="btn btn-danger">Banning <i class="fa-solid fa-ban"></i></a>
-                    </div> 
+                    </div>
                 </div>
-            
+                <div class="alert-info">
+                    Only author have not any Comic-Series that can be delete !
+                </div>
             </div>
             <div class="table-responsive">
                 <table class="table datanew">
@@ -73,7 +84,7 @@
                                 <td>@author.IdTg</td>
                                 <td>@author.TenTg</td>
                                 <td>@boTruyenRepository.CountByAuthorId(author.IdTg).Result</td> <!-- Consider moving this logic to the controller -->
-                                <td>@(author.Active.HasValue ? (author.Active.Value ? "Yes" : "No") : "Unknown")</td>
+                                <td>@(author.Active.HasValue ? (author.Active.Value ? "Activate" : "Hided") : "Unknown")</td>
                                 <td>
                                     <a asp-area="Admin" asp-controller="AuthorManager" asp-action="Detail" asp-route-id="@author.IdTg" class="me-3">
                                         <img src="~/img/icons/eye.svg" alt="View">

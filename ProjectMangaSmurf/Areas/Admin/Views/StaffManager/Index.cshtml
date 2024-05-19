@@ -14,6 +14,14 @@
         background-color: magenta; /* Change color when active */
     }
 
+    .alert-info {
+        color: #004085; /* Màu chữ xanh */
+        background-color: #cce5ff; /* Nền màu xanh nhạt */
+        border: 1px solid #b8daff; /* Viền màu xanh */
+        padding: 10px;
+        margin: 10px 0;
+        border-radius: 5px; /* Bo góc cho khối thông báo */
+    }
 </style>
 
 
@@ -42,16 +50,13 @@
                         </a>
                     </div>
                 </div>
+
                 <div class="filters">
                     <button class="btn btn-primary" onclick="applyFilter('all')">See All <i class="fa-solid fa-border-all"></i></button>
                     <button class="btn btn-success" onclick="applyFilter('active')">Activating <i class="fa-solid fa-person-digging"></i></button>
                     <button class="btn btn-danger" onclick="applyFilter('banned')">Banning  <i class="fa-solid fa-ban"></i></button>
                 </div>
-
-
             </div>
-
-
             <div class="table-responsive">
                 <table class="table  datanew">
                     <thead>
@@ -76,7 +81,20 @@
                                 <td>@(i.IdUserNavigation?.Phone ?? "N/A")</td>
                                 <td>@(i.IdUserNavigation?.Email ?? "N/A")</td>
                                 <td>@i.StaffRole</td>
-                                <td>@(i.IdUserNavigation?.Active.ToString() ?? "N/A")</td>
+                                <td>
+                                    @switch ((i.IdUserNavigation?.Active))
+                                    {
+                                        case true:
+                                            <span class="text-success">Active</span>
+                                            break;
+                                        case false:
+                                            <span class="text-danger">Inactive</span>
+                                            break;
+                                        default:
+                                            <span class="text-secondary">Errol</span>
+                                            break;
+                                    }
+                                </td>
                                 <td>
                                     <a asp-area="Admin" asp-controller="StaffManager" asp-action="Detail" asp-route-id="@i.IdUser" class="me-3">
                                         <img src="~/img/icons/eye.svg" alt="img">
