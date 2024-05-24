@@ -34,5 +34,7 @@ namespace ProjectMangaSmurf.Repository
         IQueryable<NhanVien> GetQueryV();
         Task UpdatePermissionDetail2Async(StaffPermissionsDetail permissionDetail);
         Task<StaffPermissionsDetail> GetPermissionDetailByIdAsync(string idUser, byte idPermissions);
+
+        Task DeleteAllDetails(string id);
     }
 }

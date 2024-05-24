@@ -34,6 +34,16 @@
         border-radius: 5px; /* Rounded corners for titles */
         margin-bottom: 10px;
     }
+
+    .notice {
+        color: #D8000C;
+        background-color: #FFD2D2;
+        padding: 8px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        border: 1px solid #D8000C;
+    }
 </style>
 
 <div class="content">
@@ -43,29 +53,32 @@
             <h6>Manager - View - Authentication</h6>
         </div>
         <div class="page-btn">
-            <a asp-area="Admin" asp-controller="StaffManager" asp-action="Register" class="btn btn-added">
-                <img src="~/img/icons/plus.svg" alt="img" class="me-1"> Add New Role-User
+            <a asp-area="Admin" asp-controller="ServiceManager" asp-action="Add" class="btn btn-added">
+                <img src="~/img/icons/plus.svg" alt="Add New Role-User" class="me-1"> Add New Pack
             </a>
         </div>
     </div>
-
+    <div class="notice">
+        Notice: Changing the activation status will affect the transaction action!
+    </div>
     @foreach (var parentId in new[] { "P001", "P002", "P003" })
     {
         var parentName = Model.FirstOrDefault(p => p.ParentPack == parentId)?.PackName ?? $"Parent {parentId}";
         <div class="table-container">
-            <div class="table-title">@parentName</div>
+            <div class="table-title"><i class="fa-solid fa-ticket"></i>                                   @parentName</div>
             <div class="table-responsive">
                 <table class="table datanew">
                     <thead>
                         <tr>
                             <th>ID Pack</th>
                             <th>Pack Name</th>
+                            <th>Purchase Times</th>
                             <th>Ticket Salary</th>
-                            <th>Activate Time</th>
                             <th>Amount</th>
                             <th>Discount</th>
                             <th>Description</th>
                             <th>Status</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -74,8 +87,8 @@
                             <tr>
                                 <td>@item.IdPack</td>
                                 <td>@item.PackName</td>
+                                <td>@item.PurchaseCount</td> <!-- Display purchase count -->
                                 <td>@item.TicketSalary</td>
-                                <td>@item.ActivateTimeService</td>
                                 <td>@item.Amount</td>
                                 <td>@item.Discount</td>
                                 <td>@item.Description</td>
@@ -89,6 +102,17 @@
                                         <span class="text-danger">Inactive</span>
                                     }
                                 </td>
+                                <td>
+                                    <a asp-area="Admin" asp-controller="ServiceManager" asp-action="Update" asp-route-id="@item.IdPack" class="me-3">
+                                        <img src="~/img/icons/edit.svg" alt="Edit">
+                                    </a>
+                                    <a href="javascript:void(0);" onclick="toggleActive('@item.IdPack')" class="me-3">
+                                        <img src="~/img/icons/eye.svg" alt="Toggle Active">
+                                    </a>
+                                    <a href="javascript:void(0);" onclick="deletePack('@item.IdPack')" class="me-3">
+                                        <img src="~/img/icons/delete.svg" alt="Delete">
+                                    </a>
+                                </td>
                             </tr>
                         }
                     </tbody>
@@ -99,18 +123,62 @@
 </div>
 
 <script>
-    var currentFilter = 'all';  // Default filter
-    var Banned = false;    // Premium filter state
-
-    function applyFilter(filter) {
-        currentFilter = filter;
-        updateList();
+    function toggleActive(idPack) {
+        $.ajax({
+            url: '@Url.Action("ToggleActive", "ServiceManager")',
+            type: 'POST',
+            data: { id: idPack },
+            success: function (response) {
+                location.reload();
+            },
+            error: function () {
+                alert('Failed to toggle active status.');
+            }
+        });
     }
 
-    function updateList() {
-        // Build the URL with current filters
-        var url = '@Url.Action("Index", "ServiceManager", new { Area = "Admin" })' +
-            `?status=${currentFilter}&premium=${premiumOnly}`;
-        window.location.href = url;
+    function deletePack(idPack) {
+        Swal.fire({
+            title: "Are you sure you want to delete this Pack?",
+            text: `This action cannot be undone and will remove all related data for ID ${idPack}.`,
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#007bff",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete everything!",
+            confirmButtonClass: "btn btn-primary",
+            cancelButtonClass: "btn btn-danger ml-1",
+            buttonsStyling: false
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '@Url.Action("DeleteConfirmed", "ServiceManager")',
+                    type: 'POST',
+                    data: { id: idPack },
+                    success: function (response) {
+                        Swal.fire(
+                            'Deleted!',
+                            'All related data have been successfully deleted.',
+                            'success'
+                        );
+                        location.reload();
+                    },
+                    error: function (xhr, status, error) {
+                        Swal.fire(
+                            'Error!',
+                            'Failed to delete and related data cause there are one or more comics under control of this type. Please try to delete them first and try again.',
+                            'error'
+                        );
+                    }
+                });
+            }
+        });
     }
+
+    $(document).ready(function () {
+        $('.delete-product').click(function () {
+            var productId = $(this).data('product-id');
+            deletePack(productId);
+        });
+    });
 </script>

@@ -29,7 +29,7 @@ namespace ProjectMangaSmurf.Repository
             await _context.SaveChangesAsync();
         }
 
-        public async Task UpdatePermissionDetailAsync(StaffPermissionsDetail permission )
+        public async Task UpdatePermissionDetailAsync(StaffPermissionsDetail permission)
         {
             _context.Update(permission);
             await _context.SaveChangesAsync();
@@ -110,7 +110,7 @@ namespace ProjectMangaSmurf.Repository
             await _context.SaveChangesAsync();
         }
 
-        public async Task UpdateAsync(NhanVien nv , User uv )
+        public async Task UpdateAsync(NhanVien nv, User uv)
         {
             _context.NhanViens.Update(nv);
             _context.Users.Update(uv);
@@ -197,8 +197,44 @@ namespace ProjectMangaSmurf.Repository
                 .FirstOrDefaultAsync(p => p.IdUser == idUser && p.IdPermissions == idPermissions);
         }
 
+        public async Task DeleteAllDetails(string id)
+        {
+            // Tìm user và liên kết nhân viên của nó
+            var nv = await _context.Users
+                .Include(u => u.NhanVien)
+                .FirstOrDefaultAsync(c => c.IdUser == id);
+
+            // Tìm nhân viên và quyền của nó
+            var per = await _context.NhanViens
+                .Include(nv => nv.StaffPermissionsDetails)
+                .FirstOrDefaultAsync(nv => nv.IdUser == id);
+
+            // Kiểm tra nếu tìm thấy nhân viên
+            if (per != null)
+            {
+                // Xóa tất cả quyền của nhân viên
+                foreach (var permissionDetail in per.StaffPermissionsDetails)
+                {
+                    _context.StaffPermissionsDetails.Remove(permissionDetail);
+                }
+                await _context.SaveChangesAsync();
+
+                // Xóa nhân viên
+                _context.NhanViens.Remove(per);
+                await _context.SaveChangesAsync();
+            }
+
+            // Kiểm tra nếu tìm thấy user
+            if (nv != null)
+            {
+                // Xóa user
+                _context.Users.Remove(nv);
+                await _context.SaveChangesAsync();
+            }
+        }
+
     }
-   
+
 }
 
 

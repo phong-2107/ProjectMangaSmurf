@@ -32,7 +32,8 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
         private readonly ITacGiaRepository _tacGiaRepository;
         private readonly IAuthorRepository _authRepository;
         private readonly IHopdongRepository _hopdongRepository;
-        private readonly ProjectDBContext _context;  // Thêm dòng này
+        private readonly IWebMediaRepository _mediaRepository;
+        private readonly ProjectDBContext _context; 
 
         public BoTruyenManager(IboTruyenRepository botruyenrepository,
                                 IChapterRepository chapterrepository,
@@ -40,7 +41,8 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
                                 ILoaiTruyenRepository loaiTruyenRepository,
                                 ITacGiaRepository tacGiaRepository,
                                 IHopdongRepository hopdongRepository,
-                                ProjectDBContext context)  // Thêm dòng này
+                                ProjectDBContext context,
+                                IWebMediaRepository mediaRepository)  // Thêm dòng này
         {
             _botruyenrepository = botruyenrepository;
             _chapterrepository = chapterrepository;
@@ -49,6 +51,7 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
             _tacGiaRepository = tacGiaRepository;
             _hopdongRepository = hopdongRepository;
             _context = context;  // Thêm dòng này
+            _mediaRepository = mediaRepository;
         }
 
         #endregion
@@ -68,6 +71,8 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
             else
                 return 0;
         }
+
+
 
         private async Task<string> SaveFile(IFormFile file)
         {
@@ -142,6 +147,8 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
             else
             {
                 var listBotruyen = await _botruyenrepository.GetAllAsync();
+                var alertConfig = await _mediaRepository.GetConfigByIdAsync2(36);
+                var alertConfigUpdate = await _mediaRepository.GetConfigByIdAsync2(37);
                 var ListEarliest = await _botruyenrepository.GetAllAsyncByChapterEarliest();
                 var listPopular = await _botruyenrepository.GetAllAsyncByDay();
                 var listMoney = await _hopdongRepository.GetAllAsync();
@@ -154,6 +161,8 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
                 ViewBag.View = sumView;
                 ViewBag.ListEarliest = ListEarliest.Take(4);
                 ViewBag.listPopular = listPopular.Take(4);
+                ViewBag.AlertMessage = alertConfig?.ConfigValue;
+                ViewBag.AlertMessage2 = alertConfigUpdate?.ConfigValue;
                 return View(listBotruyen);
             }
         }

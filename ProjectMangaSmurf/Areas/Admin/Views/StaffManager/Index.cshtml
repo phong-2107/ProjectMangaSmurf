@@ -99,10 +99,10 @@
                                     <a asp-area="Admin" asp-controller="StaffManager" asp-action="Detail" asp-route-id="@i.IdUser" class="me-3">
                                         <img src="~/img/icons/eye.svg" alt="img">
                                     </a>
-                                    <a asp-area="Admin" asp-controller="StaffManager" asp-action="Update" asp-route-id="@i.IdUser" class="me-3 ">
+                                    <a asp-area="Admin" asp-controller="StaffManager" asp-action="UpdateAndRBAC" asp-route-id="@i.IdUser" class="me-3 ">
                                         <img src="~/img/icons/edit.svg" alt="img">
                                     </a>
-                                    <a asp-area="Admin" asp-controller="StaffManager" asp-action="Delete" asp-route-id="@i.IdUser" class="me-3 ">
+                                    <a class="delete-productn me-3" data-product-id="@i.IdUser" href="javascript:void(0);">
                                         <img src="~/img/icons/delete.svg" alt="img">
                                     </a>
                                 </td>
@@ -114,22 +114,50 @@
         </div>
     </div>
 </div>
-<script>
-    var currentFilter = 'all';  // Default filter
-    var Banned = false;    // Premium filter state
+<<script>
 
-    function applyFilter(filter) {
-        currentFilter = filter;
-        updateList();
-    }
-
-    function updateList() {
-        // Build the URL with current filters
-        var url = '@Url.Action("Index", "StaffManager", new { Area = "Admin" })' +
-            `?status=${currentFilter}&premium=${premiumOnly}`;
-        window.location.href = url;
-    }
+         $('.delete-productn').click(function () {
+             var productId = $(this).data('product-id');
+             Swal.fire({
+                 title: "Are you sure?",
+                 text: `Delete USER ID ${productId}`,
+                 type: "warning",
+                 showCancelButton: true,
+                 confirmButtonColor: "#3085d6",
+                 cancelButtonColor: "#d33",
+                 confirmButtonText: "Yes, delete it!",
+                 confirmButtonClass: "btn btn-primary",
+                 cancelButtonClass: "btn btn-danger ml-1",
+                 buttonsStyling: false
+             }).then((result) => {
+                 if (result.isConfirmed) {
+                     $.ajax({
+                         url: `/Admin/StaffManager/DeleteConfirmed/${productId}`,
+                         type: 'POST',
+                         data: { id: productId },
+                         success: function (response) {
+                             Swal.fire(
+                                 'Deleted!',
+                                 'Successfully',
+                                 'success'
+                             );
+                             location.reload();
+                         },
+                         error: function (xhr, status, error) {
+                             Swal.fire(
+                                 'Error!',
+                                 'Failed to delete the user because this account has Acction logs - Please try again.',
+                                 'error'
+                             );
+                             console.error(xhr.responseText);
+                         }
+                     });
+                 }
+             });
+         });
+    
 </script>
+
 
 
 

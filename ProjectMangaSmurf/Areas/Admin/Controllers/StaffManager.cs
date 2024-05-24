@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
 using ProjectMangaSmurf.Models.ViewModels;
 using ProjectMangaSmurf.Data;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 using ProjectMangaSmurf.Areas.Common.Repository;
 using System.Linq;
 using System.Collections.Generic;
@@ -30,41 +29,19 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
             _context = db;
         }
 
-        public async Task<IActionResult> RBAC()
-        {
-            IEnumerable<PermissionsList> permissionsList = await _staffRepository.GetAllRBACAsync() ?? Enumerable.Empty<PermissionsList>();
-            return View(permissionsList);
-        }
-
+        #region Index
+        [RBACAuthorize(PermissionId = 49)]
         public async Task<IActionResult> Index()
         {
-            IQueryable<NhanVien> query = _staffRepository.GetQueryV(); 
+            IQueryable<NhanVien> query = _staffRepository.GetQueryV();
 
-            var list = await query.ToListAsync(); 
-            return View(list); 
+            var list = await query.ToListAsync();
+            return View(list);
         }
+        #endregion
 
-        public async Task<IActionResult> SelfDetail(string id)
-        {
-            var staff = await _staffRepository.GetByIdSAsync(id);
-            if (staff == null)
-            {
-                return NotFound();
-            }
-
-            var staffPermissions = await _staffRepository.GetPermissionsByUserIdAsync(id);
-            var allPermissions = await _staffRepository.GetAllRBACAsync();
-
-            ViewBag.Pn = staffPermissions;
-            ViewBag.AllPermissions = allPermissions;
-
-            var viewModel = new StaffDetailsViewModel
-            {
-                Staff = staff
-            };
-
-            return View(viewModel);
-        }
+        #region Details
+        [RBACAuthorize(PermissionId = 50)]
         public async Task<IActionResult> Detail(string id)
         {
             var staff = await _staffRepository.GetByIdSAsync(id);
@@ -88,92 +65,112 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
         }
 
 
-        [HttpPost]
-        public async Task<IActionResult> TogglePermissionStatus(string idUser, byte idPermissions)
+        public async Task<IActionResult> SelfDetail(string id)
         {
-            var permission = await _staffRepository.GetPermissionDetailByIdAsync(idUser, idPermissions);
-            if (permission == null)
-            {
-                return NotFound("Permission not found.");
-            }
-
-            permission.Active = !(permission.Active ?? false);
-            await _staffRepository.UpdatePermissionDetailAsync(permission);
-
-            return RedirectToAction("Detail", new { id = idUser });
-        }
-
-
-        public async Task<IActionResult> Update(string id)
-        {
-            var staff = await _staffRepository.GetByIdAsync(id);
+            var staff = await _staffRepository.GetByIdSAsync(id);
             if (staff == null)
             {
                 return NotFound();
             }
-            return View(staff);
+
+            var staffPermissions = await _staffRepository.GetPermissionsByUserIdAsync(id);
+            var allPermissions = await _staffRepository.GetAllRBACAsync();
+
+            ViewBag.Pn = staffPermissions;
+            ViewBag.AllPermissions = allPermissions;
+
+            var viewModel = new StaffDetailsViewModel
+            {
+                Staff = staff
+            };
+
+            return View(viewModel);
         }
 
-        [HttpPost]
-        private async Task UpdatePermissionStatus(byte id, byte status)
+        #endregion
+
+        #region RBAC
+        [RBACAuthorize(PermissionId = 58)]
+        public async Task<IActionResult> RBAC()
         {
-            var permission = await _staffRepository.GetPermissionByIdAsync(id);
-            if (permission != null)
+            IEnumerable<PermissionsList> permissionsList = await _staffRepository.GetAllRBACAsync() ?? Enumerable.Empty<PermissionsList>();
+            return View(permissionsList);
+        }
+        #endregion
+
+        #region TogglePermissionStatus
+        [HttpPost]
+        [RBACAuthorize(PermissionId = 61)]
+        public async Task<IActionResult> TogglePermissionStatus(string idUser, byte idPermissions)
+        {
+            using (var transaction = await _context.Database.BeginTransactionAsync())
             {
-                permission.PermissionsStats = status;
-                await _staffRepository.UpdatePermissionAsync(permission);
+                try
+                {
+                    var permission = await _staffRepository.GetPermissionDetailByIdAsync(idUser, idPermissions);
+                    if (permission == null)
+                    {
+                        return NotFound("Permission not found.");
+                    }
+
+                    // Toggle the Active status
+                    permission.Active = !(permission.Active ?? false);
+                    await _staffRepository.UpdatePermissionDetailAsync(permission);
+
+                    await transaction.CommitAsync();
+                    return RedirectToAction("Detail", new { id = idUser });
+                }
+                catch (Exception ex)
+                {
+                    await transaction.RollbackAsync();
+                    ModelState.AddModelError("", "An error occurred: " + ex.Message);
+                    return RedirectToAction("Detail", new { id = idUser });
+                }
             }
         }
 
+        #endregion
+
+        #region UpdateStaffStatus
         [HttpPost]
+        [RBACAuthorize(PermissionId = 60)]
         public async Task<IActionResult> UpdateStaffStatus(string IdUser, bool Active)
         {
-            var user = await _userRepository.GetByIdAsync(IdUser);
-            if (user == null)
+            using (var transaction = await _context.Database.BeginTransactionAsync())
             {
-                return NotFound("User not found.");
+                try
+                {
+                    var user = await _userRepository.GetByIdAsync(IdUser);
+                    if (user == null)
+                    {
+                        return NotFound("User not found.");
+                    }
+
+                    user.Active = Active;
+                    await _userRepository.UpdateAsync(user);
+
+                    await transaction.CommitAsync();
+                    return RedirectToAction("Detail", new { id = IdUser });
+                }
+                catch (Exception ex)
+                {
+                    await transaction.RollbackAsync();
+                    ModelState.AddModelError("", "An error occurred: " + ex.Message);
+                    return RedirectToAction("Detail", new { id = IdUser });
+                }
             }
-
-            user.Active = Active;
-            await _userRepository.UpdateAsync(user);
-            return RedirectToAction("Detail", new { id = IdUser });
         }
+        #endregion
 
-
-        [HttpPost]
-        public async Task<IActionResult> SetActive(int id)
-        {
-            await UpdatePermissionStatus((byte)id, (byte)1);  // Active status
-            return RedirectToAction("RBAC");
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> SetInactive(int id)
-        {
-            await UpdatePermissionStatus((byte)id, (byte)0);  // Inactive status
-            return RedirectToAction("RBAC");
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> SetMaintenance(int id)
-        {
-            await UpdatePermissionStatus((byte)id, (byte)2);  // Maintenance status
-            return RedirectToAction("RBAC");
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> SetStop(int id)
-        {
-            await UpdatePermissionStatus((byte)id, (byte)3);  // Stop status
-            return RedirectToAction("RBAC");
-        }
-
+        #region Register
+        [RBACAuthorize(PermissionId = 59)]
         public IActionResult Register()
         {
             return View();
         }
 
         [HttpPost]
+        [RBACAuthorize(PermissionId = 59)]
         public async Task<IActionResult> Register(string Taikhoan, string Email, string matKhau)
         {
             if (!ModelState.IsValid)
@@ -184,11 +181,11 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
             var existingUser = await _staffRepository.GetByEmailAsync(Email);
             if (existingUser != null)
             {
-                ViewBag.Error = "This email already exists"; 
+                ViewBag.Error = "This email already exists";
                 return View();
             }
 
-            using (var transaction = _context.Database.BeginTransaction())
+            using (var transaction = await _context.Database.BeginTransactionAsync())
             {
                 try
                 {
@@ -229,22 +226,24 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
                         }
                     }
 
-                    transaction.Commit();
+                    await transaction.CommitAsync();
 
                     // Redirect to RegisterRBAC with the IdUser of the newly created user
                     return RedirectToAction("UpdateAndRBAC", "StaffManager", new { id = user.IdUser });
                 }
                 catch (Exception ex)
                 {
-                    transaction.Rollback();
+                    await transaction.RollbackAsync();
                     ViewBag.Error = "Error: " + ex.Message;
                     return View();
                 }
             }
         }
+        #endregion
 
-
+        #region UpdateAndRBAC
         [HttpGet]
+        [RBACAuthorize(PermissionId = 59)]
         public async Task<IActionResult> UpdateAndRBAC(string id)
         {
             var staff = await _staffRepository.GetByIdAsync(id);
@@ -276,8 +275,8 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
             return View();
         }
 
-
         [HttpPost]
+        [RBACAuthorize(PermissionId = 59)]
         public async Task<IActionResult> UpdateAndRBAC(string IdUser, string Username, string FullName, DateOnly? BirthDate, byte? Gender, bool StaffRole, List<byte> SelectedPermissions)
         {
             if (!ModelState.IsValid)
@@ -291,7 +290,7 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
                 return NotFound("User not found.");
             }
 
-            using (var transaction = _context.Database.BeginTransaction())
+            using (var transaction = await _context.Database.BeginTransactionAsync())
             {
                 try
                 {
@@ -318,17 +317,97 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
                         await _staffRepository.UpdatePermissionDetailAsync(permission);
                     }
 
-                    await _context.SaveChangesAsync();
-                    transaction.Commit();
+                    await transaction.CommitAsync();
                     return RedirectToAction("Index", "StaffManager");
                 }
                 catch (Exception ex)
                 {
-                    transaction.Rollback();
+                    await transaction.RollbackAsync();
                     ModelState.AddModelError("", "An error occurred: " + ex.Message);
                     return View();
                 }
             }
         }
+        #endregion
+
+        #region Delete Methods
+        [RBACAuthorize(PermissionId = 53)]
+        [HttpPost]
+        public async Task<IActionResult> DeleteConfirmed(string id)
+        {
+            using (var transaction = await _context.Database.BeginTransactionAsync())
+            {
+                try
+                {
+                    var boTruyen = await _staffRepository.GetByIdAsync(id);
+                    if (boTruyen == null)
+                    {
+                        return NotFound();
+                    }
+
+                    await _staffRepository.DeleteAllDetails(id);
+                    await transaction.CommitAsync();
+
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception ex)
+                {
+                    await transaction.RollbackAsync();
+                    return Json(new { success = false, message = "Error: " + ex.Message });
+                }
+            }
+        }
+        #endregion
+
+
+        #region UpdateStatus
+        [HttpPost]
+        [RBACAuthorize(PermissionId = 61)]
+        public async Task<IActionResult> UpdateStatus(byte id, string status)
+        {
+            using (var transaction = await _context.Database.BeginTransactionAsync())
+            {
+                try
+                {
+                    var permission = await _staffRepository.GetPermissionByIdAsync(id);
+                    if (permission == null)
+                    {
+                        return NotFound();
+                    }
+
+                    switch (status.ToLower())
+                    {
+                        case "active":
+                            permission.PermissionsStats = 1;
+                            permission.Active = true;
+                            break;
+                        case "inactive":
+                            permission.PermissionsStats = 0;
+                            permission.Active = false;
+                            break;
+                        case "maintenance":
+                            permission.PermissionsStats = 2;
+                            break;
+                        case "stop":
+                            permission.PermissionsStats = 3;
+                            permission.Active = false;
+                            break;
+                        default:
+                            return BadRequest("Invalid status.");
+                    }
+
+                    await _staffRepository.UpdatePermissionAsync(permission);
+                    await transaction.CommitAsync();
+                    return Json(new { success = true });
+                }
+                catch (Exception ex)
+                {
+                    await transaction.RollbackAsync();
+                    return Json(new { success = false, message = "Error: " + ex.Message });
+                }
+            }
+        }
+        #endregion
+
     }
 }

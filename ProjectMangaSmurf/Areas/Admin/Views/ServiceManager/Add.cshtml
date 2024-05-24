@@ -1,0 +1,132 @@
+﻿@model ProjectMangaSmurf.Models.ServicePackConfig
+
+@using Microsoft.AspNetCore.Mvc.Rendering
+@using ProjectMangaSmurf.Repository
+@inject IService kh
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<style>
+    .preview {
+        max-width: 50%;
+        max-height: 50%;
+    }
+
+    form, .notice {
+        display: inline-block;
+        vertical-align: top;
+        margin-right: 10px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        margin-left: 20px; /* Ensure left margin for all forms and notice */
+    }
+
+    .notice {
+        color: #D8000C;
+        background-color: #FFD2D2;
+        padding: 8px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        border: 1px solid #D8000C;
+    }
+</style>
+
+<div class="content">
+    <div class="page-header">
+        <div class="page-title">
+            <h2>Upload New Service Pack <i class="fa-regular fa-square-plus"></i> </h2>
+            <h6>Place the Service Pack Information</h6>
+        </div>
+        <div class="notice">
+            "Notice: If a Service Pack is successfully uploaded, you will be redirected to the View List."
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <form asp-action="Add" method="post" enctype="multipart/form-data" class="row">
+                <div class="col-lg-3 col-sm-6 col-12">
+                    <div class="form-group">
+                        <label asp-for="IdPack">Service Pack Id</label>
+                        <input asp-for="IdPack" type="text" value="@ViewBag.Id" readonly class="form-control">
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-6 col-12">
+                    <div class="form-group">
+                        <label asp-for="PackName">Service Pack Name</label>
+                        <input asp-for="PackName" type="text" placeholder="Ex: Basic Pack" class="form-control">
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-6 col-12">
+                    <div class="form-group">
+                        <label asp-for="TicketSalary">Ticket Salary</label>
+                        <input asp-for="TicketSalary" type="number" class="form-control">
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-6 col-12">
+                    <div class="form-group">
+                        <label asp-for="Amount">Amount</label>
+                        <input asp-for="Amount" type="number" step="0.01" class="form-control">
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-6 col-12">
+                    <div class="form-group">
+                        <label asp-for="Discount">Discount</label>
+                        <input asp-for="Discount" type="number" step="0.01" class="form-control">
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-6 col-12">
+                    <div class="form-group">
+                        <label asp-for="Description">Description</label>
+                        <input asp-for="Description" type="text" class="form-control">
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-6 col-12">
+                    <label asp-for="ParentPack">Parent Pack</label>
+                    <select asp-for="ParentPack" class="form-control">
+                        <option value="P001">Box</option>
+                        <option value="P002">Pack</option>
+                        <option value="P003">Premium</option>
+                    </select>
+                </div>
+                <div class="col-lg-3 col-sm-6 col-12">
+                    <label asp-for="Active">Active Status</label>
+                    <select asp-for="Active" class="form-control">
+                        <option value="true">Active</option>
+                        <option value="false">Inactive</option>
+                    </select>
+                </div>
+                <div asp-validation-summary="ModelOnly" class="col-lg-12 p-4 text-danger" style="font-size:20px; font-weight:600"></div>
+                <div class="col-lg-12">
+                    <button type="submit" class="btn btn-submit me-2">Submit</button>
+                    <a href="javascript:history.back()" class="btn btn-cancel">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('form').on('submit', function (e) {
+            var packName = $('#PackName').val().trim();
+            var ticketSalary = $('#TicketSalary').val().trim();
+            var amount = $('#Amount').val().trim();
+            var discount = $('#Discount').val().trim();
+            var description = $('#Description').val().trim();
+            var parentPack = $('#ParentPack').val();
+            var isActive = $('#Active').val();
+
+            if (packName === "" || ticketSalary === "" || amount === "" || discount === "" || description === "") {
+                alert("Please fill out all fields.");
+                e.preventDefault(); // Prevent form submission
+            } else {
+                var message = "Are you sure you want to submit the form?"; // Base message
+                message += "\n Active Status: " + (isActive === 'true' ? 'Active' : 'Inactive');
+                var confirmSubmit = confirm(message);
+                if (!confirmSubmit) {
+                    e.preventDefault(); // Prevent form submission
+                }
+            }
+        });
+    });
+</script>

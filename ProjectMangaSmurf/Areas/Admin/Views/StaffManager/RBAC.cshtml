@@ -7,7 +7,6 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 </head>
 <style>
-    <style >
     .btn-custom {
         background-color: rebeccapurple;
         color: white;
@@ -20,9 +19,9 @@
 
     .action-button {
         margin-right: 5px;
-        border: 0px solid #ccc; /* Default border for all buttons */
+        border: 0px solid #ccc;
         padding: 5px 10px;
-        display: inline-block; /* Align buttons in a row */
+        display: inline-block;
         color: white;
         cursor: pointer;
     }
@@ -57,19 +56,17 @@
     }
 </style>
 
-</style>
-
 <div class="content">
     <div class="page-header">
         <div class="page-title">
             <h2>
-                <i class="fa-solid fa-circle-user"></i> LIST OF PERMISSIONS 
-             </h2>
-        <h6>Manager - View - Edit Role-Base Controller </h6> 
+                <i class="fa-solid fa-circle-user"></i> LIST OF PERMISSIONS
+            </h2>
+            <h6>Manager - View - Edit Role-Base Controller </h6>
         </div>
-            <div class="alert-info">
-                Upload Status Directly Here 
-            </div>
+        <div class="alert-info">
+            Upload Status Directly Here
+        </div>
     </div>
     <div class="card">
         <div class="card-body">
@@ -114,26 +111,15 @@
                                 </td>
                                 <td>@(item.Active.HasValue ? (item.Active.Value ? "Yes" : "No") : "N/A")</td>
                                 <td>
-                                    <form asp-action="SetActive" asp-route-id="@item.IdPermissions" method="post" style="display: inline;">
-                                        <button type="submit" class="action-button btn-set-active">
-                                            <i class="fa-solid fa-person-digging"></i> Set to Active
-                                        </button>
-                                    </form>
-                                    <form asp-action="SetInactive" asp-route-id="@item.IdPermissions" method="post" style="display: inline;">
-                                        <button type="submit" class="action-button btn-set-inactive">
-                                            <i class="fa-regular fa-circle-stop"></i> Set to Inactive
-                                        </button>
-                                    </form>
-                                    <form asp-action="SetMaintenance" asp-route-id="@item.IdPermissions" method="post" style="display: inline;">
-                                        <button type="submit" class="action-button btn-set-maintenance">
-                                            <i class="fa-solid fa-tools"></i> Set to Maintenance
-                                        </button>
-                                    </form>
-                                    <form asp-action="SetStop" asp-route-id="@item.IdPermissions" method="post" style="display: inline;">
-                                        <button type="submit" class="action-button btn-set-stop">
-                                            <i class="fa-solid fa-ban"></i> Set to Stop
-                                        </button>
-                                    </form>
+                                    <button class="action-button @(item.Active ?? false ? "btn-set-inactive" : "btn-set-active")" onclick="updateStatus('@item.IdPermissions', '@(item.Active ?? false ? "inactive" : "active")')">
+                                        <i class="fa-solid fa-toggle-@(item.Active ?? false ? "off" : "on")"></i> @(item.Active ?? false ? "Set to Inactive" : "Set to Active")
+                                    </button>
+                                    <button class="action-button btn-set-maintenance" onclick="updateStatus('@item.IdPermissions', 'maintenance')">
+                                        <i class="fa-solid fa-tools"></i> Set to Maintenance
+                                    </button>
+                                    <button class="action-button btn-set-stop" onclick="updateStatus('@item.IdPermissions', 'stop')">
+                                        <i class="fa-solid fa-ban"></i> Set to Stop
+                                    </button>
                                 </td>
                             </tr>
                         }
@@ -148,38 +134,49 @@
         </div>
     </div>
 </div>
-<script>
-    function handleSubmit(actionMessage) {
-        // SweetAlert2 notification
-        Swal.fire({
-            title: 'Are you sure?',
-            text: `${actionMessage} this permission?`,
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, proceed!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                Swal.fire(
-                    'Updated!',
-                    'The permission status has been updated.',
-                    'success'
-                );
-                // Submit the form programmatically
-                return true; // Allow form submission to continue
-            } else {
-                // If you want to prevent form submission on cancel
-                Swal.fire(
-                    'Cancelled',
-                    'Your action has been cancelled',
-                    'error'
-                );
-                return false; // This will stop the form from submitting
-            }
-        });
 
-        // Prevent form from submitting immediately
-        return false;
-    }
-</script>
+@section Scripts {
+    <script>
+        function updateStatus(id, status) {
+            Swal.fire({
+                title: "Are you sure?",
+                text: `You are about to set status to ${status}.`,
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, update it!",
+                confirmButtonClass: "btn btn-primary",
+                cancelButtonClass: "btn btn-danger ml-1",
+                buttonsStyling: false
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: `/Admin/StaffManager/UpdateStatus`,
+                        type: 'POST',
+                        data: {
+                            id: id,
+                            status: status
+                        },
+                        success: function (response) {
+                            Swal.fire(
+                                'Updated!',
+                                'Status has been updated.',
+                                'success'
+                            );
+                            location.reload();
+                        },
+                        error: function (xhr, status, error) {
+                            Swal.fire(
+                                'Error!',
+                                'Failed to update status.',
+                                'error'
+                            );
+                            console.error(xhr.responseText);
+                        }
+                    });
+                }
+            });
+        }
+    </script>
+}

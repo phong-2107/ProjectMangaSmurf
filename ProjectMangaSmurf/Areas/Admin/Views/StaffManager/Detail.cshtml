@@ -145,12 +145,12 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in activePermissions.Where(p => p.Active == true))
+                @foreach (var item in activePermissions)
                 {
                     var parentPermission = allPermissions.FirstOrDefault(p => p.IdPermissions == item.IdPermissionsNavigation.ParentPermissions);
                     var pn = parentPermission?.PermissionsName ?? "N/A";
-                    var accessStatus = "Already";
-                    var accessClass = "text-green";
+                    var accessStatus = item.Active == true ? "Active" : "Inactive";
+                    var accessClass = item.Active == true ? "text-green" : "text-red";
                     <tr data-status="active">
                         <td>@pn</td>
                         <td>@item.IdPermissions</td>
@@ -158,16 +158,25 @@
                         <td>@item.IdPermissionsNavigation.Description</td>
                         <td class="@accessClass">@accessStatus</td>
                         <td>
-                            <form asp-area="Admin" asp-controller="StaffManager" asp-action="TogglePermissionStatus" method="post">
+                            <form asp-area="Admin" asp-controller="StaffManager" asp-action="TogglePermissionStatus" method="post" style="display: inline;">
                                 <input type="hidden" name="idUser" value="@item.IdUser" />
                                 <input type="hidden" name="idPermissions" value="@item.IdPermissions" />
-                                <button type="submit" class="btn btn-link p-0">
-                                    <img src="~/img/icons/edit.svg" alt="Toggle Status">
+                                <button type="submit" class="btn btn-link p-0" title="Toggle Status">
+                                    @if (item.Active == true)
+                                    {
+                                        <i class="fa-solid fa-toggle-on" style="color: green;"></i>
+                                    }
+                                    else
+                                    {
+                                        <i class="fa-solid fa-toggle-off" style="color: red;"></i>
+                                    }
                                 </button>
                             </form>
                         </td>
                     </tr>
                 }
+
+
             </tbody>
         </table>
     </div>

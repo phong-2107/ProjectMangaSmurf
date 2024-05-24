@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ProjectMangaSmurf.Models;
 
@@ -26,4 +27,7 @@ public partial class ServicePackConfig
     public bool? Active { get; set; }
 
     public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
+
+    [NotMapped] 
+    public int PurchaseCount { get; set; }
 }
