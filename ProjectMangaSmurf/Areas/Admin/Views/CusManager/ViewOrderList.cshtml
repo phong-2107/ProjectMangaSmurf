@@ -5,15 +5,22 @@
 }
 
 
-
+<style>
+    .alert-info {
+        color: #004085; /* Màu chữ xanh */
+        background-color: #cce5ff; /* Nền màu xanh nhạt */
+        border: 1px solid #b8daff; /* Viền màu xanh */
+        padding: 10px;
+        margin: 10px 0;
+        border-radius: 5px; /* Bo góc cho khối thông báo */
+    }</style>
 
 <div class="content">
     <div class="page-header">
         <div class="page-title">
-            <h4> <i class="fa-solid fa-file-invoice-dollar"></i>  Order List Manager</h4>
+            <h2> <i class="fa-solid fa-file-invoice-dollar"></i>  Order List Manager</h2>
             <h6>Histories of Transaction </h6>
         </div>
-
     </div>
 
     <div class="card">
@@ -29,6 +36,9 @@
                             <img src="~/img/icons/search-white.svg" alt="img">
                         </a>
                     </div>
+                </div>
+                <div class="alert-info">
+                    Click on ID of Customer to go their detail site
                 </div>
             </div>
 

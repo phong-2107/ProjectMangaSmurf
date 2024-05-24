@@ -3,7 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using ProjectMangaSmurf.Repository;
 using ProjectMangaSmurf.Models;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using ProjectMangaSmurf.Data;
 
 namespace ProjectMangaSmurf.Areas.Admin.Controllers
 {
@@ -13,14 +14,18 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
     {
         private readonly IComicTypeRepository _comicTypeRepository;
         private readonly IboTruyenRepository _botruyen;
+        private readonly ProjectDBContext _context;
 
-        public ComicTypeManager(IComicTypeRepository comicTypeRepository, IboTruyenRepository botruyen)
+        public ComicTypeManager(IComicTypeRepository comicTypeRepository, IboTruyenRepository botruyen, ProjectDBContext context)
         {
             _comicTypeRepository = comicTypeRepository;
             _botruyen = botruyen;
+            _context = context;
         }
 
+        #region ToggleActive
         [HttpPost]
+        [RBACAuthorize(PermissionId = 37)]
         public async Task<IActionResult> ToggleActive(string id)
         {
             var loaiTruyen = await _comicTypeRepository.GetByIdAsync(id);
@@ -32,16 +37,19 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
             }
             return NotFound();
         }
+        #endregion
 
-
-        // List all comic types
+        #region Index
+        [RBACAuthorize(PermissionId = 32)]
         public async Task<IActionResult> Index()
         {
             var comicTypes = await _comicTypeRepository.GetAllAsync();
             return View(comicTypes);
         }
+        #endregion
 
-        // Display details of a specific comic type
+        #region Detail
+        [RBACAuthorize(PermissionId = 33)]
         public async Task<IActionResult> Detail(string id)
         {
             var comicType = await _comicTypeRepository.GetLoaiByIdAsync(id);
@@ -50,7 +58,6 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            // Fetching all comic series that belong to this type
             var comicSeries = await _botruyen.GetAllAllAsync();
             var relatedComics = comicSeries.Where(c => c.Listloai.Contains(id)).ToList();
 
@@ -58,11 +65,14 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
             ViewBag.RelatedSeriesCount = relatedComics.Count;
             return View(comicType);
         }
+        #endregion
 
+        #region Add
+        [RBACAuthorize(PermissionId = 34)]
         public async Task<IActionResult> Add()
         {
-            ViewBag.Id = await _comicTypeRepository.GenerateLoaiTruyenId(); // Call without any arguments
-            return View(new LoaiTruyen()); // Assuming TacGium is the author model
+            ViewBag.Id = await _comicTypeRepository.GenerateLoaiTruyenId();
+            return View(new LoaiTruyen());
         }
 
         [HttpPost]
@@ -75,9 +85,10 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
             }
             return View(author);
         }
+        #endregion
 
-
-        // Display form to update a comic type
+        #region Update
+        [RBACAuthorize(PermissionId = 35)]
         public async Task<IActionResult> Update(string id)
         {
             var comicType = await _comicTypeRepository.GetLoaiByIdAsync(id);
@@ -88,7 +99,6 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
             return View(comicType);
         }
 
-        // Handle updating a comic type
         [HttpPost]
         public async Task<IActionResult> Update(string id, LoaiTruyen comicType)
         {
@@ -104,15 +114,28 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
             }
             return View(comicType);
         }
+        #endregion
 
-        // Handle deletion of a comic type
+        #region DeleteConfirmed
         [HttpPost]
+        [RBACAuthorize(PermissionId = 36)]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            await _comicTypeRepository.DeleteAsync(id);
-            return RedirectToAction(nameof(Index));
+            using (var transaction = await _context.Database.BeginTransactionAsync())
+            {
+                try
+                {
+                    await _comicTypeRepository.DeleteAsync(id);
+                    await transaction.CommitAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                catch
+                {
+                    await transaction.RollbackAsync();
+                    throw;
+                }
+            }
         }
+        #endregion
     }
-
-
 }

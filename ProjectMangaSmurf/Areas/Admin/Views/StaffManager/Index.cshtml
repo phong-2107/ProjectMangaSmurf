@@ -14,6 +14,14 @@
         background-color: magenta; /* Change color when active */
     }
 
+    .alert-info {
+        color: #004085; /* Màu chữ xanh */
+        background-color: #cce5ff; /* Nền màu xanh nhạt */
+        border: 1px solid #b8daff; /* Viền màu xanh */
+        padding: 10px;
+        margin: 10px 0;
+        border-radius: 5px; /* Bo góc cho khối thông báo */
+    }
 </style>
 
 
@@ -42,16 +50,13 @@
                         </a>
                     </div>
                 </div>
+
                 <div class="filters">
                     <button class="btn btn-primary" onclick="applyFilter('all')">See All <i class="fa-solid fa-border-all"></i></button>
                     <button class="btn btn-success" onclick="applyFilter('active')">Activating <i class="fa-solid fa-person-digging"></i></button>
                     <button class="btn btn-danger" onclick="applyFilter('banned')">Banning  <i class="fa-solid fa-ban"></i></button>
                 </div>
-
-
             </div>
-
-
             <div class="table-responsive">
                 <table class="table  datanew">
                     <thead>
@@ -76,15 +81,28 @@
                                 <td>@(i.IdUserNavigation?.Phone ?? "N/A")</td>
                                 <td>@(i.IdUserNavigation?.Email ?? "N/A")</td>
                                 <td>@i.StaffRole</td>
-                                <td>@(i.IdUserNavigation?.Active.ToString() ?? "N/A")</td>
+                                <td>
+                                    @switch ((i.IdUserNavigation?.Active))
+                                    {
+                                        case true:
+                                            <span class="text-success">Active</span>
+                                            break;
+                                        case false:
+                                            <span class="text-danger">Inactive</span>
+                                            break;
+                                        default:
+                                            <span class="text-secondary">Errol</span>
+                                            break;
+                                    }
+                                </td>
                                 <td>
                                     <a asp-area="Admin" asp-controller="StaffManager" asp-action="Detail" asp-route-id="@i.IdUser" class="me-3">
                                         <img src="~/img/icons/eye.svg" alt="img">
                                     </a>
-                                    <a asp-area="Admin" asp-controller="StaffManager" asp-action="Update" asp-route-id="@i.IdUser" class="me-3 ">
+                                    <a asp-area="Admin" asp-controller="StaffManager" asp-action="UpdateAndRBAC" asp-route-id="@i.IdUser" class="me-3 ">
                                         <img src="~/img/icons/edit.svg" alt="img">
                                     </a>
-                                    <a asp-area="Admin" asp-controller="StaffManager" asp-action="Delete" asp-route-id="@i.IdUser" class="me-3 ">
+                                    <a class="delete-productn me-3" data-product-id="@i.IdUser" href="javascript:void(0);">
                                         <img src="~/img/icons/delete.svg" alt="img">
                                     </a>
                                 </td>
@@ -96,22 +114,50 @@
         </div>
     </div>
 </div>
-<script>
-    var currentFilter = 'all';  // Default filter
-    var Banned = false;    // Premium filter state
+<<script>
 
-    function applyFilter(filter) {
-        currentFilter = filter;
-        updateList();
-    }
-
-    function updateList() {
-        // Build the URL with current filters
-        var url = '@Url.Action("Index", "StaffManager", new { Area = "Admin" })' +
-            `?status=${currentFilter}&premium=${premiumOnly}`;
-        window.location.href = url;
-    }
+         $('.delete-productn').click(function () {
+             var productId = $(this).data('product-id');
+             Swal.fire({
+                 title: "Are you sure?",
+                 text: `Delete USER ID ${productId}`,
+                 type: "warning",
+                 showCancelButton: true,
+                 confirmButtonColor: "#3085d6",
+                 cancelButtonColor: "#d33",
+                 confirmButtonText: "Yes, delete it!",
+                 confirmButtonClass: "btn btn-primary",
+                 cancelButtonClass: "btn btn-danger ml-1",
+                 buttonsStyling: false
+             }).then((result) => {
+                 if (result.isConfirmed) {
+                     $.ajax({
+                         url: `/Admin/StaffManager/DeleteConfirmed/${productId}`,
+                         type: 'POST',
+                         data: { id: productId },
+                         success: function (response) {
+                             Swal.fire(
+                                 'Deleted!',
+                                 'Successfully',
+                                 'success'
+                             );
+                             location.reload();
+                         },
+                         error: function (xhr, status, error) {
+                             Swal.fire(
+                                 'Error!',
+                                 'Failed to delete the user because this account has Acction logs - Please try again.',
+                                 'error'
+                             );
+                             console.error(xhr.responseText);
+                         }
+                     });
+                 }
+             });
+         });
+    
 </script>
+
 
 
 

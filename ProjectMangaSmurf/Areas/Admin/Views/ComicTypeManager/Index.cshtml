@@ -10,13 +10,22 @@
         justify-content: space-between;
         align-items: center;
     }
+
+    .alert-info {
+        color: #004085; /* Màu chữ xanh */
+        background-color: #cce5ff; /* Nền màu xanh nhạt */
+        border: 1px solid #b8daff; /* Viền màu xanh */
+        padding: 10px;
+        margin: 10px 0;
+        border-radius: 5px; /* Bo góc cho khối thông báo */
+    }
 </style>
 
 
 <div class="content">
     <div class="page-header d-flex justify-content-between align-items-center">
         <div class="page-title">
-            <h4><i class="fa-solid fa-book-skull"></i> LIST OF COMIC TYPES</h4>
+            <h2><i class="fa-solid fa-bars-staggered"></i>      </i> LIST OF COMIC TYPES</h2>
             <h6>Manage - View</h6>
         </div>
         <div class="page-btn">
@@ -39,9 +48,10 @@
                         </a>
                     </div>
                 </div>
-               
+                <div class="alert-info">
+                    Choose " <img src="~/img/icons/dashboard.svg" alt="img"> " to go to Main comic type Detail Site
+                </div>
             </div>
-
             <div class="card mb-0" id="filter_inputs">
                 <div class="card-body pb-0">
                     <div class="row">
@@ -120,13 +130,29 @@
                                 <td>@type.IdLoai</td>
                                 <td>@type.TenLoai</td>
                                 <td>@count</td> <!-- Displaying the count -->
-                                <th>@type.Active</th>
                                 <td>
-                                    <a asp-area="Admin" asp-controller="ComicTypeManager" asp-action="Detail" asp-route-id="@type.IdLoai" class="class=" me-3">
+                                    @switch (type.Active)
+                                    {
+                                        case true:
+                                            <span class="text-success">Active</span>
+                                            break;
+                                        case false:
+                                            <span class="text-danger">Inactive</span>
+                                            break;
+                                        default:
+                                            <span class="text-secondary">Errol</span>
+                                            break;
+                                    }
+                                </td>
+                                <td>
+                                    <a asp-area="Admin" asp-controller="ComicTypeManager" asp-action="Detail" asp-route-id="@type.IdLoai" class="me-3" >
                                         <img src="~/img/icons/eye.svg" alt="img">
                                     </a>
-                                    <a asp-area="Admin" asp-controller="ComicTypeManager" asp-action="Update" asp-route-id="@type.IdLoai" class="class=" me-3">
+                                    <a asp-area="Admin" asp-controller="ComicTypeManager" asp-action="Update" asp-route-id="@type.IdLoai" class= "me-3">
                                         <img src="~/img/icons/edit.svg" alt="img">
+                                    </a>
+                                    <a asp-area="" asp-controller="BoTruyen" asp-action="CTLoaiTruyen" asp-route-id="@type.IdLoai" class="me-3">
+                                        <img src="~/img/icons/dashboard.svg" alt="img">
                                     </a>
                                     <a class="delete-type me-3" data-product-id="@type.IdLoai" href="javascript:void(0);">
                                         <img src="~/img/icons/delete.svg" alt="img">

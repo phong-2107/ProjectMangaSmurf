@@ -1,0 +1,462 @@
+﻿@model IEnumerable<ProjectMangaSmurf.Models.WebMediaConfig>
+
+@{
+    var socialAndUrlConfigs = Model.Where(c => new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 20 }.Contains(c.IdConfig));
+    var contactInfoConfigs = Model.Where(c => new int[] { 9, 10, 11, 12, 27, 28, 29, 30 }.Contains(c.IdConfig));
+    var addressInfoConfigs = Model.Where(c => new int[] { 13, 14, 15 }.Contains(c.IdConfig));
+    var webContextInfoConfigs = Model.Where(c => new int[] { 16, 21, 22, 23, 31, 32, 33, 34 }.Contains(c.IdConfig));
+    var footerInfoConfigs = Model.Where(c => new int[] { 24, 25, 26 }.Contains(c.IdConfig));
+    var announceConfigs = Model.Where(c => new int[] { 35, 36, 37 }.Contains(c.IdConfig));
+    var AboutConfigs = Model.Where(c => new int[] { 38, 39, 40, 41, 42, 43, 44 }.Contains(c.IdConfig));
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Configuration Manager</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .table-container {
+            margin-bottom: 40px;
+        }
+
+        .table-title {
+            background-color: #1b2850;
+            color: white;
+            padding: 10px;
+            border-radius: 15px;
+            margin-bottom: 10px;
+            padding-left: 30px;
+            display: flex;
+            align-items: center;
+        }
+
+            .table-title i {
+                margin-right: 20px;
+            }
+
+        .table th, .table td {
+            vertical-align: middle;
+            text-align: center;
+        }
+
+            .table th:nth-child(1), .table td:nth-child(1) {
+                text-align: left;
+                width: 25%;
+            }
+
+            .table th:nth-child(2), .table td:nth-child(2) {
+                width: 10%;
+            }
+
+            .table th:nth-child(3), .table td:nth-child(3) {
+                width: 65%;
+            }
+
+        .table textarea {
+            margin-right: 10px;
+            resize: vertical;
+        }
+
+        .btn-check {
+            margin-left: 5px;
+        }
+
+        .btn-group {
+            display: flex;
+            align-items: center;
+        }
+
+        .save-popup {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            display: none;
+            z-index: 1000;
+        }
+
+            .save-popup button {
+                margin-right: 10px;
+            }
+
+        .alert-info {
+            color: #004085; /* Màu chữ xanh */
+            background-color: #cce5ff; /* Nền màu xanh nhạt */
+            border: 1px solid #b8daff; /* Viền màu xanh */
+            padding: 10px;
+            margin: 10px 0;
+            margin-left: 40px;
+            border-radius: 5px; /* Bo góc cho khối thông báo */
+            flex-grow: 1;
+            text-align: center; /* Center the text */
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <div class="page-header d-flex justify-content-between align-items-center">
+            <div class="page-title">
+                <h2>
+                    <i class="fa-solid fa-laptop-medical"></i>  Web Configuration Manager
+                </h2>
+                <h6>Manage Website Infographic</h6>
+            </div>
+
+            <div class="alert-info">
+                <i class="fa-solid fa-triangle-exclamation"></i>        Be cautious when changing website's attributes data !
+            </div>
+        </div>
+
+        @* Table for Social and URL Configs *@
+        <div class="table-container">
+            <div class="table-title">
+                <i class="fa-solid fa-people-roof"></i>
+                <h3>Social Media URL</h3>
+                <button class="btn btn-primary ml-auto" onclick="saveAllConfigs()"><i class="fa-solid fa-file-arrow-up"></i>                      Save All</button>
+            </div>
+            <table class="table table-bordered mb-4">
+                <thead>
+                    <tr>
+                        <th>Config Title</th>
+                        <th>Active</th>
+                        <th>Config Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var config in socialAndUrlConfigs)
+                    {
+                        <tr>
+                            <td class="config-title">@config.ConfigTitle</td>
+                            <td>
+                                <button class="btn @(config.Active ?? false ? "btn-success" : "btn-danger")" id="toggle-button-@config.IdConfig" onclick="toggleActive(@config.IdConfig)">
+                                    <i class="fa-solid fa-toggle-@(config.Active ?? false ? "on" : "off")"></i>
+                                    @(config.Active ?? false ? "Active" : "Inactive")
+                                </button>
+                            </td>
+                            <td class="d-flex justify-content-between align-items-center">
+                                <textarea class="form-control flex-grow-1 config-value" id="config-value-@config.IdConfig" oninput="trackChanges(@config.IdConfig)">@config.ConfigValue</textarea>
+                                <div class="btn-group">
+                                    <button class="btn btn-secondary ml-2 btn-check" id="check-button-@config.IdConfig" onclick="checkLink(@config.IdConfig)"><i class="fa-solid fa-location-arrow"></i>      Check Link</button>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        @* Table for Contact Information Configs *@
+        <div class="table-container">
+            <div class="table-title">
+                <i class="fa-solid fa-address-book"></i>
+                <h3>Contact Information</h3>
+                <button class="btn btn-primary ml-auto" onclick="saveAllConfigs()"><i class="fa-solid fa-file-arrow-up"></i>               Save All</button>
+            </div>
+            <table class="table table-bordered mb-4">
+                <thead>
+                    <tr>
+                        <th>Config Title</th>
+                        <th>Active</th>
+                        <th>Config Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var config in contactInfoConfigs)
+                    {
+                        <tr>
+                            <td class="config-title">@config.ConfigTitle</td>
+                            <td>
+                                <button class="btn @(config.Active ?? false ? "btn-success" : "btn-danger")" id="toggle-button-@config.IdConfig" onclick="toggleActive(@config.IdConfig)">
+                                    <i class="fa-solid fa-toggle-@(config.Active ?? false ? "on" : "off")"></i>
+                                    @(config.Active ?? false ? "Active" : "Inactive")
+                                </button>
+                            </td>
+                            <td class="d-flex justify-content-between align-items-center">
+                                <textarea class="form-control flex-grow-1 config-value" id="config-value-@config.IdConfig" oninput="trackChanges(@config.IdConfig)">@config.ConfigValue</textarea>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        @* Table for Address Information Configs *@
+        <div class="table-container">
+            <div class="table-title">
+                <i class="fa-solid fa-map-location-dot"></i>
+                <h3>Address Information</h3>
+                <button class="btn btn-primary ml-auto" onclick="saveAllConfigs()"> <i class="fa-solid fa-file-arrow-up"></i>         Save All</button>
+            </div>
+            <table class="table table-bordered mb-4">
+                <thead>
+                    <tr>
+                        <th>Config Title</th>
+                        <th>Active</th>
+                        <th>Config Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var config in addressInfoConfigs)
+                    {
+                        <tr>
+                            <td class="config-title">@config.ConfigTitle</td>
+                            <td>
+                                <button class="btn @(config.Active ?? false ? "btn-success" : "btn-danger")" id="toggle-button-@config.IdConfig" onclick="toggleActive(@config.IdConfig)">
+                                    <i class="fa-solid fa-toggle-@(config.Active ?? false ? "on" : "off")"></i>
+                                    @(config.Active ?? false ? "Active" : "Inactive")
+                                </button>
+                            </td>
+                            <td class="d-flex justify-content-between align-items-center">
+                                <textarea class="form-control flex-grow-1 config-value" id="config-value-@config.IdConfig" oninput="trackChanges(@config.IdConfig)">@config.ConfigValue</textarea>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        @* Table for Web Context Information Configs *@
+        <div class="table-container">
+            <div class="table-title">
+                <i class="fa-solid fa-envelope-open-text"></i>
+                <h3>Web Context Information</h3>
+                <button class="btn btn-primary ml-auto" onclick="saveAllConfigs()"><i class="fa-solid fa-file-arrow-up"></i>                      Save All</button>
+            </div>
+            <table class="table table-bordered mb-4">
+                <thead>
+                    <tr>
+                        <th>Config Title</th>
+                        <th>Active</th>
+                        <th>Config Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var config in webContextInfoConfigs)
+                    {
+                        <tr>
+                            <td class="config-title">@config.ConfigTitle</td>
+                            <td>
+                                <button class="btn @(config.Active ?? false ? "btn-success" : "btn-danger")" id="toggle-button-@config.IdConfig" onclick="toggleActive(@config.IdConfig)">
+                                    <i class="fa-solid fa-toggle-@(config.Active ?? false ? "on" : "off")"></i>
+                                    @(config.Active ?? false ? "Active" : "Inactive")
+                                </button>
+                            </td>
+                            <td class="d-flex justify-content-between align-items-center">
+                                <textarea class="form-control flex-grow-1 config-value" id="config-value-@config.IdConfig" oninput="trackChanges(@config.IdConfig)">@config.ConfigValue</textarea>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        @* Table for Footer Information Configs *@
+        <div class="table-container">
+            <div class="table-title">
+                <i class="fa-solid fa-text-width"></i>
+                <h3>Footer Information</h3>
+                <button class="btn btn-primary ml-auto" onclick="saveAllConfigs()"><i class="fa-solid fa-file-arrow-up"></i>                       Save All</button>
+            </div>
+            <table class="table table-bordered mb-4">
+                <thead>
+                    <tr>
+                        <th>Config Title</th>
+                        <th>Active</th>
+                        <th>Config Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var config in footerInfoConfigs)
+                    {
+                        <tr>
+                            <td class="config-title">@config.ConfigTitle</td>
+                            <td>
+                                <button class="btn @(config.Active ?? false ? "btn-success" : "btn-danger")" id="toggle-button-@config.IdConfig" onclick="toggleActive(@config.IdConfig)">
+                                    <i class="fa-solid fa-toggle-@(config.Active ?? false ? "on" : "off")"></i>
+                                    @(config.Active ?? false ? "Active" : "Inactive")
+                                </button>
+                            </td>
+                            <td class="d-flex justify-content-between align-items-center">
+                                <textarea class="form-control flex-grow-1 config-value" id="config-value-@config.IdConfig" oninput="trackChanges(@config.IdConfig)">@config.ConfigValue</textarea>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        @* Table for Announcement Information Configs *@
+        <div class="table-container">
+            <div class="table-title">
+                <i class="fa-solid fa-bullhorn"></i>
+                <h3>Announcement Config</h3>
+                <button class="btn btn-primary ml-auto" onclick="saveAllConfigs()"><i class="fa-solid fa-file-arrow-up"></i>                        Save All</button>
+            </div>
+            <table class="table table-bordered mb-4">
+                <thead>
+                    <tr>
+                        <th>Config Title</th>
+                        <th>Active</th>
+                        <th>Config Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var config in announceConfigs)
+                    {
+                        <tr>
+                            <td class="config-title">@config.ConfigTitle</td>
+                            <td>
+                                <button class="btn @(config.Active ?? false ? "btn-success" : "btn-danger")" id="toggle-button-@config.IdConfig" onclick="toggleActive(@config.IdConfig)">
+                                    <i class="fa-solid fa-toggle-@(config.Active ?? false ? "on" : "off")"></i>
+                                    @(config.Active ?? false ? "Active" : "Inactive")
+                                </button>
+                            </td>
+                            <td class="d-flex justify-content-between align-items-center">
+                                <textarea class="form-control flex-grow-1 config-value" id="config-value-@config.IdConfig" oninput="trackChanges(@config.IdConfig)">@config.ConfigValue</textarea>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        @* Table for About Information Configs *@
+        <div class="table-container">
+            <div class="table-title">
+                <i class="fa-solid fa-laptop-code"></i>
+                <h3>Web Attributes Config</h3>
+                <button class="btn btn-primary ml-auto" onclick="saveAllConfigs()"><i class="fa-solid fa-file-arrow-up"></i>                           Save All</button>
+            </div>
+            <table class="table table-bordered mb-4">
+                <thead>
+                    <tr>
+                        <th>Config Title</th>
+                        <th>Active</th>
+                        <th>Config Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var config in AboutConfigs)
+                    {
+                        <tr>
+                            <td class="config-title">@config.ConfigTitle</td>
+                            <td>
+                                <button class="btn @(config.Active ?? false ? "btn-success" : "btn-danger")" id="toggle-button-@config.IdConfig" onclick="toggleActive(@config.IdConfig)">
+                                    <i class="fa-solid fa-toggle-@(config.Active ?? false ? "on" : "off")"></i>
+                                    @(config.Active ?? false ? "Active" : "Inactive")
+                                </button>
+                            </td>
+                            <td class="d-flex justify-content-between align-items-center">
+                                <textarea class="form-control flex-grow-1 config-value" id="config-value-@config.IdConfig" oninput="trackChanges(@config.IdConfig)">@config.ConfigValue</textarea>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="save-popup" id="savePopup">
+            <button class="btn btn-primary" onclick="saveAllConfigs()"><i class="fa-solid fa-file-arrow-up"></i>              Save All</button>
+            <button class="btn btn-secondary" onclick="discardAllChanges()"><i class="fa-solid fa-square-xmark"></i>         Discard All Changes</button>
+        </div>
+    </div>
+
+    <script>
+        let unsavedChanges = {};
+
+        function toggleActive(idConfig) {
+            $.ajax({
+                url: '@Url.Action("ToggleActive", "WebManager")',
+                type: 'POST',
+                data: { id: idConfig },
+                success: function () {
+                    location.reload();
+                },
+                error: function () {
+                    alert('Failed to toggle active status.');
+                }
+            });
+        }
+
+        function trackChanges(idConfig) {
+            const value = document.getElementById(`config-value-${idConfig}`).value;
+            if (!unsavedChanges[idConfig]) {
+                unsavedChanges[idConfig] = { idConfig: idConfig, ConfigValue: value };
+            } else {
+                unsavedChanges[idConfig].ConfigValue = value;
+            }
+            showSavePopup();
+        }
+
+        function saveAllConfigs() {
+            const configs = Object.values(unsavedChanges);
+            if (configs.length === 0) {
+                alert('No changes to save.');
+                return;
+            }
+            $.ajax({
+                url: '@Url.Action("SaveConfigValues", "WebManager")',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(configs),
+                success: function () {
+                    alert('Configuration values saved successfully.');
+                    location.reload();
+                },
+                error: function () {
+                    alert('Failed to save configuration values.');
+                }
+            });
+            unsavedChanges = {};
+        }
+
+        function checkLink(idConfig) {
+            var url = document.getElementById(`config-value-${idConfig}`).value;
+            window.open(url, '_blank');
+        }
+
+        function showSavePopup() {
+            document.getElementById('savePopup').style.display = 'block';
+        }
+
+        function discardAllChanges() {
+            unsavedChanges = {};
+            location.reload();
+        }
+
+        window.onbeforeunload = function () {
+            if (Object.keys(unsavedChanges).length > 0) {
+                return 'You have unsaved changes. Are you sure you want to leave?';
+            }
+        };
+
+        // Adjust text area size based on max length of config titles
+        $(document).ready(function () {
+            var maxTitleLength = 0;
+            $('.config-title').each(function () {
+                var titleLength = $(this).text().length;
+                if (titleLength > maxTitleLength) {
+                    maxTitleLength = titleLength;
+                }
+            });
+
+            var textAreaWidth = maxTitleLength * 8; // Adjust multiplier as needed
+            $('.config-value').css('width', textAreaWidth + 'px');
+        });
+    </script>
+</body>
+</html>

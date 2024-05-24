@@ -1,0 +1,21 @@
+﻿@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+
+<div id="accessDeniedPopup" class="access-denied-popup" style="display: none;">
+    <div class="access-denied-content">
+        <img src="/images/denied2.png" alt="Access Denied">
+        @if (HttpContextAccessor.HttpContext.Session.GetString("AdminSession") != null)
+        {
+            var userId = HttpContextAccessor.HttpContext.Session.GetString("AdminSessionId");
+            <div>
+                No permit to access this action. <br>
+                Please contact your Administrator / Supervisor Lmao :D !!
+                <br><br>
+                <a asp-area="Admin" asp-controller="StaffManager" asp-action="SelfDetail" asp-route-id="@userId"  class="permission-link">
+                    <h6>&lt; Click here to see your Permission List &gt;</h6>
+                </a>
+            </div>
+        }
+     
+    </div>
+</div>

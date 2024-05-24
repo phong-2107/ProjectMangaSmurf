@@ -34,6 +34,30 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult AccessDenied()
         {
+            TempData["ShowAccessDeniedPopup"] = true;
+            return Redirect(Request.Headers["Referer"].ToString());
+        }
+
+        [HttpGet]
+        public IActionResult CheckAccessDenied()
+        {
+            // Check if the user should be denied access
+            bool isAccessDenied = TempData["ShowAccessDeniedPopup"] != null && (bool)TempData["ShowAccessDeniedPopup"];
+
+            // Clear the TempData after checking
+            TempData["ShowAccessDeniedPopup"] = false;
+
+            return Json(new { isAccessDenied });
+        }
+
+
+        public IActionResult ActionMaintenance()
+        {
+            return View();
+        }
+
+        public IActionResult ActionStop()
+        {
             return View();
         }
 

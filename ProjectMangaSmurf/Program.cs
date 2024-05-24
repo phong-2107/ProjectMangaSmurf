@@ -5,7 +5,9 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using ProjectMangaSmurf.Areas.Common.Repository;
 using ProjectMangaSmurf.Data;
 using ProjectMangaSmurf.Areas.Common.Services;
+using ProjectMangaSmurf.Helper;
 using Microsoft.AspNetCore.Authorization;
+using ProjectMangaSmurf.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
@@ -86,10 +88,11 @@ builder.Services.AddDbContext<ProjectDBContext>(options => options.UseSqlServer(
 
 
 builder.Services.AddRazorPages();
-
+builder.Services.AddScoped<IConfigService, EFConfigService>();
 builder.Services.AddScoped<IUser,EFUser>();
 builder.Services.AddScoped<CustomAuthenticationService>();
 builder.Services.AddScoped<IStaffRepository,EFStaffRepository>();
+builder.Services.AddScoped<IService, EFService>();
 builder.Services.AddScoped<IComicTypeRepository, EFComicTypeRepository>();
 builder.Services.AddScoped<IAuthorRepository, EFAuthorRepository>();
 builder.Services.AddScoped<IboTruyenRepository, EFboTruyenRepository>();
@@ -150,6 +153,7 @@ app.UseSession();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapRazorPages();
+
 
 app.UseEndpoints(endpoints =>
 {

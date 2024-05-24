@@ -1,6 +1,8 @@
-﻿
+﻿using Microsoft.EntityFrameworkCore;
 using ProjectMangaSmurf.Data;
 using ProjectMangaSmurf.Models;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ProjectMangaSmurf.Repository
 {
@@ -13,9 +15,27 @@ namespace ProjectMangaSmurf.Repository
             _context = context;
         }
 
-        WebMediaConfig IWebMediaRepository.GetFirstAsync()
+        public async Task<IEnumerable<WebMediaConfig>> GetAllConfigsAsync()
         {
-            return _context.WebMediaConfigs.FirstOrDefault();
+            return await _context.WebMediaConfigs.ToListAsync();
+        }
+
+        public async Task<WebMediaConfig> GetConfigByIdAsync(int id)
+        {
+            return await _context.WebMediaConfigs.FindAsync(id);
+        }
+
+        public async Task<WebMediaConfig> GetConfigByIdAsync2(int id)
+        {
+            return await _context.WebMediaConfigs
+                                 .Where(config => config.IdConfig == id && config.Active == true)
+                                 .FirstOrDefaultAsync();
+        }
+
+        public async Task UpdateConfigAsync(WebMediaConfig config)
+        {
+            _context.WebMediaConfigs.Update(config);
+            await _context.SaveChangesAsync();
         }
     }
 }

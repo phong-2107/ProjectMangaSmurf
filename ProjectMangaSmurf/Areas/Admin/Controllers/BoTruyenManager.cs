@@ -4,8 +4,8 @@ using ProjectMangaSmurf.Repository;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ProjectMangaSmurf.Models;
 using Microsoft.EntityFrameworkCore;
-//using iTextSharp.text;
-//using iTextSharp.text.pdf;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 using System.IO;
@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using System;
 using ProjectMangaSmurf.Data;
-//using ChapterModel = ProjectMangaSmurf.Models.Chapter;
+using ChapterModel = ProjectMangaSmurf.Models.Chapter;
 using Microsoft.EntityFrameworkCore.Storage;
 
 namespace ProjectMangaSmurf.Areas.Admin.Controllers
@@ -32,7 +32,8 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
         private readonly ITacGiaRepository _tacGiaRepository;
         private readonly IAuthorRepository _authRepository;
         private readonly IHopdongRepository _hopdongRepository;
-        private readonly ProjectDBContext _context;  // Thêm dòng này
+        private readonly IWebMediaRepository _mediaRepository;
+        private readonly ProjectDBContext _context;
 
         public BoTruyenManager(IboTruyenRepository botruyenrepository,
                                 IChapterRepository chapterrepository,
@@ -40,7 +41,8 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
                                 ILoaiTruyenRepository loaiTruyenRepository,
                                 ITacGiaRepository tacGiaRepository,
                                 IHopdongRepository hopdongRepository,
-                                ProjectDBContext context)  // Thêm dòng này
+                                ProjectDBContext context,
+                                IWebMediaRepository mediaRepository)  // Thêm dòng này
         {
             _botruyenrepository = botruyenrepository;
             _chapterrepository = chapterrepository;
@@ -49,6 +51,7 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
             _tacGiaRepository = tacGiaRepository;
             _hopdongRepository = hopdongRepository;
             _context = context;  // Thêm dòng này
+            _mediaRepository = mediaRepository;
         }
 
         #endregion
@@ -68,6 +71,8 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
             else
                 return 0;
         }
+
+
 
         private async Task<string> SaveFile(IFormFile file)
         {
@@ -89,35 +94,35 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
             return "/images/truyen/" + image.FileName;
         }
 
-        //private async Task<string> CreatePDFAndSaveImages(string idBo, int sttChap, List<IFormFile> images)
-        //{
-        //    string directoryPath = Path.Combine("wwwroot", "pdf");
-        //    Directory.CreateDirectory(directoryPath);  // Ensure the directory exists
+        private async Task<string> CreatePDFAndSaveImages(string idBo, int sttChap, List<IFormFile> images)
+        {
+            string directoryPath = Path.Combine("wwwroot", "pdf");
+            Directory.CreateDirectory(directoryPath);  // Ensure the directory exists
 
-        //    string pdfFileName = $"{idBo}_{sttChap}.pdf";
-        //    string pdfPath = Path.Combine(directoryPath, pdfFileName);
+            string pdfFileName = $"{idBo}_{sttChap}.pdf";
+            string pdfPath = Path.Combine(directoryPath, pdfFileName);
 
-        //    using (Document document = new Document(PageSize.A4))
-        //    using (FileStream stream = new FileStream(pdfPath, FileMode.Create))
-        //    {
-        //        PdfWriter.GetInstance(document, stream);
-        //        document.Open();
+            using (Document document = new Document(PageSize.A4))
+            using (FileStream stream = new FileStream(pdfPath, FileMode.Create))
+            {
+                PdfWriter.GetInstance(document, stream);
+                document.Open();
 
-        //        foreach (var image in images)
-        //        {
-        //            var imagePath = await SaveImage(image, directoryPath);  // Save image temporarily if needed
-        //            iTextSharp.text.Image pdfImage = iTextSharp.text.Image.GetInstance(imagePath);
-        //            pdfImage.ScaleToFit(document.PageSize.Width, document.PageSize.Height);
-        //            pdfImage.Alignment = Image.ALIGN_CENTER | Image.ALIGN_MIDDLE;
-        //            document.NewPage();
-        //            document.Add(pdfImage);
-        //        }
+                foreach (var image in images)
+                {
+                    var imagePath = await SaveImage(image, directoryPath);  // Save image temporarily if needed
+                    iTextSharp.text.Image pdfImage = iTextSharp.text.Image.GetInstance(imagePath);
+                    pdfImage.ScaleToFit(document.PageSize.Width, document.PageSize.Height);
+                    pdfImage.Alignment = Image.ALIGN_CENTER | Image.ALIGN_MIDDLE;
+                    document.NewPage();
+                    document.Add(pdfImage);
+                }
 
-        //        document.Close();
-        //    }
+                document.Close();
+            }
 
-        //    return pdfPath.Substring(pdfPath.IndexOf("wwwroot") + "wwwroot".Length).Replace('\\', '/');
-        //}
+            return pdfPath.Substring(pdfPath.IndexOf("wwwroot") + "wwwroot".Length).Replace('\\', '/');
+        }
 
         private async Task<string> SaveImage(IFormFile image, string directoryPath)
         {
@@ -142,6 +147,8 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
             else
             {
                 var listBotruyen = await _botruyenrepository.GetAllAsync();
+                var alertConfig = await _mediaRepository.GetConfigByIdAsync2(36);
+                var alertConfigUpdate = await _mediaRepository.GetConfigByIdAsync2(37);
                 var ListEarliest = await _botruyenrepository.GetAllAsyncByChapterEarliest();
                 var listPopular = await _botruyenrepository.GetAllAsyncByDay();
                 var listMoney = await _hopdongRepository.GetAllAsync();
@@ -154,6 +161,8 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
                 ViewBag.View = sumView;
                 ViewBag.ListEarliest = ListEarliest.Take(4);
                 ViewBag.listPopular = listPopular.Take(4);
+                ViewBag.AlertMessage = alertConfig?.ConfigValue;
+                ViewBag.AlertMessage2 = alertConfigUpdate?.ConfigValue;
                 return View(listBotruyen);
             }
         }
@@ -233,18 +242,10 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
                 }
             }
         }
-        public async Task<IActionResult> AddChapterPDF(string id, int stt)
-        {
-            ViewBag.Id = id;
-            ViewBag.Stt = stt;
-            var relatedComics = await _chapterrepository.GetChaptersByComicId(id);
-            ViewBag.RelatedChapter = relatedComics ?? new List<ProjectMangaSmurf.Models.Chapter>();
-            return View();
 
-        }
 
         [HttpPost]
-        public async Task<IActionResult> AddChapterPDF(Chapter chapter, List<IFormFile> images)
+        public async Task<IActionResult> AddChapter(ChapterModel chapter, List<IFormFile> images)
         {
             using (var transaction = await _context.Database.BeginTransactionAsync())
             {
@@ -257,8 +258,8 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
 
                     if (images.Any())
                     {
-                        //string pdfPath = await CreatePDFAndSaveImages(chapter.IdBo, chapter.SttChap, images);
-                        //chapter.ChapterContent = pdfPath;
+                        string pdfPath = await CreatePDFAndSaveImages(chapter.IdBo, chapter.SttChap, images);
+                        chapter.ChapterContent = pdfPath;
                     }
 
                     await _chapterrepository.AddAsync(chapter);
@@ -273,76 +274,6 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
                     return Json(new { success = false, message = "Error: " + ex.Message });
                 }
             }
-        }
-
-        public bool RangBuocChapter(Chapter bt)
-        {
-
-            if (bt.TenChap == null)
-            {
-                ModelState.AddModelError(string.Empty, "Ban Chưa nhâp ten chap");
-                return false;
-            }
-            if (bt.ThoiGian == null)
-            {
-                ModelState.AddModelError(string.Empty, "Ban Chưa nhâp thoi gian");
-                return false;
-            }
-            return true;
-        }
-        private async Task<string> SaveImageChapter(IFormFile image)
-        {
-            var identifier = $"{new Random().Next(1000, 9999)}";
-            string fileName = $"{identifier}_{image.FileName}";
-            var savePath = Path.Combine("wwwroot/images/chapter", fileName);
-
-            using (var fileStream = new FileStream(savePath, FileMode.Create))
-            {
-                await image.CopyToAsync(fileStream);
-            }
-            return "/images/chapter/" + fileName;
-        }
-        [HttpGet]
-        public async Task<IActionResult> AddChapter(string id, int stt)
-        {
-            var max = await _chapterrepository.GetMaxSttChapAsync(id);
-            ViewBag.Id = id;
-            ViewBag.Stt = max + 1;
-            var relatedComics = await _chapterrepository.GetChaptersByComicId(id);
-            ViewBag.RelatedChapter = relatedComics ?? new List<Chapter>();
-            return View();
-
-        }
-        [HttpPost]
-        public async Task<IActionResult> AddChapter(Chapter chapter, List<IFormFile> images)
-        {
-            var rangbuoc = RangBuocChapter(chapter);
-            if (!rangbuoc)
-            {
-                // If business rules validation fails, return to the view with the current model.
-                return View(chapter);
-            }
-
-            // Proceed with adding the chapter if all validations pass.
-            await _chapterrepository.AddAsync(chapter);
-
-            int i = 1;
-            foreach (var image in images)
-            {
-                CtChapter CTChap = new CtChapter
-                {
-                    SoTrang = i++,
-                    IdBo = chapter.IdBo,
-                    SttChap = chapter.SttChap,
-                    AnhTrang = await SaveImageChapter(image),
-                    Active = true
-                };
-                await _chapterrepository.AddAsyncCT(CTChap);
-            }
-
-            var stt = chapter.SttChap;
-            TempData["Message"] = "New chapter added successfully, do you want to continue?";
-            return RedirectToAction("AddChapter", new { id = chapter.IdBo,  stt = stt + 1});
         }
         #endregion
 
