@@ -38,26 +38,26 @@
                                     var tmp = 5 - valueF;
                                     for (int a = 0; a < valueF; a++)
                                     {
-                                            <i class="ri-star-fill" data-index="@a" style="color: #FAB818;"></i>
+                                                        <i class="ri-star-fill" data-index="@a" style="color: #FAB818;"></i>
                                     }
                                     for (int b = 0; b < tmp; b++)
                                     {
-                                            <i class="ri-star-fill" data-index="@b"></i>
+                                                        <i class="ri-star-fill" data-index="@b"></i>
                                     }
-                                        <hr />
-                                        <span class="rating-review">Average Rating: @Model.TkDanhgia (@Model.TongLuotXem View)</span>
-                                        <hr />
+                                                    <hr />
+                                                    <span class="rating-review">Average Rating: @Model.TkDanhgia (@Model.TongLuotXem View)</span>
+                                                    <hr />
                                 }
                                 else
                                 {
-                                        <i class="ri-star-fill" data-index="1"></i>
-                                        <i class="ri-star-fill" data-index="2"></i>
-                                        <i class="ri-star-fill" data-index="3"></i>
-                                        <i class="ri-star-fill" data-index="4"></i>
-                                        <i class="ri-star-fill" data-index="5"></i>
-                                        <hr />
-                                        <span class="rating-review">Average Rating: @Model.TkDanhgia (@Model.TongLuotXem View)</span>
-                                        <hr />
+                                                    <i class="ri-star-fill" data-index="1"></i>
+                                                    <i class="ri-star-fill" data-index="2"></i>
+                                                    <i class="ri-star-fill" data-index="3"></i>
+                                                    <i class="ri-star-fill" data-index="4"></i>
+                                                    <i class="ri-star-fill" data-index="5"></i>
+                                                    <hr />
+                                                    <span class="rating-review">Average Rating: @Model.TkDanhgia (@Model.TongLuotXem View)</span>
+                                                    <hr />
                                 }
                             }
                             </div>
@@ -74,18 +74,18 @@
                         var listtmp = Model.Chapters.ToList();
                         if (listtmp.Count > 0)
                         {
-                                <div class="background-detail">
-                                    <div class="bg-item "></div>
-                                    <a asp-action="Chapter" asp-route-id="@Model.IdBo" asp-route-stt="1" class="btn-read">
-                                        <i class="ri-book-open-fill" title="click here"></i>
-                                    </a>
-                                </div>
+                                            <div class="background-detail">
+                                                <div class="bg-item "></div>
+                                                <a asp-action="Chapter" asp-route-id="@Model.IdBo" asp-route-stt="1" class="btn-read">
+                                                    <i class="ri-book-open-fill" title="click here"></i>
+                                                </a>
+                                            </div>
                         }
                         else
                         {
-                                <div class="background-detail">
-                                    <div class="bg-item "></div>
-                                </div>
+                                            <div class="background-detail">
+                                                <div class="bg-item "></div>
+                                            </div>
                         }
                     }
 
@@ -102,13 +102,13 @@
                             if (EarliestChap != null)
                             {
                                 var time = chapterRepository.CalculateTimeAgo(EarliestChap.ThoiGian);
-                                    <i class="ri-time-line"></i>
-                                    <span class="time">@time</span>
+                                                <i class="ri-time-line"></i>
+                                                <span class="time">@time</span>
                             }
                             else
                             {
-                                    <i class="ri-time-line"></i>
-                                    <span class="time">... giờ trước</span>
+                                                <i class="ri-time-line"></i>
+                                                <span class="time">... giờ trước</span>
                             }
                         }
 
@@ -118,7 +118,7 @@
                             var listtop = boTruyenRepository.GetListLoaiAsync(Model.IdBo);
                             foreach (var i in listtop)
                             {
-                                    <a asp-area="" asp-controller="BoTruyen" asp-action="ListTopic" asp-route-id="@i" class="item-type">@i</a>
+                                                <a asp-area="" asp-controller="BoTruyen" asp-action="ListTopic" asp-route-id="@i" class="item-type">@i</a>
                             }
                         }
                     </div>
@@ -210,20 +210,20 @@
                             {
                                 if (ViewBag.premium != false && ViewBag.cost != null)
                                 {
-                                    <a class="btn__action" style="pointer-events: none; background-color: #8f8f8f">ĐỌC TIẾP CHAP <span class="chapter">@stt</span></a>
+                                                <a class="btn__action" style="pointer-events: none; background-color: #8f8f8f">ĐỌC TIẾP CHAP <span class="chapter">@stt</span></a>
                                 }else{
-                                    <a class="btn__action" asp-action="Chapter" asp-route-id="@Model.IdBo" asp-route-stt="@stt">ĐỌC TIẾP CHAP <span class="chapter">@stt</span></a>
+                                                <a class="btn__action" asp-action="Chapter" asp-route-id="@Model.IdBo" asp-route-stt="@stt">ĐỌC TIẾP CHAP <span class="chapter">@stt</span></a>
                                 }
                             }
                             else
                             {
-                                    <a class="btn__action" style="pointer-events: none; background-color: #8f8f8f">
-                                        Đọc tiếp chap
-                                        @if (ViewBag.next != null && ViewBag.next != -1)
+                                                <a class="btn__action" style="pointer-events: none; background-color: #8f8f8f">
+                                                    Đọc tiếp chap
+                                                    @if (ViewBag.next != null && ViewBag.next != -1)
                                         {
-                                            @ViewBag.next
+                                                        @ViewBag.next
                                         }
-                                    </a>
+                                                </a>
                             }
                         }
                     </div>
@@ -273,19 +273,20 @@
                     <i class="fa-solid fa-list"></i> DANH SÁCH CHƯƠNG TRUYỆN
                 </div>
                 <div class="d-flex flex-column mb-3 w-100 mt-3">
-                    @{
-                        var listChap = Model.Chapters.ToList();
-                        var listRev = Model.Chapters.Reverse();
-                        var kh = @HttpContextAccessor.HttpContext.Session.GetString("TK");
-                        KhachHang khach = new KhachHang();
-                        if (kh != null)
-                        {
-                            khach = await khachhangrepository.GetByAccountAsync(kh);
-                        }
-
-                        var idKh = khach?.IdUser;
-                        var isPremium = khach?.ActivePremium ?? false;
+                @{
+                    var listChap = Model.Chapters.ToList();
+                    var listRev = Model.Chapters.Reverse();
+                    var kh = @HttpContextAccessor.HttpContext.Session.GetString("TK");
+                    KhachHang khach = new KhachHang();
+                    if (kh != null)
+                    {
+                        khach = await khachhangrepository.GetByAccountAsync(kh);
                     }
+
+                    var idKh = khach?.IdUser;
+                    var isPremium = khach?.ActivePremium ?? false;
+                    var ticket = khach?.TicketSalary;
+                }
                     @if (listChap.Count > 0)
                     {
                         foreach (var chapter in listRev)
@@ -312,7 +313,35 @@
                                     </div>
 
                                 </a>
+                            <script>
+                                $(document).ready(function () {
+                                    $(document).on('click', '.premium-chap', function (event) {
+                                        var idKh = '@idKh';
+                                        if (idKh.trim().length === 0) {
 
+                                            const swalWithBootstrapButtons = Swal.mixin({
+                                                customClass: {
+                                                    confirmButton: "btn btn-success",
+                                                    cancelButton: "btn btn-danger mr-3"
+                                                },
+                                                buttonsStyling: false
+                                            });
+                                            swalWithBootstrapButtons.fire({
+                                                text: "Bạn cần đăng nhập để đọc nội dung này!",
+                                                icon: "warning",
+                                                showCancelButton: true,
+                                                confirmButtonText: "Login now!!",
+                                                cancelButtonText: "Cancel!",
+                                                reverseButtons: true
+                                            }).then((result) => {
+                                                if (result.isConfirmed) {
+                                                    window.location.href = '/KhachHang/login';
+                                                }
+                                            });
+                                        }
+                                        });
+                                });
+                            </script>
                             }
                             else
                             {
@@ -337,16 +366,39 @@
                             }
                         }
                     }
-                    <script>
-                        $(document).ready(function () {
-                            $(document).on('click', '.premium-chap', function (event) {
-                                var chapId = $(this).data('chapter-id');
-                                var chapStt = $(this).data('chapter-stt');
-                                var idKh = '@idKh';
-                                var isPremiumBool = '@isPremium';
-                                if (idKh && idKh.trim().length > 0) {
+                <script>
+                    $(document).ready(function () {
+                        $(document).on('click', '.premium-chap', function (event) {
+                            var chapId = $(this).data('chapter-id');
+                            var chapStt = $(this).data('chapter-stt');
+                            var idKh = '@idKh';
+                            var isPremiumBool = '@isPremium';
+                            var ticket = @ticket;
+                            if (idKh.trim().length > 0) {
 
-                                    if (isPremiumBool === 'True') {
+                                if (isPremiumBool === 'True') {
+                                    if (ticket <= 0) {
+                                        const swalWithBootstrapButtons = Swal.mixin({
+                                            customClass: {
+                                                confirmButton: "btn btn-success",
+                                                cancelButton: "btn btn-danger mr-3"
+                                            },
+                                            buttonsStyling: false
+                                        });
+                                        swalWithBootstrapButtons.fire({
+                                            text: " Có vẻ bạn cần mua thêm vé để đọc nội dung này !!",
+                                            icon: "warning",
+                                            showCancelButton: true,
+                                            confirmButtonText: "Mua ngay!!",
+                                            cancelButtonText: "Cancel!",
+                                            reverseButtons: true
+                                        }).then((result) => {
+                                            if (result.isConfirmed) {
+                                                window.location.href = '/Payment/Index';
+                                            }
+                                        });
+                                    }
+                                    else {
                                         $.ajax({
                                             url: '@Url.Action("Chapter", "BoTruyen")',
                                             data: { id: chapId, stt: chapStt },
@@ -359,28 +411,9 @@
                                             }
                                         });
                                     }
-                                    else {
-                                        const swalWithBootstrapButtons = Swal.mixin({
-                                            customClass: {
-                                                confirmButton: "btn btn-success",
-                                                cancelButton: "btn btn-danger mr-3"
-                                            },
-                                            buttonsStyling: false
-                                        });
-                                        swalWithBootstrapButtons.fire({
-                                            text: "Bạn cần đăng ký gói premium để đọc nội dung này!",
-                                            icon: "warning",
-                                            showCancelButton: true,
-                                            confirmButtonText: "Đăng ký",
-                                            cancelButtonText: "Cancel!",
-                                            reverseButtons: true
-                                        }).then((result) => {
-                                            if (result.isConfirmed) {
-                                                window.location.href = '/Payment/Index';
-                                            }
-                                        });
-                                    }
-                                } else {
+
+                                }
+                                else {
                                     const swalWithBootstrapButtons = Swal.mixin({
                                         customClass: {
                                             confirmButton: "btn btn-success",
@@ -389,61 +422,65 @@
                                         buttonsStyling: false
                                     });
                                     swalWithBootstrapButtons.fire({
-                                        text: "Bạn cần đăng nhập để đọc nội dung này!",
+                                        text: "Bạn cần đăng ký gói premium để đọc nội dung này!",
                                         icon: "warning",
                                         showCancelButton: true,
-                                        confirmButtonText: "Login",
+                                        confirmButtonText: "Đăng ký ngay!!",
                                         cancelButtonText: "Cancel!",
                                         reverseButtons: true
                                     }).then((result) => {
                                         if (result.isConfirmed) {
-                                            window.location.href = '/KhachHang/login';
+                                            window.location.href = '/Payment/Index';
                                         }
                                     });
                                 }
-                            });
+                            }
+                            
                         });
-                    </script>
+                    });
+                </script>
                 </div>
-                 
+
+            
                 <div class="container">
                     @{
                         var listt = ViewBag.list;
                         if (listt != null)
                         {
-                            <div class="content-title">
-                                <i class="fa-solid fa-bookmark"></i> CÓ THỂ BẠN QUAN TÂM
-                            </div>
-                            <div class="row row-cols-6  justify-content-center gap-2">
+                                <div class="content-title">
+                                    <i class="fa-solid fa-bookmark"></i> CÓ THỂ BẠN QUAN TÂM
+                                </div>
+                                <div class="row row-cols-6  justify-content-center gap-2">
 
-                                @foreach (var botruyen in listt)
+                                    @foreach (var botruyen in listt)
                                 {
-                                    <div class="col-2 update-item" style="width: 190px;">
-                                        <a asp-action="CTBoTruyen" asp-route-id="@botruyen.IdBo">
-                                            <figure class="position-relative">
-                                                @{
+                                        <div class="col-2 update-item" style="width: 190px;">
+                                            <a asp-action="CTBoTruyen" asp-route-id="@botruyen.IdBo">
+                                                <figure class="position-relative">
+                                                    @{
                                                     if (!string.IsNullOrEmpty(botruyen.AnhBia))
                                                     {
-                                                        <img src="@botruyen.AnhBia" alt="truyen Image" />
+                                                                <img src="@botruyen.AnhBia" alt="truyen Image" />
                                                     }
-                                                    <figcaption>
-                                                        <h6 class="item-title"><a href="#">@botruyen.TenBo</a></h6>
-                                                    </figcaption>
-                                                }
-                                                @if (botruyen.TtPemium == true)
+                                                            <figcaption>
+                                                                <h6 class="item-title"><a href="#">@botruyen.TenBo</a></h6>
+                                                            </figcaption>
+                                                    }
+                                                    @if (botruyen.TtPemium == true)
                                                 {
-                                                    <div class="item-vip">
-                                                        <img style="width:50px!important; height:20px!important; border-radius:0!important;" src="~/images/predark.png" />
-                                                    </div>
+                                                        <div class="item-vip">
+                                                            <img style="width:50px!important; height:20px!important; border-radius:0!important;" src="~/images/predark.png" />
+                                                        </div>
                                                 }
-                                            </figure>
-                                        </a>
-                                    </div>
+                                                </figure>
+                                            </a>
+                                        </div>
                                 }
-                            </div>
+                                </div>
                         }
                     }
                 </div>
+                
             </div>
         </div>
     </div>
@@ -498,12 +535,11 @@
                                         popup: 'swal-top-margin'
                                     }
                                 })
-                                // .then((result) => {
-                                //     window.location.reload();
-                                // });
+                                .then((result) => {
+                                    window.location.reload();
+                                });
                             } else {
                                 alert('Lỗi khi đánh giá, vui lòng thử lại');
-                            // location.reload();
                             }
                         },
                         error: function () {
@@ -537,3 +573,4 @@
 
 
     </script>
+

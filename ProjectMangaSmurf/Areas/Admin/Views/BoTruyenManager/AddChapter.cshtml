@@ -8,6 +8,13 @@
         max-width: 50%;
         max-height: 50%;
     }
+
+    .Time{
+        padding: .5rem;
+        width: 100%;
+        border-radius: 5px;
+        border: 1px solid #888;
+    }
 </style>
 
 <div class="content">
@@ -29,33 +36,35 @@
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label asp-for="SttChap">STT Chapter</label>
-                        <input asp-for="SttChap" type="text" value="@ViewBag.Stt" placeholder="1, 2, 3, ...">
+                        <input asp-for="SttChap" type="text" value="@ViewBag.Stt" placeholder="1, 2, 3, ..." required>
                     </div>
-                </div
+                </div>
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label asp-for="TicketCost">TicketCost</label>
-                        <input asp-for="TicketCost" type="text" placeholder="1, 2, 3, ...">
+                        <input asp-for="TicketCost" type="text" placeholder="1, 2, 3, ..." required>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label asp-for="TenChap">Tên Chapter</label>
-                        <input asp-for="TenChap" type="text" placeholder="Example ...">
+                        <input asp-for="TenChap" type="text" placeholder="Example ..." required>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-6 col-12">
-                    <div class="form-group">
+                   <div class="form-group">
                         <label asp-for="ThoiGian">Thời gian</label>
-                        <input asp-for="ThoiGian" type="date">
+                        <input asp-for="ThoiGian" type="date" required class="Time">
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-6 col-12">
-                    <label asp-for="TtPemium">Truyện Premium</label>
-                    <select asp-for="TtPemium" class="select">
-                        <option>true</option>
-                        <option>false</option>
-                    </select>
+                     <div class="form-group">
+                        <label asp-for="TtPemium">Truyện Premium</label>
+                        <select asp-for="TtPemium" class="select" required>
+                            <option>true</option>
+                            <option>false</option>
+                        </select>
+                    </div>
                 </div>
 
                 <div class="col-lg-12">

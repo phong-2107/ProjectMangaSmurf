@@ -292,12 +292,15 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
         }
         private async Task<string> SaveImageChapter(IFormFile image)
         {
-            var savePath = Path.Combine("wwwroot/images/chapter", image.FileName);
+            var identifier = $"{new Random().Next(1000, 9999)}";
+            string fileName = $"{identifier}_{image.FileName}";
+            var savePath = Path.Combine("wwwroot/images/chapter", fileName);
+
             using (var fileStream = new FileStream(savePath, FileMode.Create))
             {
                 await image.CopyToAsync(fileStream);
             }
-            return "/images/chapter/" + image.FileName;
+            return "/images/chapter/" + fileName;
         }
         [HttpGet]
         public async Task<IActionResult> AddChapter(string id, int stt)
@@ -310,7 +313,6 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
             return View();
 
         }
-
         [HttpPost]
         public async Task<IActionResult> AddChapter(Chapter chapter, List<IFormFile> images)
         {

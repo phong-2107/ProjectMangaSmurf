@@ -221,12 +221,12 @@
                                asp-controller="ChapterManager"
                                asp-action="Detail"
                                asp-route-id="@item.IdBo"
-                               asp-route-stt="@item.SttChap"><img src="~/img/icons/eye.svg" alt="View"></a>
+                               asp-route-stt="@item.SttChap"><img src="~/img/icons/eye.svg" alt="View" class="me-3"></a>
 
                             <a asp-area="Admin" asp-controller="ChapterManager" asp-action="Update" asp-route-id="@item.SttChap && @item.IdBo" class="me-3">
                                 <img src="~/img/icons/edit.svg" alt="Edit">
                             </a>
-                            <a class="delete-chapter" data-idbo="@item.IdBo" data-sttchap="@item.SttChap" href="javascript:void(0);">
+                            <a class="delete-chapter" data-idbo="@item.IdBo" data-sttchap="@item.SttChap" href="javascript:void(0); ">
                                 <img src="~/img/icons/delete.svg" alt="Delete">
                             </a>
 

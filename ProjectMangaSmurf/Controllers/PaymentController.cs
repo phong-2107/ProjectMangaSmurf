@@ -154,7 +154,7 @@ namespace ProjectMangaSmurf.Controllers
                 }
                 catch (Exception ex)
                 {
-                    ////transaction.Rollback();
+                    transaction.Rollback();
                     return View("Error", new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
                 }
             }

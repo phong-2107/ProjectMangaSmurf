@@ -11,11 +11,11 @@
 
 
 <div class="background"></div>
-<div class="main__bottom sections  TruyenNew__Containter containers grid">
+<div class="main__bottom sections TruyenNew__Containter containers grid">
     <section class="home" id="home">
         <div class="home__container w-100">
             <div id="carouselExampleAutoplaying" class="carousel slide home__carousel bg__carousel w-100" data-bs-ride="carousel">
-                <div class="carousel-inner rounded-3 w-100" style="">
+                <div class="carousel-inner rounded-2 w-100" style="">
                     @{
                         string TruncateText(string text, int maxLength)
                         {
@@ -38,7 +38,7 @@
                         <div class="carousel-item @(botruyen.Index == 0 ? "active" : "") w-100 main-Banner">
                             @if (!string.IsNullOrEmpty(botruyen.Value.AnhBanner))
                             {
-                                <img src="@botruyen.Value.AnhBanner" class="d-block w-100 rounded-3" alt="Anh banner" style="height: 500px!important; object-fit: cover;">
+                                <img src="@botruyen.Value.AnhBanner" class="d-block w-100 rounded-2" alt="Anh banner" style="height: 470px!important; object-fit: cover;">
                             }
                             @if (botruyen.Value.TtPemium)
                             {
@@ -46,7 +46,7 @@
                                     <img style="width:100px!important; height:40px!important; border-radius:0!important;" src="~/images/predark.png" />
                                 </div>
                             }
-                            <div class="item-infor">
+                            <div class="item-infor" >
                                 <div class="item-content">
                                     <div class="content">
                                         <a href="#">@botruyen.Value.TenBo</a>
@@ -55,14 +55,15 @@
                                         <p>@TruncateText(botruyen.Value.Mota, 35)</p>
                                     </div>
                                 </div>
-                                <div class="btn__regis w-50">
-                                    <a asp-action="CTBoTruyen" asp-route-id="@botruyen.Value.IdBo">View more</a>
-                                </div>
+                                
+                            </div>
+                            <div class="btn__regis w-50" style=" position:absolute; bottom:60px; right:50px; z-index:1000; max-width:170px;">
+                                <a asp-action="CTBoTruyen" asp-route-id="@botruyen.Value.IdBo">View more</a>
                             </div>
                         </div>
                     }
                 </div>
-                <div class="background-item rounded-3"></div>
+                <div class="background-item rounded-2"></div>
                 <button class="carousel-control-prev " type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev" style="width: 5%; z-index: 1000;">
                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                 </button>
@@ -93,26 +94,13 @@
             </div>
         </div>
         <div class="main__random bg-random">
-            <a id="btnPay" class="btn-pre"  data-customerid="@HttpContextAccessor.HttpContext.Session.GetString("TK")"><i class="fa-solid fa-gem"></i>Try Now</a>
+            <a id="btnPay" class="btn-pre"  data-customerid="@HttpContextAccessor.HttpContext.Session.GetString("IdKH")">@* <i class="fa-solid fa-gem"></i> *@Try Now</a>
             <script>
                 $(document).ready(function () {
                     $('#btnPay').click(function (e) {
                         var customerId = $(this).data('customerid');
-                        if (customerId) {
-                            var pay = @Html.Raw(Json.Serialize(ViewBag.Pay));
-                            // if (pay != null) {
-                            //     Swal.fire({
-                            //         title: "Wanting!",
-                            //         text: "Bạn đã đăng ký một gói premium trước đó !",
-                            //         icon: "warning"
-                            //     });
-                            // } else {
-                            //    
-                            // }\
-                            window.location.href = '@Url.Action("Index", "Payment")';
-                        } else {
-                            window.location.href = '@Url.Action("Index", "Payment")';
-                        }
+                        window.location.href = '@Url.Action("Index", "Payment")';
+                        
                     });
                 });
             </script>
@@ -134,9 +122,11 @@
 
                 <div class="col update-item" asp-action="CTBoTruyen" asp-route-id="botruyen.IdBo">
                     <a asp-action="CTBoTruyen" asp-route-id="@botruyen.IdBo">
-                        <figure>
+                        <figure style="position:relative;">
+                            
                             @if (!string.IsNullOrEmpty(botruyen.AnhBia))
                             {
+                                <span class="hot-icon" style="z-index:10001;">HOT</span>
                                 <img src="@botruyen.AnhBia" alt="truyen Image" />
                             }
                             <figcaption>
@@ -149,6 +139,8 @@
         </div>
     </div>
 </div>
+
+
 
 <section class="new-update containers mt-3" id="update">
     <div class="update__container TruyenNew__Containter grids">
@@ -176,6 +168,7 @@
                             <figure class="position-relative">
                                 @if (!string.IsNullOrEmpty(botruyen.AnhBia))
                                 {
+                                    
                                     <img src="@botruyen.AnhBia" alt="truyen Image" />
                                 }
                                 <figcaption>

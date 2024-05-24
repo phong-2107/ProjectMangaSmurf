@@ -706,7 +706,7 @@ img {
 .main__bottom {
     position: relative;
     display: grid;
-    grid-template-columns: 72% 28%;
+    grid-template-columns: 70% 27%;
     gap:1rem;
 }
 
@@ -718,6 +718,7 @@ img {
 
 .home__container {
     align-items: center;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 }
 
 .home__carousel {
@@ -778,11 +779,11 @@ img {
 } */
 
 .main__right {
-    margin-top: 1rem;
     width: 100%;
     position: relative;
     width: 100%;
     display: grid;
+    gap:1rem;
     grid-template-columns: 1fr;
 }
 
@@ -792,9 +793,9 @@ img {
     width: 100%;
     height: 230px;
     padding: .8rem;
-    margin-bottom: .8rem;
     background-color: var(--box-color);
-    border-radius: 10px;
+    border-radius: 2px;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 }
 
 
@@ -933,7 +934,7 @@ img {
 .item-vip {
     position: absolute;
     top: 10px;
-    right: 10px;
+    right: 20px;
 }
 
 .item-vip-banner {
@@ -1004,6 +1005,30 @@ img {
     .pre-poster img {
         width: 90px;
     }
+
+
+@keyframes blink {
+    50% {
+        opacity: 0.0;
+    }
+}
+
+.hot-icon {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    padding: .2rem .4rem;
+    background-color: red;
+    color: white;
+    text-align: center;
+    line-height: 15px;
+    font-size: 10px;
+    font-weight: 500;
+    z-index: 10000;
+    border-radius: 3px;
+    animation: blink 2s infinite;
+}
+
 
 .item-loai {
     color: var(--first-color);

@@ -23,7 +23,7 @@ namespace ProjectMangaSmurf.Repository
         {
             string idPrefix = "HD";
             int idLength = 8;
-            string maxId = _context.Payments.Select(kh => kh.IdUser)
+            string maxId = _context.Payments.Select(kh => kh.IdPayment)
                                                .OrderByDescending(id => id)
                                                .FirstOrDefault();
             if (maxId == null)

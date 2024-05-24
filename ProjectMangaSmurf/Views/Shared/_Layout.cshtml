@@ -200,10 +200,27 @@
                                 <a id="follow" class="nav__item nav__link active-link">Theo dõi</a>
                                 <script>
                                     document.getElementById('follow').addEventListener('click', function () {
-                                        var userResponse = confirm("Bạn cần đăng nhập để xem danh sách theo dõi. Bạn có muốn đăng nhập ngay?");
-                                        if (userResponse) {
-                                            window.location.href = '@Url.Action("Login", "KhachHang")';
-                                        }
+                                        const swalWithBootstrapButtons = Swal.mixin({
+                                            customClass: {
+                                                confirmButton: 'btn btn-success',
+                                                cancelButton: 'btn btn-secondary mr-3'
+                                            },
+                                            buttonsStyling: false
+                                        });
+
+                                        swalWithBootstrapButtons.fire({
+                                            title: 'Login warning!',
+                                            text: "Bạn cần đăng nhập để xem danh sách theo dõi. Bạn có muốn đăng nhập ngay?",
+                                            icon: 'warning',
+                                            showCancelButton: true,
+                                            confirmButtonText: 'Login Now!',
+                                            cancelButtonText: 'Cancel',
+                                            reverseButtons: true
+                                        }).then((result) => {
+                                            if (result.isConfirmed) {
+                                                window.location.href = '@Url.Action("Login", "KhachHang")';
+                                            } 
+                                        });
                                     });
                                 </script>
                         }
@@ -218,10 +235,26 @@
                                 <a id="history" class="nav__item nav__link active-link">Lịch sử</a>
                                 <script>
                                     document.getElementById('history').addEventListener('click', function () {
-                                        var userResponse = confirm("Bạn cần đăng nhập để xem lịch sử đọc. Bạn có muốn đăng nhập ngay?");
-                                        if (userResponse) {
-                                            window.location.href = '@Url.Action("Login", "KhachHang")';
-                                        }
+                                        const swalWithBootstrapButtons = Swal.mixin({
+                                            customClass: {
+                                                confirmButton: 'btn btn-success',
+                                                cancelButton: 'btn btn-secondary mr-3'
+                                            },
+                                            buttonsStyling: false
+                                        });
+                                        swalWithBootstrapButtons.fire({
+                                            title: 'Login warning!',
+                                            text: "Bạn cần đăng nhập để xem lịch sử đọc. Bạn có muốn đăng nhập ngay?",
+                                            icon: 'warning',
+                                            showCancelButton: true,
+                                            confirmButtonText: 'Login Now!',
+                                            cancelButtonText: 'Cancel',
+                                            reverseButtons: true
+                                        }).then((result) => {
+                                            if (result.isConfirmed) {
+                                                window.location.href = '@Url.Action("Login", "KhachHang")';
+                                            }
+                                        });
                                     });
                                 </script>
                         }

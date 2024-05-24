@@ -50,7 +50,7 @@ namespace ProjectMangaSmurf.Repository
 
         public async Task SendEmailTemplateAsync(string toEmail, string subject, string body, string template)
         {
-            var email = "mangasmurf@outlook.com";
+            var email = "Mangasmurf@outlook.com";
             var password = "Phong2107@";
 
             var message = new MimeMessage();
