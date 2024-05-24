@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using ProjectMangaSmurf.Data;
 using ProjectMangaSmurf.Models;
 using ProjectMangaSmurf.Repository;
 
@@ -12,57 +13,65 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
     {
         private readonly IAuthorRepository _authorRepository;
         private readonly IboTruyenRepository _botruyen;
-        public AuthorManager(IAuthorRepository authorRepository, IboTruyenRepository botruyen)
+        private readonly ProjectDBContext _context;
+
+        public AuthorManager(IAuthorRepository authorRepository, IboTruyenRepository botruyen, ProjectDBContext context)
         {
             _authorRepository = authorRepository;
             _botruyen = botruyen;
+            _context = context;
         }
 
+        #region ToggleActive
         [HttpPost]
+        [RBACAuthorize(PermissionId = 31)]
         public async Task<IActionResult> ToggleActive(string id)
         {
-            var author = await _authorRepository.GetAuthorById(id);
-            if (author == null)
+            using (var transaction = await _context.Database.BeginTransactionAsync())
             {
-                return NotFound();
-            }
-
-            // Toggle the active state safely
-            author.Active = !(author.Active ?? false);
-            await _authorRepository.UpdateAsync(author);
-
-            // Fetch all comics by this author
-            var comics = await _botruyen.GetComicsByAuthorId(id);
-
-            // Update all comics' active status to match the author's new status
-            if (comics != null)
-            {
-                if (author.Active == true)
+                try
                 {
-                    foreach (var comic in comics)
+                    var author = await _authorRepository.GetAuthorById(id);
+                    if (author == null)
                     {
-                        comic.Active = true;
-                        await _botruyen.UpdateAsync(comic);
+                        return NotFound();
                     }
+
+                    // Toggle the active state safely
+                    author.Active = !(author.Active ?? false); // Use ?? to provide a default value
+                    await _authorRepository.UpdateAsync(author);
+
+                    // Fetch all comics by this author
+                    var comics = await _botruyen.GetComicsByAuthorId(id);
+
+                    // Update all comics' active status to match the author's new status
+                    if (comics != null)
+                    {
+                        foreach (var comic in comics)
+                        {
+                            comic.Active = author.Active ?? false; // Use ?? to provide a default value
+                            await _botruyen.UpdateAsync(comic);
+                        }
+                    }
+
+                    await transaction.CommitAsync();
+
+                    // Optionally add a success message or similar feedback
+                    TempData["Message"] = "Author and related comics' active status updated successfully!";
                 }
-                if (author.Active == false)
+                catch (Exception ex)
                 {
-                    foreach (var comic in comics)
-                    {
-                        comic.Active = false;
-                        await _botruyen.UpdateAsync(comic);
-                    }
+                    await transaction.RollbackAsync();
+                    ModelState.AddModelError("", "An error occurred: " + ex.Message);
                 }
 
+                return RedirectToAction(nameof(Detail), new { id });
             }
-
-            // Optionally add a success message or similar feedback
-            TempData["Message"] = "Author and related comics' active status updated successfully!";
-
-            return RedirectToAction(nameof(Detail), new { id });
         }
+        #endregion
 
-
+        #region Index
+        [RBACAuthorize(PermissionId = 26)]
         public async Task<IActionResult> Index(bool? isActive)
         {
             IEnumerable<TacGium> authors;
@@ -76,7 +85,10 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
             }
             return View(authors);
         }
+        #endregion
 
+        #region Detail
+        [RBACAuthorize(PermissionId = 27)]
         public async Task<IActionResult> Detail(string id)
         {
             var author = await _authorRepository.GetAuthorById(id);
@@ -91,7 +103,10 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
 
             return View(author);
         }
+        #endregion
 
+        #region Add
+        [RBACAuthorize(PermissionId = 28)]
         public async Task<IActionResult> Add()
         {
             ViewBag.Id = await _authorRepository.GenerateAuthorId(); // Call without any arguments
@@ -99,16 +114,32 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        [RBACAuthorize(PermissionId = 28)]
         public async Task<IActionResult> Add(TacGium author)
         {
             if (ModelState.IsValid)
             {
-                await _authorRepository.AddAsync(author);
-                return RedirectToAction(nameof(Index));
+                using (var transaction = await _context.Database.BeginTransactionAsync())
+                {
+                    try
+                    {
+                        await _authorRepository.AddAsync(author);
+                        await transaction.CommitAsync();
+                        return RedirectToAction(nameof(Index));
+                    }
+                    catch (Exception ex)
+                    {
+                        await transaction.RollbackAsync();
+                        ModelState.AddModelError("", "An error occurred: " + ex.Message);
+                    }
+                }
             }
             return View(author);
         }
+        #endregion
 
+        #region Update
+        [RBACAuthorize(PermissionId = 29)]
         public async Task<IActionResult> Update(string id)
         {
             if (string.IsNullOrEmpty(id))
@@ -125,8 +156,8 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
             return View(author);
         }
 
-
         [HttpPost]
+        [RBACAuthorize(PermissionId = 29)]
         public async Task<IActionResult> Update(TacGium author)
         {
             if (!ModelState.IsValid)
@@ -134,81 +165,116 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
                 return View(author);
             }
 
-            // Check if Active status is being set to False
-            if (author.Active == false)
+            using (var transaction = await _context.Database.BeginTransactionAsync())
             {
-                // Fetch all comics by this author
-                var comics = await _botruyen.GetComicsByAuthorId(author.IdTg);
-
-                // Update all comics' active status to match the author's new status
-                if (comics != null)
+                try
                 {
-                    foreach (var comic in comics)
+                    // Check if Active status is being set to False
+                    if (author.Active == false)
                     {
-                        comic.Active = false;
-                        await _botruyen.UpdateAsync(comic);
+                        // Fetch all comics by this author
+                        var comics = await _botruyen.GetComicsByAuthorId(author.IdTg);
+
+                        // Update all comics' active status to match the author's new status
+                        if (comics != null)
+                        {
+                            foreach (var comic in comics)
+                            {
+                                comic.Active = false;
+                                await _botruyen.UpdateAsync(comic);
+                            }
+                        }
                     }
+
+                    await _authorRepository.UpdateAsync(author);
+                    await transaction.CommitAsync();
+
+                    TempData["Message"] = "Author updated successfully!";
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception ex)
+                {
+                    await transaction.RollbackAsync();
+                    ModelState.AddModelError("", "Unable to save changes.");
                 }
             }
 
-            try
-            {
-                await _authorRepository.UpdateAsync(author);
-                TempData["Message"] = "Author updated successfully!";
-                return RedirectToAction(nameof(Index));
-            }
-            catch (Exception ex)
-            {
-                // Log the error
-                ModelState.AddModelError("", "Unable to save changes.");
-                return View(author);
-            }
-
+            return View(author);
         }
-        private bool AuthorExists(string id)
-        {
-            return _authorRepository.GetAuthorById(id) != null;
-        }
+        #endregion
 
-
+        #region Delete
         [HttpPost]
+        [RBACAuthorize(PermissionId = 30)]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            var author = await _authorRepository.GetAuthorById(id);
-            if (author == null)
+            using (var transaction = await _context.Database.BeginTransactionAsync())
             {
-                return NotFound();
-            }
-
-            // Fetch all comics by this author
-            var comics = await _botruyen.GetComicsByAuthorId(id);
-            if (comics != null)
-            {
-                foreach (var comic in comics)
+                try
                 {
-                    // Assuming a method to delete all chapters and details of a comic
-                    await _authorRepository.DeleteAllChaptersAndDetails(comic.IdBo);
-                    // Now delete the comic
-                    await _authorRepository.DeleteAsync(comic.IdBo);
+                    var author = await _authorRepository.GetAuthorById(id);
+                    if (author == null)
+                    {
+                        return NotFound();
+                    }
+
+                    // Fetch all comics by this author
+                    var comics = await _botruyen.GetComicsByAuthorId(id);
+                    if (comics != null)
+                    {
+                        foreach (var comic in comics)
+                        {
+                            // Assuming a method to delete all chapters and details of a comic
+                            await _authorRepository.DeleteAllChaptersAndDetails(comic.IdBo);
+                            // Now delete the comic
+                            await _authorRepository.DeleteAsync(comic.IdBo);
+                        }
+                    }
+
+                    // Finally, delete the author
+                    await _authorRepository.DeleteAsync(id);
+                    await transaction.CommitAsync();
+                    return RedirectToAction(nameof(Index));
                 }
+                catch (Exception ex)
+                {
+                    await transaction.RollbackAsync();
+                    ModelState.AddModelError("", "An error occurred: " + ex.Message);
+                }
+
+                return RedirectToAction(nameof(Index));
             }
-
-            // Finally, delete the author
-            await _authorRepository.DeleteAsync(id);
-            return RedirectToAction(nameof(Index));
         }
-
-
-
+        [RBACAuthorize(PermissionId = 30)]
         public async Task<IActionResult> Delete(string id)
         {
             var author = await _authorRepository.GetAuthorById(id);
             if (author != null)
             {
-                await _authorRepository.DeleteAsync(id);
+                using (var transaction = await _context.Database.BeginTransactionAsync())
+                {
+                    try
+                    {
+                        await _authorRepository.DeleteAsync(id);
+                        await transaction.CommitAsync();
+                    }
+                    catch (Exception ex)
+                    {
+                        await transaction.RollbackAsync();
+                        ModelState.AddModelError("", "An error occurred: " + ex.Message);
+                    }
+                }
                 return RedirectToAction(nameof(Index));
             }
             return NotFound();
         }
+        #endregion
+
+        #region Private Methods
+        private bool AuthorExists(string id)
+        {
+            return _authorRepository.GetAuthorById(id) != null;
+        }
+        #endregion
     }
 }

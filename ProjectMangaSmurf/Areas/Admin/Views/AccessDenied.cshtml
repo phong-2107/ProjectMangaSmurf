@@ -1,8 +1,4 @@
-﻿@{
-    Layout = null; // No layout to keep the page standalone
-}
-
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -22,18 +18,29 @@
         /* Styling for the message box */
         .access-denied {
             padding: 20px;
-            border: 2px solid red;
-            background-color: white;
+            background-color: #ffe6e6; /* Lighter red background */
             color: red;
             font-size: 24px;
             text-align: center;
+            border-radius: 15px; /* Rounded corners */
+            display: flex;
+            align-items: center;
         }
+            /* Styling for the image */
+            .access-denied img {
+                max-width: 400px;
+                margin-right: 20px; /* Space between the image and the text */
+            }
     </style>
 </head>
 <body>
+    <div class="content">
     <div class="access-denied">
-        No permit to access this action. <br>
-        Please contact your Administrator / Supervisor.
-    </div>
+        <img src="/images/denied.png" alt="Access Denied">
+        <div>
+            No permit to access this action. <br>
+            Please contact your Administrator / Supervisor.
+        </div>
+    </div></div>
 </body>
 </html>

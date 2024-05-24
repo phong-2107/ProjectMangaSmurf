@@ -8,13 +8,16 @@
 
     <link rel="icon" type="image/png" href="~/images/icon logo.png">
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300..900&display=swap" rel="stylesheet">
+
     @*----------------- STYLE CSS FILE ------------------ *@
     <link href="~/css/animate.css" rel="stylesheet" />
     <link href="~/css/bootstrap.min.css" rel="stylesheet" />
     <link href="~/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
     <link href="~/css/datatables.bootstrap4.min.css" rel="stylesheet" />
     <link href="~/js/owlcarousel/owl.carousel.min.css" rel="stylesheet" />
-    <!-- In your _Layout.cshtml head section -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
     <link href="~/css/select2.min.css" rel="stylesheet" />
@@ -28,20 +31,28 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 
     <style>
+<<<<<<< HEAD
         /*         .header-left.active {
                     background-color: #ae8249;
                 }
          */
+=======
+>>>>>>> 4fb584e170da6c6baae985c62871a8900f39bc3a
         .nav.user-menu {
             display: flex;
             align-items: center;
             font-family: 'Roboto', sans-serif;
+<<<<<<< HEAD
+=======
+            position: relative;
+>>>>>>> 4fb584e170da6c6baae985c62871a8900f39bc3a
         }
 
             .nav.user-menu span {
                 margin-right: 1rem;
                 font-size: 1rem;
                 font-weight: 600;
+<<<<<<< HEAD
             }
 
         .btn-custom-logout {
@@ -58,6 +69,125 @@
 
             .btn-custom-logout:hover {
                 background-color: #a07837;
+=======
+                cursor: pointer;
+            }
+
+        .footer {
+            background-color: #273b77;
+            padding: 1rem;
+            text-align: center;
+            font-family: 'Roboto', sans-serif;
+            font-size: 0.875rem;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            position: relative;
+        }
+
+            .footer a {
+                color: white;
+                text-decoration: none;
+            }
+
+                .footer a:hover {
+                    text-decoration: underline;
+                }
+
+        .footer-icons {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+            .footer-icons i {
+                color: white;
+                font-size: 1.5rem;
+            }
+
+            .footer-icons span {
+                color: white;
+                margin: 0 10px;
+            }
+
+        .dropdown-menu-user {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 0.25rem;
+            box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            min-width: 200px;
+        }
+
+            .dropdown-menu-user a {
+                color: #333;
+                padding: 0.5rem 1rem;
+                text-decoration: none;
+                display: flex;
+                align-items: center;
+                font-family: 'Roboto', sans-serif;
+                font-size: 1rem;
+            }
+
+                .dropdown-menu-user a:hover {
+                    background-color: #f8f9fa;
+                }
+
+            .dropdown-menu-user i {
+                margin-right: 0.5rem;
+            }
+
+        .nav.user-menu:hover .dropdown-menu-user {
+            display: block;
+        }
+
+        .access-denied-popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+        }
+
+        .access-denied-content {
+            background: white;
+            color: #330404;
+            font-size: 24px;
+            text-align: center;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            font-family: 'Rubik', sans-serif;
+            font-weight: 400; /* Adjust weight as needed */
+            font-style: normal;
+        }
+
+            .access-denied-content img {
+                max-width: 200px;
+                margin-right: 20px;
+            }
+
+        .permission-link {
+            text-decoration: none;
+            color: #330404;
+        }
+
+            .permission-link:hover {
+                text-decoration: underline;
+>>>>>>> 4fb584e170da6c6baae985c62871a8900f39bc3a
             }
     </style>
 </head>
@@ -86,10 +216,26 @@
                     {
                         var userId = HttpContextAccessor.HttpContext.Session.GetString("AdminSessionId");
                         var user = HttpContextAccessor.HttpContext.Session.GetString("AdminSession");
+<<<<<<< HEAD
                         <a asp-area="Admin" asp-controller="StaffManager" asp-action="SelfDetail" asp-route-id="@userId"> <span><i class="fa-solid fa-face-smile"></i> Hi @user</span></a>
                         <form asp-controller="AdminLogin" asp-action="Logout" method="post" style="display:inline;">
                             <button type="submit" class="btn btn-custom-logout"><i class="fa-solid fa-right-from-bracket"> </i> </button>
                         </form>
+=======
+                        <span><i class="fa-solid fa-face-smile"></i>    User:   @user</span>
+                        <div class="dropdown-menu-user">
+                            <a asp-area="Admin" asp-controller="StaffManager" asp-action="SelfDetail" asp-route-id="@userId">
+                                <i class="fa-solid fa-user"></i> My Account
+                            </a>
+                            <a asp-area="" asp-controller="BoTruyen" asp-action="Index">
+                                <i class="fa-solid fa-house"></i> Go to Main Site
+                            </a>
+                            <a asp-controller="AdminLogin" asp-action="Logout" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                <i class="fa-solid fa-right-from-bracket"></i> Logout
+                            </a>
+                            <form id="logout-form" asp-controller="AdminLogin" asp-action="Logout" method="post" style="display:none;"></form>
+                        </div>
+>>>>>>> 4fb584e170da6c6baae985c62871a8900f39bc3a
                     }
                 </li>
             </ul>
@@ -123,6 +269,7 @@
                             </a>
                             <ul>
                                 <li>
+<<<<<<< HEAD
                                     <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="Add"><i class="fa-solid fa-layer-group"></i>             Upload Comic</a>
                                 </li>
                                 <li>
@@ -133,6 +280,21 @@
                                 </li>
                                 <li>
                                     <a asp-area="Admin" asp-controller="StaffManager" asp-action="Register"><i class="fa-solid fa-person-breastfeeding"></i>             Create User-Staff</a>
+=======
+                                    <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="Add"><i class="fa-solid fa-layer-group"></i> Upload Comic</a>
+                                </li>
+                                <li>
+                                    <a asp-area="Admin" asp-controller="AuthorManager" asp-action="Add"> <i class="fa-solid fa-layer-group"></i> Upload Author</a>
+                                </li>
+                                <li>
+                                    <a asp-area="Admin" asp-controller="ComicTypeManager" asp-action="Add"><i class="fa-solid fa-layer-group"></i> Upload Comic Type</a>
+                                </li>
+                                <li>
+                                    <a asp-area="Admin" asp-controller="ServiceManager" asp-action="Add"><i class="fa-brands fa-shopify"></i> Create Service Pack</a>
+                                </li>
+                                <li>
+                                    <a asp-area="Admin" asp-controller="StaffManager" asp-action="Register"><i class="fa-solid fa-person-breastfeeding"></i> Create User-Staff</a>
+>>>>>>> 4fb584e170da6c6baae985c62871a8900f39bc3a
                                 </li>
                             </ul>
                         </li>
@@ -144,6 +306,7 @@
                             </a>
                             <ul>
                                 <li>
+<<<<<<< HEAD
                                     <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="ViewList"><i class="fa-solid fa-list"></i>             Comics List</a>
                                 </li>
                                 <li>
@@ -164,6 +327,28 @@
                                 </li>
                                 <li>
                                     <a asp-area="Admin" asp-controller="StaffManager" asp-action="Index"><i class="fa-solid fa-list"></i>             Staffs List</a>
+=======
+                                    <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="ViewList"><i class="fa-solid fa-list"></i> Comics List</a>
+                                </li>
+                                <li>
+                                    <a asp-area="Admin" asp-controller="AuthorManager" asp-action="Index"><i class="fa-solid fa-list"></i> Author List</a>
+                                </li>
+                                <li>
+                                    <a asp-area="Admin" asp-controller="ComicTypeManager" asp-action="Index"><i class="fa-solid fa-list"></i> Comic-Types List</a>
+                                </li>
+                                <li>
+                                    <a asp-area="Admin" asp-controller="ServiceManager" asp-action="Index"><i class="fa-solid fa-list"></i> Service Pack</a>
+                                </li>
+
+                                <li>
+                                    <a asp-area="Admin" asp-controller="CusManager" asp-action="ViewList"><i class="fa-solid fa-list"></i> Customers List</a>
+                                </li>
+                                <li>
+                                    <a asp-area="Admin" asp-controller="CusManager" asp-action="ViewOrderList"><i class="fa-solid fa-list"></i> Payment-Order List</a>
+                                </li>
+                                <li>
+                                    <a asp-area="Admin" asp-controller="StaffManager" asp-action="Index"><i class="fa-solid fa-list"></i> Staffs List</a>
+>>>>>>> 4fb584e170da6c6baae985c62871a8900f39bc3a
                                 </li>
 
                             </ul>
@@ -176,6 +361,7 @@
                             </a>
                             <ul>
                                 <li>
+<<<<<<< HEAD
                                     <a asp-area="Admin" asp-controller="StaffManager" asp-action="RBAC"><i class="fa-solid fa-id-card-clip"></i>             Role-Base Config List</a>
                                 </li>
                                 <li>
@@ -188,6 +374,26 @@
                                     <a asp-area="Admin" asp-controller="WebManager" asp-action="AboutManagerSite"><i class="fa-solid fa-code-branch"></i>            About Manager Site</a>
                                 </li>
                                 <ul>
+=======
+                                    <a asp-area="Admin" asp-controller="StaffManager" asp-action="RBAC"><i class="fa-solid fa-id-card-clip"></i> - Role-Base Config List</a>
+                                </li>
+                                <li>
+                                    <a asp-area="Admin" asp-controller="WebManager" asp-action="Index"><i class="fa-solid fa-laptop-code"></i> - Webiste Config List </a>
+                                </li>
+                                <li>
+                                    <a asp-area="Admin" asp-controller="ServiceManager" asp-action="Index"><i class="fa-solid fa-coins"></i> - Service Config</a>
+                                </li>
+                                <li>
+                                    <a asp-area="Admin" asp-controller="WebManager" asp-action="About"><i class="fa-solid fa-code-branch"></i> - About Manager Site</a>
+                                </li>
+                                <li>
+                                    <a asp-area="" asp-controller="BoTruyen" asp-action="Index" style="display: flex; align-items: center;">
+                                        <img src="~/images/icon logo.png" alt="Smurf Manga Site" style="height: 1em; margin-right: 8px;">
+                                        Smurf Manga Site
+                                    </a>
+                                </li>
+                            </ul>
+>>>>>>> 4fb584e170da6c6baae985c62871a8900f39bc3a
                         </li>
                     </ul>
                 </div>
@@ -199,6 +405,17 @@
             </div>
             @RenderBody()
         </div>
+        <footer class="footer">
+            <div>
+                &copy; @DateTime.Now.Year - Smurf Manga Manager Project . All copy rights reserved | Author : SMs Team | <a href="/BoTruyen/Index">Smurf Manga Site <i class="fa-solid fa-location-arrow"></i></a>
+            </div>
+            <div class="footer-icons">
+                <a href="@ViewBag.Config20" title="Go to GitHub"><i class="fa-brands fa-github"></i></a> |
+                <a href="@ViewBag.Config1" title="Go to Facebook"><i class="fa-brands fa-facebook"></i></a> |
+                <a href="@ViewBag.Config2" title="Go to Discord"><i class="fa-brands fa-discord"></i></a> |
+                <a href="/WebManager/About" title="Go to Info"><i class="fa-solid fa-circle-info"></i></a>
+            </div>
+        </footer>
     </div>
 
     <script src="~/js/jquery-3.6.0.min.js"></script>
@@ -220,21 +437,51 @@
     <script src="~/js/scriptAdmin.js"></script>
 
     <script>
+        function showAccessDeniedPopup() {
+            $('#accessDeniedPopup').fadeIn();
+        }
+
+        function hideAccessDeniedPopup() {
+            $('#accessDeniedPopup').fadeOut();
+        }
+
         $(document).ready(function () {
+            function adjustFooter() {
+                var pageWrapper = $('.page-wrapper');
+                var footer = $('footer.footer');
+                var windowHeight = $(window).height();
+                var pageHeight = pageWrapper.height();
+                var offset = 0;
+
+                if (pageHeight > windowHeight) {
+                    offset = windowHeight - pageHeight - footer.height();
+                    offset = offset < 150 ? 150 : offset;
+                } else {
+                    offset = 480;
+                }
+
+                footer.css('margin-top', offset + 'px');
+            }
+
+            adjustFooter();
+
+            $(window).resize(function () {
+                adjustFooter();
+            });
+
             $('.delete-product').click(function () {
                 var productId = $(this).data('product-id');
                 Swal.fire({
                     title: "Are you sure?",
                     text: `Delete Comic ID ${productId}`,
                     type: "warning",
-                    showCancelButton: !0,
+                    showCancelButton: true,
                     confirmButtonColor: "#3085d6",
                     cancelButtonColor: "#d33",
                     confirmButtonText: "Yes, delete it!",
                     confirmButtonClass: "btn btn-primary",
                     cancelButtonClass: "btn btn-danger ml-1",
-                    buttonsStyling: !1
-
+                    buttonsStyling: false
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
@@ -250,16 +497,34 @@
                                 location.reload();
                             },
                             error: function (xhr, status, error) {
-                                // Xử lý lỗi nếu cần
                                 console.error(xhr.responseText);
                             }
                         });
                     }
                 });
             });
+
+            // Popup functionality
+            $(document).on('click', '#accessDeniedPopup', function (e) {
+                if ($(e.target).closest('.access-denied-content').length === 0) {
+                    hideAccessDeniedPopup();
+                }
+            });
+
+            // Call showAccessDeniedPopup() when access is denied
+            $.ajax({
+                url: '@Url.Action("CheckAccessDenied", "AdminLogin")',
+                method: 'GET',
+                success: function (response) {
+                    if (response.isAccessDenied) {
+                        showAccessDeniedPopup();
+                    }
+                }
+            });
         });
     </script>
 
     @await RenderSectionAsync("Scripts", required: false)
+    @await Html.PartialAsync("_AccessDeniedPopup")
 </body>
 </html>

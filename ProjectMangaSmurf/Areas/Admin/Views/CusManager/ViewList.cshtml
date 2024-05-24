@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<ProjectMangaSmurf.Models.KhachHang>
 
 @using ProjectMangaSmurf.Repository
-@inject  IKhachHangRepository kh
+@inject IKhachHangRepository kh
 
 <style>
     .btn-custom {
@@ -14,54 +14,56 @@
         background-color: magenta; /* Change color when active */
     }
 
+    .alert-info {
+        color: #004085; /* Màu chữ xanh */
+        background-color: #cce5ff; /* Nền màu xanh nhạt */
+        border: 1px solid #b8daff; /* Viền màu xanh */
+        padding: 10px;
+        margin: 10px 0;
+        border-radius: 5px; /* Bo góc cho khối thông báo */
+    }
 </style>
-
 
 <div class="content">
     <div class="page-header">
         <div class="page-title">
-            <h3> <i class="fa-solid fa-circle-user"></i>  LIST OF COSTUMER </h3>
-            <h6>       Manager - View </h6>
+            <h2><i class="fa-solid fa-circle-user"></i> LIST OF CUSTOMERS</h2>
+            <h6>Manager - View</h6>
         </div>
-        
     </div>
 
     <div class="card">
         <div class="card-body">
             <div class="table-top">
                 <div class="search-set">
-                    <div class="search-path">
-                    
-                    </div>
-
+                    <div class="search-path"></div>
                     <div class="search-input">
                         <a class="btn btn-searchset">
                             <img src="~/img/icons/search-white.svg" alt="img">
                         </a>
                     </div>
                 </div>
+                <div class="alert-info">
+                    <i class="fa-solid fa-triangle-exclamation"></i>      Customer's information is very important! , This Permission only already have in Supervior Account !
+                </div>
                 <div class="filters">
                     <button class="btn btn-primary" onclick="applyFilter('all')">See All <i class="fa-solid fa-border-all"></i></button>
                     <button class="btn btn-success" onclick="applyFilter('active')">Activating <i class="fa-solid fa-person-digging"></i></button>
-                    <button class="btn btn-danger" onclick="applyFilter('banned')">Banning  <i class="fa-solid fa-ban"></i></button>
-                   
-                    <button class="btn btn-custom" onclick="togglePremium()" id="premium-btn">Premium Stats  <i class="fa-solid fa-hand-holding-dollar"></i></button>
+                    <button class="btn btn-danger" onclick="applyFilter('banned')">Banning <i class="fa-solid fa-ban"></i></button>
+                    <button class="btn btn-custom" onclick="togglePremium()" id="premium-btn">Premium Status <i class="fa-solid fa-hand-holding-dollar"></i></button>
                 </div>
-
-             
             </div>
 
-
             <div class="table-responsive">
-                <table class="table  datanew">
+                <table class="table datanew">
                     <thead>
-                        <tr>          
-                            <th>ID Costumer</th>
-                            <th>Costumer Name</th>
+                        <tr>
+                            <th>ID Customer</th>
+                            <th>Customer Name</th>
                             <th>Phone Number</th>
                             <th>Email</th>
-                            <th>Premium Stats</th>
-                            <th>Stats</th>
+                            <th>Premium Status</th>
+                            <th>Status</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -74,7 +76,7 @@
                                 <td>@(i.IdUserNavigation?.Phone ?? "N/A")</td>
                                 <td>@(i.IdUserNavigation?.Email ?? "N/A")</td>
                                 <td>@i.ActivePremium</td>
-                                <td>@(i.IdUserNavigation?.Active.ToString() ?? "N/A")</td>
+                                <td>@(i.ActiveStats == 1 ? "Active" : i.ActiveStats == 0 ? "Banned" : "Conflict")</td>
                                 <td>
                                     <a asp-area="Admin" asp-controller="CusManager" asp-action="Detail" asp-route-id="@i.IdUser" class="me-3">
                                         <img src="~/img/icons/eye.svg" alt="img">
@@ -88,28 +90,26 @@
         </div>
     </div>
 </div>
-<script>
-    var currentFilter = 'all';  // Default filter
-    var premiumOnly = false;    // Premium filter state
 
-    function applyFilter(filter) {
-        currentFilter = filter;
-        updateList();
-    }
+@section Scripts {
+    <script>
+        var currentFilter = 'all';  // Default filter
+        var premiumOnly = false;    // Premium filter state
 
-    function togglePremium() {
-        premiumOnly = !premiumOnly;  // Toggle premium state
-        document.getElementById('premium-btn').classList.toggle('btn-active'); // Toggle button class for visual feedback
-        updateList();
-    }
+        function applyFilter(filter) {
+            currentFilter = filter;
+            updateList();
+        }
 
-    function updateList() {
-        // Build the URL with current filters
-        var url = '@Url.Action("ViewList", "CusManager", new { Area = "Admin" })' +
-            `?status=${currentFilter}&premium=${premiumOnly}`;
-        window.location.href = url; // Redirect to the updated URL
-    }
-</script>
+        function togglePremium() {
+            premiumOnly = !premiumOnly;
+            updateList();
+        }
 
-
-
+        function updateList() {
+            var url = '@Url.Action("ViewList", "CusManager", new { Area = "Admin" })' +
+                `?status=${currentFilter}&premium=${premiumOnly}`;
+            window.location.href = url;
+        }
+    </script>
+}

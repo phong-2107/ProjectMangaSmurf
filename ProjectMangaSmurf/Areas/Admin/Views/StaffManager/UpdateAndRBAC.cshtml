@@ -381,7 +381,11 @@
                                 "Notice: If Update Infomation and RBA are successfully , you'll' be redirected to User[ @ViewBag.IdUser ]'s Detail site "
                             </div>
                         </div>
+<<<<<<< HEAD
                         <input name="IdUser" id="IdUser" type="hidden" class="form-control" value="@ViewBag.IdUser" required>
+=======
+
+>>>>>>> 4fb584e170da6c6baae985c62871a8900f39bc3a
                         <div class="form-group">
                             <label for="Username"><i class="fa-solid fa-user-tag"></i> Username</label>
                             <input name="Username" id="Username" type="text" class="form-control" value="@ViewBag.Username" required>
@@ -391,8 +395,17 @@
                             <input name="FullName" id="FullName" type="text" class="form-control" required value="@ViewBag.FullName">
                         </div>
                         <div class="form-group">
+<<<<<<< HEAD
                             <label for="date"><i class="fa-solid fa-cake-candles"></i> Birth Date</label>
                             <input name="BirthDate" id="date" type="date" class="form-control" required value="">
+=======
+                            <label for="FullName"><i class="fa-solid fa-square-phone"></i> Phone </label>
+                            <input name="FullName" id="FullName" type="text" class="form-control" required value="@ViewBag.Phone">
+                        </div>
+                        <div class="form-group">
+                            <label for="date"><i class="fa-solid fa-cake-candles"></i> Birth Date</label>
+                            <input name="date" id="date" type="date" class="form-control" required value="@ViewBag.BirthDate?.ToDateTime(TimeOnly.MinValue).ToString("yyyy-MM-dd")">
+>>>>>>> 4fb584e170da6c6baae985c62871a8900f39bc3a
                         </div>
                           <div class="col-md-6 form-group">
                                 <label for="Gender">Gender</label>
@@ -409,7 +422,17 @@
                                     <!option value="false" @(ViewBag.StaffRole == true ? "selected" : "")>Admin</!option>
                                 </select>
                             </div>
+<<<<<<< HEAD
 
+=======
+                            <div class="col-md-6 form-group">
+                                <label for="StaffRole">Active</label>
+                                <select name="StaffRole" id="StaffRole" class="form-control">
+                                    <!option value="true" @(ViewBag.Active == false ? "selected" : "")>Banned</!option>
+                                    <!option value="false" @(ViewBag.Active == true ? "selected" : "")>Activate</!option>
+                                </select>
+                            </div>
+>>>>>>> 4fb584e170da6c6baae985c62871a8900f39bc3a
                         <div class="form-group form-buttons">
                             <div class="notice"><i class="fa-solid fa-circle-exclamation"></i>       Notice: Remember to assign the correct permissions to this staff member.
                             </div>

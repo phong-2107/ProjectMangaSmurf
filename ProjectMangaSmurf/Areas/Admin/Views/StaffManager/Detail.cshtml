@@ -5,6 +5,10 @@
     var inactiveSelected = customer?.IdUserNavigation?.Active == false ? "selected " : "";
     var hashedPassword = customer?.IdUserNavigation?.Password;
     var allPermissions = ViewBag.AllPermissions as List<ProjectMangaSmurf.Models.PermissionsList>;
+<<<<<<< HEAD
+=======
+    var activePermissions = ViewBag.Pn as List<ProjectMangaSmurf.Models.StaffPermissionsDetail>;
+>>>>>>> 4fb584e170da6c6baae985c62871a8900f39bc3a
 }
 
 <style>
@@ -14,6 +18,7 @@
         gap: .5rem;
     }
 
+<<<<<<< HEAD
         .action-page a {
             font-size: 20px;
             font-weight: 600;
@@ -24,6 +29,18 @@
             .action-page a:hover {
                 color: #FE820E;
             }
+=======
+    .action-page a {
+        font-size: 20px;
+        font-weight: 600;
+        letter-spacing: .7px;
+        color: #212b36;
+    }
+
+    .action-page a:hover {
+        color: #FE820E;
+    }
+>>>>>>> 4fb584e170da6c6baae985c62871a8900f39bc3a
 
     .form-section-title {
         font-size: 18px;
@@ -110,6 +127,7 @@
         <div class="col-lg-4 col-sm-12">
             <div class="card">
                 <div class="card-body">
+<<<<<<< HEAD
                     <form asp-area="Admin" asp-action="UpdateStaffStatus" asp-controller="StaffManager" method="post">
                         <input type="hidden" name="IdUser" value="@customer.IdUser" />
                         <h5 class="form-section-title">Account Status</h5>
@@ -118,6 +136,18 @@
                             <option value="false"> @inactiveSelected Inactive</option>
                         </select>
                         <button type="submit" class="btn btn-primary"><i class="fa-solid fa-person-circle-exclamation"></i>                    Update Status</button>
+=======
+                    <form id="statusForm" asp-area="Admin" asp-controller="StaffManager" asp-action="UpdateStaffStatus" method="post">
+                        <input type="hidden" name="IdUser" value="@customer.IdUser" />
+                        <h5 class="form-section-title">Account Status</h5>
+                        <select class="form-control" name="Active">
+                            <!option value="true" @activeSelected>Active</!option>
+                            <!option value="false" @inactiveSelected>Inactive</!option>
+                        </select>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fa-solid fa-person-circle-exclamation"></i> Update Status
+                        </button>
+>>>>>>> 4fb584e170da6c6baae985c62871a8900f39bc3a
                     </form>
                 </div>
             </div>
@@ -127,7 +157,11 @@
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h4 class="mb-0 related-comic-series"><i class="fa-solid fa-tag"></i> All Permissions Of @customer.IdUserNavigation.UserName</h4>
             <a asp-area="Admin" asp-action="UpdateAndRBAC" asp-controller="StaffManager" asp-route-id="@customer.IdUser">
+<<<<<<< HEAD
                 <button type="submit" class="btn btn-outline-dark"><i class="fa-solid fa-circle-info"></i>                        Update Detail</button>
+=======
+                <button type="submit" class="btn btn-outline-dark"><i class="fa-solid fa-circle-info"></i> Update Detail</button>
+>>>>>>> 4fb584e170da6c6baae985c62871a8900f39bc3a
             </a>
         </div>
         <table class="table datanew">
@@ -142,6 +176,7 @@
                 </tr>
             </thead>
             <tbody>
+<<<<<<< HEAD
                 @foreach (var item in ViewBag.Pn as List<ProjectMangaSmurf.Models.StaffPermissionsDetail>)
                 {
                     var parentPermission = allPermissions.FirstOrDefault(p => p.IdPermissions == item.IdPermissionsNavigation.ParentPermissions);
@@ -149,18 +184,49 @@
                     var accessStatus = (item.Active ?? false) ? "Already" : "No Permit";
                     var accessClass = (item.Active ?? false) ? "text-green" : "text-red";
                     <tr data-status="@((item.Active ?? false) ? "active" : "banned")">
+=======
+                @foreach (var item in activePermissions)
+                {
+                    var parentPermission = allPermissions.FirstOrDefault(p => p.IdPermissions == item.IdPermissionsNavigation.ParentPermissions);
+                    var pn = parentPermission?.PermissionsName ?? "N/A";
+                    var accessStatus = item.Active == true ? "Active" : "Inactive";
+                    var accessClass = item.Active == true ? "text-green" : "text-red";
+                    <tr data-status="active">
+>>>>>>> 4fb584e170da6c6baae985c62871a8900f39bc3a
                         <td>@pn</td>
                         <td>@item.IdPermissions</td>
                         <td>@item.IdPermissionsNavigation.PermissionsName</td>
                         <td>@item.IdPermissionsNavigation.Description</td>
                         <td class="@accessClass">@accessStatus</td>
                         <td>
+<<<<<<< HEAD
                             <a asp-area="Admin" asp-controller="ChapterManager" asp-action="ActiveOfPermission" asp-route-id="@item.IdPermissions" class="me-3">
                                 <img src="~/img/icons/edit.svg" alt="Edit">
                             </a>
                         </td>
                     </tr>
                 }
+=======
+                            <form asp-area="Admin" asp-controller="StaffManager" asp-action="TogglePermissionStatus" method="post" style="display: inline;">
+                                <input type="hidden" name="idUser" value="@item.IdUser" />
+                                <input type="hidden" name="idPermissions" value="@item.IdPermissions" />
+                                <button type="submit" class="btn btn-link p-0" title="Toggle Status">
+                                    @if (item.Active == true)
+                                    {
+                                        <i class="fa-solid fa-toggle-on" style="color: green;"></i>
+                                    }
+                                    else
+                                    {
+                                        <i class="fa-solid fa-toggle-off" style="color: red;"></i>
+                                    }
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+
+
+>>>>>>> 4fb584e170da6c6baae985c62871a8900f39bc3a
             </tbody>
         </table>
     </div>
@@ -179,6 +245,10 @@
                     success: function (response) {
                         alert('Status updated successfully');
                         // Update UI or redirect
+<<<<<<< HEAD
+=======
+                        window.location.reload();
+>>>>>>> 4fb584e170da6c6baae985c62871a8900f39bc3a
                     },
                     error: function () {
                         alert('Failed to update status');

@@ -1,0 +1,167 @@
+﻿@model IEnumerable<ProjectMangaSmurf.Models.WebMediaConfig>
+
+@{
+    var configs = ViewBag.Configs as List<ProjectMangaSmurf.Models.WebMediaConfig>;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Smurf Manga Website</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        .action-page {
+            display: flex;
+            flex-direction: row;
+            gap: .5rem;
+        }
+
+            .action-page a {
+                font-size: 20px;
+                font-weight: 600;
+                letter-spacing: .7px;
+                color: #212b36;
+            }
+
+                .action-page a:hover {
+                    color: #FE820E;
+                }
+
+        .form-section-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+            margin-top: 20px;
+        }
+
+        .productdetails li {
+            margin-bottom: 15px;
+        }
+
+        .card-body form {
+            margin-top: 20px;
+        }
+
+        .card {
+            margin-bottom: 20px;
+        }
+
+        .form-control + .form-section-title {
+            margin-top: 3px;
+        }
+
+        .form-section-title + .form-control {
+            margin-top: 3px;
+        }
+
+        .go-to-properties {
+            display: flex;
+            align-items: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: #adbded;
+            text-decoration: none;
+            margin-top: 20px;
+        }
+
+            .go-to-properties img {
+                margin-right: 10px;
+            }
+
+            .go-to-properties:hover {
+                color: #FE820E;
+            }
+
+        .image-container {
+            background-color: #b1b7c9;
+            border-radius: 10px;
+            padding: 10px;
+            margin-top: 20px;
+            text-align: center;
+            color: #112359;
+        }
+
+            .image-container img {
+                width: 100%;
+                max-width: 300px;
+                height: auto;
+                display: block;
+                margin: 0 auto;
+                border-radius: 15px;
+            }
+
+            .image-container h4 {
+                margin-top: 10px;
+                font-family: 'Roboto', sans-serif;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+                .image-container h4 i {
+                    margin-right: 10px;
+                }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <div class="page-header d-flex justify-content-between align-items-center">
+            <div class="page-title">
+                <h2><i class="fa-solid fa-laptop-medical"></i> About Smurf Manga Website</h2>
+                <h6>Infographic</h6>
+            </div>
+            <div class="page-btn">
+                <a href="@Url.Action("Index", "WebManager", new { area = "Admin" })" class="btn btn-success">
+                    <i class="fa fa-edit"></i> Go to Properties
+                </a>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-8 col-sm-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="productdetails">
+                            <ul class="product-bar">
+                                @if (configs != null && configs.Count > 0)
+                                {
+                                    @foreach (var config in configs)
+                                    {
+                                        <li>
+                                            <h4>@config.ConfigTitle</h4>
+                                            <h6>@config.ConfigValue</h6>
+                                        </li>
+                                    }
+                                }
+                                else
+                                {
+                                    <li>No configurations found.</li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-sm-12">
+                <div class="image-container">
+                    <h5> Logo Website</h5>
+                    <img src="~/images/logo1.png" alt="Logo Website">
+                </div>
+                <div class="image-container">
+                    <h5>Logo Manager Site</h5>
+                    <img src="~/images/logo4.png" alt="Logo Manager Site">
+                </div>
+                <div class="image-container">
+                    <h5>Icon Logo</h5>
+                    <img src="~/images/icon logo.png" alt="Icon Logo">
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
