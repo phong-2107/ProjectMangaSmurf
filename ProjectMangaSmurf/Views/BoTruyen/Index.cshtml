@@ -111,30 +111,35 @@
     <div class="top__container containers" style="overflow:hidden;">
         <div class="top__content">
             <div>
-                <span class="section__subtitle">Truyện Mới</span>
-                <p class="section__des">Cập nhật những bộ truyện mới nhất trong năm 2024</p>
+                <span class="section__subtitle">Gợi Ý Hôm Nay</span>
+                <p class="section__des">Gợi ý những bộ truyện theo thị hiếu và sở thích của bạn</p>
             </div>
         </div>
         <div class=" slick-list autoplay row col-6 w-100 d-flex justify-content-center">
+            @{
+                var listt = ViewBag.list;
+                if (listt != null)
+                {
+                    foreach (var botruyen in listt)
+                    {
 
-            @foreach (var botruyen in Model)
-            {
+                        <div class="col update-item" asp-action="CTBoTruyen" asp-route-id="botruyen.IdBo">
+                            <a asp-action="CTBoTruyen" asp-route-id="@botruyen.IdBo">
+                                <figure style="position:relative;">
 
-                <div class="col update-item" asp-action="CTBoTruyen" asp-route-id="botruyen.IdBo">
-                    <a asp-action="CTBoTruyen" asp-route-id="@botruyen.IdBo">
-                        <figure style="position:relative;">
-                            
-                            @if (!string.IsNullOrEmpty(botruyen.AnhBia))
-                            {
-                                <span class="hot-icon" style="z-index:10001;">HOT</span>
-                                <img src="@botruyen.AnhBia" alt="truyen Image" />
-                            }
-                            <figcaption>
-                                <h6 class="item-title"><a href="#">@botruyen.TenBo</a></h6>
-                            </figcaption>
-                        </figure>
-                    </a>
-                </div>
+                                    @if (!string.IsNullOrEmpty(botruyen.AnhBia))
+                                    {
+                                        <span class="hot-icon" style="z-index:10001;">HOT</span>
+                                        <img src="@botruyen.AnhBia" alt="truyen Image" />
+                                    }
+                                    <figcaption>
+                                        <h6 class="item-title"><a href="#">@botruyen.TenBo</a></h6>
+                                    </figcaption>
+                                </figure>
+                            </a>
+                        </div>
+                    }
+                }
             }
         </div>
     </div>
@@ -315,52 +320,54 @@
         <div class="containers">
             <div class=" justify-content-center w-100 position-relative">
                 @{
-                    var listRank = boTruyenRepository.GetAllAsyncByDay();
-                    var item = Model.ElementAt(0);
-                            <div class=" position-relative">
-                                @if (!string.IsNullOrEmpty(item.AnhBanner))
-                        {
-                                    <img src="@item.AnhBanner" alt="truyen Image" class="img-poster" />
-                                    <div class="background-item rounded-3 w-100" style="z-index:0"></div>
-                        }
-                                @if (item.TtPemium == true)
-                        {
-                                    <div class="position-absolute pre-poster">
-                                        <img src="/images/PreDark.png" alt="Premium Image" />
-                                    </div>
-                        }
-                                <div class="position-absolute name-poster">
-                                    <h3>@item.TenBo</h3>
-                                    @{
-                                int valueF = Convert.ToInt32(item.TkDanhgia);
-                                if (valueF > 0)
-                                {
-                                    var tmp = 5 - valueF;
-                                    for (int a = 0; a < valueF; a++)
+                    var item = ViewBag.MaxView;
+                    if(item != null)
+                    {
+                        <div class=" position-relative">
+                            @if (!string.IsNullOrEmpty(item.AnhBanner))
+                            {
+                                <img src="@item.AnhBanner" alt="truyen Image" class="img-poster" />
+                                <div class="background-item rounded-3 w-100" style="z-index:0"></div>
+                            }
+                            @if (item.TtPemium == true)
+                            {
+                                <div class="position-absolute pre-poster">
+                                    <img src="/images/PreDark.png" alt="Premium Image" />
+                                </div>
+                            }
+                            <div class="position-absolute name-poster">
+                                <h3>@item.TenBo</h3>
+                                @{
+                                    int valueF = Convert.ToInt32(item.TkDanhgia);
+                                    if (valueF > 0)
                                     {
-                                                        <i class="ri-star-fill" style="color: #FAB818;"></i>
+                                        var tmp = 5 - valueF;
+                                        for (int a = 0; a < valueF; a++)
+                                        {
+                                            <i class="ri-star-fill" style="color: #FAB818;"></i>
+                                        }
+                                        for (int b = 0; b < tmp; b++)
+                                        {
+                                            <i class="ri-star-fill"></i>
+                                        }
                                     }
-                                    for (int b = 0; b < tmp; b++)
+                                    else
                                     {
-                                                        <i class="ri-star-fill"></i>
+                                        <i class="ri-star-fill"></i>
+                                        <i class="ri-star-fill"></i>
+                                        <i class="ri-star-fill"></i>
+                                        <i class="ri-star-fill"></i>
+                                        <i class="ri-star-fill"></i>
                                     }
                                 }
-                                else
-                                {
-                                                    <i class="ri-star-fill"></i>
-                                                    <i class="ri-star-fill"></i>
-                                                    <i class="ri-star-fill"></i>
-                                                    <i class="ri-star-fill"></i>
-                                                    <i class="ri-star-fill"></i>
-                                }
-                                    }
-
-                                </div>
-                                <div class="position-absolute btn-poster">
-                                    <a asp-action="CTBoTruyen" asp-route-id="@item.IdBo" class="btn-poster-detail">Đọc ngay <i class="ri-arrow-right-s-fill"></i></a>
-                                </div>
 
                             </div>
+                            <div class="position-absolute btn-poster">
+                                <a asp-action="CTBoTruyen" asp-route-id="@item.IdBo" class="btn-poster-detail">Đọc ngay <i class="ri-arrow-right-s-fill"></i></a>
+                            </div>
+
+                        </div>
+                    }
                 }
             </div>
 

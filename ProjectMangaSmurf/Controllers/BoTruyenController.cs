@@ -37,6 +37,15 @@ namespace ProjectMangaSmurf.Controllers
             _hopdongRepository = hopdongRepository;
             _recommendationRepository = recommendationRepository;
         }
+        public static int ExtractNumberFromId(string id)
+        {
+            var match = Regex.Match(id, "^BT([0-9]+)$");
+            if (match.Success)
+            {
+                return int.Parse(match.Groups[1].Value);
+            }
+            throw new ArgumentException("ID không hợp lệ");
+        }
 
         public async Task<IActionResult> Index()
         {
@@ -55,6 +64,24 @@ namespace ProjectMangaSmurf.Controllers
                 ViewBag.kh = null;
             }
 
+            var truyenMax = await _botruyenrepository.GetBoTruyenWithMaxViewsAsync();
+
+            var bookId = ExtractNumberFromId(truyenMax.IdBo);
+            var recommendations = await _recommendationRepository.GetRecommendationsAsync(bookId);
+
+            List<BoTruyen> list = new List<BoTruyen>();
+
+            foreach (var r in recommendations)
+            {
+                var idBo = CreateIdFromNumber(r);
+                BoTruyen bt = await _botruyenrepository.GetByIdAsync(idBo);
+                if (bt != null)
+                {
+                    list.Add(bt);
+                }
+            }
+            ViewBag.list = list;
+            ViewBag.MaxView = truyenMax;
             return View(listBotruyen);
         }
         public async Task<IActionResult> ListTruyen()
@@ -124,15 +151,7 @@ namespace ProjectMangaSmurf.Controllers
             return View(listBotruyen);
         }
 
-        public static int ExtractNumberFromId(string id)
-        {
-            var match = Regex.Match(id, "^BT([0-9]+)$");
-            if (match.Success)
-            {
-                return int.Parse(match.Groups[1].Value);
-            }
-            throw new ArgumentException("ID không hợp lệ");
-        }
+        
 
         private string CreateIdFromNumber(int number)
         {

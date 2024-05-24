@@ -338,5 +338,27 @@ namespace ProjectMangaSmurf.Repository
             var chaps = await _context.Chapters.Where(c => c.IdBo == id).ToListAsync();
             return chaps.Count();
         }
+
+        public async Task<BoTruyen> GetBoTruyenWithMaxViewsAsync()
+        {
+            var maxViews = await _context.BoTruyens.MaxAsync(b => b.TongLuotXem);
+
+            var boTruyen = await _context.BoTruyens
+                .Where(b => b.TongLuotXem == maxViews)
+                .FirstOrDefaultAsync();
+
+            return boTruyen;
+        }
+
+        public async Task<BoTruyen> GetBoTruyenWithMaxFollowsAsync()
+        {
+            var max = await _context.BoTruyens.MaxAsync(b => b.TkTheodoi);
+
+            var boTruyen = await _context.BoTruyens
+                .Where(b => b.TkTheodoi == max)
+                .FirstOrDefaultAsync();
+
+            return boTruyen;
+        }
     }
 }
