@@ -287,7 +287,7 @@
                 <div>
                     <div>
                         <span class="section__subtitle">Avatar</span>
-                        <p class="section__des">Chọn một avatar! Bạn có thể thay đổi chúng</p>
+                        <p class="section__des">Chọn một avatar! Bạn có thể thay đổi chúng sau đó!</p>
                     </div>
                     <form asp-controller="KhachHang" asp-action="UpdateAvatar" method="post" id="avatarForm">
                         <input type="hidden" name="id" id="avatarId">
@@ -337,7 +337,7 @@
                         <div class="inputBox">
                             @if(ViewBag.date != null)
                             {
-                                <input name="date" id="date" type="date" required value="@ViewBag.date.ToString("yyyy-MM-dd")">
+                                <input name="date" id="date" type="date" required value="@(ViewBag.date.Birth.HasValue ? ViewBag.date.Birth.Value.ToString("yyyy-MM-dd") : string.Empty)" placeholder="dd/mm/yyyy">
                                 <span>Năm sinh</span>
                                 <i></i>
                             }

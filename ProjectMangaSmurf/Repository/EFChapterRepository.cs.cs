@@ -324,5 +324,18 @@ namespace ProjectMangaSmurf.Repository
                 .MaxAsync(ch => ch.SttChap);
             return maxSttChap;
         }
+
+        public byte GetCostByIdAsync(string id, int stt)
+        {
+            var cost = _context.Chapters.FirstOrDefault(p => p.IdBo == id && p.SttChap == stt);
+            if(cost == null)
+            {
+                return 0;
+            }
+            else
+            {
+                return (byte)cost.TicketCost;
+            }
+        }
     }
 }

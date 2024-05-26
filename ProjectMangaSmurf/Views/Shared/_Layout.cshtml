@@ -33,9 +33,10 @@
 
         <!-- LINK SWEETALERT -->
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.dark.min.css">
         <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
         <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-
          <link href="~/css/style.css" rel="stylesheet" />
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
@@ -104,7 +105,7 @@
                         }
                     </script>
 
-                    <div class="nav__buttons" @* style="display:none;" *@>
+                    <div class="nav__buttons" style="display:none;">
                         <i class="@* ri-sun-cloudy-fill *@ ri-moon-fill change-theme" id="theme-button"></i>
                     </div>
                     <div class="nav__login">
@@ -137,7 +138,7 @@
                                         <a asp-area="" asp-controller="KhachHang" asp-action="Register">Đăng ký</a>
                                     </div>
                                     <div class=" btn__login">
-                                        <a asp-area="" asp-controller="KhachHang" asp-action="Login">Đăng nhập</a>
+                                    <a asp-area="" asp-controller="KhachHang" asp-action="Login">Đăng nhập</a>
                                     </div>
                             }
                         }
@@ -162,7 +163,7 @@
                             <a class="nav__link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="cursor:pointer;">Thể loại truyện</a>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                 <div class="row">
-                                    <div class="col-4">
+                                    <div class="col-3">
                                         <a class="dropdown-item item-main" asp-area="" asp-controller="BoTruyen" asp-action="ListTruyen">Tất cả</a>
                                         <a class="dropdown-item" asp-area="" asp-controller="BoTruyen" asp-action="ListTopic" asp-route-id="Xuyên không">Xuyên không</a>
                                         <a class="dropdown-item" asp-area="" asp-controller="BoTruyen" asp-action="ListTopic" asp-route-id="Adventure">Adventure</a>
@@ -170,7 +171,7 @@
                                         <a class="dropdown-item" asp-area="" asp-controller="BoTruyen" asp-action="ListTopic" asp-route-id="Sports">Sports</a>
                                         <a class="dropdown-item" asp-area="" asp-controller="BoTruyen" asp-action="ListTopic" asp-route-id="Truyện màu">Truyện màu</a>
                                     </div>
-                                    <div class="col-4">
+                                    <div class="col-3">
                                         <a class="dropdown-item item-main" href="#">Theo Cảm xúc</a>
                                         <a class="dropdown-item" asp-area="" asp-controller="BoTruyen" asp-action="ListTopic" asp-route-id="Nhẹ nhàng">Nhẹ nhàng</a>
                                         <a class="dropdown-item" asp-area="" asp-controller="BoTruyen" asp-action="ListTopic" asp-route-id="Kinh dị">Kinh dị</a>
@@ -178,13 +179,21 @@
                                         <a class="dropdown-item" asp-area="" asp-controller="BoTruyen" asp-action="ListTopic" asp-route-id="Action">Action</a>
                                         <a class="dropdown-item" asp-area="" asp-controller="BoTruyen" asp-action="ListTopic" asp-route-id="Comedy">Comedy</a>
                                     </div>
-                                    <div class="col-4">
+                                    <div class="col-3">
                                         <a class="dropdown-item item-main" href="#">Theo Khu Vực</a>
                                         <a class="dropdown-item" asp-area="" asp-controller="BoTruyen" asp-action="ListTopic" asp-route-id="Manwa">Manwa</a>
                                         <a class="dropdown-item" asp-area="" asp-controller="BoTruyen" asp-action="ListTopic" asp-route-id="Manhua">Manhua</a>
                                         <a class="dropdown-item" asp-area="" asp-controller="BoTruyen" asp-action="ListTopic" asp-route-id="Manga">Manga</a>
                                         <a class="dropdown-item" asp-area="" asp-controller="BoTruyen" asp-action="ListTopic" asp-route-id="Comic">Comic</a>
                                         <a class="dropdown-item" asp-area="" asp-controller="BoTruyen" asp-action="ListTopic" asp-route-id="Webtoon">Webtoon</a>
+                                    </div>
+                                    <div class="col-3">
+                                        <a class="dropdown-item item-main" href="#">Theo đội tuổi</a>
+                                        <a class="dropdown-item" asp-area="" asp-controller="BoTruyen" asp-action="ListBirth" asp-route-number="0">Mọi độ tuổi</a>
+                                        <a class="dropdown-item" asp-area="" asp-controller="BoTruyen" asp-action="ListBirth" asp-route-number="5">Trẻ em</a>
+                                        <a class="dropdown-item" asp-area="" asp-controller="BoTruyen" asp-action="ListBirth" asp-route-number="12">Thiếu Niên</a>
+                                        <a class="dropdown-item" asp-area="" asp-controller="BoTruyen" asp-action="ListBirth" asp-route-number="16">Bạo lực</a>
+                                        <a class="dropdown-item" asp-area="" asp-controller="BoTruyen" asp-action="ListBirth" asp-route-number="18">Trưởng thành</a>
                                     </div>
                                 </div>
                             </div>
@@ -210,8 +219,11 @@
 
                                         swalWithBootstrapButtons.fire({
                                             title: 'Login warning!',
-                                            text: "Bạn cần đăng nhập để xem danh sách theo dõi. Bạn có muốn đăng nhập ngay?",
-                                            icon: 'warning',
+                                            text: "Có vẻ như bạn cần đăng nhập để xem danh sách theo dõi. Đăng nhập ngay?",
+                                            imageUrl: "/images/yuzu.png",
+                                            imageWidth: 180,
+                                            imageHeight: 90,
+                                            imageAlt: "Custom image",
                                             showCancelButton: true,
                                             confirmButtonText: 'Login Now!',
                                             cancelButtonText: 'Cancel',
@@ -219,7 +231,7 @@
                                         }).then((result) => {
                                             if (result.isConfirmed) {
                                                 window.location.href = '@Url.Action("Login", "KhachHang")';
-                                            } 
+                                            }
                                         });
                                     });
                                 </script>
@@ -242,10 +254,14 @@
                                             },
                                             buttonsStyling: false
                                         });
+
                                         swalWithBootstrapButtons.fire({
                                             title: 'Login warning!',
-                                            text: "Bạn cần đăng nhập để xem lịch sử đọc. Bạn có muốn đăng nhập ngay?",
-                                            icon: 'warning',
+                                            text: "Có vẻ như bạn cần đăng nhập để xem lịch sử đọc. Đăng nhập ngay?",
+                                            imageUrl: "/images/yuzu.png",
+                                            imageWidth: 180,
+                                            imageHeight: 90,
+                                            imageAlt: "Custom image",
                                             showCancelButton: true,
                                             confirmButtonText: 'Login Now!',
                                             cancelButtonText: 'Cancel',
@@ -260,7 +276,7 @@
                         }
                     }
                     <a class="nav__item nav__link active-link" asp-area="" asp-controller="BoTruyen" asp-action="Rankings" asp-route-id="1">Xếp hạng</a>
-                    <a href="#home" class="nav__item nav__link active-link">Tìm truyện</a>
+                    @* <a href="#home" class="nav__item nav__link active-link">Tìm truyện</a> *@
                     <a class="nav__item nav__link active-link" asp-area="" asp-controller="BoTruyen" asp-action="ListTruyen">Mới cập nhật</a>
                     
                     
@@ -417,16 +433,19 @@
                 $('#results').empty();
             }
         });
+
         document.addEventListener('DOMContentLoaded', function () {
             const loginPagePath = '/KhachHang/Login';
             const registerPagePath = '/KhachHang/Register';
-            const InforPagePath = '/KhachHang/Infor';
+            const inforPagePath = '/KhachHang/Infor';
             const currentPagePath = window.location.pathname;
 
-            if (currentPagePath !== loginPagePath && currentPagePath !== registerPagePath && currentPagePath !== InforPagePath) {
+            // Kiểm tra nếu trang hiện tại không phải là một trong các trang đặc biệt này
+            if (currentPagePath !== loginPagePath && currentPagePath !== registerPagePath && currentPagePath !== inforPagePath) {
                 localStorage.setItem('redirectAfterLogin', window.location.href);
             }
         });
+
     </script>
 </body>
     @RenderSection("Scripts", required: false)

@@ -360,5 +360,14 @@ namespace ProjectMangaSmurf.Repository
 
             return boTruyen;
         }
+
+        public async Task<IEnumerable<BoTruyen>> GetAllByBirth(int number)
+        {
+            if(number == 0)
+            {
+                return await _context.BoTruyens.ToListAsync();
+            }
+            return await _context.BoTruyens.Where(p => p.Dotuoi == number).ToListAsync();
+        }
     }
 }

@@ -41,7 +41,7 @@
 .rank-item {
     position: relative;
     display: grid;
-    grid-template-columns: 5% 80% 15%;
+    grid-template-columns: 7% 68% 25%;
     justify-content: space-between;
     list-style: none;
     padding: 15px 0;
@@ -60,7 +60,7 @@
 }
 
 .item-number {
-    font-size: var(--h2-font-size);
+    font-size: var(--h1-font-size);
     font-weight: var(--font-semi-bold);
 }
 
@@ -150,7 +150,7 @@
 
         #firstRank .item-number {
             color: #ff9c1a;
-            font-size: 2rem;
+            font-size: 3rem;
             z-index: 10;
             font-weight:700;
         }

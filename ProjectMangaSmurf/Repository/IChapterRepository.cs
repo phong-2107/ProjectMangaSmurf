@@ -13,6 +13,7 @@ namespace ProjectMangaSmurf.Repository
         Task UpdatePageNumberAsync(string idBo, int sttChap, int currentSoTrang, int newSoTrang);
         Task DeletePageAsync(string idBo, int sttChap, int soTrang);
         int GetEarliestByIdAsync(string id);
+        byte GetCostByIdAsync(string id, int stt);
         string CalculateTimeAgo(DateTime date);
         Chapter GetChapterEarliestByIdAsync(string id);
         Task AddAsync(Chapter chapter);

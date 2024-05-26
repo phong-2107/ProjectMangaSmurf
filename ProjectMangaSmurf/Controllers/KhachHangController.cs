@@ -15,6 +15,8 @@ using System.Text;
 using System;
 using Microsoft.AspNetCore.Http;
 using ProjectMangaSmurf.Data;
+using PayPal.Api;
+using System.util;
 namespace ProjectMangaSmurf.Controllers
 {
     public class KhachHangController : Controller
@@ -69,7 +71,6 @@ namespace ProjectMangaSmurf.Controllers
             return View();
         }
 
-        
         public async Task LoginGoogle()
         {
             await HttpContext.ChallengeAsync(GoogleDefaults.AuthenticationScheme, new AuthenticationProperties()
@@ -135,6 +136,7 @@ namespace ProjectMangaSmurf.Controllers
                     HttpContext.Session.SetString("Img", avatar.AvatarContent);
                     HttpContext.Session.SetString("IdKH", find.IdUser);
                     return RedirectToAction("Index", "BoTruyen");
+
                 }
             }
             else
@@ -179,6 +181,7 @@ namespace ProjectMangaSmurf.Controllers
                         HttpContext.Session.SetString("TK", kh.IdUserNavigation.UserName);
                         HttpContext.Session.SetString("Img", avatar.AvatarContent);
                         HttpContext.Session.SetString("IdKH", kh.IdUser);
+
                         //return RedirectToAction("Index", "BoTruyen");
                         return Json(new { success = true });
                     }
@@ -641,16 +644,23 @@ namespace ProjectMangaSmurf.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> UpdateInfor(string Taikhoan, string TenKh, string Sdt, string Email)
+        public async Task<IActionResult> UpdateInfor(string Taikhoan, string TenKh, string Sdt, string Email, string birthdate)
         {
             var idkh = HttpContext.Session.GetString("TK");
             var khach = _khachhangrepository.GetByAccountAsync(idkh);
             if (await khach != null)
             {
                 var kh = await khach;
-                kh.GoogleAccount = Email;
 
-                await _khachhangrepository.UpdateAsync(kh);
+                var user = await _userRepository.GetByIdAsync(kh.IdUser);
+                if (user != null)
+                {
+                    user.UserName = Taikhoan;
+                    user.FullName = TenKh;
+                    user.Phone = Sdt;
+                    user.Birth = DateOnly.Parse(birthdate);
+                    await _userRepository.UpdateAsync(user);
+                }
 
                 TempData["info"] = "Cập nhật thông tin thành công";
                 return RedirectToAction("Account");

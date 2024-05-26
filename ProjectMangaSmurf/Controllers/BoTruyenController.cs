@@ -147,11 +147,26 @@ namespace ProjectMangaSmurf.Controllers
         {
             var listBotruyen = await _botruyenrepository.GetAllByTopic(id);
             var loai = await _botruyenrepository.GetLoaiByNameAsync(id);
-            ViewBag.Topic = loai.TenLoai;
+            ViewBag.Topic = loai.TenLoai.ToUpper();
             return View(listBotruyen);
         }
 
-        
+        public async Task<IActionResult> ListBirth(int number)
+        {
+            var listBotruyen = await _botruyenrepository.GetAllByBirth(number);
+            if (number == 0)
+                ViewBag.Topic = "MỌI ĐỘ TUỔI";
+            if (number == 5)
+                ViewBag.Topic = "TRẺ EM";
+            if (number == 12)
+                ViewBag.Topic = "THIẾU NIÊN";
+            if (number == 16)
+                ViewBag.Topic = "BẠO LỰC";
+            if (number == 18)
+                ViewBag.Topic = "TRƯỞNG THÀNH";
+            return View(listBotruyen);
+        }
+
 
         private string CreateIdFromNumber(int number)
         {

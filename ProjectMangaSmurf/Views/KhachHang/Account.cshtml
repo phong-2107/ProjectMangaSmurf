@@ -91,9 +91,15 @@
                                             </div>
                                             <div class="mb-3">
                                                 <label class="form-label">Birthday</label>
-                                                <input name="birthdate" type="date" class="form-control" value="@user.Birth" placeholder="dd/mm/yyyy">
+                                                <input name="birthdate" type="date" class="form-control"
+                                                       value="@(user.Birth.HasValue ? user.Birth.Value.ToString("yyyy-MM-dd") : string.Empty)" placeholder="dd/mm/yyyy">
                                             </div>
-                                                <div class="mb-3">
+                                            <div class="mb-3">
+                                                <label class="form-label">Số thẻ</label>
+                                                <input type="text" class="form-control" value="@user.KhachHang.TicketSalary vé" readonly>
+                                            </div>
+
+                                            <div class="mb-3">
                                                 @{
                                                     string email = user.Email;
                                                     int indexOfAt = email.IndexOf('@');
@@ -109,7 +115,7 @@
                                                             <a href="javascript:void(0)">Resend confirmation</a>
                                                         </div>
                                                     }
-                                                    
+
                                                 }
                                             </div>
                                             <div class="d-flex justify-content-end mt-3">
@@ -171,8 +177,7 @@
                                     }
                                 </div>
                                 <div class="card-body">
-                                    <button asp-area="" asp-controller="KhachHang" asp-action="LoginGoogle" type="button" class="btn btn-danger">Connect to <strong>Google</strong><i class="fab fa-google"></i></button>
-                                    <button type="button" class="btn btn-primary">Connect to <strong>Facebook</strong><i class="fab fa-facebook-f"></i></button>
+                                    <button asp-area="" asp-controller="KhachHang" asp-action="LoginGoogle" type="button" class="btn btn-danger">Connected <strong>Google</strong><i class="fab fa-google"></i></button>
                                 </div>
                             </form>
                         </div>

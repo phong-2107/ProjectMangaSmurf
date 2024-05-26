@@ -204,15 +204,105 @@
                                 });
                             </script>
                         </div>
-                        @{
-                            var stt = chapterRepository.GetEarliestByIdAsync(Model.IdBo);
-                            if (stt > 0)
+                    @{
+                        var kh = @HttpContextAccessor.HttpContext.Session.GetString("TK");
+                        int? ticket = 0;
+                        KhachHang khach = new KhachHang();
+                        if (kh != null)
+                        {
+                            khach = await khachhangrepository.GetByAccountAsync(kh);
+                            ticket = khach.TicketSalary;
+                        }
+                        var idKh = khach?.IdUser;
+                        var isPremium = khach?.ActivePremium ?? false;
+                        var stt = chapterRepository.GetEarliestByIdAsync(Model.IdBo);
+                        var cost = chapterRepository.GetCostByIdAsync(Model.IdBo, stt);
+                        if (stt > 0)
                             {
                                 if (ViewBag.premium != false && ViewBag.cost != null)
                                 {
                                                 <a class="btn__action" style="pointer-events: none; background-color: #8f8f8f">ĐỌC TIẾP CHAP <span class="chapter">@stt</span></a>
                                 }else{
-                                                <a class="btn__action" asp-action="Chapter" asp-route-id="@Model.IdBo" asp-route-stt="@stt">ĐỌC TIẾP CHAP <span class="chapter">@stt</span></a>
+                                <a class="btn__action premium-chap" data-chapter-id="@Model.IdBo" data-chapter-stt="@stt" data-idkh="@idKh" data-ispremium="@isPremium">ĐỌC TIẾP CHAP <span class="chapter">@stt</span></a>
+                                <script>
+                                    $(document).ready(function () {
+                                        $(document).on('click', '.premium-chap', function (event) {
+                                            var chapId = $(this).data('chapter-id');
+                                            var chapStt = $(this).data('chapter-stt');
+                                            var idKh = '@idKh';
+                                            var isPremiumBool = '@isPremium';
+                                            var ticket = @ticket;
+                                            var cost = @cost;
+                                            if (idKh.trim().length > 0) {
+                                                if (isPremiumBool === 'True') {
+                                                    if (ticket < cost) {
+                                                        const swalWithBootstrapButtons = Swal.mixin({
+                                                            customClass: {
+                                                                confirmButton: "btn btn-success",
+                                                                cancelButton: "btn btn-danger mr-3"
+                                                            },
+                                                            buttonsStyling: false
+                                                        });
+                                                        swalWithBootstrapButtons.fire({
+                                                            text: " Có vẻ bạn cần mua thêm vé để đọc nội dung này !!",
+                                                            imageUrl: "/images/denied2.png",
+                                                            imageWidth: 200,
+                                                            imageHeight: 200,
+                                                            imageAlt: "Custom image",
+                                                            showCancelButton: true,
+                                                            confirmButtonText: "Mua ngay!!",
+                                                            cancelButtonText: "Cancel!",
+                                                            reverseButtons: true
+                                                        }).then((result) => {
+                                                            if (result.isConfirmed) {
+                                                                window.location.href = '/Payment/Index';
+                                                            }
+                                                        });
+                                                    }
+                                                    else {
+                                                        $.ajax({
+                                                            url: '@Url.Action("Chapter", "BoTruyen")',
+                                                            data: { id: chapId, stt: chapStt },
+                                                            success: function (response) {
+                                                                $('body').html(response);
+                                                                history.pushState({ path: this.url }, '', this.url);
+                                                            },
+                                                            error: function () {
+                                                                alert('Không thể gửi yêu cầu. Vui lòng kiểm tra lại.');
+                                                            }
+                                                        });
+                                                    }
+
+                                                }
+                                                else {
+                                                    const swalWithBootstrapButtons = Swal.mixin({
+                                                        customClass: {
+                                                            confirmButton: "btn btn-success",
+                                                            cancelButton: "btn btn-danger mr-3"
+                                                        },
+                                                        buttonsStyling: false
+                                                    });
+                                                    swalWithBootstrapButtons.fire({
+                                                        text: "Bạn cần đăng ký gói premium để đọc nội dung này!",
+                                                        imageUrl: "/images/denied2.png",
+                                                        imageWidth: 200,
+                                                        imageHeight: 200,
+                                                        imageAlt: "Custom image",
+                                                        showCancelButton: true,
+                                                        confirmButtonText: "Đăng ký ngay!!",
+                                                        cancelButtonText: "Cancel!",
+                                                        reverseButtons: true
+                                                    }).then((result) => {
+                                                        if (result.isConfirmed) {
+                                                            window.location.href = '/Payment/Index';
+                                                        }
+                                                    });
+                                                }
+                                            }
+
+                                        });
+                                    });
+                                </script>
                                 }
                             }
                             else
@@ -276,16 +366,6 @@
                 @{
                     var listChap = Model.Chapters.ToList();
                     var listRev = Model.Chapters.Reverse();
-                    var kh = @HttpContextAccessor.HttpContext.Session.GetString("TK");
-                    KhachHang khach = new KhachHang();
-                    if (kh != null)
-                    {
-                        khach = await khachhangrepository.GetByAccountAsync(kh);
-                    }
-
-                    var idKh = khach?.IdUser;
-                    var isPremium = khach?.ActivePremium ?? false;
-                    var ticket = khach?.TicketSalary;
                 }
                     @if (listChap.Count > 0)
                     {
@@ -328,7 +408,10 @@
                                             });
                                             swalWithBootstrapButtons.fire({
                                                 text: "Bạn cần đăng nhập để đọc nội dung này!",
-                                                icon: "warning",
+                                                imageUrl: "/images/yuzu.png",
+                                                imageWidth: 180,
+                                                imageHeight: 90,
+                                                imageAlt: "Custom image",
                                                 showCancelButton: true,
                                                 confirmButtonText: "Login now!!",
                                                 cancelButtonText: "Cancel!",
@@ -387,7 +470,10 @@
                                         });
                                         swalWithBootstrapButtons.fire({
                                             text: " Có vẻ bạn cần mua thêm vé để đọc nội dung này !!",
-                                            icon: "warning",
+                                            imageUrl: "/images/ads_lt.png",
+                                            imageWidth: 180,
+                                            imageHeight: 90,
+                                            imageAlt: "Custom image",
                                             showCancelButton: true,
                                             confirmButtonText: "Mua ngay!!",
                                             cancelButtonText: "Cancel!",
@@ -423,7 +509,10 @@
                                     });
                                     swalWithBootstrapButtons.fire({
                                         text: "Bạn cần đăng ký gói premium để đọc nội dung này!",
-                                        icon: "warning",
+                                        imageUrl: "/images/yuzu.png",
+                                        imageWidth: 180,
+                                        imageHeight: 90,
+                                        imageAlt: "Custom image",
                                         showCancelButton: true,
                                         confirmButtonText: "Đăng ký ngay!!",
                                         cancelButtonText: "Cancel!",
@@ -555,10 +644,13 @@
                         buttonsStyling: false
                     });
                     swalWithBootstrapButtons.fire({
-                        text: "Bạn cần đăng nhập để đánh giá bộ truyện",
-                        icon: "warning",
+                        text: "Bạn cần đăng nhập để đánh giá bộ truyện này",
+                        imageUrl: "/images/denied2.png",
+                        imageWidth: 200,
+                        imageHeight: 200,
+                        imageAlt: "Custom image",
                         showCancelButton: true,
-                        confirmButtonText: "Login",
+                        confirmButtonText: "Login now!",
                         cancelButtonText: "Cancel!",
                         reverseButtons: true
                     }).then((result) => {

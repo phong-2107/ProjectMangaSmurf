@@ -8,6 +8,7 @@ using ProjectMangaSmurf.Areas.Common.Services;
 using ProjectMangaSmurf.Helper;
 using Microsoft.AspNetCore.Authorization;
 using ProjectMangaSmurf.Services;
+using System.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
@@ -45,13 +46,6 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddHttpContextAccessor();
 
-//builder.Services.AddSession(options =>
-//{
-//    options.IdleTimeout = TimeSpan.FromMinutes(30);
-//    options.Cookie.HttpOnly = true;
-//    options.Cookie.IsEssential = true;
-//    options.Cookie.Name = ".AspNetCore.Admin.Session";
-//});
 
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
@@ -80,11 +74,15 @@ services.AddControllersWithViews()
 builder.Services.AddControllersWithViews().AddSessionStateTempDataProvider();
 services.AddSession();
 
-var connectionString = builder.Configuration.GetConnectionString("ProjectDBContextConnection") ?? 
-    throw new InvalidOperationException("Connection string 'ProjectDBContextConnection' " +
-    "not found.");
+//var connectionString = builder.Configuration.GetConnectionString("ProjectDBContextConnection") ?? 
+//    throw new InvalidOperationException("Connection string 'ProjectDBContextConnection' " +
+//    "not found.");
+//builder.Services.AddDbContext<ProjectDBContext>(options => options.UseSqlServer(connectionString));
+builder.Services.AddDbContext<ProjectDBContext>(options =>
+        options.UseLazyLoadingProxies()
+               .UseSqlServer(builder.Configuration.GetConnectionString("ProjectDBContextConnection")));
 
-builder.Services.AddDbContext<ProjectDBContext>(options => options.UseSqlServer(connectionString));
+
 
 
 builder.Services.AddRazorPages();
