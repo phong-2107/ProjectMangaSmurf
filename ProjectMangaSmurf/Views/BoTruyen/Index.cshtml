@@ -58,7 +58,7 @@
                                 
                             </div>
                             <div class="btn__regis w-50" style=" position:absolute; bottom:60px; right:50px; z-index:1000; max-width:170px;">
-                                <a asp-action="CTBoTruyen" asp-route-id="@botruyen.Value.IdBo">View more</a>
+                                <a asp-action="CTBoTruyen" asp-route-id="@botruyen.Value.IdBo">View more <i class="fa-solid fa-square-caret-right"></i></a>
                             </div>
                         </div>
                     }
@@ -81,7 +81,7 @@
                 </div>
                 <div class="horizontal"></div>
                 <div class="item-des">
-                    <p>Nếu bạn không biết đọc gì hôm nay. Hãy để chúng tôi chọn cho bạn</p>
+                    <p>Nếu bạn không biết đọc gì hôm nay. Hãy để chúng tôi chọn cho bạn </p>
                 </div>
 
                 @{
@@ -363,7 +363,7 @@
 
                             </div>
                             <div class="position-absolute btn-poster">
-                                <a asp-action="CTBoTruyen" asp-route-id="@item.IdBo" class="btn-poster-detail">Đọc ngay <i class="ri-arrow-right-s-fill"></i></a>
+                                <a asp-action="CTBoTruyen" asp-route-id="@item.IdBo" class="btn-poster-detail">View Now <i class="fa-solid fa-square-caret-right"></i></a>
                             </div>
 
                         </div>

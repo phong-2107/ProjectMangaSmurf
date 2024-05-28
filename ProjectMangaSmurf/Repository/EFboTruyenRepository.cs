@@ -187,11 +187,36 @@ namespace ProjectMangaSmurf.Repository
         {
             var list = _context.BoTruyens.ToList();
             List<BoTruyen> listTTActive =  new List<BoTruyen>();
+            if (id == 4)
+            {
+                listTTActive = _context.BoTruyens.OrderByDescending(a => a.TkDanhgia).ToList();
+            }
+            if(id == 3)
+            {
+                DateTime today = DateTime.Today;
+                var booksWithDailyViews = _context.BoTruyens
+                                        .Select(b => new
+                                        {
+                                            BoTruyen = b,
+                                            DailyViews = b.Chapters
+                                                .Where(c => c.ThoiGian.Date == today)
+                                                .Sum(c => c.TkLuotxem)
+                                        })
+                                        .OrderByDescending(x => x.DailyViews)
+                                        .ToList()
+                                        .Select(x => x.BoTruyen)
+                                        .ToList();
+                listTTActive = booksWithDailyViews;
+            }
+            if (id == 2)
+            {
+                listTTActive = _context.BoTruyens.OrderByDescending(a => a.TongLuotXem).ToList();
+            }
             if (id == 1)
             {
                 listTTActive = list.Where(p => p.TrangThai == id).ToList();
             }
-            else if (id == 0)
+            if (id == 0)
             {
                 listTTActive = list.Where(p => p.TrangThai == id).ToList();
             }

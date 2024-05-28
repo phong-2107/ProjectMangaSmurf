@@ -8,6 +8,7 @@ namespace ProjectMangaSmurf.Repository
 
         Task<IEnumerable<Payment>> GetPaymentByIdAsync(string id);
         Task AddAsync(Payment hd);
+        Task<Payment> GetByIdAsync(string id);
         string GenerateHD();
 
         Task<ServicePackConfig> GetPackByIdAsync(string id);

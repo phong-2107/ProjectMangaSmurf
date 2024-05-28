@@ -46,27 +46,37 @@ namespace ProjectMangaSmurf.Controllers
         [HttpPost]
         public IActionResult Checkout(double Money, string Name, string phone, int OrderId, string PaymentMethod)
         {
+
             if (ModelState.IsValid)
             {
-                if (PaymentMethod == "Thanh toán VNPay")
+                using var transaction = _context.Database.BeginTransaction();  // Giả sử '_context' là DbContext của bạn
+                try
                 {
-                    var vnPayModel = new VnPaymentRequestModel();
-                    vnPayModel.Amount = Money;
-                    vnPayModel.CreatedDate = DateTime.Now;
-                    vnPayModel.Description = $"{Name} {phone}";
-                    vnPayModel.FullName = Name;
-                    vnPayModel.OrderId = OrderId;
+                    if (PaymentMethod == "Thanh toán VNPay")
+                    {
+                        var vnPayModel = new VnPaymentRequestModel();
+                        vnPayModel.Amount = Money;
+                        vnPayModel.CreatedDate = DateTime.Now;
+                        vnPayModel.Description = $"{Name} {phone}";
+                        vnPayModel.FullName = Name;
+                        vnPayModel.OrderId = OrderId;
 
-                    HttpContext.Session.SetString("OrderId", vnPayModel.OrderId.ToString());
-                    HttpContext.Session.SetString("date", vnPayModel.CreatedDate.ToString());
-                    HttpContext.Session.SetString("Name", vnPayModel.FullName.ToString());
-                    HttpContext.Session.SetString("Note", vnPayModel.Description.ToString());
-                    HttpContext.Session.SetString("Phone", phone);
-                    return Redirect(_vnPayservice.CreatePaymentUrl(HttpContext, vnPayModel));
+                        HttpContext.Session.SetString("OrderId", vnPayModel.OrderId.ToString());
+                        HttpContext.Session.SetString("date", vnPayModel.CreatedDate.ToString());
+                        HttpContext.Session.SetString("Name", vnPayModel.FullName.ToString());
+                        HttpContext.Session.SetString("Note", vnPayModel.Description.ToString());
+                        HttpContext.Session.SetString("Phone", phone);
+                        return Redirect(_vnPayservice.CreatePaymentUrl(HttpContext, vnPayModel));
+                    }
+                    else if(PaymentMethod == "Thanh toán Paypal")
+                    {
+                        return RedirectToAction("ProcessPayPalPayment", new { Money, Name, phone, OrderId });
+                    }
                 }
-                else if(PaymentMethod == "Thanh toán Paypal")
+                catch (Exception ex)
                 {
-                    return RedirectToAction("ProcessPayPalPayment", new { Money, Name, phone, OrderId });
+                    transaction.Rollback();
+                    return RedirectToAction("Error", "Home");
                 }
             }
             return View();
@@ -155,7 +165,7 @@ namespace ProjectMangaSmurf.Controllers
                 catch (Exception ex)
                 {
                     transaction.Rollback();
-                    return View("Error", new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+                    return RedirectToAction("Error", "Home");
                 }
             }
         }

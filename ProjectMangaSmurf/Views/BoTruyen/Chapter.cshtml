@@ -278,6 +278,29 @@
             }
         }
     </div>
+
+    <div class=" p-3 control mt-4 " style="gap:1.2rem;">
+        @{
+            if (sttchapMin >= 1)
+            {
+                <a class="btn-prev" asp-action="Chapter" asp-route-id="@Model.IdBo" asp-route-stt="@sttchapMin" style="padding: .3rem .8rem; font-size:1rem; font-weight:500;"><i class="ri-arrow-left-s-line"></i> Previous</a>
+            }
+            else
+            {
+                <a class="btn-prev" style="background-color: #8f8f8f;color: #000 !important; padding: .3rem .8rem; font-size:1rem; font-weight:500;"><i class="ri-arrow-left-s-line"></i> Previous</a>
+            }
+
+            if (sttchapMax <= sttMax)
+            {
+                <a class="btn-next" asp-action="Chapter" asp-route-id="@Model.IdBo" asp-route-stt="@sttchapMax" style="padding: .3rem .8rem; font-size:1rem; font-weight:500;"><i class="ri-arrow-right-s-line"></i> Next</a>
+            }
+            else
+            {
+                <a class="btn-prev" style="background-color: #8f8f8f;color: #000 !important; padding: .3rem .8rem; font-size:1rem; font-weight:500;"><i class="ri-arrow-right-s-line"></i> Next</a>
+            }
+        }
+
+    </div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.js" integrity="sha512-HGOnQO9+SP1V92SrtZfjqxxtLmVzqZpjFFekvzZVWoiASSQgSr4cw9Kqd2+l8Llp4Gm0G8GIFJ4ddwZilcdb8A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>

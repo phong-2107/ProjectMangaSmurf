@@ -7,8 +7,8 @@
 <div class=" main__top section">
     <div class=" list__container containers list">
         <div class="top__content">
-            <span class="section__subtitle">TRUYỆN MỚI CẬP NHẬT</span>
-            <div class="controls">
+            <h2 class="section__subtitle">CẬP NHẬT MỚI NHẤT <span style="color: #9858F1;">@ViewBag.Topic</span></h2>
+            <div class="controls">                                                              
                 <div class="dropdown">
                     <button class="btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="ri-menu-2-fill"></i> STATUS
@@ -24,9 +24,9 @@
                         <i class="ri-equalizer-2-line"></i> FILTER
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end" style="max-height:150px;">
-                        <li><a class="dropdown-item" href="#">Theo thời gian</a></li>
-                        <li><a class="dropdown-item" href="#">View</a></li>
-                        <li><a class="dropdown-item" href="#">Đánh giá</a></li>
+                        <li><a class="dropdown-item" asp-area="" asp-controller="BoTruyen" asp-action="ListTruyenTT" asp-route-id="3">Theo thời gian</a></li>
+                        <li><a class="dropdown-item" asp-area="" asp-controller="BoTruyen" asp-action="ListTruyenTT" asp-route-id="2">View</a></li>
+                        <li><a class="dropdown-item" asp-area="" asp-controller="BoTruyen" asp-action="ListTruyenTT" asp-route-id="4">Đánh giá</a></li>
                     </ul>
                 </div>
             </div>

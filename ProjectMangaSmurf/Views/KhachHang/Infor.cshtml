@@ -313,7 +313,7 @@
                 <form class="form-login" id="formInfor" autocomplete="off" method="post">
                     <div class="content-login form-group position-relative" style="z-index: 100000;">
                         <div class="infor-img">
-                            <img src="@ViewBag.Url" />
+                            <img src="@img" />
                             <a id="btn-avatar" class="btn-avatar"><i class="ri-pencil-line"></i></a>
                         </div>
 
@@ -439,16 +439,19 @@
             $('.overlay').click(function () {
                 $(this).hide();
                 $('#loginForm').hide();
+                window.location.reload();
             });
 
             $('.close-btn').click(function () {
                 $('#loginOverlay').hide();
                 $('#loginForm').hide();
+                window.location.reload();
             });
 
             $('.btn-cancel').click(function () {
                 $('#loginOverlay').hide();
                 $('#loginForm').hide();
+                window.location.reload();
             });
         });
 

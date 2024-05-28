@@ -7,6 +7,7 @@ using ProjectMangaSmurf.Data;
 using Newtonsoft.Json;
 using System.Text.RegularExpressions;
 using System.Net;
+using System.Diagnostics;
 namespace ProjectMangaSmurf.Controllers
 {
     public class BoTruyenController : Controller
@@ -46,43 +47,51 @@ namespace ProjectMangaSmurf.Controllers
             }
             throw new ArgumentException("ID không hợp lệ");
         }
-
         public async Task<IActionResult> Index()
         {
-            var listBotruyen = await _botruyenrepository.GetAllAsync();
-            var listLoaiTruyen = await _botruyenrepository.GetAllLoaiTruyens();
-            ViewBag.LoaiTruyen = listLoaiTruyen;
-
-            var userId = HttpContext.Session.GetString("IdKH");
-            if (userId != null)
+            using var transaction = _context.Database.BeginTransaction();  // Giả sử '_context' là DbContext của bạn
+            try
             {
-                ViewBag.kh = await _khachhangrepository.GetByIdAsync(userId);
-                ViewBag.pay = await _hopdongRepository.GetPaymentByIdAsync(userId);
-            }
-            else
-            {
-                ViewBag.kh = null;
-            }
+                var listBotruyen = await _botruyenrepository.GetAllAsync();
+                var listLoaiTruyen = await _botruyenrepository.GetAllLoaiTruyens();
+                ViewBag.LoaiTruyen = listLoaiTruyen;
 
-            var truyenMax = await _botruyenrepository.GetBoTruyenWithMaxViewsAsync();
-
-            var bookId = ExtractNumberFromId(truyenMax.IdBo);
-            var recommendations = await _recommendationRepository.GetRecommendationsAsync(bookId);
-
-            List<BoTruyen> list = new List<BoTruyen>();
-
-            foreach (var r in recommendations)
-            {
-                var idBo = CreateIdFromNumber(r);
-                BoTruyen bt = await _botruyenrepository.GetByIdAsync(idBo);
-                if (bt != null)
+                var userId = HttpContext.Session.GetString("IdKH");
+                if (userId != null)
                 {
-                    list.Add(bt);
+                    ViewBag.kh = await _khachhangrepository.GetByIdAsync(userId);
+                    ViewBag.pay = await _hopdongRepository.GetPaymentByIdAsync(userId);
                 }
+                else
+                {
+                    ViewBag.kh = null;
+                }
+
+                var truyenMax = await _botruyenrepository.GetBoTruyenWithMaxViewsAsync();
+
+                var bookId = ExtractNumberFromId(truyenMax.IdBo);
+                var recommendations = await _recommendationRepository.GetRecommendationsAsync(bookId);
+
+                List<BoTruyen> list = new List<BoTruyen>();
+
+                foreach (var r in recommendations)
+                {
+                    var idBo = CreateIdFromNumber(r);
+                    BoTruyen bt = await _botruyenrepository.GetByIdAsync(idBo);
+                    if (bt != null)
+                    {
+                        list.Add(bt);
+                    }
+                }
+                ViewBag.list = list;
+                ViewBag.MaxView = truyenMax;
+                return View(listBotruyen);
             }
-            ViewBag.list = list;
-            ViewBag.MaxView = truyenMax;
-            return View(listBotruyen);
+            catch (Exception ex)
+            {
+                transaction.Rollback();
+                return RedirectToAction("Error", "Home");
+            }
         }
         public async Task<IActionResult> ListTruyen()
         {
@@ -94,14 +103,31 @@ namespace ProjectMangaSmurf.Controllers
             var listBotruyen = await _botruyenrepository.GetAllAsyncByChapterEarliest();
             return View(listBotruyen);
         }
-
         public async Task<IActionResult> ListTruyenTT(int id)
         {
             var listBotruyen = await _botruyenrepository.GetAllTrangThaiAsync(id);
+            if(id == 0)
+            {
+                ViewBag.Topic = "ĐANG TIẾN HÀNH";
+            }
+            if (id == 1)
+            {
+                ViewBag.Topic = "ĐÃ HOÀN THÀNH";
+            }
+            if (id == 2)
+            {
+                ViewBag.Topic = "THEO LƯỢT ĐỌC";
+            }
+            if (id == 3)
+            {
+                ViewBag.Topic = "THEO THỜI GIAN";
+            }
+            if (id == 4)
+            {
+                ViewBag.Topic = "THEO ĐÁNH GIÁ";
+            }
             return View(listBotruyen);
         }
-
-        [HttpGet]
         public async Task<IActionResult> SearchBoTruyen(string query)
         {
             var results = await _botruyenrepository.SearchByNameAsync(query);
@@ -150,7 +176,6 @@ namespace ProjectMangaSmurf.Controllers
             ViewBag.Topic = loai.TenLoai.ToUpper();
             return View(listBotruyen);
         }
-
         public async Task<IActionResult> ListBirth(int number)
         {
             var listBotruyen = await _botruyenrepository.GetAllByBirth(number);
@@ -166,13 +191,10 @@ namespace ProjectMangaSmurf.Controllers
                 ViewBag.Topic = "TRƯỞNG THÀNH";
             return View(listBotruyen);
         }
-
-
         private string CreateIdFromNumber(int number)
         {
             return "BT" + number.ToString("D8");
         }
-
         public async Task<IActionResult> CTBoTruyen(string id)
         {
             using (var transaction = _context.Database.BeginTransaction())
@@ -241,14 +263,14 @@ namespace ProjectMangaSmurf.Controllers
                     }
 
                     await _context.SaveChangesAsync();
-                    transaction.Commit(); // Commit transaction if all operations are successful
+                    transaction.Commit(); 
 
                     return View(Botruyen);
                 }
                 catch (Exception ex)
                 {
                     transaction.Rollback();
-                    return View("Error"); 
+                    return RedirectToAction("Error", "Home");
                 }
             }
         }
@@ -285,11 +307,10 @@ namespace ProjectMangaSmurf.Controllers
                 catch (Exception ex)
                 {
                     await transaction.RollbackAsync();
-                    return StatusCode(500, "Internal server error");
+                    return RedirectToAction("Error", "Home");
                 }
             }
         }
-
         private async Task UpdateBoTruyenViews(string id)
         {
             var bt = await _botruyenrepository.GetByIdAsync(id);
@@ -299,7 +320,6 @@ namespace ProjectMangaSmurf.Controllers
                 await _botruyenrepository.UpdateAsync(bt);
             }
         }
-
         private async Task HandleUserActivity(string userId, string boId, int stt)
         {
             var user = await _khachhangrepository.GetByIdAsync(userId);

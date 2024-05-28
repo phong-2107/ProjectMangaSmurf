@@ -105,8 +105,8 @@
                         }
                     </script>
 
-                    <div class="nav__buttons" style="display:none;">
-                        <i class="@* ri-sun-cloudy-fill *@ ri-moon-fill change-theme" id="theme-button"></i>
+                    <div class="nav__buttons" @* style="visibility:hidden;" *@>
+                        <i class="ri-sun-cloudy-fill @* ri-moon-fill *@ change-theme" id="theme-button"></i>
                     </div>
                     <div class="nav__login">
                         @{
@@ -158,7 +158,7 @@
                     <label for="sidebar-active" class="close-sidebar-button">
                         <svg xmlns="http://www.w3.org/2000/svg" height="32" viewBox="0 -960 960 960" width="32"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" /></svg>
                     </label>
-                    <a class="nav__item nav__link active-link" >
+                    <a class="nav__link active-link" >
                         <div class="dropdown">
                             <a class="nav__link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="cursor:pointer;">Thể loại truyện</a>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -199,6 +199,20 @@
                             </div>
                         </div>
                     </a>
+                        <div class="dropdown">
+                            <a class="nav__link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="cursor:pointer;">Xếp hạng</a>
+                            <div class="dropdown-menu" style="width:170px !important; height:170px !important; top:25px !important; " aria-labelledby="dropdownMenuButton">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <a class="dropdown-item" asp-area="" asp-controller="BoTruyen" asp-action="Rankings" asp-route-id="1">Lượt đọc</a>
+                                        <a class="dropdown-item" asp-area="" asp-controller="BoTruyen" asp-action="Rankings" asp-route-id="2">Theo dõi</a>
+                                        <a class="dropdown-item" asp-area="" asp-controller="BoTruyen" asp-action="Rankings" asp-route-id="3">Đánh giá</a>
+                                        <a class="dropdown-item" asp-area="" asp-controller="BoTruyen" asp-action="Rankings" asp-route-id="4">Hôm nay</a>
+                                        <a class="dropdown-item" asp-area="" asp-controller="BoTruyen" asp-action="Rankings" asp-route-id="5">Tháng này</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     <a asp-area="" asp-controller="BoTruyen" asp-action="Trending" class="nav__link active-link">Trending</a>
                     @{
                         if(kh!= null)
@@ -275,7 +289,11 @@
                                 </script>
                         }
                     }
-                    <a class="nav__item nav__link active-link" asp-area="" asp-controller="BoTruyen" asp-action="Rankings" asp-route-id="1">Xếp hạng</a>
+                    
+
+                    @* <a class="nav__item nav__link active-link" asp-area="" asp-controller="BoTruyen" asp-action="Rankings" asp-route-id="1">
+                        Xếp hạng
+                    </a> *@
                     @* <a href="#home" class="nav__item nav__link active-link">Tìm truyện</a> *@
                     <a class="nav__item nav__link active-link" asp-area="" asp-controller="BoTruyen" asp-action="ListTruyen">Mới cập nhật</a>
                     
@@ -335,13 +353,6 @@
             document.body.classList[selectedTheme === 'dark' ? 'add' : 'remove'](darkTheme)
             themeButton.classList[selectedIcon === 'ri-moon-fill' ? 'remove' : 'add'](iconTheme)
         }
-        // themeButton.addEventListener('click', () => {
-        //     document.body.classList.toggle(darkTheme);
-        //     themeButton.classList.toggle(iconTheme);
-
-        //     localStorage.setItem('selected-theme', getCurrentTheme());
-        //     localStorage.setItem('selected-icon', getCurrentIcon());
-        // })
         themeButton.addEventListener('click', () => {
             requestAnimationFrame(() => {
                 document.body.classList.toggle(darkTheme);

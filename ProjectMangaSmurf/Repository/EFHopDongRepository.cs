@@ -43,6 +43,12 @@ namespace ProjectMangaSmurf.Repository
             return await _context.Payments.ToListAsync();
         }
 
+        public async Task<Payment> GetByIdAsync(string id)
+        {
+            var payment = await _context.Payments.OrderByDescending(e => e.ExpiresTime).FirstOrDefaultAsync(p => p.IdUser == id);
+            return payment;
+        }
+
         public ServicePackConfig GetPackById(string id)
         {
             return _context.ServicePackConfigs.FirstOrDefault(p => p.IdPack == id);

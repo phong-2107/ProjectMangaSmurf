@@ -51,6 +51,7 @@ namespace ProjectMangaSmurf.Controllers
             _context = db;
         }
 
+        #region Giải quyết logic
         public bool checkpass(string pass, string passKh)
         {
             if (pass != null && passKh != null)
@@ -66,19 +67,6 @@ namespace ProjectMangaSmurf.Controllers
             }
         }
 
-        public IActionResult login()
-        {
-            return View();
-        }
-
-        public async Task LoginGoogle()
-        {
-            await HttpContext.ChallengeAsync(GoogleDefaults.AuthenticationScheme, new AuthenticationProperties()
-            {
-                RedirectUri = Url.Action("GoogleResponse")
-            });
-        }
-
         public string RandomPass()
         {
             Random random = new Random();
@@ -92,6 +80,23 @@ namespace ProjectMangaSmurf.Controllers
             }
 
             return stringBuilder.ToString();
+        }
+        #endregion
+
+
+        #region Action 
+        public IActionResult login()
+        {
+
+            return View();
+        }
+
+        public async Task LoginGoogle()
+        {
+            await HttpContext.ChallengeAsync(GoogleDefaults.AuthenticationScheme, new AuthenticationProperties()
+            {
+                RedirectUri = Url.Action("GoogleResponse")
+            });
         }
 
         public async Task<ActionResult> GoogleResponse()
@@ -125,6 +130,7 @@ namespace ProjectMangaSmurf.Controllers
                     kh.TicketSalary = 0;
                     kh.ActiveStats = 1;
 
+
                     await _userRepository.AddAsyncKH(user, kh);
                     HttpContext.Session.SetString("Img", avatar.AvatarContent);
                     HttpContext.Session.SetString("IdKH", kh.IdUser);
@@ -135,6 +141,17 @@ namespace ProjectMangaSmurf.Controllers
                     var avatar = await _avatarRepository.GetByIdAsync(find.IdAvatar);
                     HttpContext.Session.SetString("Img", avatar.AvatarContent);
                     HttpContext.Session.SetString("IdKH", find.IdUser);
+
+                    var payment = await _hopdongRepository.GetByIdAsync(find.IdUser);
+                    if (payment != null)
+                    {
+                        DateTimeOffset todayOffset = new DateTimeOffset(DateTime.Today, TimeZoneInfo.Local.GetUtcOffset(DateTime.Today));
+                        if (payment.ExpiresTime >= todayOffset && find.TicketSalary <= 0)
+                        {
+                            find.ActivePremium = false;
+                            await _khachhangrepository.UpdateAsync(find);
+                        }
+                    }
                     return RedirectToAction("Index", "BoTruyen");
 
                 }
@@ -168,8 +185,6 @@ namespace ProjectMangaSmurf.Controllers
         {
             if (ModelState.IsValid)
             {
-
-
                 var kh = await _khachhangrepository.GetByAccountAsync(Taikhoan);
                 if (kh != null)
                 {
@@ -182,7 +197,16 @@ namespace ProjectMangaSmurf.Controllers
                         HttpContext.Session.SetString("Img", avatar.AvatarContent);
                         HttpContext.Session.SetString("IdKH", kh.IdUser);
 
-                        //return RedirectToAction("Index", "BoTruyen");
+                        var payment = await _hopdongRepository.GetByIdAsync(User.IdUser);
+                        if(payment != null)
+                        {
+                            DateTimeOffset todayOffset = new DateTimeOffset(DateTime.Today, TimeZoneInfo.Local.GetUtcOffset(DateTime.Today));
+                            if (payment.ExpiresTime >= todayOffset && kh.TicketSalary <= 0)
+                            {
+                                kh.ActivePremium = false;
+                                await _khachhangrepository.UpdateAsync(kh);
+                            }
+                        }
                         return Json(new { success = true });
                     }
                     else
@@ -202,8 +226,6 @@ namespace ProjectMangaSmurf.Controllers
             return View();
         }
 
-
-
         public IActionResult LoginPopup(string returnUrl)
         {
             ViewBag.ReturnUrl = returnUrl;
@@ -221,17 +243,13 @@ namespace ProjectMangaSmurf.Controllers
                     var check = PasswordHasher.VerifyPassword(Matkhau.Trim(), kh.IdUserNavigation.Password.Trim());
                     if (check)
                     {
-                        // Set session variables
                         HttpContext.Session.SetString("TK", kh.IdUserNavigation.UserName);
                         HttpContext.Session.SetString("IdKH", kh.IdUser);
 
-                        // Check if the returnUrl is not null and is a local URL to prevent Open Redirect vulnerabilities
                         if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
                         {
                             return Redirect(returnUrl);
                         }
-
-                        // If no valid returnUrl, redirect to a default page
                         return RedirectToAction("Index", "BoTruyen");
                     }
                     else
@@ -263,7 +281,6 @@ namespace ProjectMangaSmurf.Controllers
         {
             return View();
         }
-
 
         [HttpPost]
         public async Task<IActionResult> ForgotPassword(string Email, string Code)
@@ -357,7 +374,6 @@ namespace ProjectMangaSmurf.Controllers
             return Json(new { success = false, message = "có lỗi trong quá trình nhập" });
         }
 
-
         public IActionResult Register()
         {
             return View();
@@ -446,7 +462,6 @@ namespace ProjectMangaSmurf.Controllers
         [HttpPost]
         public async Task<IActionResult> Infor(string Username, string FullName, int Gender, DateOnly date)
         {
-            // Kiểm tra ModelState
             if (!ModelState.IsValid)
             {
                 return View();
@@ -644,7 +659,7 @@ namespace ProjectMangaSmurf.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> UpdateInfor(string Taikhoan, string TenKh, string Sdt, string Email, string birthdate)
+        public async Task<IActionResult> UpdateInfor(string Taikhoan, string TenKh, string Sdt, string birthdate)
         {
             var idkh = HttpContext.Session.GetString("TK");
             var khach = _khachhangrepository.GetByAccountAsync(idkh);
@@ -795,6 +810,6 @@ namespace ProjectMangaSmurf.Controllers
             }
             return View(registeredKhachHang);
         }
-
+        #endregion
     }
 }
