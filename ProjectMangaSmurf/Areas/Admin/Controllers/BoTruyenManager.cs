@@ -4,8 +4,8 @@ using ProjectMangaSmurf.Repository;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ProjectMangaSmurf.Models;
 using Microsoft.EntityFrameworkCore;
-using iTextSharp.text;
-using iTextSharp.text.pdf;
+//using iTextSharp.text;
+//using iTextSharp.text.pdf;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 using System.IO;
@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using System;
 using ProjectMangaSmurf.Data;
-using ChapterModel = ProjectMangaSmurf.Models.Chapter;
+//using ChapterModel = ProjectMangaSmurf.Models.Chapter;
 using Microsoft.EntityFrameworkCore.Storage;
 
 namespace ProjectMangaSmurf.Areas.Admin.Controllers
@@ -94,35 +94,35 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
             return "/images/truyen/" + image.FileName;
         }
 
-        private async Task<string> CreatePDFAndSaveImages(string idBo, int sttChap, List<IFormFile> images)
-        {
-            string directoryPath = Path.Combine("wwwroot", "pdf");
-            Directory.CreateDirectory(directoryPath);  // Ensure the directory exists
+        //private async Task<string> CreatePDFAndSaveImages(string idBo, int sttChap, List<IFormFile> images)
+        //{
+        //    string directoryPath = Path.Combine("wwwroot", "pdf");
+        //    Directory.CreateDirectory(directoryPath);  // Ensure the directory exists
 
-            string pdfFileName = $"{idBo}_{sttChap}.pdf";
-            string pdfPath = Path.Combine(directoryPath, pdfFileName);
+        //    string pdfFileName = $"{idBo}_{sttChap}.pdf";
+        //    string pdfPath = Path.Combine(directoryPath, pdfFileName);
 
-            using (Document document = new Document(PageSize.A4))
-            using (FileStream stream = new FileStream(pdfPath, FileMode.Create))
-            {
-                PdfWriter.GetInstance(document, stream);
-                document.Open();
+        //    using (Document document = new Document(PageSize.A4))
+        //    using (FileStream stream = new FileStream(pdfPath, FileMode.Create))
+        //    {
+        //        PdfWriter.GetInstance(document, stream);
+        //        document.Open();
 
-                foreach (var image in images)
-                {
-                    var imagePath = await SaveImage(image, directoryPath);  // Save image temporarily if needed
-                    iTextSharp.text.Image pdfImage = iTextSharp.text.Image.GetInstance(imagePath);
-                    pdfImage.ScaleToFit(document.PageSize.Width, document.PageSize.Height);
-                    pdfImage.Alignment = Image.ALIGN_CENTER | Image.ALIGN_MIDDLE;
-                    document.NewPage();
-                    document.Add(pdfImage);
-                }
+        //        foreach (var image in images)
+        //        {
+        //            var imagePath = await SaveImage(image, directoryPath);  // Save image temporarily if needed
+        //            iTextSharp.text.Image pdfImage = iTextSharp.text.Image.GetInstance(imagePath);
+        //            pdfImage.ScaleToFit(document.PageSize.Width, document.PageSize.Height);
+        //            pdfImage.Alignment = Image.ALIGN_CENTER | Image.ALIGN_MIDDLE;
+        //            document.NewPage();
+        //            document.Add(pdfImage);
+        //        }
 
-                document.Close();
-            }
+        //        document.Close();
+        //    }
 
-            return pdfPath.Substring(pdfPath.IndexOf("wwwroot") + "wwwroot".Length).Replace('\\', '/');
-        }
+        //    return pdfPath.Substring(pdfPath.IndexOf("wwwroot") + "wwwroot".Length).Replace('\\', '/');
+        //}
 
         private async Task<string> SaveImage(IFormFile image, string directoryPath)
         {
@@ -251,15 +251,15 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
             ViewBag.Id = id;
             ViewBag.Stt = max + 1;
             var relatedComics = await _chapterrepository.GetChaptersByComicId(id);
-            ViewBag.RelatedChapter = relatedComics ?? new List<ChapterModel>();
+            ViewBag.RelatedChapter = relatedComics ?? new List<Chapter>();
             return View();
 
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddChapter(ChapterModel chapter, List<IFormFile> images)
+        public async Task<IActionResult> AddChapter(Models.Chapter chapter, List<IFormFile> images)
         {
-            using (var transaction = await _context.Database.BeginTransactionAsync())
+            using (var transaction = await _context.Database.BeginTransactionAsync()) 
             {
                 try
                 {
@@ -286,10 +286,11 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
                         };
                         await _chapterrepository.AddAsyncCT(CTChap);
                     }
-
+                    await transaction.CommitAsync();
                     var stt = chapter.SttChap;
                     TempData["Message"] = "New chapter added successfully, do you want to continue?";
                     return RedirectToAction("AddChapter", new { id = chapter.IdBo, stt = stt + 1 });
+
                 }
                 catch (Exception ex)
                 {
@@ -490,7 +491,7 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
             return "/images/chapter/" + fileName;
         }
 
-        public bool RangBuocChapter(ChapterModel bt)
+        public bool RangBuocChapter(Models.Chapter bt)
         {
 
             if (bt.TenChap == null)
