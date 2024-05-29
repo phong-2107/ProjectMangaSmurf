@@ -3,6 +3,12 @@
 @using ProjectMangaSmurf.Repository
 @inject IboTruyenRepository boTruyenRepository
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+@{
+    var id = ViewBag.Id;
+    var stt = ViewBag.Stt;
+}
+
 <style>
     .preview {
         max-width: 50%;
@@ -30,13 +36,13 @@
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label asp-for="IdBo">Bộ truyện</label>
-                        <input asp-for="IdBo" type="text" value="@ViewBag.Id" readonly>
+                        <input asp-for="IdBo" type="text" value="@id" readonly>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label asp-for="SttChap">STT Chapter</label>
-                        <input asp-for="SttChap" type="text" value="@ViewBag.Stt" placeholder="1, 2, 3, ..." required>
+                        <input asp-for="SttChap" type="text" value="@stt" placeholder="1, 2, 3, ..." required>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-6 col-12">
@@ -54,7 +60,7 @@
                 <div class="col-lg-3 col-sm-6 col-12">
                    <div class="form-group">
                         <label asp-for="ThoiGian">Thời gian</label>
-                        <input asp-for="ThoiGian" type="date" required class="Time">
+                        <input asp-for="ThoiGian" type="date" required class="Time" value="@DateTime.Today.ToString("yyyy-MM-dd")">
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-6 col-12">

@@ -139,98 +139,114 @@
                     <div class="row h-100">
 
                         <div class="col-lg-3 col-md-4 col-sm-12 col-12">
-                            <div class="dash-count das3 d-flex flex-column">
-                                <div class="dash-imgs">
-                                    <i class="fa-solid fa-clipboard-user"></i>
+                            <a asp-area="Admin" asp-controller="StaffManager" asp-action="Index">
+                                <div class="dash-count das3 d-flex flex-column">
+                                    <div class="dash-imgs">
+                                        <i class="fa-solid fa-clipboard-user"></i>
+                                    </div>
+                                    <div class="dash-counts">
+                                        <a> <h5>Manage Staff</h5></a>
+                                    </div>
                                 </div>
-                                <div class="dash-counts">
-                                    <a asp-area="Admin" asp-controller="StaffManager" asp-action="Index"> <h5>Manage Staff</h5></a>
-                                </div>
-                            </div>
+                            </a>
                         </div>
                         <div class="col-lg-3 col-md-4 col-sm-12 col-12">
-                            <div class="dash-count das3 d-flex flex-column">
-                                <div class="dash-imgs">
-                                    <i class="fa-solid fa-display"></i>
+                            <a asp-area="Admin" asp-controller="WebManager" asp-action="Setting">
+                                <div class="dash-count das3 d-flex flex-column">
+                                    <div class="dash-imgs">
+                                        <i class="fa-solid fa-display"></i>
+                                    </div>
+                                    <div class="dash-counts">
+                                        <a >
+                                            <h5>Manage Display</h5>
+                                        </a>
+                                    </div>
                                 </div>
-                                <div class="dash-counts">
-                                    <a asp-area="Admin" asp-controller="WebManager" asp-action="Setting">
-                                        <h5>Manage Display</h5>
-                                    </a>
-                                </div>
-                            </div>
+                            </a>
                         </div>
                         <div class="col-lg-3 col-md-4 col-sm-12 col-12">
+                            <a asp-area ="Admin" asp-controller="StaffManager" asp-action="Log">
                             <div class="dash-count das3 d-flex flex-column">
                                 <div class="dash-imgs">
                                     <i class="fa-brands fa-adversal"></i>
                                 </div>
                                 <div class="dash-counts">
-                                    <a asp-area="Admin" asp-controller="StaffManager" asp-action="Log">
+                                    <a >
                                         <h5>Manage Active-Logs</h5> 
                                     </a>
                                 </div>
                             </div>
+                            </a>
                         </div>
                         <div class="col-lg-3 col-md-4 col-sm-12 col-12">
+                            <a asp-area ="Admin" asp-controller="ServiceManager" asp-action="Add">
                             <div class="dash-count das3 d-flex flex-column">
                                 <div class="dash-imgs">
                                     <i class="fa-solid fa-sliders"></i>
                                 </div>
                                 <div class="dash-counts">
-                                    <a asp-area="Admin" asp-controller="ServiceManager" asp-action="Add">
+                                    <a >
                                         <h5>Service Settings</h5>
                                     </a>
                                 </div>
                             </div>
+                            </a>
                         </div>
                         <div class="col-lg-3 col-md-4 col-sm-12 col-12">
+                            <a asp-area="Admin" asp-controller="CusManager" asp-action="ViewOrderList">
                             <div class="dash-count das3 d-flex flex-column">
                                 <div class="dash-imgs">
                                     <i class="fa-solid fa-cash-register"></i>
                                 </div>
                                 <div class="dash-counts">
-                                    <a asp-area="Admin" asp-controller="CusManager" asp-action="ViewOrderList">
+                                    <a>
                                         <h5>Payment Views </h5>
                                     </a>
                                 </div>
                             </div>
+                            </a>
                         </div>
                         <div class="col-lg-3 col-md-4 col-sm-12 col-12">
+                            <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="add">
                             <div class="dash-count das3 d-flex flex-column">
                                 <div class="dash-imgs">
                                     <i class="fa-regular fa-square-plus"></i>
                                 </div>
                                 <div class="dash-counts">
-                                    <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="add">
+                                    <a >
                                         <h5>Upload New Series</h5>
                                     </a>
                                 </div>
                             </div>
+                            </a>
                         </div>
                         <div class="col-lg-3 col-md-4 col-sm-12 col-12">
+                            <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="ViewList">
                             <div class="dash-count das3 d-flex flex-column">
                                 <div class="dash-imgs">
                                     <i class="fa-solid fa-book-bookmark"></i>
                                 </div>
                                 <div class="dash-counts">
-                                    <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="ViewList">
+                                    <a >
                                         <h5>Comic Library</h5>
                                     </a>
                                 </div>
                             </div>
+                            </a>
                         </div>
                         <div class="col-lg-3 col-md-4 col-sm-12 col-12">
+                            <a asp-area="Admin" asp-controller="CusManager" asp-action="ViewList">
                             <div class="dash-count das3 d-flex flex-column">
                                 <div class="dash-imgs">
                                     <i class="fa-solid fa-user-plus"></i>
                                 </div>
                                 <div class="dash-counts">
-                                    <a asp-area="Admin" asp-controller="CusManager" asp-action="ViewList">
+                                    <a >
                                         <h5>Views Customers</h5>
                                     </a>
                                 </div>
                             </div>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -270,7 +286,7 @@
                                         <tr>
                                             <td>@i</td>
                                             <td class="productimgname">
-                                                <a class="product-img">
+                                                <a class="product-img" asp-area="Admin" asp-controller="BoTruyenManager" asp-action="Detail" asp-route-id="@b.IdBo" style="cursor:pointer;">
                                                     <img src="@b.AnhBia" alt="product">
                                                 </a>
                                                 <a>@b.TenBo</a>
@@ -297,7 +313,7 @@
                             <th>ID</th>
                             <th>Series Name</th>
                             <th>Premium</th>
-                            <th>Banner</th>
+                            <th>Poster</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -309,13 +325,13 @@
                                 <tr>
                                     <td>@bo.IdBo</td>
                                     <td>
-                                        <a href="javascript:void(0);">@bo.TenBo</a>
+                                        <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="Detail" asp-route-id="@bo.IdBo" style="cursor:pointer;">@bo.TenBo</a>
                                     </td>
                                     <td>
                                         @switch (bo.TtPemium)
                                         {
                                             case true:
-                                                <span class="text-success">Premium</span>
+                                                <span class="text-success " style="font-weight:500;">Premium</span>
                                                 break;
                                             case false:
                                                 <span class="text-danger">Inactive</span>
@@ -326,11 +342,10 @@
                                         }
                                     </td>
                                     <td class="productimgname">
-                                        <a class="product-img">
-                                            <img src="@bo.AnhBanner" alt="product">
+                                        <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="Detail" asp-route-id="@bo.IdBo" style="cursor:pointer;" class="product-img">
+                                            <img src="@bo.AnhBia" alt="product">
                                         </a>
                                     </td>
-                                  
                                 </tr>
                             }
 

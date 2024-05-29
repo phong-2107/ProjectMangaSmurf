@@ -4,7 +4,7 @@
 :root {
     /*========== Colors ==========*/
     /* Color mode HSL(hue, saturation, lightness)*/
-    /*--first-color: #6a4040;
+    --first-color: #6a4040;
     --first-color-alt: hsl(19, 64%, 52%);
     --title-color: hsl(19, 16%, 10%);
     --text-color: hsl(19, 16%, 35%);
@@ -12,22 +12,22 @@
     --body-color: #D1D5DB;
     --body-main: #E4E4E4;
     --body-item-color: #b2b4b8;
-    --body-item-color-dark: #27333a;
+    --body-item-color-dark: #D1D5DB;
     --body-white: #ffffff;
     --box-color: #DDDCD4;
     --btn-yellow: #E38645;
     --containers-color-alt: #BD9A43;
     --containers-color-yellow: #B58E3E;
     --containers-color: hsl(20, 45%, 14%);
-*/
-    --body-white: #ffffff;
+    /**/
+    /*--body-white: #ffffff;
     --first-color: hsl(19, 100%, 97%);
     --first-color-alt: hsl(19, 100%, 97%);
     --title-color: hsl(19, 16%, 85%);
     --text-color: hsl(19, 16%, 65%);
     --text-color-light: hsl(19, 8%, 55%);
     --box-color: #181D1F;
-    --body-color:  /*#141624;  #263238;*/ #0E1111;
+    --body-color:*/ /*#141624;  #263238;*/ /*#0E1111;
     --body-color-dark: #1a2226;
     --body-main: #1a1e24;
     --btn-yellow: #CE29F9;
@@ -36,7 +36,7 @@
     --containers-color: hsl(19, 10%, 10%);
     --containers-color-alt: #9858F1;
     --containers-color-yellow: #B142F5;
-    --btn-orange: #F47521;
+    --btn-orange: #F47521;*/
 
 
     --header-height: 3rem;
@@ -191,7 +191,7 @@ img {
 #global-loader{
     background: var(--body-color);
     position: fixed;
-    z-index: 9999;
+    z-index: 99999;
     width: 100%;
     height: 100vh;
     display: flex;
@@ -389,6 +389,7 @@ img {
 .nav__menu-list {
     position: relative;
     display: flex;
+    align-items:center;
 }
 
 .header .nav__content {
@@ -404,9 +405,9 @@ img {
 .search {
     position: relative;
     background-color: #fff;
-    width: 45px;
-    height: 45px;
-    border-radius: 10px;
+    width: 42px;
+    height: 42px;
+    border-radius: 7px;
     transition: 0.5s;
     overflow: hidden;
     margin-right: 1rem;
@@ -421,8 +422,8 @@ img {
         position: absolute;
         top: 0;
         left: 0;
-        width: 45px;
-        height: 45px;
+        width: 42px;
+        height: 42px;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -472,6 +473,11 @@ img {
         color: var(--first-color);
     }
 
+
+    .results:::-webkit-scrollbar {
+        width: 5px;
+        height: 5px; 
+    }
 .search .input input {
     position: absolute;
     top: 0;
@@ -651,8 +657,8 @@ img {
 
 .nav__buttons {
     position: relative;
-    width: 45px;
-    height: 45px;
+    width: 42px;
+    height: 42px;
     background-color: var(--containers-color-alt);
     border-radius: 5px;
     transition: 0.5s;
@@ -800,7 +806,7 @@ img {
 
 
     .main__random .item-content .item-des {
-        color: #fff;
+        color: var(--title-color);
         margin-bottom: 1.5rem;
     }
 

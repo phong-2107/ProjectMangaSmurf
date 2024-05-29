@@ -1,4 +1,4 @@
-﻿@{
+﻿﻿@{
     Layout = null;
     ViewData["Title"] = "Staff Information and Permissions";
 }
@@ -21,20 +21,20 @@
         position: relative;
     }
 
-    .permissions-list .form-check-input:checked {
-        background-color: #000000; /* Black background when checked */
-        border-color: #000000; /* Keep border color black */
-    }
+        .permissions-list .form-check-input:checked {
+            background-color: #000000; /* Black background when checked */
+            border-color: #000000; /* Keep border color black */
+        }
 
-    .permissions-list .form-check-input:checked::after {
-        content: '✔'; /* Checkmark symbol */
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        color: #ffffff; /* White color for checkmark */
-        font-size: 0.75em;
-    }
+            .permissions-list .form-check-input:checked::after {
+                content: '✔'; /* Checkmark symbol */
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                color: #ffffff; /* White color for checkmark */
+                font-size: 0.75em;
+            }
 
     .permissions-container {
         padding: 15px;
@@ -45,11 +45,11 @@
         justify-content: flex-start;
     }
 
-    .permissions-container h4 {
-        color: #6589f7; /* Brown text for 'Assign Permissions' */
-        font-family: 'Roboto', sans-serif; /* Roboto font */
-        text-align: center; /* Center the title */
-    }
+        .permissions-container h4 {
+            color: #6589f7; /* Brown text for 'Assign Permissions' */
+            font-family: 'Roboto', sans-serif; /* Roboto font */
+            text-align: center; /* Center the title */
+        }
 
     .permissions-matrix {
         display: grid;
@@ -57,19 +57,19 @@
         grid-gap: 20px;
     }
 
-    .permissions-matrix > div {
-        background-color: #6589f7; /* Brown background for each group */
-        padding: 10px;
-        border-radius: 10px;
-    }
+        .permissions-matrix > div {
+            background-color: #6589f7; /* Brown background for each group */
+            padding: 10px;
+            border-radius: 10px;
+        }
 
-    .permissions-matrix h5 {
-        color: #ffffff; /* White text for titles */
-    }
+        .permissions-matrix h5 {
+            color: #ffffff; /* White text for titles */
+        }
 
-    .permissions-matrix .form-check {
-        margin-bottom: 10px; /* Space between each item */
-    }
+        .permissions-matrix .form-check {
+            margin-bottom: 10px; /* Space between each item */
+        }
 
     .form-group {
         background-color: #6589f7; /* Brown background */
@@ -94,13 +94,13 @@
         font-family: 'Roboto', sans-serif; /* Roboto font */
     }
 
-    input[type='text']::placeholder, input[type='date']::placeholder { /* Adjust placeholder color */
-        color: #ffffff;
-    }
+        input[type='text']::placeholder, input[type='date']::placeholder { /* Adjust placeholder color */
+            color: #ffffff;
+        }
 
-    input[type='date']::-webkit-calendar-picker-indicator {
-        filter: invert(1); /* Make calendar icon white */
-    }
+        input[type='date']::-webkit-calendar-picker-indicator {
+            filter: invert(1); /* Make calendar icon white */
+        }
 
     .btn {
         border: 2px solid #6f42c1; /* Purple border */
@@ -118,10 +118,10 @@
         border: 2px solid #6f42c1; /* Purple border */
     }
 
-    .btn-primary:hover {
-        background-color: #6f42c1; /* Purple background */
-        color: #ffffff; /* White text */
-    }
+        .btn-primary:hover {
+            background-color: #6f42c1; /* Purple background */
+            color: #ffffff; /* White text */
+        }
 
     .btn-secondary {
         background-color: #6f42c1; /* Purple background */
@@ -129,10 +129,10 @@
         border: 2px solid #6f42c1; /* Purple border */
     }
 
-    .btn-secondary:hover {
-        background-color: transparent;
-        color: #6f42c1; /* Purple text */
-    }
+        .btn-secondary:hover {
+            background-color: transparent;
+            color: #6f42c1; /* Purple text */
+        }
 
     .centered-title {
         text-align: center; /* Center the title */
@@ -166,11 +166,11 @@
         font-family: 'Roboto', sans-serif;
     }
 
-    .nav.user-menu span {
-        margin-right: 1rem;
-        font-size: 1rem;
-        font-weight: 600;
-    }
+        .nav.user-menu span {
+            margin-right: 1rem;
+            font-size: 1rem;
+            font-weight: 600;
+        }
 
     .btn-custom-logout {
         background-color: #1B2850;
@@ -183,9 +183,9 @@
         border-radius: 0.25rem;
     }
 
-    .btn-custom-logout:hover {
-        background-color: #a07837;
-    }
+        .btn-custom-logout:hover {
+            background-color: #a07837;
+        }
 
     .header {
         display: flex;
@@ -198,6 +198,7 @@
     .nav__logo {
         display: block;
     }
+
     .user-menu-container {
         display: flex;
         align-items: center;
@@ -231,20 +232,19 @@
         margin-right: 4px
     }
 
-    .permissions-matrix .form-check-input.parent-checkbox:checked {
-        background-color: #1B2850; /* Dark blue background when checked */
-        border-color: #ffffff; /* Keep border color white */
-    }
+        .permissions-matrix .form-check-input.parent-checkbox:checked {
+            background-color: #1B2850; /* Dark blue background when checked */
+            border-color: #ffffff; /* Keep border color white */
+        }
 
-    .permissions-matrix .form-check-input.parent-checkbox:checked::after {
-
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        color: #ffffff; /* White color for checkmark */
-        font-size: 0.65em;
-    }
+            .permissions-matrix .form-check-input.parent-checkbox:checked::after {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                color: #ffffff; /* White color for checkmark */
+                font-size: 0.65em;
+            }
 
     /* General checkbox style */
     .permissions-matrix .form-check-input {
@@ -259,20 +259,19 @@
         position: relative;
     }
 
-    .permissions-matrix .form-check-input:checked {
-        background-color: #1B2850; /* Dark blue background */
-        border-color: #1B2850; /* Keep border color dark blue */
-    }
+        .permissions-matrix .form-check-input:checked {
+            background-color: #1B2850; /* Dark blue background */
+            border-color: #1B2850; /* Keep border color dark blue */
+        }
 
-    .permissions-matrix .form-check-input:checked::after {
-
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        color: #ffffff; /* White color for checkmark */
-        font-size: 0.75em;
-    }
+            .permissions-matrix .form-check-input:checked::after {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                color: #ffffff; /* White color for checkmark */
+                font-size: 0.75em;
+            }
 
     /* Style for parent permission label */
     .permissions-matrix .form-check-label.parent-label {
@@ -287,12 +286,12 @@
         position: relative;
     }
 
-    .permissions-matrix .form-check-label.parent-label .parent-checkbox {
-        position: absolute;
-        left: 10px;
-        top: 50%;
-        transform: translateY(-50%);
-    }
+        .permissions-matrix .form-check-label.parent-label .parent-checkbox {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
 
     form, .notice {
         display: inline-block;
@@ -318,9 +317,9 @@
         margin-right: 10px;
     }
 
-    .form-row .form-group:last-child {
-        margin-right: 0;
-    }
+        .form-row .form-group:last-child {
+            margin-right: 0;
+        }
 
     .form-buttons {
         text-align: right;
@@ -381,7 +380,7 @@
                                 "Notice: If Update Infomation and RBA are successfully , you'll' be redirected to User[ @ViewBag.IdUser ]'s Detail site "
                             </div>
                         </div>
-
+                        <input name="IdUser" id="IdUser" type="hidden" class="form-control" value="@ViewBag.IdUser" required>
                         <div class="form-group">
                             <label for="Username"><i class="fa-solid fa-user-tag"></i> Username</label>
                             <input name="Username" id="Username" type="text" class="form-control" value="@ViewBag.Username" required>
@@ -391,37 +390,28 @@
                             <input name="FullName" id="FullName" type="text" class="form-control" required value="@ViewBag.FullName">
                         </div>
                         <div class="form-group">
-                            <label for="FullName"><i class="fa-solid fa-square-phone"></i> Phone </label>
-                            <input name="FullName" id="FullName" type="text" class="form-control" required value="@ViewBag.Phone">
-                        </div>
-                        <div class="form-group">
                             <label for="date"><i class="fa-solid fa-cake-candles"></i> Birth Date</label>
-                            <input name="date" id="date" type="date" class="form-control" required value="@ViewBag.BirthDate?.ToDateTime(TimeOnly.MinValue).ToString("yyyy-MM-dd")">
+                            <input name="BirthDate" id="date" type="date" class="form-control" required value="">
                         </div>
-                          <div class="col-md-6 form-group">
-                                <label for="Gender">Gender</label>
-                                <select name="Gender" id="Gender" class="form-control">
-                                    <!option value="0" @(ViewBag.Gender == null ? "selected" : "")>Other</!option>
-                                    <!option value="1" @(ViewBag.Gender == 1 ? "selected" : "")>Male</!option>
-                                    <!option value="2" @(ViewBag.Gender == 2 ? "selected" : "")>Female</!option>
-                                </select>
-                            </div>
-                            <div class="col-md-6 form-group">
-                                <label for="StaffRole">Role</label>
-                                <select name="StaffRole" id="StaffRole" class="form-control">
-                                    <!option value="true" @(ViewBag.StaffRole == false ? "selected" : "")>Staff</!option>
-                                    <!option value="false" @(ViewBag.StaffRole == true ? "selected" : "")>Admin</!option>
-                                </select>
-                            </div>
-                            <div class="col-md-6 form-group">
-                                <label for="StaffRole">Active</label>
-                                <select name="StaffRole" id="StaffRole" class="form-control">
-                                    <!option value="true" @(ViewBag.Active == false ? "selected" : "")>Banned</!option>
-                                    <!option value="false" @(ViewBag.Active == true ? "selected" : "")>Activate</!option>
-                                </select>
-                            </div>
+                        <div class="col-md-6 form-group">
+                            <label for="Gender">Gender</label>
+                            <select name="Gender" id="Gender" class="form-control">
+                                <!option value="0" @(ViewBag.Gender == null ? "selected" : "")>Other</!option>
+                                <!option value="1" @(ViewBag.Gender == 1 ? "selected" : "")>Male</!option>
+                                <!option value="2" @(ViewBag.Gender == 2 ? "selected" : "")>Female</!option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label for="StaffRole">Role</label>
+                            <select name="StaffRole" id="StaffRole" class="form-control">
+                                <!option value="true" @(ViewBag.StaffRole == false ? "selected" : "")>Staff</!option>
+                                <!option value="false" @(ViewBag.StaffRole == true ? "selected" : "")>Admin</!option>
+                            </select>
+                        </div>
+
                         <div class="form-group form-buttons">
-                            <div class="notice"><i class="fa-solid fa-circle-exclamation"></i>       Notice: Remember to assign the correct permissions to this staff member.
+                            <div class="notice">
+                                <i class="fa-solid fa-circle-exclamation"></i>       Notice: Remember to assign the correct permissions to this staff member.
                             </div>
 
                             <button type="submit" class="btn btn-secondary">

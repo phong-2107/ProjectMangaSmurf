@@ -12,7 +12,9 @@
 @* <link href="~/css/stylechapter.css" rel="stylesheet" /> *@
 <link href="~/css/stylerank.css" rel="stylesheet" />
 
-
+@{
+    string next = ViewBag.next;
+}
 
 <div class=" main__top detail section">
     <div class=" detail__container containers">
@@ -309,7 +311,7 @@
                             {
                                                 <a class="btn__action" style="pointer-events: none; background-color: #8f8f8f">
                                                     Đọc tiếp chap
-                                                    @if (ViewBag.next != null && ViewBag.next != -1)
+                                                    @if (next != null && next != "-1")
                                         {
                                                         @ViewBag.next
                                         }

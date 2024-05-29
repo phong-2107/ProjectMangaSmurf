@@ -5,7 +5,6 @@
     var inactiveSelected = customer?.IdUserNavigation?.Active == false ? "selected " : "";
     var hashedPassword = customer?.IdUserNavigation?.Password;
     var allPermissions = ViewBag.AllPermissions as List<ProjectMangaSmurf.Models.PermissionsList>;
-    var activePermissions = ViewBag.Pn as List<ProjectMangaSmurf.Models.StaffPermissionsDetail>;
 }
 
 <style>
@@ -112,9 +111,6 @@
     <div class="table-responsive">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h4 class="mb-0 related-comic-series"><i class="fa-solid fa-tag"></i> All Permissions Of @customer.IdUserNavigation.UserName</h4>
-            <a asp-area="Admin" asp-action="UpdateAndRBAC" asp-controller="StaffManager" asp-route-id="@customer.IdUser">
-                <button type="submit" class="btn btn-outline-dark"><i class="fa-solid fa-circle-info"></i> Update Detail</button>
-            </a>
         </div>
         <table class="table datanew">
             <thead>
@@ -128,25 +124,26 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in activePermissions)
+                @foreach (var item in ViewBag.Pn as List<ProjectMangaSmurf.Models.StaffPermissionsDetail>)
                 {
                     var parentPermission = allPermissions.FirstOrDefault(p => p.IdPermissions == item.IdPermissionsNavigation.ParentPermissions);
                     var pn = parentPermission?.PermissionsName ?? "N/A";
-                    var accessStatus = item.Active == true ? "Active" : "Inactive";
-                    var accessClass = item.Active == true ? "text-green" : "text-red";
-                    <tr data-status="active">
+                    var accessStatus = (item.Active ?? false) ? "Already" : "No Permit";
+                    var accessClass = (item.Active ?? false) ? "text-green" : "text-red";
+                    <tr data-status="@((item.Active ?? false) ? "active" : "banned")">
                         <td>@pn</td>
                         <td>@item.IdPermissions</td>
                         <td>@item.IdPermissionsNavigation.PermissionsName</td>
                         <td>@item.IdPermissionsNavigation.Description</td>
                         <td class="@accessClass">@accessStatus</td>
-                       
+                        <td>
+                            <a asp-area="Admin" asp-controller="ChapterManager" asp-action="ActiveOfPermission" asp-route-id="@item.IdPermissions" class="me-3">
+                                <img src="~/img/icons/edit.svg" alt="Edit">
+                            </a>
+                        </td>
                     </tr>
                 }
-
             </tbody>
         </table>
     </div>
 </div>
-
-

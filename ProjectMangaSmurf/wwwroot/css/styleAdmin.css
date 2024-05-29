@@ -5290,7 +5290,7 @@ span.select2-container.select2-container--default.select2-container--open {
             .table tbody tr td .product-img img {
                 min-width: 40px;
                 width: 40px;
-                height: 40px;
+                height: 55px;
                 border: 0;
             }
 
@@ -8467,3 +8467,4 @@ span.select2-container.select2-container--default.select2-container--open {
         top: 50%;
         right: 10px;
     }
+
