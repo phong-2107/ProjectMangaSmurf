@@ -1,16 +1,14 @@
 ﻿@model IEnumerable<ProjectMangaSmurf.Models.BoTruyen>
 @using ProjectMangaSmurf.Repository
-@using Microsoft.AspNetCore.Http
-@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
-@inject IHttpContextAccessor HttpContextAccessor
+@using ProjectMangaSmurf.Helper
 @inject IboTruyenRepository boTruyenRepository
 @inject IChapterRepository chapterRepository
 
+<!-- LINK SLICK -->
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.css" />
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick-theme.css" />
 
-
-
-
-<div class="background"></div>
+@* <div class="background"></div> *@
 <div class="main__bottom sections TruyenNew__Containter containers grid">
     <section class="home" id="home">
         <div class="home__container w-100">
@@ -49,7 +47,30 @@
                             <div class="item-infor" >
                                 <div class="item-content">
                                     <div class="content">
-                                        <a href="#">@botruyen.Value.TenBo</a>
+                                        <a asp-action="CTBoTruyen" asp-route-id="@botruyen.Value.IdBo" style="display:block;">@botruyen.Value.TenBo</a>
+                                        @{
+                                            int valueF = Convert.ToInt32(botruyen.Value.TkDanhgia);
+                                            if (valueF > 0)
+                                            {
+                                                var tmp = 5 - valueF;
+                                                for (int a = 0; a < valueF; a++)
+                                                {
+                                                    <i class="ri-star-fill" style="color: #FAB818;"></i>
+                                                }
+                                                for (int b = 0; b < tmp; b++)
+                                                {
+                                                    <i class="ri-star-fill"></i>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <i class="ri-star-fill"></i>
+                                                <i class="ri-star-fill"></i>
+                                                <i class="ri-star-fill"></i>
+                                                <i class="ri-star-fill"></i>
+                                                <i class="ri-star-fill"></i>
+                                            }
+                                        }
                                     </div>
                                     <div class="item-des">
                                         <p>@TruncateText(botruyen.Value.Mota, 35)</p>
@@ -57,13 +78,13 @@
                                 </div>
                                 
                             </div>
-                            <div class="btn__regis w-50" style=" position:absolute; bottom:60px; right:50px; z-index:1000; max-width:170px;">
-                                <a asp-action="CTBoTruyen" asp-route-id="@botruyen.Value.IdBo">View more <i class="fa-solid fa-square-caret-right"></i></a>
+                            <div class="btn__regis w-50" style=" position:absolute; bottom:60px; right:50px; z-index:1000; max-width:150px;">
+                                <a asp-action="CTBoTruyen" asp-route-id="@botruyen.Value.IdBo">Watch  <i class="fa-solid fa-square-caret-right"></i></a>
                             </div>
                         </div>
                     }
                 </div>
-                <div class="background-item rounded-2"></div>
+                <div class="background-item rounded-1"></div>
                 <button class="carousel-control-prev " type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev" style="width: 5%; z-index: 1000;">
                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                 </button>
@@ -94,13 +115,11 @@
             </div>
         </div>
         <div class="main__random bg-random">
-            <a id="btnPay" class="btn-pre"  data-customerid="@HttpContextAccessor.HttpContext.Session.GetString("IdKH")">@* <i class="fa-solid fa-gem"></i> *@Try Now</a>
+            <a id="btnPay" class="btn-pre">Try Now</a>
             <script>
                 $(document).ready(function () {
                     $('#btnPay').click(function (e) {
-                        var customerId = $(this).data('customerid');
                         window.location.href = '@Url.Action("Index", "Payment")';
-                        
                     });
                 });
             </script>
@@ -111,7 +130,7 @@
     <div class="top__container containers" style="overflow:hidden;">
         <div class="top__content">
             <div>
-                <span class="section__subtitle">Gợi Ý Hôm Nay</span>
+                <span class="section__subtitle">Đề Cử Hôm Nay</span>
                 <p class="section__des">Gợi ý những bộ truyện theo thị hiếu và sở thích của bạn</p>
             </div>
         </div>
@@ -144,9 +163,6 @@
         </div>
     </div>
 </div>
-
-
-
 <section class="new-update containers mt-3" id="update">
     <div class="update__container TruyenNew__Containter grids">
         <div class="top__content">
@@ -174,7 +190,7 @@
                                 @if (!string.IsNullOrEmpty(botruyen.AnhBia))
                                 {
 
-                                    <img loading="lazy" src="@botruyen.AnhBia" alt="truyen Image" />
+                                    <img loading="lazy" src="@botruyen.AnhBia" alt="Poster" />
                                 }
                                 <figcaption>
                                     <h6 class="item-title"><a href="#">@botruyen.TenBo</a></h6>
@@ -337,6 +353,7 @@
                             }
                             <div class="position-absolute name-poster">
                                 <h3>@item.TenBo</h3>
+                            
                                 @{
                                     int valueF = Convert.ToInt32(item.TkDanhgia);
                                     if (valueF > 0)
@@ -360,17 +377,14 @@
                                         <i class="ri-star-fill"></i>
                                     }
                                 }
-
                             </div>
                             <div class="position-absolute btn-poster">
                                 <a asp-action="CTBoTruyen" asp-route-id="@item.IdBo" class="btn-poster-detail">View Now <i class="fa-solid fa-square-caret-right"></i></a>
                             </div>
-
                         </div>
                     }
                 }
             </div>
-
         </div>
     </div>
 </section>
@@ -405,11 +419,8 @@
         </div>
     </div>
 </section>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.js" integrity="sha512-HGOnQO9+SP1V92SrtZfjqxxtLmVzqZpjFFekvzZVWoiASSQgSr4cw9Kqd2+l8Llp4Gm0G8GIFJ4ddwZilcdb8A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.js"></script>
-
 <script type="text/javascript">
     $('.autoplay').slick({
         slidesToShow: 6,
@@ -454,7 +465,5 @@
             }
         ]
     });
-
-
 </script>
 

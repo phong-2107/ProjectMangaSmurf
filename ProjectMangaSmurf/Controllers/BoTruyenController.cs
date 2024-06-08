@@ -59,12 +59,15 @@ namespace ProjectMangaSmurf.Controllers
                 var userId = HttpContext.Session.GetString("IdKH");
                 if (userId != null)
                 {
+
                     ViewBag.kh = await _khachhangrepository.GetByIdAsync(userId);
                     ViewBag.pay = await _hopdongRepository.GetPaymentByIdAsync(userId);
+                    ViewBag.IdKH = HttpContext.Session.GetString("IdKH");
                 }
                 else
                 {
                     ViewBag.kh = null;
+                    ViewBag.IdKH = null;
                 }
 
                 var truyenMax = await _botruyenrepository.GetBoTruyenWithMaxViewsAsync();

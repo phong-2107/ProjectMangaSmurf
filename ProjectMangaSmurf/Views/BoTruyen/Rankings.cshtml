@@ -49,20 +49,21 @@
                     int count = 1;
                     string loaitruyen = string.Join(", ", list);
                     <li id="firstRank" class="rank-item">
-                            <div class="bg-img" style="background-image: url('@img');"></div>
-                            <span class="item-number">01</span>
-                            <div class="item-content">
-                                @if (!string.IsNullOrEmpty(item.AnhBia))
-                                {
+                        <div class="bg-img" style="background-image: url('@img');"></div>
+                        <span class="item-number">01</span>
+                        <div class="item-content">
+                            @if (!string.IsNullOrEmpty(item.AnhBia))
+                            {
                                 <a asp-action="CTBoTruyen" asp-route-id="@item.IdBo"><img src="@item.AnhBia" alt="truyen Image" class="rank-img" /></a>
-                                }
+                            }
 
-                            <div class="item-infor firstRank-infor">
-                                    <a asp-action="CTBoTruyen" asp-route-id="@item.IdBo">
+                            <div class="item-infor firstRank-infor" style="padding:0 20px;">
+                                <a asp-action="CTBoTruyen" asp-route-id="@item.IdBo">
                                     <h3 class="item-title">@item.TenBo</h3>
-                                        </a>
-                                    <div>
-                                    <p class="item-type">@loaitruyen</p>
+                                </a>
+                                <h6 class="item-type"><span style="color:#FAB818; font-size:20px; font-weight:600;">@item.TongLuotXem</span> Lượt xem</h6>
+                                <div>
+                                    <p class="item-type" style="margin-bottom: .5rem;">@loaitruyen</p>
                                     @{
                                         int valueF = Convert.ToInt32(item.TkDanhgia);
                                         if (valueF > 0)
@@ -86,9 +87,9 @@
                                             <i class="ri-star-fill"></i>
                                         }
                                     }
-                                    </div>
                                 </div>
                             </div>
+                        </div>
                         <div class="background-item rounded-3"></div>
                     </li>
 
@@ -104,9 +105,10 @@
                                 <a asp-action="CTBoTruyen" asp-route-id="@i.IdBo">
                                     <img src="@i.AnhBia" alt="" class="rank-img">
                                 </a>
-                                <div class="item-infor">
+                                <div class="item-infor" style="padding:10px 20px;">
                                     <h3 class="item-title">@i.TenBo</h3>
-                                    <p class="item-type">@loaiTop</p>
+                                    <h6 class="item-type"><span style="color:#fff;">@i.TongLuotXem</span> Lượt xem</h6>
+                                    <p class="item-type" style="margin-bottom: .5rem;">@loaiTop</p>
                                 </div>
                             </div>
                             <div class="rank__item-infor ml-auto">
@@ -155,8 +157,8 @@
                                     }
                                 }
                                 
-                                <span><i class="ri-heart-3-fill"></i> @i.TkTheodoi Lượt theo dõi</span>
-                                
+                                <span>@i.TkTheodoi Lượt theo dõi</span>
+                                @*<i class="ri-heart-3-fill"></i>*@
                             </div>
                         </li>
                     }

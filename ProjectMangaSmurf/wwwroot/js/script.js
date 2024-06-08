@@ -51,8 +51,37 @@ const sr = ScrollReveal({
     delay: 400,
 })
 
+/*=============== DARK LIGHT THEME ===============*/
+const themeButton = document.getElementById('theme-button');
+const darkTheme = 'dark-theme';
+const iconTheme = 'ri-sun-cloudy-fill';
+
+const selectedTheme = localStorage.getItem('selected-theme');
+const selectedIcon = localStorage.getItem('selected-icon');
+
+const getCurrentTheme = () => document.body.classList.contains(darkTheme) ? 'dark' : 'dark';
+const getCurrentIcon = () => themeButton.classList.contains(iconTheme) ? 'ri-sun-cloudy-fill' : 'ri-moon-fill';
+
+if (selectedTheme) {
+    document.body.classList[selectedTheme === 'dark' ? 'add' : 'remove'](darkTheme)
+    themeButton.classList[selectedIcon === 'ri-moon-fill' ? 'remove' : 'add'](iconTheme)
+}
+themeButton.addEventListener('click', () => {
+    requestAnimationFrame(() => {
+        document.body.classList.toggle(darkTheme);
+        themeButton.classList.toggle(iconTheme);
+    });
+
+    localStorage.setItem('selected-theme', getCurrentTheme());
+    localStorage.setItem('selected-icon', getCurrentIcon());
+});
+
+
+
 sr.reveal(`.new-update, .TruyenNew__Containter, .Update__Containter, .TopRank__container, .footer__description, .footer__content`)
 sr.reveal(`.main__top` ,, { origin: 'bottom' })
 sr.reveal(`.main__bottom, .new-update`, { origin: 'left' })
 sr.reveal(`.about__img , .recently__img`, { origin: 'right' })
 sr.reveal(`.popular__card`, { interval: 100 })
+
+

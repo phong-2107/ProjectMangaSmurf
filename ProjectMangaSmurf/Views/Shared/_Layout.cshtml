@@ -8,56 +8,32 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-    
+ 
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>MangaSmurf</title>
-
         <link rel="icon" type="image/png" href="~/images/icon logo.png">
         <!-- LINK BOOTSTRAP -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
         <!-- LINK REMIXICON -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.2.0/remixicon.css">
-
-        <!-- LINK JQUERY -->
-        <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-
-        <!-- LINK SLICK -->
-        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.css" />
-        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick-theme.css" />
-
+        
         <!-- LINK SWEETALERT -->
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.dark.min.css">
         <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
+        <!-- LINK STYLE MAIN CSS -->
         <link href="~/css/style.css" rel="stylesheet" />
-
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-        <script>
-            if (localStorage.getItem('selected-theme') === 'dark') {
-                document.documentElement.classList.add('dark-theme');
-            }
-        </script>
-        <style>
-            .nav__item .dropdown:hover .dropdown-menu {
-                display: block;
-                margin-top: 0; /* remove the gap so it doesn't close */
-            }
-        </style>
+        <!-- LINK JQUERY -->
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     </head>
 <body>
     <header class="header" id="header">
         <div class="nav__side">
             <nav class="containers nav">
                 <a class="nav__logo" asp-area="" asp-controller="BoTruyen" asp-action="Index">
-                    <img class="nav__logo-img" src="/images/logo1.png" alt="logo website">
+                    <img class="nav__logo-img" src="/images/logo2.png" alt="logo website">
                 </a>
                 <div class="nav__menu nav__menu-list" id="nav-menu">
                     <div class="search">
@@ -102,9 +78,9 @@
                         }
                     </script>
 
-                    <div class="nav__buttons">
-                        <i class="@* ri-sun-cloudy-fill *@ ri-moon-fill change-theme" id="theme-button"></i>
-                    </div>
+                    @* <div class="nav__buttons">
+                        <i class="@* ri-sun-cloudy-fill  ri-moon-fill change-theme" id="theme-button"></i>
+                    </div> *@
                     <div class="nav__login">
                         @{
                             var kh = HttpContextAccessor.HttpContext.Session.GetString("TK");
@@ -310,7 +286,6 @@
 
     
     <main role="main" class="pb-3">
-        
         <div id="global-loader">
             <span class="loader"></span>
         </div>
@@ -321,11 +296,21 @@
         <partial name="_Footer"/>
     </footer>
 
+    <!-- LINK JQUERY -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" ></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <!-- LINK BOOTSTRAP -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- LINK SLICK -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.js" integrity="sha512-HGOnQO9+SP1V92SrtZfjqxxtLmVzqZpjFFekvzZVWoiASSQgSr4cw9Kqd2+l8Llp4Gm0G8GIFJ4ddwZilcdb8A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!-- LINK sweetalert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- LINK POPPER -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <!-- LINK SCROLLREVEAL -->
     <script src="~/js/scrollreveal.min.js"></script>
-
-    
-
+    <!-- LINK MAIN -->
+    <script src="~/js/script.js"></script>
     <script>
 
         setTimeout(function () {
@@ -335,31 +320,7 @@
             }, 100);
         }, 500);
 
-        /*=============== DARK LIGHT THEME ===============*/
-        const themeButton = document.getElementById('theme-button');
-        const darkTheme = 'dark-theme';
-        const iconTheme = 'ri-sun-cloudy-fill';
-
-        const selectedTheme = localStorage.getItem('selected-theme');
-        const selectedIcon = localStorage.getItem('selected-icon');
-
-        const getCurrentTheme = () => document.body.classList.contains(darkTheme) ? 'dark' : 'dark';
-        const getCurrentIcon = () => themeButton.classList.contains(iconTheme) ? 'ri-sun-cloudy-fill' : 'ri-moon-fill';
-
-        if (selectedTheme) {
-            document.body.classList[selectedTheme === 'dark' ? 'add' : 'remove'](darkTheme)
-            themeButton.classList[selectedIcon === 'ri-moon-fill' ? 'remove' : 'add'](iconTheme)
-        }
-        themeButton.addEventListener('click', () => {
-            requestAnimationFrame(() => {
-                document.body.classList.toggle(darkTheme);
-                themeButton.classList.toggle(iconTheme);
-            });
-
-            localStorage.setItem('selected-theme', getCurrentTheme());
-            localStorage.setItem('selected-icon', getCurrentIcon());
-        });
-
+        
         /* ======================== cuộn lên đầu trang ================================ */
         
         var scrollToTopButton = document.getElementById("scrollToTopBtn");
@@ -382,20 +343,34 @@
             }
         }
 
-        
-    </script>
-
-    <script src="~/js/script.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
-    <script>
-
         document.addEventListener('visibilitychange', function () {
             if (document.visibilityState === 'hidden') {
                 console.log('Người dùng có thể đang chụp màn hình');
             }
         });
 
+
+
+        
+
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const loginPagePath = '/KhachHang/Login';
+            const registerPagePath = '/KhachHang/Register';
+            const inforPagePath = '/KhachHang/Infor';
+            const currentPagePath = window.location.pathname;
+
+            // Kiểm tra nếu trang hiện tại không phải là một trong các trang đặc biệt này
+            if (currentPagePath !== loginPagePath && currentPagePath !== registerPagePath && currentPagePath !== inforPagePath) {
+                localStorage.setItem('redirectAfterLogin', window.location.href);
+            }
+        });
+
+    </script>
+
+
+    <script>
+        /* ======================== Find Bo Truyen ================================ */
         $(document).ready(function () {
             $('.searchInput').on('input', function () {
                 var searchQuery = $(this).val();
@@ -416,43 +391,30 @@
                     });
                 }
             });
-            
-            
-            function displaySearchResults(results) {
-                var resultsContainer = $('#results');
-                resultsContainer.empty();
-
-                results.forEach(function (result) {
-                    resultsContainer.append(
-                        `<li>
-                            <a href="/BoTruyen/CTBoTruyen/${result.id}" class="item-search">
-                                <img src="${result.img}" />
-                                <div>
-                                    <h4>${result.tenBo}</h4>
-                                    <span>${result.view} View</span>
-                                </div>
-                            </a>
-                        </li>`
-                    );
-                });
-            }
-
-            function clearSearchResults() {
-                $('#results').empty();
-            }
         });
 
-        document.addEventListener('DOMContentLoaded', function () {
-            const loginPagePath = '/KhachHang/Login';
-            const registerPagePath = '/KhachHang/Register';
-            const inforPagePath = '/KhachHang/Infor';
-            const currentPagePath = window.location.pathname;
+        function displaySearchResults(results) {
+            var resultsContainer = $('#results');
+            resultsContainer.empty();
 
-            // Kiểm tra nếu trang hiện tại không phải là một trong các trang đặc biệt này
-            if (currentPagePath !== loginPagePath && currentPagePath !== registerPagePath && currentPagePath !== inforPagePath) {
-                localStorage.setItem('redirectAfterLogin', window.location.href);
-            }
-        });
+            results.forEach(function (result) {
+                resultsContainer.append(
+                    `<li>
+                                <a href="/BoTruyen/CTBoTruyen/${result.id}" class="item-search">
+                                    <img src="${result.img}" />
+                                    <div>
+                                        <h4>${result.tenBo}</h4>
+                                        <span>${result.view} View</span>
+                                    </div>
+                                </a>
+                            </li>`
+                );
+            });
+        }
+
+        function clearSearchResults() {
+            $('#results').empty();
+        }
 
     </script>
 </body>
