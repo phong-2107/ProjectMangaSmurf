@@ -14,6 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
 var configuration = builder.Configuration;
 
+// set googleOptions
 builder.Services.AddAuthentication().AddGoogle(googleOptions =>
 {
     googleOptions.ClientId = "603767058702-cli1i4notmjpfqo2jg2s7t7001o6i0i0.apps.googleusercontent.com";
@@ -22,6 +23,7 @@ builder.Services.AddAuthentication().AddGoogle(googleOptions =>
     googleOptions.Scope.Add("https://www.googleapis.com/auth/userinfo.email");
 });
 
+// set Cookie Authentication config
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
@@ -41,12 +43,13 @@ builder.Services.AddAuthentication(options =>
 });
 
 
-
+// Custom MemoryCache 
 builder.Services.AddControllersWithViews();
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddHttpContextAccessor();
 
 
+// set Cookie Admin
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
 {
@@ -58,6 +61,7 @@ builder.Services.AddSession(options =>
     options.Cookie.Name = ".AspNetCore.Admin.Session";  
 });
 
+// set Cookie Main User
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(30);
@@ -65,26 +69,20 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
     options.Cookie.Name = ".AspNetCore.Main.Session";  
 });
-
-
 services.AddControllersWithViews();
 
+// AddCookieTempDataProvider
 services.AddControllersWithViews()
     .AddCookieTempDataProvider(); 
 builder.Services.AddControllersWithViews().AddSessionStateTempDataProvider();
 services.AddSession();
 
-//var connectionString = builder.Configuration.GetConnectionString("ProjectDBContextConnection") ?? 
-//    throw new InvalidOperationException("Connection string 'ProjectDBContextConnection' " +
-//    "not found.");
-//builder.Services.AddDbContext<ProjectDBContext>(options => options.UseSqlServer(connectionString));
+// loading Database
 builder.Services.AddDbContext<ProjectDBContext>(options =>
         options.UseLazyLoadingProxies()
                .UseSqlServer(builder.Configuration.GetConnectionString("ProjectDBContextConnection")));
 
-
-
-
+// config Repository - Service 
 builder.Services.AddRazorPages();
 builder.Services.AddScoped<IConfigService, EFConfigService>();
 builder.Services.AddScoped<IUser,EFUser>();
@@ -110,7 +108,6 @@ builder.Services.AddScoped<IVNPayRepository, EFVNPayRepository>();
 builder.Services.AddScoped<IPayPalService, PayPalService>();
 //======================= Manager =======================
 builder.Services.AddScoped<IStaffRepository, EFStaffRepository>();
-
 //======================= Recommendation Book =======================
 builder.Services.AddScoped<IBookRecommendationRepository, EFBookRecommendationRepository>();
 
@@ -123,6 +120,7 @@ builder.Services.AddScoped<IBookRecommendationRepository, EFBookRecommendationRe
 //});
 
 
+//Flask api
 builder.Services.AddHttpClient();
 builder.Services.AddControllersWithViews();
 builder.Services.AddControllersWithViews();
@@ -130,6 +128,7 @@ builder.Services.AddHttpClient("FlaskAPI", client =>
 {
     client.BaseAddress = new Uri("http://localhost:5000"); 
 });
+
 
 
 var app = builder.Build();

@@ -8,6 +8,7 @@ namespace ProjectMangaSmurf.Repository
         Task<IEnumerable<Chapter>> GetAllByIdAsync(string id);
         Task<IEnumerable<CtChapter>> GetAllCTByIdAsync(string id, int stt);
         Task<Chapter> GetByIdAsync(string id, int stt);
+        Task<CtHoatDong> GetCTHDAsync(string id, string kh, int stt);
         Task<List<Chapter>> GetChaptersByComicId(string comicId);
         Task<CtChapter> GetPageByIdAsync(string idBo, int sttChap, int soTrang);
         Task UpdatePageNumberAsync(string idBo, int sttChap, int currentSoTrang, int newSoTrang);

@@ -78,7 +78,7 @@
                                 </div>
                                 
                             </div>
-                            <div class="btn__regis w-50" style=" position:absolute; bottom:60px; right:50px; z-index:1000; max-width:150px;">
+                            <div class="btn__regis btn-watch w-50" >
                                 <a asp-action="CTBoTruyen" asp-route-id="@botruyen.Value.IdBo">Watch  <i class="fa-solid fa-square-caret-right"></i></a>
                             </div>
                         </div>
@@ -115,7 +115,7 @@
             </div>
         </div>
         <div class="main__random bg-random">
-            <a id="btnPay" class="btn-pre">Try Now</a>
+            <a id="btnPay" style="font-weight:600; letter-spacing:1px;" class="btn-pre nav__buttons-Pre"><i class="fa-solid fa-crown"></i><span style="padding-right:.3rem; font-weight:500; color:#FAB818; ">Try  </span>  Premium </a>
             <script>
                 $(document).ready(function () {
                     $('#btnPay').click(function (e) {
@@ -431,35 +431,35 @@
             {
                 breakpoint: 450,
                 settings: {
-                    slidesToShow: 2,
+                    slidesToShow: 3,
                     slidesToScroll: 1
                 }
             },
             {
                 breakpoint: 576, 
                 settings: {
-                    slidesToShow: 2,
+                    slidesToShow: 3,
                     slidesToScroll: 1
                 }
             },
             {
                 breakpoint: 767,
                 settings: {
-                    slidesToShow: 3,
+                    slidesToShow: 4,
                     slidesToScroll: 1
                 }
             },
             {
                 breakpoint: 1064, 
                 settings: {
-                    slidesToShow: 4,
+                    slidesToShow: 5,
                     slidesToScroll: 1
                 }
             },
             {
                 breakpoint: 1280, 
                 settings: {
-                    slidesToShow: 5,
+                    slidesToShow: 6,
                     slidesToScroll: 1
                 }
             }

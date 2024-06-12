@@ -28,7 +28,6 @@ namespace ProjectMangaSmurf.Repository
             {
                 double totalRating = await reviews.SumAsync(c => (double)c.DanhGia);
                 int count = await reviews.CountAsync();
-
                 return totalRating / count;
             }
 

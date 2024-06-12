@@ -327,16 +327,6 @@ namespace ProjectMangaSmurf.Controllers
         {
             var user = await _khachhangrepository.GetByIdAsync(userId);
             if (user == null) return;
-
-            var ctHoatDong = new CtHoatDong
-            {
-                IdBo = boId,
-                SttChap = stt,
-                IdUser = user.IdUser,
-                TtDoc = true
-            };
-            await _chapterrepository.AddAsyncCTHD(ctHoatDong);
-
             var ctBo = await _cTBoTruyenRepository.GetByIdAsync(user.IdUser, boId);
             if (ctBo != null)
             {
@@ -354,15 +344,26 @@ namespace ProjectMangaSmurf.Controllers
                     LsMoi = stt.ToString()
                 };
                 await _cTBoTruyenRepository.AddAsync(ctBoTruyen);
+                
             }
-
             var findChap = await _chapterrepository.GetByIdAsync(boId, stt);
             if (findChap != null)
             {
-                user.TicketSalary = user.TicketSalary - findChap.TicketCost;
-                await _khachhangrepository.UpdateAsync(user);
+                var findCTHD = await _chapterrepository.GetCTHDAsync(boId, user.IdUser, stt);
+                if(findCTHD == null)
+                {
+                    user.TicketSalary = user.TicketSalary - findChap.TicketCost;
+                    await _khachhangrepository.UpdateAsync(user);
+                    var ctHoatDong = new CtHoatDong
+                    {
+                        IdBo = boId,
+                        SttChap = stt,
+                        IdUser = user.IdUser,
+                        TtDoc = true
+                    };
+                    await _chapterrepository.AddAsyncCTHD(ctHoatDong);
+                }
             }
-
             ViewBag.follow = ctBo?.Theodoi ?? false;
         }
     }

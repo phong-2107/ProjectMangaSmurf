@@ -77,16 +77,14 @@
                             $('#results').empty();
                         }
                     </script>
-
-                    @* <div class="nav__buttons">
-                        <i class="@* ri-sun-cloudy-fill  ri-moon-fill change-theme" id="theme-button"></i>
-                    </div> *@
-                    <div class="nav__login">
-                        @{
+                    @{
                             var kh = HttpContextAccessor.HttpContext.Session.GetString("TK");
                             var khID = HttpContextAccessor.HttpContext.Session.GetString("IdKH");
-                            
-                            if (kh!= null){
+                     }
+                    <div class="nav__login">
+                        @{
+                                if (kh!= null){
+
                                 var imgUrl = HttpContextAccessor.HttpContext.Session.GetString("Img");
                                 <div class=" btn__login dropdown position-relative" style="color:#fff;">
                                     <style>
@@ -107,6 +105,7 @@
                             }
                             else
                             {
+                                
                                     <div class="btn__regis mr-2">
                                         <a asp-area="" asp-controller="KhachHang" asp-action="Register">Đăng ký</a>
                                     </div>
@@ -114,8 +113,9 @@
                                     <a asp-area="" asp-controller="KhachHang" asp-action="Login">Đăng nhập</a>
                                     </div>
                             }
-                        }
+                         }
                     </div>
+                    
                 </div>
 
             </nav>
@@ -131,9 +131,9 @@
                     <label for="sidebar-active" class="close-sidebar-button">
                         <svg xmlns="http://www.w3.org/2000/svg" height="32" viewBox="0 -960 960 960" width="32"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" /></svg>
                     </label>
-                    <a class="nav__link active-link" >
+                    <a asp-area="" asp-controller="BoTruyen" asp-action="Index" class="nav__link">Trang Chủ</a>
                         <div class="dropdown">
-                            <a class="nav__link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="cursor:pointer;">Thể loại truyện</a>
+                            <a class="nav__link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="cursor:pointer;">Thể Loại Truyện</a>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                 <div class="row">
                                     <div class="col-3">
@@ -171,7 +171,6 @@
                                 </div>
                             </div>
                         </div>
-                    </a>
                         <div class="dropdown">
                             <a class="nav__link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="cursor:pointer;">Xếp hạng</a>
                             <div class="dropdown-menu" style="width:170px !important; height:170px !important; top:25px !important; " aria-labelledby="dropdownMenuButton">
@@ -187,6 +186,7 @@
                             </div>
                         </div>
                     <a asp-area="" asp-controller="BoTruyen" asp-action="Trending" class="nav__link active-link">Trending</a>
+                    <a class="nav__item nav__link active-link" asp-area="" asp-controller="BoTruyen" asp-action="ListTruyen">Mới cập nhật</a>
                     @{
                         if(kh!= null)
                         {
@@ -267,11 +267,13 @@
                     @* <a class="nav__item nav__link active-link" asp-area="" asp-controller="BoTruyen" asp-action="Rankings" asp-route-id="1">
                         Xếp hạng
                     </a> *@
-                    @* <a href="#home" class="nav__item nav__link active-link">Tìm truyện</a> *@
-                    <a class="nav__item nav__link active-link" asp-area="" asp-controller="BoTruyen" asp-action="ListTruyen">Mới cập nhật</a>
+                    <a href="https://www.facebook.com/share/fFgCruNduDrskWBa/" class="nav__item nav__link active-link">Fanpage</a>
                     
+                    <div class="nav__buttons nav__buttons-Pre" style="margin-left:2.5rem;">
+                        <a asp-controller="Payment" asp-action="Index"><i class="fa-solid fa-crown"></i><span>Try</span> Premium</a>
+                    </div>
                     
-                    <div class="nav__login">
+                    <div class="nav__login" id="nav-login">
                     <div class="btn__regis mr-2">
                     <a>Đăng ký</a>
                     </div>

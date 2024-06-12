@@ -337,5 +337,10 @@ namespace ProjectMangaSmurf.Repository
                 return (byte)cost.TicketCost;
             }
         }
+
+        public async Task<CtHoatDong> GetCTHDAsync(string id, string kh, int stt)
+        {
+            return await _context.CtHoatDongs.FirstOrDefaultAsync(p => p.IdBo == id && p.SttChap == stt && p.IdUser == kh);
+        }
     }
 }
