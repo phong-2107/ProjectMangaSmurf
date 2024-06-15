@@ -1,0 +1,38 @@
+﻿@model IEnumerable<ProjectMangaSmurf.Models.NhanVien>
+
+@foreach (var i in Model)
+{
+    <tr>
+        <td>@i.IdUser</td>
+        <td>@(i.IdUserNavigation?.FullName ?? "N/A")</td>
+        <td>@(i.IdUserNavigation?.UserName ?? "N/A")</td>
+        <td>@(i.IdUserNavigation?.Phone ?? "N/A")</td>
+        <td>@(i.IdUserNavigation?.Email ?? "N/A")</td>
+        <td>@i.StaffRole</td>
+        <td>
+            @switch ((i.IdUserNavigation?.Active))
+            {
+                case true:
+                    <span class="text-success">Active</span>
+                    break;
+                case false:
+                    <span class="text-danger">Inactive</span>
+                    break;
+                default:
+                    <span class="text-secondary">Error</span>
+                    break;
+            }
+        </td>
+        <td>
+            <a asp-area="Admin" asp-controller="StaffManager" asp-action="Detail" asp-route-id="@i.IdUser" class="me-3">
+                <img src="~/img/icons/eye.svg" alt="img">
+            </a>
+            <a asp-area="Admin" asp-controller="StaffManager" asp-action="UpdateAndRBAC" asp-route-id="@i.IdUser" class="me-3 ">
+                <img src="~/img/icons/edit.svg" alt="img">
+            </a>
+            <a class="delete-productn me-3" data-product-id="@i.IdUser" href="javascript:void(0);">
+                <img src="~/img/icons/delete.svg" alt="img">
+            </a>
+        </td>
+    </tr>
+}

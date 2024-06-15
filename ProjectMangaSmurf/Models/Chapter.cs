@@ -29,5 +29,5 @@ public partial class Chapter
 
     public virtual ICollection<CtHoatDong> CtHoatDongs { get; set; } = new List<CtHoatDong>();
 
-    public virtual BoTruyen IdBoNavigation { get; set; } = null!;
+    public virtual BoTruyen? IdBoNavigation { get; set; } 
 }

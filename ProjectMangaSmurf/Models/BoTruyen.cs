@@ -21,9 +21,9 @@ public partial class BoTruyen
 
     public int TongLuotXem { get; set; }
 
-    public string AnhBia { get; set; } = null!;
+    public string? AnhBia { get; set; } 
 
-    public string AnhBanner { get; set; } = null!;
+    public string? AnhBanner { get; set; } 
 
     public bool TtPemium { get; set; }
 
@@ -39,5 +39,5 @@ public partial class BoTruyen
 
     public virtual ICollection<CtLoaiTruyen> CtLoaiTruyens { get; set; } = new List<CtLoaiTruyen>();
 
-    public virtual TacGium IdTgNavigation { get; set; } = null!;
+    public virtual TacGium? IdTgNavigation { get; set; } 
 }

@@ -37,6 +37,7 @@ namespace ProjectMangaSmurf.Repository
         Task<int> CountByComicTypeId(string comicTypeId);
         Task<int> CountByAuthorId(string comicAuthId);
 
+        Task<IEnumerable<BoTruyen>> SearchComicsAsync(string query);
         Task<BoTruyen> GetBoTruyenWithMaxViewsAsync();
         Task<BoTruyen> GetBoTruyenWithMaxFollowsAsync();
     }

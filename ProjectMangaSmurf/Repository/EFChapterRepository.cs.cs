@@ -308,21 +308,24 @@ namespace ProjectMangaSmurf.Repository
         }
 
 
-        public async Task<int> GetMaxSttChapAsync(string idBo)
+        public async Task<int> GetNextSttChapAsync(string idBo)
         {
             // Kiểm tra xem có chương nào trong bộ truyện này không
             var hasChapters = await _context.Chapters.AnyAsync(ch => ch.IdBo == idBo);
             if (!hasChapters)
             {
-                // Không có chương nào, có thể trả về 0 hoặc một giá trị phù hợp
-                return 0;
+                // Không có chương nào, có thể trả về 1 như là chương đầu tiên
+                return 1;
             }
 
             // Truy vấn để lấy SttChap lớn nhất
             int maxSttChap = await _context.Chapters
                 .Where(ch => ch.IdBo == idBo)
                 .MaxAsync(ch => ch.SttChap);
-            return maxSttChap;
+
+            // Trả về giá trị lớn nhất + 1
+            return maxSttChap + 1;
         }
+
     }
 }

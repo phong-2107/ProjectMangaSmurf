@@ -3,8 +3,6 @@
 @{
     ViewData["Title"] = "Order List";
 }
-
-
 <style>
     .alert-info {
         color: #004085; /* Màu chữ xanh */
@@ -13,13 +11,95 @@
         padding: 10px;
         margin: 10px 0;
         border-radius: 5px; /* Bo góc cho khối thông báo */
-    }</style>
+    }
+
+    .filters {
+        display: flex;
+        justify-content: space-between; /* Evenly distribute the buttons */
+        margin-bottom: 15px;
+    }
+
+        .filters button {
+            flex: 1;
+            margin: 5px;
+            padding: 10px 15px;
+            border: none;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 5px;
+            background: linear-gradient(90deg, #ffdd99, #ffcc66, #ffbb33, #ffaa00); /* Gradient from light to darker orange */
+            transition: background 0.3s ease;
+        }
+
+            .filters button:hover {
+                background: linear-gradient(90deg, #ffaa00, #ffbb33, #ffcc66, #ffdd99); /* Reversed gradient on hover */
+            }
+
+    .popup {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: white;
+        padding: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+        z-index: 1000;
+        display: none; /* Hidden by default */
+    }
+
+        .popup .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: transparent;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+            .popup .close-btn:hover {
+                color: red;
+            }
+
+        .popup h3 {
+            margin-top: 0;
+        }
+
+        .popup input, .popup select {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .popup button {
+            padding: 10px 15px;
+            border: none;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 5px;
+            background: #ffaa00;
+            transition: background 0.3s ease;
+            margin-right: 10px;
+        }
+
+            .popup button:hover {
+                background: #ff8800;
+            }
+</style>
+
 
 <div class="content">
     <div class="page-header">
         <div class="page-title">
-            <h2> <i class="fa-solid fa-file-invoice-dollar"></i>  Order List Manager</h2>
-            <h6>Histories of Transaction </h6>
+            <h2><i class="fa-solid fa-file-invoice-dollar"></i> ORDER LIST MANAGER</h2>
+            <h6>Histories of Transaction</h6>
         </div>
     </div>
 
@@ -27,21 +107,18 @@
         <div class="card-body">
             <div class="table-top">
                 <div class="search-set">
-                    <div class="search-path">
-       
-                    </div>
-
-                    <div class="search-input">
-                        <a class="btn btn-searchset">
-                            <img src="~/img/icons/search-white.svg" alt="img">
-                        </a>
+                    <div class="filters">
+                        <button id="btn-filter-date-range">Day - Until</button>
+                        <button id="btn-filter-month">Month</button>
+                        <button id="btn-filter-year">Year</button>
+                        <button id="btn-filter-quarter">Quater of [ Year ]</button>
+                        <button id="btn-clear-filter">Clear Filter</button>
                     </div>
                 </div>
                 <div class="alert-info">
-                    Click on ID of Customer to go their detail site
+                    Click on ID of Customer to go to their detail site
                 </div>
             </div>
-
 
             <div class="table-responsive">
                 <table class="table datanew">
@@ -49,6 +126,7 @@
                         <tr>
                             <th>Order ID</th>
                             <th>Customer ID</th>
+                            <th>Customer Name</th>
                             <th>Payment Method</th>
                             <th>Pack ID</th>
                             <th>Date of Transaction</th>
@@ -63,11 +141,28 @@
                             <tr>
                                 <td>@hopDong.IdPayment</td>
                                 <td><a href="@Url.Action("Detail", "CusManager", new { id = hopDong.IdUser })">@hopDong.IdUser</a></td>
-                                <td>@hopDong.PayMethod</td>
+                                <td>@hopDong.IdUserNavigation.IdUserNavigation.FullName</td> <!-- This line is updated to include the full name -->
+                                <td>
+                                    @switch (hopDong.PayMethod)
+                                    {
+                                        case 1:
+                                            @:<i class="fa-solid fa-wallet"></i> VNPAY
+                                            break;
+                                        case 2:
+                                            @:<i class="fa-solid fa-wallet"></i> MOMO
+                                            break;
+                                        case 3:
+                                            @:<i class="fa-brands fa-paypal"></i> PAYPAL
+                                            break;
+                                        default:
+                                            @:<span>Unknown</span>
+                                            break;
+                                    }
+                                </td>
                                 <td>@hopDong.IdPack</td>
                                 <td>@(hopDong.PayDate?.ToString("dd/MM/yyyy") ?? "N/A")</td>
                                 <td>@(hopDong.ExpiresTime?.ToString("dd/MM/yyyy") ?? "N/A")</td>
-                                <td>@hopDong.PayAmount</td> <!-- Adjusted for currency formatting -->
+                                <td>@hopDong.PayAmount</td>
                                 <td>
                                     @switch (hopDong.PayStats)
                                     {
@@ -88,13 +183,128 @@
                             </tr>
                         }
                     </tbody>
-
                 </table>
+                <!-- Date Range Filter Popup -->
+                <div id="date-range-popup" class="popup">
+                    <button class="close-btn">&times;</button>
+                    <h3>Chọn khoảng ngày</h3>
+                    <label for="start-date">Ngày bắt đầu:</label>
+                    <input type="date" id="start-date">
+                    <label for="end-date">Ngày kết thúc:</label>
+                    <input type="date" id="end-date">
+                    <button id="submit-date-range">Submit</button>
+                    <button id="cancel-date-range">Cancel</button>
+                </div>
+
+                <!-- Month Filter Popup -->
+                <div id="month-popup" class="popup">
+                    <button class="close-btn">&times;</button>
+                    <h3>Chọn tháng</h3>
+                    <input type="month" id="filter-month">
+                    <button id="submit-month">Submit</button>
+                    <button id="cancel-month">Cancel</button>
+                </div>
+
+                <!-- Year Filter Popup -->
+                <div id="year-popup" class="popup">
+                    <button class="close-btn">&times;</button>
+                    <h3>Chọn năm</h3>
+                    <input type="number" id="filter-year" min="2000" max="2099" step="1">
+                    <button id="submit-year">Submit</button>
+                    <button id="cancel-year">Cancel</button>
+                </div>
+
+                <!-- Quarter Filter Popup -->
+                <div id="quarter-popup" class="popup">
+                    <button class="close-btn">&times;</button>
+                    <h3>Chọn quý</h3>
+                    <select id="filter-quarter">
+                        <option value="1">Quý 1</option>
+                        <option value="2">Quý 2</option>
+                        <option value="3">Quý 3</option>
+                        <option value="4">Quý 4</option>
+                    </select>
+                    <input type="number" id="quarter-year" min="2000" max="2099" step="1" placeholder="Năm">
+                    <button id="submit-quarter">Submit</button>
+                    <button id="cancel-quarter">Cancel</button>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
 
+<script>
+    function showPopup(popupId) {
+        // Hide all popups
+        document.querySelectorAll('.popup').forEach(popup => popup.style.display = 'none');
+        // Show the specified popup
+        document.getElementById(popupId).style.display = 'block';
+    }
+
+    document.querySelectorAll('.close-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+            this.parentElement.style.display = 'none';
+        });
+    });
+
+    document.getElementById('btn-filter-date-range').addEventListener('click', function () {
+        showPopup('date-range-popup');
+    });
+
+    document.getElementById('cancel-date-range').addEventListener('click', function () {
+        document.getElementById('date-range-popup').style.display = 'none';
+    });
+
+    document.getElementById('submit-date-range').addEventListener('click', function () {
+        const startDate = document.getElementById('start-date').value;
+        const endDate = document.getElementById('end-date').value;
+        window.location.href = `/Admin/CusManager/ViewOrderList?startDate=${startDate}&endDate=${endDate}&filterType=day`;
+    });
+
+    document.getElementById('btn-filter-month').addEventListener('click', function () {
+        showPopup('month-popup');
+    });
+
+    document.getElementById('cancel-month').addEventListener('click', function () {
+        document.getElementById('month-popup').style.display = 'none';
+    });
+
+    document.getElementById('submit-month').addEventListener('click', function () {
+        const month = document.getElementById('filter-month').value;
+        window.location.href = `/Admin/CusManager/ViewOrderList?startDate=${month}&filterType=month`;
+    });
+
+    document.getElementById('btn-filter-year').addEventListener('click', function () {
+        showPopup('year-popup');
+    });
+
+    document.getElementById('cancel-year').addEventListener('click', function () {
+        document.getElementById('year-popup').style.display = 'none';
+    });
+
+    document.getElementById('submit-year').addEventListener('click', function () {
+        const year = document.getElementById('filter-year').value;
+        window.location.href = `/Admin/CusManager/ViewOrderList?startDate=${year}&filterType=year`;
+    });
+
+    document.getElementById('btn-filter-quarter').addEventListener('click', function () {
+        showPopup('quarter-popup');
+    });
+
+    document.getElementById('cancel-quarter').addEventListener('click', function () {
+        document.getElementById('quarter-popup').style.display = 'none';
+    });
+
+    document.getElementById('submit-quarter').addEventListener('click', function () {
+        const quarter = document.getElementById('filter-quarter').value;
+        const year = document.getElementById('quarter-year').value;
+        window.location.href = `/Admin/CusManager/ViewOrderList?startDate=${year}&quarter=${quarter}&filterType=quarter`;
+    });
+
+    document.getElementById('btn-clear-filter').addEventListener('click', function () {
+        window.location.href = '/Admin/CusManager/ViewOrderList';
+    });
+</script>
 
 

@@ -96,8 +96,8 @@
 <div class="content">
     <div class="page-header">
         <div class="page-title">
-            <h4>Update Comic Series</h4>
-            <h6>Update details of the comic series</h6>
+            <h2>Update Comic Series         <i class="fa-solid fa-shuffle"></i></h2>
+            <h4>Update details of the comic series</h4>
         </div>
     </div>
     <div class="card">
@@ -106,18 +106,19 @@
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label asp-for="TenBo">Comic Series Name</label>
-                        <input asp-for="TenBo" type="text" placeholder="Enter the name of the comic series" class="form-control">
+                        <input asp-for="TenBo" type="text" placeholder="Enter the name of the comic series" class="form-control" value="@Model.TenBo">
                     </div>
                 </div>
+                <input type="hidden" asp-for="IdBo" value="@Model..IdBo">
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label asp-for="Dotuoi">Age Rating</label>
                         <select asp-for="Dotuoi" class="select">
-                            <option value="0">[E] Everyone</option>
-                            <option value="3">[C] Child 3+</option>
-                            <option value="12">[T] Teenagers</option>
-                            <option value="16">[R] Violent-Sexually</option>
-                            <option value="18">[R18] Audutl only</option>
+                            <!option value="0" @(Model.Dotuoi == 0 ? "selected" : "")>[E] Everyone</!option>
+                            <!option value="3" @(Model.Dotuoi == 3 ? "selected" : "")>[C] Child 3+</!option>
+                            <!option value="12" @(Model.Dotuoi == 12 ? "selected" : "")>[T] Teenagers</!option>
+                            <!option value="16" @(Model.Dotuoi == 16 ? "selected" : "")>[R] Violent-Sexually</!option>
+                            <!option value="18" @(Model.Dotuoi == 18 ? "selected" : "")>[R18] Adults only</!option>
                         </select>
                     </div>
                 </div>
@@ -127,10 +128,9 @@
                         <select asp-for="Listloai" asp-items="ViewBag.types" multiple="multiple" class="select" name="listloai">
                             @foreach (var type in ViewBag.types)
                             {
-                                <option value="@type.Value">@type.Text</option>
+                                <!option value="@type.Value" @(Model.Listloai.Contains(type.Value) ? "selected" : "")>@type.Text</!option>
                             }
                         </select>
-
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-6 col-12">
@@ -138,30 +138,34 @@
                         <label asp-for="IdTg">Author</label>
                         <select asp-for="IdTg" asp-items="@ViewBag.TGs" class="form-control">
                             <option>Select Author</option>
+                            @foreach (var author in ViewBag.TGs)
+                            {
+                                <!option value="@author.Value" @(Model.IdTg == author.Value ? "selected" : "")>@author.Text</!option>
+                            }
                         </select>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-6 col-12">
                     <label asp-for="TtPemium">Premium Status</label>
                     <select asp-for="TtPemium" class="form-control">
-                        <option value="true">Yes</option>
-                        <option value="false">No</option>
+                        <!option value="true" @(Model.TtPemium ? "selected" : "")>Yes</!option>
+                        <!option value="false" @(!Model.TtPemium ? "selected" : "")>No</!option>
                     </select>
                 </div>
                 <div class="col-lg-3 col-sm-6 col-12">
                     <label asp-for="TrangThai">Status</label>
                     <select asp-for="TrangThai" class="form-control">
-                        <option value="0">0-End/Finish</option>
-                        <option value="1">1-Updating</option>
-                        <option value="3">2-Coming Soon</option>
-                        <option value="3">3-Stopped Publish</option>
+                        <!option value="0" @(Model.TrangThai == 0 ? "selected" : "")>0-End/Finish</!option>
+                        <!option value="1" @(Model.TrangThai == 1 ? "selected" : "")>1-Updating</!option>
+                        <!option value="2" @(Model.TrangThai == 2 ? "selected" : "")>2-Coming Soon</!option>
+                        <!option value="3" @(Model.TrangThai == 3 ? "selected" : "")>3-Stopped Publish</!option>
                     </select>
                 </div>
 
                 <div class="col-lg-12">
                     <div class="form-group">
                         <label asp-for="Mota">Description</label>
-                        <textarea asp-for="Mota" class="form-control"></textarea>
+                        <textarea asp-for="Mota" class="form-control">@Model.Mota</textarea>
                         <span asp-validation-for="Mota" class="text-danger"></span>
                     </div>
                 </div>
@@ -174,8 +178,8 @@
                                 <h4>Upload Banner</h4>
                             </div>
                             <input type="file" id="AnhBanner" name="AnhBanner" class="imgInput" data-target="preview1" style="display:none;">
-                            <img class="preview" id="preview1" src="@Model.AnhBanner" alt="Banner preview" style="display:block;">
-                            <button type="button" class="btn-cancel" style="display:none;" onclick="revertChanges('preview1', 'AnhBanner')">X</button>
+                            <img class="preview" id="preview1" src="@Model.AnhBanner" data-original-src="@Model.AnhBanner" alt="Banner preview" style="display:block;">
+                            <button type="button" class="btn-cancel" data-target="preview1" style="display:none;" onclick="revertChanges('preview1', 'AnhBanner')">X</button>
                         </div>
                     </div>
                 </div>
@@ -188,8 +192,8 @@
                                 <h4>Upload Poster</h4>
                             </div>
                             <input type="file" id="AnhBia" name="AnhBia" class="imgInput" data-target="preview2" style="display:none;">
-                            <img class="preview" id="preview2" src="@Model.AnhBia" alt="Poster preview" style="display:block;">
-                            <button type="button" class="btn-cancel" style="display:none;" onclick="revertChanges('preview2', 'AnhBia')">X</button>
+                            <img class="preview" id="preview2" src="@Model.AnhBia" data-original-src="@Model.AnhBia" alt="Poster preview" style="display:block;">
+                            <button type="button" class="btn-cancel" data-target="preview2" style="display:none;" onclick="revertChanges('preview2', 'AnhBia')">X</button>
                         </div>
                     </div>
                 </div>
@@ -232,8 +236,7 @@
 
         $('.btn-cancel').click(function () {
             var previewID = $(this).data('target');
-            $('#' + previewID).attr('src', $('#' + previewID).data('original-src'));
-            $('#' + previewID).hide();
+            $('#' + previewID).attr('src', $('#' + previewID).data('original-src')).hide();
             $(this).hide();
             $('#' + previewID.replace('preview', 'imgInput')).val('');
         });
@@ -270,7 +273,10 @@
 
     });
 
+    function revertChanges(previewID, inputID) {
+        var originalSrc = $('#' + previewID).data('original-src');
+        $('#' + previewID).attr('src', originalSrc).hide();
+        $('#' + previewID.replace('preview', 'btn-cancel')).hide();
+        $('#' + inputID).val('');
+    }
 </script>
-
-
-

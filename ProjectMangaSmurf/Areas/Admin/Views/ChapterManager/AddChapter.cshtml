@@ -1,0 +1,158 @@
+﻿@model IEnumerable<ProjectMangaSmurf.Models.BoTruyen>
+
+@using ProjectMangaSmurf.Repository
+@inject IboTruyenRepository boTruyenRepository
+@inject IChapterRepository chapterRepository
+
+<style>
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .filters {
+        margin-left: 100px;
+        margin-top: 10px;
+    }
+
+    .search-set + .filters {
+        margin-top: 10px;
+    }
+
+    .alert-info {
+        color: #004085; /* Màu chữ xanh */
+        background-color: #cce5ff; /* Nền màu xanh nhạt */
+        border: 1px solid #b8daff; /* Viền màu xanh */
+        padding: 10px;
+        margin: 10px 0;
+        border-radius: 5px; /* Bo góc cho khối thông báo */
+    }
+
+    .btn-update {
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+        display: inline-block;
+        background-color: #f44336; /* Red by default */
+        color: white;
+        border: none;
+        transition: background-color 0.3s, color 0.3s;
+        margin: 10px;
+        border-radius: 5px; /* Rounded corners for buttons */
+    }
+    .btn-update {
+        background-color: #FFC107; /* Amber for update button */
+        color: black;
+    }
+</style>
+<div class="content">
+    <div class="page-header">
+        <div class="page-title">
+            <h2><i class="fa-brands fa-readme"></i> LIST OF COMICS - ADD NEW CHAPTER </h2>
+            <h6>Choose a Comic to upload new chapter</h6>
+        </div>
+        <div class="page-btn">
+            <a  asp-controller="BoTruyenManager" asp-action="add" class="btn btn-added">
+                <img src="~/img/icons/plus.svg" alt="img" class="me-1"> Go to add new comic
+            </a>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="table-top">
+                <div class="search-set">
+                    <div class="search-path">
+                    </div>
+                    <div class="search-input">
+                        <a class="btn btn-searchset">
+                            <img src="~/img/icons/search-white.svg" alt="img">
+                        </a>
+                    </div>
+                </div>
+                <div class="alert-info">
+                    Use Search-bar to find a correct comic serises !
+                </div>
+            </div>
+
+            <div class="table-responsive">
+
+                <table class="table  datanew">
+                    <thead>
+                        <tr>
+                            <th>ID Comic</th>
+                            <th>Name</th>
+                            <th>Age Rating</th>
+                            <th>Author</th>
+                            <th>Types</th>
+                            <th>Active</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var i in Model)
+                        {
+                            <tr>
+                                @{
+                                    var tg = boTruyenRepository.getNameTGById(i.IdTg);
+                                    var listloai = string.Join(",", i.Listloai);
+                                }
+                                <td>@i.IdBo</td>
+                                <td>@i.TenBo</td>
+                                <td>@i.Dotuoi</td>
+                                <td>@tg</td>
+                                <td>@listloai</td>
+
+                                <td>
+                                    @switch (i.Active)
+                                    {
+                                        case true:
+                                            <span class="text-success">Active</span>
+                                            break;
+                                        case false:
+                                            <span class="text-danger">Inactive</span>
+                                            break;
+                                        default:
+                                            <span class="text-secondary">Errol</span>
+                                            break;
+                                    }
+                                </td>
+                                <td>
+                                    <form asp-area="Admin" asp-action="AddChapter" asp-controller="BoTruyenManager" asp-route-id="@i.IdBo" class="me-3" method="get">
+
+                                        <button type="submit" class="btn-update"><i class="fa-solid fa-plus"></i>  Upload</button>
+                                    </form>
+                                </td>
+                            </tr>
+                          
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var currentFilter = 'all';  // Default filter
+    var premiumOnly = false;    // Premium filter state
+
+    function applyFilter(filter) {
+        currentFilter = filter;
+        updateList();
+    }
+
+    function togglePremium() {
+        premiumOnly = !premiumOnly;  // Toggle premium state
+        document.getElementById('premium-btn').classList.toggle('btn-active'); // Toggle button class for visual feedback
+        updateList();
+    }
+
+    function updateList() {
+        // Build the URL with current filters
+        var url = '@Url.Action("ViewList", "CusManager", new { Area = "Admin" })' +
+            `?status=${currentFilter}&premium=${premiumOnly}`;
+        window.location.href = url; // Redirect to the updated URL
+    }
+</script>

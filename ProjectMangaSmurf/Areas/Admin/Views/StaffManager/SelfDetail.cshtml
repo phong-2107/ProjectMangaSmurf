@@ -1,8 +1,8 @@
 ﻿@model ProjectMangaSmurf.Models.ViewModels.StaffDetailsViewModel
 @{
     var customer = Model.Staff;
-    var activeSelected = customer?.IdUserNavigation?.Active == true ? "selected " : "";
-    var inactiveSelected = customer?.IdUserNavigation?.Active == false ? "selected " : "";
+    var activeSelected = customer?.IdUserNavigation?.Active == true ? "selected" : "";
+    var inactiveSelected = customer?.IdUserNavigation?.Active == false ? "selected" : "";
     var hashedPassword = customer?.IdUserNavigation?.Password;
     var allPermissions = ViewBag.AllPermissions as List<ProjectMangaSmurf.Models.PermissionsList>;
     var activePermissions = ViewBag.Pn as List<ProjectMangaSmurf.Models.StaffPermissionsDetail>;
@@ -83,11 +83,11 @@
     <div class="page-header">
         <div class="page-title">
             <div class="action-page">
-                <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="Index"><i class="fa-solid fa-house-laptop"></i>             HOME PAGE</a>
+                <a asp-area="Admin" asp-controller="BoTruyenManager" asp-action="Index"><i class="fa-solid fa-house-laptop"></i> HOME PAGE</a>
                 <a asp-area="Admin" asp-controller="StaffManager" asp-action="Index"> \ LIST OF STAFF</a>
-                <a asp-area="Admin" asp-controller="StaffManager" asp-action="Detail" asp-route-id="@customer.IdUser"> \ @customer.IdUser  -  @(customer.IdUserNavigation?.FullName ?? "N/A")</a>
+                <a asp-area="Admin" asp-controller="StaffManager" asp-action="Detail" asp-route-id="@customer.IdUser"> \ @customer.IdUser - @(customer.IdUserNavigation?.FullName ?? "N/A")</a>
             </div>
-            <h6>Detail Info of Staff Member</h6>
+            <h6>Your Infomatation Detail </h6>
         </div>
     </div>
 
@@ -110,12 +110,6 @@
         </div>
     </div>
     <div class="table-responsive">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h4 class="mb-0 related-comic-series"><i class="fa-solid fa-tag"></i> All Permissions Of @customer.IdUserNavigation.UserName</h4>
-            <a asp-area="Admin" asp-action="UpdateAndRBAC" asp-controller="StaffManager" asp-route-id="@customer.IdUser">
-                <button type="submit" class="btn btn-outline-dark"><i class="fa-solid fa-circle-info"></i> Update Detail</button>
-            </a>
-        </div>
         <table class="table datanew">
             <thead>
                 <tr>
@@ -124,7 +118,7 @@
                     <th>Title</th>
                     <th>Description</th>
                     <th>Access Permission</th>
-                    <th>Action</th>
+                    <th>System Permission Status</th>
                 </tr>
             </thead>
             <tbody>
@@ -134,16 +128,36 @@
                     var pn = parentPermission?.PermissionsName ?? "N/A";
                     var accessStatus = item.Active == true ? "Active" : "Inactive";
                     var accessClass = item.Active == true ? "text-green" : "text-red";
+                    var permissionActiveStatus = allPermissions.FirstOrDefault(p => p.IdPermissions == item.IdPermissions)?.PermissionsStats;
                     <tr data-status="active">
                         <td>@pn</td>
                         <td>@item.IdPermissions</td>
                         <td>@item.IdPermissionsNavigation.PermissionsName</td>
                         <td>@item.IdPermissionsNavigation.Description</td>
                         <td class="@accessClass">@accessStatus</td>
-                       
+
+                        <td>
+                            @switch (permissionActiveStatus)
+                            {
+                                case 0:
+                                    <span class="text-danger"><i class="fa-solid fa-ban"></i>     - Stop</span>
+                                    break;
+                                case 1:
+                                    <span class="text-success"><i class="fa-solid fa-wifi"></i>              - Run</span>
+                                    break;
+                                case 2:
+                                    <span class="text-primary"><i class="fa-solid fa-triangle-exclamation"></i>       - Mantenance</span>
+                                    break;
+                                case 3:
+                                    <span class="text-danger"><i class="fa-solid fa-ban"></i>        - Stop</span>
+                                    break;
+                                default:
+                                    <span class="text-secondary">Errol</span>
+                                    break;
+                            }
+                        </td>
                     </tr>
                 }
-
             </tbody>
         </table>
     </div>

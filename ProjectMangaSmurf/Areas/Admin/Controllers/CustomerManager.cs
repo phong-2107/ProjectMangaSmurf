@@ -57,11 +57,33 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
 
         #region ViewOrderList
         [RBACAuthorize(PermissionId = 44)]
-        public async Task<IActionResult> ViewOrderList()
+        public async Task<IActionResult> ViewOrderList(DateTime? startDate, DateTime? endDate, int? month, int? year, int? quarter, int? quarterYear)
         {
-            var orders = await _khachhangrepository.GetAllPaymentAsync();  // Assuming the repository method name
-            return View(orders);
+            IQueryable<Payment> paymentsQuery = _context.Payments.Include(p => p.IdUserNavigation.IdUserNavigation);
+
+            if (startDate.HasValue && endDate.HasValue)
+            {
+                paymentsQuery = paymentsQuery.Where(p => p.PayDate >= startDate && p.PayDate <= endDate);
+            }
+            else if (month.HasValue && year.HasValue)
+            {
+                paymentsQuery = paymentsQuery.Where(p => p.PayDate.Value.Month == month && p.PayDate.Value.Year == year);
+            }
+            else if (year.HasValue)
+            {
+                paymentsQuery = paymentsQuery.Where(p => p.PayDate.Value.Year == year);
+            }
+            else if (quarter.HasValue && quarterYear.HasValue)
+            {
+                int startMonth = (quarter.Value - 1) * 3 + 1;
+                int endMonth = startMonth + 2;
+                paymentsQuery = paymentsQuery.Where(p => p.PayDate.Value.Year == quarterYear && p.PayDate.Value.Month >= startMonth && p.PayDate.Value.Month <= endMonth);
+            }
+
+            var payments = await paymentsQuery.ToListAsync();
+            return View(payments);
         }
+
         #endregion
 
         #region UpdateCustomerStatus

@@ -24,12 +24,11 @@
     }
 </style>
 
-
 <div class="content">
     <div class="page-header">
         <div class="page-title">
-            <h2> <i class="fa-solid fa-circle-user"></i>  LIST OF STAFF - ADMINISTRATOR </h2>
-            <h6>       Manager - View - Authentication </h6>
+            <h2> <i class="fa-solid fa-circle-user"></i> LIST OF STAFF - ADMINISTRATOR </h2>
+            <h6> Manager - View - Authentication </h6>
         </div>
         <div class="page-btn">
             <a asp-area="Admin" asp-controller="StaffManager" asp-action="Register" class="btn btn-added">
@@ -54,11 +53,11 @@
                 <div class="filters">
                     <button class="btn btn-primary" onclick="applyFilter('all')">See All <i class="fa-solid fa-border-all"></i></button>
                     <button class="btn btn-success" onclick="applyFilter('active')">Activating <i class="fa-solid fa-person-digging"></i></button>
-                    <button class="btn btn-danger" onclick="applyFilter('banned')">Banning  <i class="fa-solid fa-ban"></i></button>
+                    <button class="btn btn-danger" onclick="applyFilter('banned')">Banning <i class="fa-solid fa-ban"></i></button>
                 </div>
             </div>
             <div class="table-responsive">
-                <table class="table  datanew">
+                <table class="table datanew">
                     <thead>
                         <tr>
                             <th>IDA</th>
@@ -71,7 +70,7 @@
                             <th>Action</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="staffTableBody">
                         @foreach (var i in Model)
                         {
                             <tr>
@@ -91,7 +90,7 @@
                                             <span class="text-danger">Inactive</span>
                                             break;
                                         default:
-                                            <span class="text-secondary">Errol</span>
+                                            <span class="text-secondary">Error</span>
                                             break;
                                     }
                                 </td>
@@ -114,50 +113,62 @@
         </div>
     </div>
 </div>
-<<script>
 
-         $('.delete-productn').click(function () {
-             var productId = $(this).data('product-id');
-             Swal.fire({
-                 title: "Are you sure?",
-                 text: `Delete USER ID ${productId}`,
-                 type: "warning",
-                 showCancelButton: true,
-                 confirmButtonColor: "#3085d6",
-                 cancelButtonColor: "#d33",
-                 confirmButtonText: "Yes, delete it!",
-                 confirmButtonClass: "btn btn-primary",
-                 cancelButtonClass: "btn btn-danger ml-1",
-                 buttonsStyling: false
-             }).then((result) => {
-                 if (result.isConfirmed) {
-                     $.ajax({
-                         url: `/Admin/StaffManager/DeleteConfirmed/${productId}`,
-                         type: 'POST',
-                         data: { id: productId },
-                         success: function (response) {
-                             Swal.fire(
-                                 'Deleted!',
-                                 'Successfully',
-                                 'success'
-                             );
-                             location.reload();
-                         },
-                         error: function (xhr, status, error) {
-                             Swal.fire(
-                                 'Error!',
-                                 'Failed to delete the user because this account has Acction logs - Please try again.',
-                                 'error'
-                             );
-                             console.error(xhr.responseText);
-                         }
-                     });
-                 }
-             });
-         });
-    
-</script>
+@section Scripts {
+    <script>
+        function applyFilter(status) {
+            $.ajax({
+                url: '@Url.Action("FilterStaff", "StaffManager")',
+                type: 'GET',
+                data: { status: status },
+                success: function (data) {
+                    $('#staffTableBody').html(data);
+                },
+                error: function (xhr, status, error) {
+                    alert('Failed to filter staff');
+                    console.error(xhr.responseText);
+                }
+            });
+        }
 
-
-
-
+        $('.delete-productn').click(function () {
+            var productId = $(this).data('product-id');
+            Swal.fire({
+                title: "Are you sure?",
+                text: `Delete USER ID ${productId}`,
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, delete it!",
+                confirmButtonClass: "btn btn-primary",
+                cancelButtonClass: "btn btn-danger ml-1",
+                buttonsStyling: false
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: `/Admin/StaffManager/DeleteConfirmed/${productId}`,
+                        type: 'POST',
+                        data: { id: productId },
+                        success: function (response) {
+                            Swal.fire(
+                                'Deleted!',
+                                'Successfully',
+                                'success'
+                            );
+                            location.reload();
+                        },
+                        error: function (xhr, status, error) {
+                            Swal.fire(
+                                'Error!',
+                                'Failed to delete the user because this account has action logs - Please try again.',
+                                'error'
+                            );
+                            console.error(xhr.responseText);
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+}

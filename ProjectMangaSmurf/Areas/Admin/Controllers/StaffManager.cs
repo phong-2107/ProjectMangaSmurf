@@ -34,10 +34,33 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
         [RBACAuthorize(PermissionId = 49)]
         public async Task<IActionResult> Index()
         {
+            var list = await _staffRepository.GetQueryV().ToListAsync();
+            return View(list);
+        }
+        #endregion
+
+        #region FilterStaff
+        [HttpGet]
+        public async Task<IActionResult> FilterStaff(string status)
+        {
             IQueryable<NhanVien> query = _staffRepository.GetQueryV();
 
+            switch (status.ToLower())
+            {
+                case "active":
+                    query = query.Where(nv => nv.IdUserNavigation.Active == true);
+                    break;
+                case "banned":
+                    query = query.Where(nv => nv.IdUserNavigation.Active == false);
+                    break;
+                case "all":
+                default:
+                    // No additional filtering needed
+                    break;
+            }
+
             var list = await query.ToListAsync();
-            return View(list);
+            return PartialView("_StaffListPartial", list); // Render a partial view with the filtered staff list
         }
         #endregion
 

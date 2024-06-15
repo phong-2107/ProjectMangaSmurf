@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ProjectMangaSmurf.Data;
+using ProjectMangaSmurf.Helper;
 using ProjectMangaSmurf.Models;
+using ProjectMangaSmurf.Models.ViewModels;
 using ProjectMangaSmurf.Repository;
 using System;
 using System.Collections.Generic;
@@ -48,9 +50,12 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
 
         #region Add
         [RBACAuthorize(PermissionId = 22)]
-        public IActionResult Add()
+
+        [HttpGet]
+        public async Task<IActionResult> AddChapter()
         {
-            return View();
+            var listBotruyen = await _botruyenrepository.GetAllAllAsync(); // Correct use of repository
+            return View(listBotruyen);
         }
         #endregion
 
@@ -324,6 +329,63 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
             int currentMaxNumber = await _chapterrepository.GetMaxChapterNumberAsync(idBo);
             return currentMaxNumber + 1;
         }
+
+
+
+        #endregion
+
+        #region AddChap
+        [HttpGet]
+        public IActionResult AddChapter2()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddChapter2(Chapter chapter, IFormFileCollection ChapterImages)
+        {
+            if (ModelState.IsValid)
+            {
+                chapter.ThoiGian = DateTime.Now;
+                _context.Chapters.Add(chapter);
+                await _context.SaveChangesAsync();
+
+                int soTrang = 1;
+                foreach (var image in ChapterImages)
+                {
+                    if (image != null && image.Length > 0)
+                    {
+                        var fileName = Path.GetFileName(image.FileName);
+                        var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", fileName);
+
+                        using (var fileStream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await image.CopyToAsync(fileStream);
+                        }
+
+                        var ctChapter = new CtChapter
+                        {
+                            IdBo = chapter.IdBo,
+                            SttChap = chapter.SttChap,
+                            AnhTrang = fileName,
+                            SoTrang = soTrang,
+                            Active = true
+                        };
+
+                        _context.CtChapters.Add(ctChapter);
+                        soTrang++;
+                    }
+                }
+
+                await _context.SaveChangesAsync();
+
+                return RedirectToAction("Index", "Chapter"); // Chuyển hướng đến trang danh sách các chương
+            }
+
+            return View(chapter);
+        }
         #endregion
     }
+
+
 }

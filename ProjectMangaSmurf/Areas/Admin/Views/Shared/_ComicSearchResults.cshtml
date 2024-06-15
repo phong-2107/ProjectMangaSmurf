@@ -1,0 +1,8 @@
+﻿@model IEnumerable<ProjectMangaSmurf.Models.BoTruyen>
+
+@foreach (var comic in Model)
+{
+    <a href="#" class="dropdown-item comic-result" data-idbo="@comic.IdBo" data-tenbo="@comic.TenBo">
+        @comic.IdBo - @comic.TenBo
+    </a>
+}

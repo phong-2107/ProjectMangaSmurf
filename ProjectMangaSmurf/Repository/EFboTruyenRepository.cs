@@ -21,6 +21,17 @@ namespace ProjectMangaSmurf.Repository
         {
             return await _context.BoTruyens.ToListAsync();
         }
+        public async Task<IEnumerable<BoTruyen>> SearchComicsAsync(string query)
+        {
+            if (string.IsNullOrEmpty(query))
+            {
+                return new List<BoTruyen>();
+            }
+
+            return await _context.BoTruyens
+                .Where(comic => comic.IdBo.Contains(query) || comic.TenBo.Contains(query))
+                .ToListAsync();
+        }
 
         public async Task<BoTruyen> GetByIdAsync(string id)
         {

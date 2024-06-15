@@ -276,5 +276,7 @@ namespace ProjectMangaSmurf.Areas.Admin.Controllers
             return _authorRepository.GetAuthorById(id) != null;
         }
         #endregion
+
+
     }
 }
