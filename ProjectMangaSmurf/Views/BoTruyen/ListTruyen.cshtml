@@ -47,7 +47,7 @@
                                         var time = chapterRepository.CalculateTimeAgo(EarliestChap.ThoiGian);
                                         if (!string.IsNullOrEmpty(botruyen.AnhBia))
                                         {
-                                            <img src="@botruyen.AnhBia" alt="truyen Image" />
+                                            <img loading="lazy" src="@botruyen.AnhBia" alt="truyen Image" />
                                         }
                                         <figcaption>
                                             <h6 class="item-title"><a href="#">@botruyen.TenBo</a></h6>
@@ -62,7 +62,7 @@
                                     {
                                         if (!string.IsNullOrEmpty(botruyen.AnhBia))
                                         {
-                                            <img src="@botruyen.AnhBia" alt="truyen Image" />
+                                            <img loading="lazy" src="@botruyen.AnhBia" alt="truyen Image" />
                                         }
                                         <figcaption>
                                             <h6 class="item-title"><a href="#">@botruyen.TenBo</a></h6>
@@ -86,7 +86,7 @@
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.js" integrity="sha512-HGOnQO9+SP1V92SrtZfjqxxtLmVzqZpjFFekvzZVWoiASSQgSr4cw9Kqd2+l8Llp4Gm0G8GIFJ4ddwZilcdb8A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="/js/script.js"></script>
+@* <script src="/js/script.js"></script> *@
 <script src="/js/ScriptShowList.js"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.js"></script>

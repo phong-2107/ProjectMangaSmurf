@@ -82,6 +82,11 @@ builder.Services.AddDbContext<ProjectDBContext>(options =>
         options.UseLazyLoadingProxies()
                .UseSqlServer(builder.Configuration.GetConnectionString("ProjectDBContextConnection")));
 
+//var connectionString = builder.Configuration.GetConnectionString("ProjectDBContextConnection") ??
+//    throw new InvalidOperationException("Connection string 'ProjectDBContextConnection' " +
+//    "not found.");
+//builder.Services.AddDbContext<ProjectDBContext>(options => options.UseSqlServer(connectionString));
+
 // config Repository - Service 
 builder.Services.AddRazorPages();
 builder.Services.AddScoped<IConfigService, EFConfigService>();

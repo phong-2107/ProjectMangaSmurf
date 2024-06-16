@@ -117,19 +117,21 @@ img {
             max-width: 500px;
         }
 
-
-
-    .control .btn-home,
-    .control .btn-prev,
-    .control .btn-next {
-        font-size: var(--h2-font-size);
-        color: var(--title-color);
-        font-weight: var(--font-medium);
-        padding: 0 .3rem;
-        background-color: var(--containers-color-alt);
-        border-radius: 5px;
+    
+        .control .btn-home,
+        .control .btn-prev,
+        .control .btn-next {
+            font-size: var(--h2-font-size);
+            color: var(--title-color);
+            font-weight: var(--font-medium);
+            padding: 0 .3rem;
+            background-color: var(--containers-color-alt);
+            border-radius: 5px;
+        }
+    .control .btn-home {
+        font-size: var(--h3-font-size);
+        padding: .1rem .4rem;
     }
-
 .btn-follow, 
 .btn-unfollow{
     color: var(--title-color);
@@ -137,7 +139,7 @@ img {
     padding: 0 .3rem;
     border-radius: 5px;
     padding:.3rem .5rem;
-    font-size:.8rem;
+    font-size:1rem;
 }
 
 .btn-follow {

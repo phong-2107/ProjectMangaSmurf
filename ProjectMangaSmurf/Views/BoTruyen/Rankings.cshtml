@@ -4,8 +4,6 @@
 @inject IChapterRepository chapterRepository
 
 <link href="~/css/styleRank.css" rel="stylesheet" />
-
-
 <div class=" main__top rank section">
     <div class="top__container rank__container containers">
         <div class="top__content">
@@ -54,7 +52,7 @@
                         <div class="item-content">
                             @if (!string.IsNullOrEmpty(item.AnhBia))
                             {
-                                <a asp-action="CTBoTruyen" asp-route-id="@item.IdBo"><img src="@item.AnhBia" alt="truyen Image" class="rank-img" /></a>
+                                <a asp-action="CTBoTruyen" asp-route-id="@item.IdBo"><img loading="lazy" src="@item.AnhBia" alt="truyen Image" class="rank-img" /></a>
                             }
 
                             <div class="item-infor firstRank-infor" style="padding:0 20px;">
@@ -103,7 +101,7 @@
                             <span class="item-number" style="color: #FE3200;">@count</span>
                             <div class="item-content">
                                 <a asp-action="CTBoTruyen" asp-route-id="@i.IdBo">
-                                    <img src="@i.AnhBia" alt="" class="rank-img">
+                                    <img loading="lazy" src="@i.AnhBia" alt="" class="rank-img">
                                 </a>
                                 <div class="item-infor" style="padding:10px 20px;">
                                     <h3 class="item-title">@i.TenBo</h3>
@@ -168,7 +166,7 @@
     </div>
 </div>
 
-<script>
+<script defer>
     document.addEventListener('DOMContentLoaded', function () {
         var activeIndex = @ViewBag.value;
         var listItems = document.querySelectorAll('#rank__type .nav__item');

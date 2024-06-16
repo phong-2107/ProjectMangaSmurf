@@ -45,12 +45,13 @@
 
     </div>
     <div class="control" id="control">
-        <a asp-area="" asp-controller="BoTruyen" asp-action="Index" class="btn-home"><i class="ri-home-4-fill"></i></a>
+        <a asp-area="" asp-controller="BoTruyen" asp-action="Index" class="btn-home"><i class="fa-solid fa-house"></i></a>
+        <a asp-area="" asp-controller="BoTruyen" asp-action="CTBoTruyen" asp-route-id="@Model.IdBo" class="btn-home"><i class="fa-solid fa-bars"></i></a>
         @{
             var sttchapMin = @Model.SttChap - 1;
             if (sttchapMin >= 1)
             {
-                    <a class="btn-prev" asp-action="Chapter" asp-route-id="@Model.IdBo" asp-route-stt="@sttchapMin"><i class="ri-arrow-left-s-line"></i></a>
+                <a class="btn-prev" asp-action="Chapter" asp-route-id="@Model.IdBo" asp-route-stt="@sttchapMin"><i class="ri-arrow-left-s-line"></i></a>
             }
 
         }
@@ -82,12 +83,12 @@
                         {
                             if (chap.TtPemium == true)
                             {
-                                    <li>
-                                        <a class="dropdown-item premium-chap" data-chapter-id="@chap.IdBo" data-chapter-stt="@chap.SttChap" data-idkh="@idKh" data-ispremium="@isPremium">
-                                             chap @chap.SttChap - @chap.TenChap <img style="width:40px!important; height:15px!important; border-radius:0!important; right:0;" src="~/images/predark.png" />
-                                        </a>
-                                    </li>
-                                <script>
+                                <li>
+                                    <a class="dropdown-item premium-chap" data-chapter-id="@chap.IdBo" data-chapter-stt="@chap.SttChap" data-idkh="@idKh" data-ispremium="@isPremium">
+                                        chap @chap.SttChap - @chap.TenChap <img style="width:40px!important; height:15px!important; border-radius:0!important; right:0;" src="~/images/predark.png" />
+                                    </a>
+                                </li>
+                                <script defer>
                                     $(document).ready(function () {
                                         $(document).on('click', '.premium-chap', function (event) {
                                             var idKh = '@idKh';
@@ -125,7 +126,7 @@
                     }
                 }
             </ul>
-            <script>
+            <script defer>
                 $(document).ready(function () {
                     $(document).on('click', '.premium-chap', function (event) {
                         var chapId = $(this).data('chapter-id');
@@ -208,16 +209,16 @@
             var sttMax = ChapterRepository.GetEarliestByIdAsync(Model.IdBo);
             if (sttchapMax <= sttMax)
             {
-                    <a class="btn-next" asp-action="Chapter" asp-route-id="@Model.IdBo" asp-route-stt="@sttchapMax"><i class="ri-arrow-right-s-line"></i></a>
+                <a class="btn-next" asp-action="Chapter" asp-route-id="@Model.IdBo" asp-route-stt="@sttchapMax"><i class="ri-arrow-right-s-line"></i></a>
             }
         }
         @if (ViewBag.follow)
         {
-            <a id="btn-unfollow" class="btn-follow" style="background-color: #FE0000; padding:.5rem; border-radius:5px;">
+            <a id="btn-unfollow" class="btn-follow" style="background-color: #FE0000; padding:.3rem .5rem; border-radius:3px;">
                 <i class="ri-close-fill"></i>
                 <span>Hủy Theo dõi</span>
             </a>
-            <script>
+            <script defer>
                 $(document).ready(function () {
                     $('#btn-unfollow').click(function (event) {
                         event.preventDefault();
@@ -266,15 +267,15 @@
                 foreach (var item in listCT)
                 {
                         <div id="" class="page-chapter">
-                            <img src="@item.AnhTrang" alt="trang @item.SoTrang">
+                            <img loading="lazy" src="@item.AnhTrang" alt="trang @item.SoTrang">
                         </div>
                 }
             }
             else
             {
-                    <script>
+                <script defer>
                         alert("error");
-                    </script>
+                </script>
             }
         }
     </div>
@@ -304,7 +305,7 @@
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.js" integrity="sha512-HGOnQO9+SP1V92SrtZfjqxxtLmVzqZpjFFekvzZVWoiASSQgSr4cw9Kqd2+l8Llp4Gm0G8GIFJ4ddwZilcdb8A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script>
+<script defer>
 
     document.onkeydown = function (e) {
         if (e.ctrlKey && (e.shiftKey && (e.keyCode == 73 || e.keyCode == 74)) || e.keyCode == 83 || e.keyCode == 80) {
@@ -327,7 +328,7 @@
         });
 </script>
 
-<script>
+<script defer>
     $(document).ready(function () {
         $('#btn-follow').click(function (event) {
             event.preventDefault();

@@ -1,72 +1,68 @@
-﻿
-        <div class="footer__container containers grid row align-content-md-between">
-            <div class="footer__content col-12 col-md-6">
-                <div>
-                    <h3 class="footer__title">Main Menu</h3>
+﻿<div class="footer__container containers grid row align-content-md-between">
+    <div class="footer__content col-12 col-md-6">
+        <div>
+            <h3 class="footer__title">Main Menu</h3>
 
-                    <ul class="footer__links">
-                        <li>
-                            <a asp-area="" asp-controller="Home" asp-action="AboutUs" class="footer__link">About Us</a>
-                        </li>
-                        <li>
-                            <a href="" class="footer__link">Confirm</a>
-                        </li>
-                        <li>
-                            <a asp-area="" asp-controller="BoTruyen" asp-action="ListTruyen" class="footer__link">Manga</a>
-                        </li>
-                        <li>
-                            <a class="footer__link">Random</a>
-                        </li>
+            <ul class="footer__links">
+                <li>
+                    <a asp-area="" asp-controller="Home" asp-action="AboutUs" class="footer__link">About Us</a>
+                </li>
+                <li>
+                    <a asp-area="" asp-controller="BoTruyen" asp-action="ListTruyen" class="footer__link">Manga</a>
+                </li>
+                <li>
+                    <a class="footer__link">Random</a>
+                </li>
 
-                    </ul>
-                </div>
-
-                <div>
-                    <h3 class="footer__title">Information</h3>
-
-                    <ul class="footer__links">
-                        <li>
-                            <a asp-area="" asp-controller="Contact" asp-action="Index" class="footer__link">Contact</a>
-                        </li>
-                        <li>
-                            <a href="" class="footer__link">Chating</a>
-                        </li>
-                        <li>
-                            <a href="" class="footer__link">Videos</a>
-                        </li>
-                        <li>
-                            <a href="" class="footer__link">Reservation</a>
-                        </li>
-                    </ul>
-                </div>
-
-                <div>
-                    <h3 class="footer__title">Social Media</h3>
-
-                    <ul class="footer__social">
-                        <a href="https://www.facebook.com" target="_blank" class="footer__social-link">
-                            <i class="ri-facebook-circle-line"></i>
-                        </a>
-                        <a href="https://www.instagram.com" target="_blank" class="footer__social-link">
-                            <i class="ri-instagram-line"></i>
-                        </a>
-                        <a href="https://twitter.com/?lang=vi" target="_blank" class="footer__social-link">
-                            <i class="ri-twitter-line"></i>
-                        </a>
-                    </ul>
-                </div>
-            </div>
-            <div class="col-12 col-md-6">
-                <p class="footer__description">
-                    Website luôn cập nhật nhanh và sớm nhất các đầu truyện hot
-                    Đảm bảo tính bảo mật và trải nghiệm của bạn,<br>
-                    Đăng nhập ngay để lưu lại những bộ truyện ưa thích <br>
-                </p>
-            </div>
+            </ul>
         </div>
 
-        <div class="footer__info containers" style="margin-top: 1.5rem; display:flex; justify-content:center; align-items:center">
-            <span class="footer__copy">
-                &#169;  2024 MangaSmurf.  All Rights Reserved.
-            </span>
+        <div>
+            <h3 class="footer__title">Information</h3>
+
+            <ul class="footer__links">
+                <li>
+                    <a asp-area="" asp-controller="Contact" asp-action="Index" class="footer__link">Contact</a>
+                </li>
+                <li>
+                    <a href="" class="footer__link">Videos</a>
+                </li>
+                <li>
+                    <a href="" class="footer__link">Reservation</a>
+                </li>
+            </ul>
         </div>
+
+        <div>
+            <h3 class="footer__title">Social Media</h3>
+
+            <ul class="footer__social">
+                <a href="https://www.facebook.com" target="_blank" class="footer__social-link">
+                    <i class="ri-facebook-circle-line"></i>
+                </a>
+                <a href="https://www.instagram.com" target="_blank" class="footer__social-link">
+                    <i class="ri-instagram-line"></i>
+                </a>
+                <a href="https://twitter.com/?lang=vi" target="_blank" class="footer__social-link">
+                    <i class="ri-twitter-line"></i>
+                </a>
+                <a href="https://discord.com/channels/" target="_blank" class="footer__social-link">
+                    <i class="ri-discord-line"></i>
+                </a>
+            </ul>
+        </div>
+    </div>
+    <div class="col-12 col-md-6">
+        <p class="footer__description">
+            Website luôn cập nhật nhanh và sớm nhất các đầu truyện hot
+            Đảm bảo tính bảo mật và trải nghiệm của bạn,<br>
+            <a asp-area="" asp-controller="KhachHang" asp-action="Login">Đăng nhập ngay</a> để lưu lại những bộ truyện ưa thích <br>
+        </p>
+    </div>
+</div>
+
+<div class="footer__info containers" style="margin-top: 1.5rem; display:flex; justify-content:center; align-items:center">
+    <span class="footer__copy">
+        &#169;  2024 MangaSmurf.  All Rights Reserved.
+    </span>
+</div>

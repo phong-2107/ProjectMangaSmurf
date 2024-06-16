@@ -169,14 +169,7 @@ namespace ProjectMangaSmurf.Controllers
 
         public IActionResult Logout()
         {
-            HttpContext.Session.Remove("TK");
-            HttpContext.Session.Remove("IdKH");
-            HttpContext.Session.Remove("Img");
-            HttpContext.Session.Remove("date");
-            HttpContext.Session.Remove("OrderId");
-            HttpContext.Session.Remove("Message");
-            HttpContext.Session.Remove("Email");
-            HttpContext.Session.Remove("Phone");
+            HttpContext.Session.Clear();
             return RedirectToAction("Index", "BoTruyen");
         }
 

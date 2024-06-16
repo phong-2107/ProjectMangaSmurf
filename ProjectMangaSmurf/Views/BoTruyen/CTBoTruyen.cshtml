@@ -120,7 +120,7 @@
                             var listtop = boTruyenRepository.GetListLoaiAsync(Model.IdBo);
                             foreach (var i in listtop)
                             {
-                                                <a asp-area="" asp-controller="BoTruyen" asp-action="ListTopic" asp-route-id="@i" class="item-type">@i</a>
+                                <a asp-area="" asp-controller="BoTruyen" asp-action="ListTopic" asp-route-id="@i" class="item-type">@i</a>
                             }
                         }
                     </div>
@@ -539,7 +539,7 @@
                         if (listt != null)
                         {
                                 <div class="content-title">
-                                    <i class="fa-solid fa-bookmark"></i> CÓ THỂ BẠN QUAN TÂM
+                                    <i class="fa-solid fa-bookmark"></i> ĐỀ CỬ TRUYỆN TƯƠNG TỰ
                                 </div>
                                 <div class="row row-cols-6  justify-content-center gap-2">
 

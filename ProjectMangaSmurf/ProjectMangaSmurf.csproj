@@ -7,12 +7,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Microsoft\**" />
     <Compile Remove="SendingEmails\**" />
     <Compile Remove="wwwroot\SmurfMangaData\**" />
+    <Content Remove="Microsoft\**" />
     <Content Remove="SendingEmails\**" />
     <Content Remove="wwwroot\SmurfMangaData\**" />
+    <EmbeddedResource Remove="Microsoft\**" />
     <EmbeddedResource Remove="SendingEmails\**" />
     <EmbeddedResource Remove="wwwroot\SmurfMangaData\**" />
+    <None Remove="Microsoft\**" />
     <None Remove="SendingEmails\**" />
     <None Remove="wwwroot\SmurfMangaData\**" />
   </ItemGroup>
@@ -52,7 +56,6 @@
     <Folder Include="Areas\User\Data\" />
     <Folder Include="Areas\User\Models\" />
     <Folder Include="Areas\User\Views\" />
-    <Folder Include="Microsoft\AspNetCore\Identity\" />
     <Folder Include="Properties\PublishProfiles\" />
     <Folder Include="wwwroot\images\aboutUs\" />
   </ItemGroup>
