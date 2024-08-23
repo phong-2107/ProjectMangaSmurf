@@ -49,7 +49,7 @@ namespace ProjectMangaSmurf.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            using var transaction = _context.Database.BeginTransaction();  // Giả sử '_context' là DbContext của bạn
+            using var transaction = _context.Database.BeginTransaction(); 
             try
             {
                 var listBotruyen = await _botruyenrepository.GetAllAsync();

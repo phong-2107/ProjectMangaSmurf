@@ -9,8 +9,6 @@
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick-theme.css" />
 @* 
 <div class="background"></div> *@
-
-
 <div class="main__bottom sections TruyenNew__Containter containers grid">
     <section class="home" id="home">
         <div class="home__container w-100">
@@ -82,7 +80,7 @@
 
                                 </div>
                                 <div class="btn__regis btn-watch w-50">
-                                    <a asp-action="CTBoTruyen" asp-route-id="@botruyen.Value.IdBo">Watch  <i class="fa-solid fa-square-caret-right"></i></a>
+                                    <a asp-action="CTBoTruyen" asp-route-id="@botruyen.Value.IdBo">XEM NGAY <i class="fa-solid fa-square-caret-right"></i></a>
                                 </div>
                             </div>
                         }
@@ -119,7 +117,7 @@
             </div>
         </div>
         <div class="main__random bg-random">
-            <a id="btnPay" style="font-weight:600; letter-spacing:1px;" class="btn-pre nav__buttons-Pre"><i class="fa-solid fa-crown"></i><span style="padding-right:.3rem; font-weight:500; color:#FAB818; ">Try  </span>  NOW </a>
+            <a id="btnPay" style="font-weight:600; letter-spacing:1px;" class="btn-pre nav__buttons-Pre"><i class="fa-solid fa-crown"></i><span style="padding-right:.3rem; font-weight:500; color:#FAB818; ">Thử  </span>  Ngay </a>
             <script>
                 $(document).ready(function () {
                     $('#btnPay').click(function (e) {
@@ -135,7 +133,6 @@
         <div class="top__content">
             <div>
                 <span class="section__subtitle">Đề Cử Hôm Nay</span>
-                @* <p class="section__des">Gợi ý những bộ truyện theo thị hiếu và sở thích của bạn</p> *@
             </div>
         </div>
         <div class=" slick-list autoplay row col-6 w-100 d-flex justify-content-center">
@@ -174,7 +171,7 @@
                 <p class="section__des">Cập nhật Cập nhật nhanh và chất lượng nhất các chương truyện</p>
             </div>
             <div class="btn-More">
-                <a asp-area="" asp-controller="BoTruyen" asp-action="ListTruyenEarliest">Show More</a>
+                <a asp-area="" asp-controller="BoTruyen" asp-action="ListTruyenEarliest">XEM THÊM</a>
             </div>
         </div>
         <div class="container">
@@ -270,7 +267,7 @@
                 <p class="section__des">Danh sách các truyện mới nhất cập nhật liên tục </p>
             </div>
             <div class="btn-More">
-                <a asp-area="" asp-controller="BoTruyen" asp-action="ListTruyen">Show More</a>
+                <a asp-area="" asp-controller="BoTruyen" asp-action="ListTruyen">XEM THÊM</a>
             </div>
         </div>
         <div class="container">
@@ -382,7 +379,7 @@
                                 }
                             </div>
                             <div class="position-absolute btn-poster">
-                                <a asp-action="CTBoTruyen" asp-route-id="@item.IdBo" class="btn-poster-detail">View Now <i class="fa-solid fa-square-caret-right"></i></a>
+                                <a asp-action="CTBoTruyen" asp-route-id="@item.IdBo" class="btn-poster-detail">XEM NGAY <i class="fa-solid fa-square-caret-right"></i></a>
                             </div>
                         </div>
                     }
@@ -418,7 +415,7 @@
         <div class="section-bottom container w-100">
             <img loading="lazy" src="/images/yuzu.png" alt="cat Image" />
             <span>Nếu bạn vẫn chưa biết đọc gì hôm nay!<br />Hãy xem thử danh sách đề cử của chúng tôi!</span>
-            <a asp-area="" asp-controller="BoTruyen" asp-action="ListTruyen">VIEW LIST</a>
+            <a asp-area="" asp-controller="BoTruyen" asp-action="ListTruyen">DANH SÁCH</a>
         </div>
     </div>
 </section>
