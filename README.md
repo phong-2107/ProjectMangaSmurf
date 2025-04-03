@@ -18,37 +18,30 @@ Here is a working live demo :  https://www.mangasmurfs.com (MAINTENANCE)
 ### TECH STACKa
 
 ### Frontend:
-* [![React][React.js]][React-url]
-* [![Vue][Vue.js]][Vue-url]
 * [![Bootstrap][Bootstrap.com]][Bootstrap-url]
 * [![JQuery][JQuery.com]][JQuery-url]
-
-[React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
-[Vue.js]: https://img.shields.io/badge/Vue.js-35495E?style=for-the-badge&logo=vue.js&logoColor=4FC08D
-[Bootstrap.com]: https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white
-[JQuery.com]: https://img.shields.io/badge/jQuery-0769AD?style=for-the-badge&logo=jquery&logoColor=white
-
-[React-url]: https://reactjs.org/
-[Vue-url]: https://vuejs.org/
-[Bootstrap-url]: https://getbootstrap.com/
-[JQuery-url]: https://jquery.com/
+* [![AJAX][AJAX.com]][AJAX-url]
 
 ### Backend:
+* [![ASP.NET Core MVC][ASP.NET]][ASPNET-url]
+* [![Entity Framework][Entity]][Entity-url]
+* [![Python][Python.com]][Python-url]
 
-* [![NodeJS][Node.js]][Node-url]
-* [![Express][Express.js]][Express-url]
-* [![MongoDB][MongoDB]][MongoDB-url]
-* [![RESTful API][REST]][REST-url]
+[Bootstrap.com]: https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white
+[JQuery.com]: https://img.shields.io/badge/jQuery-0769AD?style=for-the-badge&logo=jquery&logoColor=white
+[AJAX.com]: https://img.shields.io/badge/AJAX-007FFF?style=for-the-badge&logo=ajax&logoColor=white
 
-[Node.js]: https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white
-[Express.js]: https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white
-[MongoDB]: https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white
-[REST]: https://img.shields.io/badge/RESTful_API-005571?style=for-the-badge&logo=api&logoColor=white
+[ASP.NET]: https://img.shields.io/badge/ASP.NET_Core_MVC-512BD4?style=for-the-badge&logo=dotnet&logoColor=white
+[Entity]: https://img.shields.io/badge/Entity_Framework-6DB33F?style=for-the-badge&logo=.net&logoColor=white
+[Python.com]: https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white
 
-[Node-url]: https://nodejs.org/
-[Express-url]: https://expressjs.com/
-[MongoDB-url]: https://www.mongodb.com/
-[REST-url]: https://restfulapi.net/
+[Bootstrap-url]: https://getbootstrap.com/
+[JQuery-url]: https://jquery.com/
+[AJAX-url]: https://developer.mozilla.org/en-US/docs/Web/Guide/AJAX
+
+[ASPNET-url]: https://learn.microsoft.com/en-us/aspnet/core/?view=aspnetcore-7.0
+[Entity-url]: https://learn.microsoft.com/en-us/ef/
+[Python-url]: https://www.python.org/
 
 ## Site
 
